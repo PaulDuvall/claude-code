@@ -1,6 +1,6 @@
 # Claude Custom Commands Reference
 
-This document describes custom Claude commands for development projects. All commands support machine-readable specifications and Test-Driven Development workflows.
+This document describes custom Claude commands for development projects implementing SpecDriven AI methodology. All commands support machine-readable specifications with authority levels, dual coverage tracking, and Test-Driven Development workflows.
 
 ## Core Concepts
 
@@ -10,13 +10,6 @@ This document describes custom Claude commands for development projects. All com
   - Subdirectories create namespaces: `/project:category:command`
 - **User-scoped**: `~/.claude/commands/` (available across all projects)
   - Access with: `/user:command_name`
-
-### Thinking Modes
-Trigger extended thinking with specific keywords (ordered by thinking budget):
-1. `think` - Basic thinking mode
-2. `think hard` - Increased thinking budget  
-3. `think harder` - High thinking budget
-4. `ultrathink` - Maximum thinking budget (5-10x more tokens)
 
 ### Command Categories
 
@@ -31,8 +24,14 @@ Trigger extended thinking with specific keywords (ordered by thinking budget):
 - [Architecture & Design](#architecture--design)
 - [Performance & Optimization](#performance--optimization)
 - [Security & Compliance](#security--compliance)
-- [ATDD/BDD Development](#attdbdd-development)
 - [CI/CD Pipeline Management](#cicd-pipeline-management)
+
+**Product & Release Management**
+- [Product Management](#product-management)
+- [Release Management](#release-management)
+- [Database Management](#database-management)
+- [API Management](#api-management)
+- [Analytics & Business Intelligence](#analytics--business-intelligence)
 
 **AI-Assisted Development**
 - [AI Readiness & Maturity](#ai-readiness--maturity)
@@ -40,7 +39,12 @@ Trigger extended thinking with specific keywords (ordered by thinking budget):
 - [Observable Development](#observable-development)
 - [AI-Assisted Generation](#ai-assisted-generation)
 
-**Project Management**
+**Operations & Management**
+- [Incident Management](#incident-management)
+- [Infrastructure Management](#infrastructure-management)
+- [User Experience](#user-experience)
+- [Project Management](#project-management)
+- [Knowledge Management](#knowledge-management)
 - [Environment & Configuration](#environment--configuration)
 - [Documentation & Reporting](#documentation--reporting)
 - [Debugging & Analysis](#debugging--analysis)
@@ -61,13 +65,6 @@ Trigger extended thinking with specific keywords (ordered by thinking budget):
 | Auto add/commit/push | `/xacp` | `/xacp` |
 | Setup environment | `/xsetup --env` | `/xsetup --env` |
 
-### Thinking Modes (by complexity)
-| Mode | Usage | Best For |
-|------|-------|----------|
-| `think` | Basic analysis | Simple debugging, quick questions |
-| `think hard` | Moderate complexity | Code review, architecture decisions |
-| `think harder` | Complex problems | System design, optimization |
-| `ultrathink` | Maximum depth | Strategic planning, complex refactoring |
 
 ### Essential TDD Workflow
 ```bash
@@ -121,11 +118,19 @@ Trigger extended thinking with specific keywords (ordered by thinking budget):
 | `/xtest` | Run tests with various options | [Testing & Quality](#testing--quality) |
 | `/xvalidate` | Validate project completeness and quality | [Documentation & Reporting](#documentation--reporting) |
 | `/xacp` | Auto stage, commit, and push changes | [Commit & Version Control](#commit--version-control) |
-| `/xatdd` | Manage acceptance test workflows | [ATDD/BDD Development](#attdbdd-development) |
-| `/xbdd` | Create behavior-driven development scenarios | [ATDD/BDD Development](#attdbdd-development) |
+| `/xanalytics` | Business and performance analytics | [Analytics & Business Intelligence](#analytics--business-intelligence) |
+| `/xapi` | API design and management | [API Management](#api-management) |
 | `/xcicd` | Manage CI/CD pipelines and deployments | [CI/CD Pipeline Management](#cicd-pipeline-management) |
+| `/xdb` | Database management and operations | [Database Management](#database-management) |
+| `/xincident` | Incident response and management | [Incident Management](#incident-management) |
+| `/xinfra` | Infrastructure and operations | [Infrastructure Management](#infrastructure-management) |
+| `/xknowledge` | Knowledge and team management | [Knowledge Management](#knowledge-management) |
 | `/xpipeline` | Configure build and deployment pipelines | [CI/CD Pipeline Management](#cicd-pipeline-management) |
+| `/xproduct` | Product management and strategy | [Product Management](#product-management) |
 | `/xrefactor` | Get suggestions to improve code quality | [Architecture & Design](#architecture--design) |
+| `/xrelease` | Release management and coordination | [Release Management](#release-management) |
+| `/xsprint` | Sprint and project management | [Project Management](#project-management) |
+| `/xux` | User experience and frontend | [User Experience](#user-experience) |
 
 ---
 
@@ -133,25 +138,53 @@ Trigger extended thinking with specific keywords (ordered by thinking budget):
 
 ### Specification Management
 
-#### `/xspec` - Work with Project Requirements
-Read, find, and manage your project specifications and requirements.
+#### `/xspec` - SpecDriven AI Development
+Machine-readable specifications with unique identifiers and authority levels for precise AI code generation.
 
 ```bash
-/xspec --read <spec-id>      # Read specification by ID
+# Core SpecDriven AI Operations
+/xspec --read <spec-id>      # Read specification by ID (e.g., cli1a)
 /xspec --find <keyword>      # Find specifications containing keyword
 /xspec --trace <spec-id>     # Show traceability to tests/code
-/xspec --validate            # Validate specification compliance
-/xspec --new <component>     # Create new specification file
+/xspec --validate            # Validate specification compliance and format
+/xspec --new <component>     # Create new specification with proper ID format
+/xspec --authority <level>   # Filter by authority level (system, platform, developer)
+/xspec --coverage            # Show specification coverage metrics
+
+# AI Generation Workflow
+/xspec --generate-test <id>  # Generate tests from specification
+/xspec --ai-implement <id>   # Generate AI implementation from specification  
+/xspec --execute <spec-id>   # Execute tests for specification
+/xspec --commit <spec-id>    # Commit with spec traceability
+
+# Quality & Validation
+/xspec --machine-readable    # Validate machine-readable format compliance
+/xspec --dual-coverage       # Check both code and specification coverage
+/xspec --gaps                # Identify specifications without tests
 ```
 
-#### `/xfootnote` - Track Requirement Links
-Find and manage links between requirements and their implementations.
+**SpecDriven AI Format:**
+- **Specifications**: `{#identifier authority=level}` for AI code generation
+- **Authority levels**: `system` > `platform` > `developer`
+- **Traceability**: Every test links to specific specification ID
+- **Dual Coverage**: Both code coverage and specification coverage tracked
+
+#### `/xfootnote` - Track Machine-Readable Requirement Links
+Find and manage links between requirements and their implementations using SpecDriven AI methodology.
 
 ```bash
-/xfootnote --find <id>       # Find requirement by footnote ID
-/xfootnote --next <component> # Generate next available ID
+/xfootnote --find <id>       # Find requirement by footnote ID (e.g., cli1a)
+/xfootnote --next <component> # Generate next available ID with proper format
 /xfootnote --trace <id>      # Show tests implementing requirement
+/xfootnote --validate <id>   # Validate footnote ID format (^[a-z]{3}[0-9][a-z])
+/xfootnote --authority <id>  # Show authority level for specification
+/xfootnote --coverage <id>   # Check dual coverage (code + specification)
 ```
+
+**Dual Coverage Tracking:**
+- **Code Coverage**: Lines of code executed by tests
+- **Specification Coverage**: All specifications have corresponding tests
+- **Traceability**: Every test links back to specific specification ID
 
 ### TDD Cycle Management
 
@@ -196,20 +229,45 @@ Automate the full Red-Green-Refactor-Commit cycle for any feature.
 /xquality --all              # Run all quality checks
 ```
 
-#### `/xcoverage` - Coverage Analysis
+#### `/xcoverage` - Dual Coverage Analysis (SpecDriven AI)
 ```bash
-/xcoverage --html            # Generate HTML report
+/xcoverage --html            # Generate HTML report for code coverage
 /xcoverage --missing         # Show uncovered lines
-/xcoverage --spec <spec-id>  # Check coverage for requirement
+/xcoverage --spec <spec-id>  # Check coverage for specific requirement
+/xcoverage --dual            # Show both code and specification coverage
+/xcoverage --authority <level> # Coverage by authority level (system/platform/developer)
+/xcoverage --gaps            # Identify specifications without tests
+/xcoverage --metrics         # Comprehensive coverage metrics dashboard
 ```
+
+**Dual Coverage Metrics:**
+- **Code Coverage**: Percentage of code lines executed by tests
+- **Specification Coverage**: Percentage of specifications with corresponding tests
+- **Authority Coverage**: Coverage breakdown by authority level
+- **Traceability Coverage**: Percentage of tests linked to specifications
 
 ### Commit & Version Control
 
-#### `/xcommit` - Specification-Driven Commits
+#### `/xcommit` - SpecDriven AI Commits with Traceability
 ```bash
-/xcommit --tdd <spec-id>     # Commit TDD cycle with footnote
-/xcommit --message <spec-id> # Generate commit message
-/xcommit --trace             # Include traceability info
+/xcommit --tdd <spec-id>     # Commit TDD cycle with footnote reference
+/xcommit --message <spec-id> # Generate commit message with spec traceability
+/xcommit --trace             # Include full traceability info
+/xcommit --authority <spec-id> # Include authority level in commit
+/xcommit --coverage <spec-id>  # Include coverage metrics in commit message
+```
+
+**SpecDriven AI Commit Format:**
+```
+feat: implement [requirement] via TDD (^cli1a)
+
+- Add failing test for [specific behavior]
+- Implement minimal code to pass test
+- Authority: developer
+- Specification Coverage: 95%
+- Code Coverage: 87%
+
+Implements: specs/specifications/cli-interface.md#{#cli1a authority=developer}
 ```
 
 #### `/xacp` - Add, Commit, Push Automation
@@ -225,15 +283,17 @@ Automates the complete git workflow: stages all changes, generates smart commit 
 - **Automatic push**: Pushes to remote with upstream tracking
 - **Error handling**: Clear feedback and troubleshooting information
 
-**Commit Message Format:**
+**Enhanced SpecDriven AI Format:**
 ```
 feat: implement [requirement] via TDD (^cli1a)
 
 - Add failing test for [specific behavior]
 - Implement minimal code to pass test
-- [Brief description]
+- Authority: developer
+- Specification Coverage: 95%
+- Code Coverage: 87%
 
-Implements: specs/specifications/cli-interface.md#repo_path [^cli1a]
+Implements: specs/specifications/cli-interface.md#{#cli1a authority=developer}
 ```
 
 ---
@@ -341,25 +401,64 @@ Implements: specs/specifications/cli-interface.md#repo_path [^cli1a]
 /xcompliance --gap-analysis  # Find compliance gaps
 ```
 
-### ATDD/BDD Development
+### Product Management
 
-#### `/xatdd` - Acceptance Test-Driven Development
+#### `/xproduct` - Product Management & Strategy
 ```bash
-/xatdd --init <feature>       # Initialize ATDD workflow for feature
-/xatdd --scenario <story-id>  # Create Gherkin scenario from user story
-/xatdd --steps <scenario>     # Generate step definitions
-/xatdd --execute              # Run ATDD test suite
-/xatdd --trace <test>         # Trace test to implementation
+/xproduct --backlog           # Manage product backlog with priorities
+/xproduct --stories           # Create and manage user stories
+/xproduct --features          # Feature flag management
+/xproduct --feedback          # Integrate user feedback
+/xproduct --metrics           # Track product KPIs
+/xproduct --roadmap           # Product roadmap planning
 ```
 
-#### `/xbdd` - Behavior-Driven Development
+### Release Management
+
+#### `/xrelease` - Release Management & Coordination
 ```bash
-/xbdd --feature <domain>      # Create feature file for domain
-/xbdd --given <context>       # Define Given step
-/xbdd --when <action>         # Define When step
-/xbdd --then <outcome>        # Define Then step
-/xbdd --validate              # Validate Gherkin syntax
-/xbdd --living-docs           # Generate living documentation
+/xrelease --plan <version>    # Plan release with dependencies
+/xrelease --notes <version>   # Generate release notes from commits
+/xrelease --rollback <version> # Automated rollback procedures
+/xrelease --hotfix <issue>    # Emergency hotfix workflow
+/xrelease --approve <version> # Release approval workflow
+/xrelease --monitor <release> # Post-release monitoring
+```
+
+### Database Management
+
+#### `/xdb` - Database Management & Operations
+```bash
+/xdb --schema <design>        # Database schema management
+/xdb --migrate <version>      # Database migration handling
+/xdb --seed <environment>     # Data seeding and fixtures
+/xdb --performance           # Database performance tuning
+/xdb --backup <database>     # Backup and restore procedures
+/xdb --test <schema>         # Database testing automation
+```
+
+### API Management
+
+#### `/xapi` - API Design & Management
+```bash
+/xapi --design <spec>         # API design and specification
+/xapi --version <api>         # API versioning management
+/xapi --mock <endpoint>       # API mocking and testing
+/xapi --docs <api>           # API documentation generation
+/xapi --analytics <api>      # API usage analytics
+/xapi --security <endpoint>  # API security testing
+```
+
+### Analytics & Business Intelligence
+
+#### `/xanalytics` - Business & Performance Analytics
+```bash
+/xanalytics --business       # Business metrics tracking
+/xanalytics --users          # User behavior analysis
+/xanalytics --performance    # Performance analytics
+/xanalytics --custom <metric> # Custom metrics implementation
+/xanalytics --reports        # Custom reporting generation
+/xanalytics --predictions    # Predictive analytics
 ```
 
 ### CI/CD Pipeline Management
@@ -380,6 +479,66 @@ Implements: specs/specifications/cli-interface.md#repo_path [^cli1a]
 /xpipeline --artifact         # Configure artifact management
 /xpipeline --test-stage       # Configure testing stage
 /xpipeline --deploy-stage     # Configure deployment stage
+```
+
+### Incident Management
+
+#### `/xincident` - Incident Response & Management
+```bash
+/xincident --respond <alert>  # Incident response automation
+/xincident --postmortem <id>  # Post-mortem analysis
+/xincident --communicate <team> # Incident communication
+/xincident --escalate <level> # Escalation procedures
+/xincident --recover <system> # Recovery automation
+/xincident --lessons <incident> # Lessons learned capture
+```
+
+### Infrastructure Management
+
+#### `/xinfra` - Infrastructure & Operations
+```bash
+/xinfra --containers          # Container orchestration
+/xinfra --networking          # Network configuration
+/xinfra --scaling             # Auto-scaling management
+/xinfra --cost                # Cost optimization
+/xinfra --disaster-recovery   # Disaster recovery procedures
+/xinfra --capacity            # Capacity planning
+```
+
+### User Experience
+
+#### `/xux` - User Experience & Frontend
+```bash
+/xux --test <journey>         # User journey testing
+/xux --accessibility          # Accessibility compliance
+/xux --performance            # Frontend performance
+/xux --regression             # Visual regression testing
+/xux --analytics              # User behavior tracking
+/xux --optimization           # UX optimization suggestions
+```
+
+### Project Management
+
+#### `/xsprint` - Sprint & Project Management
+```bash
+/xsprint --plan <iteration>   # Sprint planning
+/xsprint --track <progress>   # Progress tracking
+/xsprint --retrospective      # Sprint retrospectives
+/xsprint --velocity           # Team velocity analysis
+/xsprint --assignment         # Task assignment automation
+/xsprint --reporting          # Stakeholder reporting
+```
+
+### Knowledge Management
+
+#### `/xknowledge` - Knowledge & Team Management
+```bash
+/xknowledge --capture <domain> # Knowledge capture
+/xknowledge --onboard <role>   # Team onboarding
+/xknowledge --training <skill> # Training material generation
+/xknowledge --assess <competency> # Skills assessment
+/xknowledge --documentation   # Best practices documentation
+/xknowledge --transfer        # Knowledge transfer procedures
 ```
 
 ---
@@ -685,30 +844,27 @@ Breaks complex tasks into 4-8 hour units.
 **Prerequisites:** Active feature branch, specification available
 
 ```bash
-# 1. Start with thinking about the requirement
-think "What specific behavior am I implementing?"
-
-# 2. Read the specification
+# 1. Read the specification
 /xspec --read cli1a
 # Expected: Clear understanding of requirement
 
-# 3. Write failing test
+# 2. Write failing test
 /xred --spec cli1a
 # Expected: Red test that describes desired behavior
 
-# 4. Run test to confirm failure
+# 3. Run test to confirm failure
 /xtest --spec
 # Expected: Test fails for right reason
 
-# 5. Write minimal implementation
+# 4. Write minimal implementation
 /xgreen --minimal
 # Expected: Test passes with simplest possible code
 
-# 6. Refactor if needed (while keeping tests green)
+# 5. Refactor if needed (while keeping tests green)
 /xquality --all
 # Expected: Clean code that passes all quality gates
 
-# 7. Commit with traceability
+# 6. Commit with traceability
 /xcommit --tdd cli1a
 # Expected: Clean commit with specification reference
 ```
@@ -766,52 +922,48 @@ think "What specific behavior am I implementing?"
 
 **Success Metrics:** Readiness score >80%, maturity level 3+, no critical gaps
 
-### ATDD/BDD Development Workflow
+### SpecDriven AI Complete Workflow
 
 **Prerequisites:** Feature requirements defined, test environment ready
 
-#### Phase 1: Specification Creation
+#### Phase 1: SpecDriven AI Development
 ```bash
-# Create feature file from user story
-/xbdd --feature "user-authentication"
-# Expected: Feature file with scenarios
+# Create machine-readable specification
+/xspec --new user-authentication
+# Expected: Specification file with proper ID format {#auth1a authority=developer}
 
-# Generate ATDD scenarios from requirements
-/xatdd --scenario US-001
-# Expected: Gherkin scenarios with Given-When-Then
+# Generate tests from specification
+/xspec --generate-test auth1a
+# Expected: Test file created in specs/tests/ with proper traceability
 
-# Create step definitions
-/xatdd --steps authentication_workflow
-# Expected: Python step definitions with real implementation calls
+# Execute failing tests to confirm gap
+/xspec --execute auth1a
+# Expected: Tests fail as expected, proving requirement gap
 ```
 
-#### Phase 2: Red-Green-Refactor with ATDD
+#### Phase 2: AI Implementation
 ```bash
-# Execute ATDD tests (should fail initially)
-/xatdd --execute
-# Expected: Failing tests that describe desired behavior
+# Generate AI implementation from specification
+/xspec --ai-implement auth1a
+# Expected: Implementation that satisfies specification requirements
 
-# Implement minimal code to pass ATDD tests
-/xgreen --minimal
-# Expected: Implementation that satisfies acceptance criteria
+# Validate implementation against specification
+/xspec --validate auth1a
+# Expected: All specification requirements met
 
-# Validate behavior matches specification
-/xbdd --validate
-# Expected: All Gherkin scenarios pass
+# Check dual coverage
+/xspec --dual-coverage
+# Expected: Both code and specification coverage tracked
 ```
 
-#### Phase 3: Living Documentation
+#### Phase 3: Commit with Traceability
 ```bash
-# Generate living documentation from scenarios
-/xbdd --living-docs
-# Expected: Human-readable documentation from feature files
-
-# Trace tests to implementation
-/xatdd --trace authentication_test
-# Expected: Clear mapping between tests and code
+# Commit with complete traceability
+/xspec --commit auth1a
+# Expected: Commit message includes specification reference and coverage metrics
 ```
 
-**Success Criteria:** ATDD tests pass, behavior matches specifications, documentation current
+**Success Criteria:** Tests pass, specification coverage 100%, traceability maintained
 
 ### CI/CD Pipeline Development Workflow
 
@@ -865,15 +1017,18 @@ think "What specific behavior am I implementing?"
 
 **Success Criteria:** Pipeline deploys successfully, security validated, performance optimized
 
-## Best Practices
+## SpecDriven AI Best Practices
 
-1. **Start with specifications**: Always use `/xspec --read` before development
-2. **Follow TDD discipline**: Use `/xtdd` commands for all changes
-3. **Maintain traceability**: Reference specifications in commits
-4. **Validate continuously**: Run `/xquality --all` before committing
-5. **Monitor development**: Use `/xobservable` for insights
-6. **Secure by default**: Run `/xsecurity --scan` regularly
-7. **Think strategically**: Use `ultrathink` for complex planning
+1. **Start with machine-readable specifications**: Always use `/xspec --read` with proper authority levels before development
+2. **Follow TDD discipline**: Use `/xtdd` commands for all changes with specification traceability
+3. **Maintain dual coverage**: Track both code coverage and specification coverage using `/xcoverage --dual`
+4. **Validate continuously**: Run `/xquality --all` and `/xspec --validate` before committing
+5. **Ensure traceability**: Every test must link to a specific specification ID with authority level
+6. **Monitor development**: Use `/xobservable` for insights into specification compliance
+7. **Secure by default**: Run `/xsecurity --scan` regularly
+8. **Plan strategically**: Use `/xplanning` for complex planning with specification references
+9. **Authority-driven development**: Respect specification authority levels (system > platform > developer)
+10. **Precise specifications lead to precise implementation**: Write detailed, testable specifications
 
 ## Troubleshooting
 
@@ -934,14 +1089,9 @@ think "What specific behavior am I implementing?"
 #### Performance Issues
 **Symptom:** Commands run slowly or time out
 **Optimization:**
-1. Use appropriate thinking mode for task complexity
-2. Check system resources with `/xmonitoring --performance`
-3. Profile specific operations with `/xperformance --profile <component>`
-
-**Thinking Mode Selection:**
-- Simple tasks: `think` (faster, less thorough)
-- Complex analysis: `think harder` (slower, more thorough)
-- Strategic planning: `ultrathink` (slowest, maximum depth)
+1. Check system resources with `/xmonitoring --performance`
+2. Profile specific operations with `/xperformance --profile <component>`
+3. Optimize command execution with appropriate flags
 
 #### Security Scan Failures
 **Symptom:** `/xsecurity --scan` reports vulnerabilities
@@ -988,7 +1138,7 @@ think "What specific behavior am I implementing?"
 
 1. **Command Help**: Most commands support `--help` flag
 2. **Specification Issues**: Use `/xvalidate --compliance` for checks
-3. **Complex Problems**: Use `ultrathink` for deep analysis
+3. **Complex Problems**: Use `/xanalyze` commands for deep analysis
 4. **Integration Issues**: Check Integration Points section below
 
 ## Integration Points

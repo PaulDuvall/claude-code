@@ -177,16 +177,29 @@ BRANCH_NAME=$(git branch --show-current)
 
 print_status "Pushing to remote..."
 
-# Push with upstream tracking
-if git push --follow-tags --set-upstream origin "$BRANCH_NAME" 2>/dev/null; then
+# Check if remote exists
+if ! git remote -v | grep -q origin; then
+    print_error "No 'origin' remote configured"
+    exit 1
+fi
+
+# Check current branch tracking
+TRACKING_BRANCH=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo "")
+
+# Push with upstream tracking (verbose for debugging)
+print_status "Attempting push with upstream tracking..."
+if git push --follow-tags --set-upstream origin "$BRANCH_NAME"; then
     REMOTE_URL=$(git remote get-url --push origin 2>/dev/null || echo "unknown")
     print_status "✅ Pushed $COMMIT_HASH to $BRANCH_NAME → $REMOTE_URL"
     echo "Commit: $COMMIT_SUMMARY"
-elif git push --follow-tags 2>/dev/null; then
+elif git push --follow-tags; then
     REMOTE_URL=$(git remote get-url --push origin 2>/dev/null || echo "unknown")
     print_status "✅ Pushed $COMMIT_HASH to $BRANCH_NAME → $REMOTE_URL"
     echo "Commit: $COMMIT_SUMMARY"
 else
     print_error "Failed to push changes"
+    print_error "Branch: $BRANCH_NAME"
+    print_error "Tracking: $TRACKING_BRANCH"
+    git status --porcelain
     exit 1
 fi
