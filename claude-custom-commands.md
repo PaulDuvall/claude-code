@@ -82,50 +82,50 @@ Trigger extended thinking with specific keywords (ordered by thinking budget):
 
 | Command | Purpose | Section |
 |---------|---------|---------|
-| `/xanalyze` | Code analysis | [Debugging & Analysis](#debugging--analysis) |
-| `/xarchitecture` | Architecture analysis | [Architecture & Design](#architecture--design) |
-| `/xatomic` | Atomic task decomposition | [Task Planning & Decomposition](#task-planning--decomposition) |
-| `/xaws` | AWS integration | [AWS/IAM Development](#awsiam-development) |
-| `/xcommit` | Specification-driven commits | [Commit & Version Control](#commit--version-control) |
-| `/xcompliance` | Compliance management | [Security & Compliance](#security--compliance) |
-| `/xconfig` | Configuration management | [Environment & Configuration](#environment--configuration) |
-| `/xconstraints` | Constraint management | [Governance & Rules](#governance--rules) |
-| `/xcoverage` | Coverage analysis | [Testing & Quality](#testing--quality) |
-| `/xdebug` | Debugging assistance | [Debugging & Analysis](#debugging--analysis) |
-| `/xdesign` | Design patterns | [Architecture & Design](#architecture--design) |
-| `/xdocs` | Documentation management | [Documentation & Reporting](#documentation--reporting) |
-| `/xfootnote` | Footnote ID management | [Specification Management](#specification-management) |
-| `/xgenerate` | Code generation | [AI-Assisted Generation](#ai-assisted-generation) |
-| `/xgovernance` | Development governance | [Governance & Rules](#governance--rules) |
-| `/xgreen` | Green phase (minimal implementation) | [TDD Cycle Management](#tdd-cycle-management) |
-| `/xiac` | Infrastructure as Code operations | [AWS/IAM Development](#awsiam-development) |
-| `/xmaturity` | Development maturity | [AI Readiness & Maturity](#ai-readiness--maturity) |
-| `/xmonitoring` | Process monitoring | [Observable Development](#observable-development) |
-| `/xobservable` | Development observability | [Observable Development](#observable-development) |
-| `/xoptimize` | Code optimization | [Performance & Optimization](#performance--optimization) |
-| `/xperformance` | Performance analysis | [Performance & Optimization](#performance--optimization) |
-| `/xplanning` | AI-assisted planning | [Task Planning & Decomposition](#task-planning--decomposition) |
-| `/xpolicy` | Policy generation | [AWS/IAM Development](#awsiam-development) |
-| `/xquality` | Code quality checks | [Testing & Quality](#testing--quality) |
-| `/xreadiness` | AI development readiness | [AI Readiness & Maturity](#ai-readiness--maturity) |
-| `/xred` | Red phase (failing test) | [TDD Cycle Management](#tdd-cycle-management) |
-| `/xrisk` | Risk assessment | [Governance & Rules](#governance--rules) |
-| `/xrules` | Rules as code | [Governance & Rules](#governance--rules) |
-| `/xsandbox` | Security sandbox | [Security & Compliance](#security--compliance) |
-| `/xscan` | Repository scanning | [Debugging & Analysis](#debugging--analysis) |
-| `/xsecurity` | Security analysis | [Security & Compliance](#security--compliance) |
-| `/xsetup` | Environment setup | [Environment & Configuration](#environment--configuration) |
-| `/xspec` | Machine-readable specifications | [Specification Management](#specification-management) |
-| `/xtdd` | Complete TDD cycle | [TDD Cycle Management](#tdd-cycle-management) |
-| `/xtemplate` | Template generation | [AI-Assisted Generation](#ai-assisted-generation) |
-| `/xtest` | Test execution | [Testing & Quality](#testing--quality) |
-| `/xvalidate` | Project validation | [Documentation & Reporting](#documentation--reporting) |
-| `/xacp` | Add, commit, push with smart messages | [Commit & Version Control](#commit--version-control) |
-| `/xatdd` | ATDD/BDD workflow management | [ATDD/BDD Development](#attdbdd-development) |
-| `/xbdd` | Behavior-driven development | [ATDD/BDD Development](#attdbdd-development) |
-| `/xcicd` | CI/CD pipeline operations | [CI/CD Pipeline Management](#cicd-pipeline-management) |
-| `/xpipeline` | Pipeline configuration | [CI/CD Pipeline Management](#cicd-pipeline-management) |
-| `/xrefactor` | Code refactoring guidance | [Architecture & Design](#architecture--design) |
+| `/xanalyze` | Analyze code structure and find issues | [Debugging & Analysis](#debugging--analysis) |
+| `/xarchitecture` | Design and validate system architecture | [Architecture & Design](#architecture--design) |
+| `/xatomic` | Break large tasks into manageable pieces | [Task Planning & Decomposition](#task-planning--decomposition) |
+| `/xaws` | Work with AWS services and credentials | [AWS/IAM Development](#awsiam-development) |
+| `/xcommit` | Create commits linked to specifications | [Commit & Version Control](#commit--version-control) |
+| `/xcompliance` | Check project compliance with standards | [Security & Compliance](#security--compliance) |
+| `/xconfig` | Manage project configuration files | [Environment & Configuration](#environment--configuration) |
+| `/xconstraints` | Define and enforce coding constraints | [Governance & Rules](#governance--rules) |
+| `/xcoverage` | Generate and analyze test coverage reports | [Testing & Quality](#testing--quality) |
+| `/xdebug` | Debug issues and trace problems to specs | [Debugging & Analysis](#debugging--analysis) |
+| `/xdesign` | Apply design patterns and best practices | [Architecture & Design](#architecture--design) |
+| `/xdocs` | Generate documentation from code and specs | [Documentation & Reporting](#documentation--reporting) |
+| `/xfootnote` | Manage specification reference IDs | [Specification Management](#specification-management) |
+| `/xgenerate` | Auto-generate code, tests, and docs | [AI-Assisted Generation](#ai-assisted-generation) |
+| `/xgovernance` | Manage development policies and audits | [Governance & Rules](#governance--rules) |
+| `/xgreen` | Write minimal code to make tests pass | [TDD Cycle Management](#tdd-cycle-management) |
+| `/xiac` | Manage infrastructure code and IAM | [AWS/IAM Development](#awsiam-development) |
+| `/xmaturity` | Assess development process maturity | [AI Readiness & Maturity](#ai-readiness--maturity) |
+| `/xmonitoring` | Monitor development process health | [Observable Development](#observable-development) |
+| `/xobservable` | Get insights into development patterns | [Observable Development](#observable-development) |
+| `/xoptimize` | Find and apply performance improvements | [Performance & Optimization](#performance--optimization) |
+| `/xperformance` | Profile and benchmark application performance | [Performance & Optimization](#performance--optimization) |
+| `/xplanning` | Create roadmaps and estimate effort | [Task Planning & Decomposition](#task-planning--decomposition) |
+| `/xpolicy` | Generate and validate IAM policies | [AWS/IAM Development](#awsiam-development) |
+| `/xquality` | Run code quality checks and formatting | [Testing & Quality](#testing--quality) |
+| `/xreadiness` | Assess AI development readiness | [AI Readiness & Maturity](#ai-readiness--maturity) |
+| `/xred` | Write failing tests for new features | [TDD Cycle Management](#tdd-cycle-management) |
+| `/xrisk` | Identify and mitigate project risks | [Governance & Rules](#governance--rules) |
+| `/xrules` | Define coding rules and check compliance | [Governance & Rules](#governance--rules) |
+| `/xsandbox` | Create secure development environments | [Security & Compliance](#security--compliance) |
+| `/xscan` | Scan repository for specific patterns | [Debugging & Analysis](#debugging--analysis) |
+| `/xsecurity` | Run security scans and vulnerability checks | [Security & Compliance](#security--compliance) |
+| `/xsetup` | Set up development environment | [Environment & Configuration](#environment--configuration) |
+| `/xspec` | Read and manage project specifications | [Specification Management](#specification-management) |
+| `/xtdd` | Complete test-driven development cycles | [TDD Cycle Management](#tdd-cycle-management) |
+| `/xtemplate` | Generate code templates and boilerplate | [AI-Assisted Generation](#ai-assisted-generation) |
+| `/xtest` | Run tests with various options | [Testing & Quality](#testing--quality) |
+| `/xvalidate` | Validate project completeness and quality | [Documentation & Reporting](#documentation--reporting) |
+| `/xacp` | Auto stage, commit, and push changes | [Commit & Version Control](#commit--version-control) |
+| `/xatdd` | Manage acceptance test workflows | [ATDD/BDD Development](#attdbdd-development) |
+| `/xbdd` | Create behavior-driven development scenarios | [ATDD/BDD Development](#attdbdd-development) |
+| `/xcicd` | Manage CI/CD pipelines and deployments | [CI/CD Pipeline Management](#cicd-pipeline-management) |
+| `/xpipeline` | Configure build and deployment pipelines | [CI/CD Pipeline Management](#cicd-pipeline-management) |
+| `/xrefactor` | Get suggestions to improve code quality | [Architecture & Design](#architecture--design) |
 
 ---
 
@@ -133,8 +133,8 @@ Trigger extended thinking with specific keywords (ordered by thinking budget):
 
 ### Specification Management
 
-#### `/xspec` - Manage Machine-Readable Specifications
-Manages specifications following the OpenAI Model Spec pattern.
+#### `/xspec` - Work with Project Requirements
+Read, find, and manage your project specifications and requirements.
 
 ```bash
 /xspec --read <spec-id>      # Read specification by ID
@@ -144,8 +144,8 @@ Manages specifications following the OpenAI Model Spec pattern.
 /xspec --new <component>     # Create new specification file
 ```
 
-#### `/xfootnote` - Footnote ID Management
-Links specifications to test implementations via unique identifiers.
+#### `/xfootnote` - Track Requirement Links
+Find and manage links between requirements and their implementations.
 
 ```bash
 /xfootnote --find <id>       # Find requirement by footnote ID
@@ -155,8 +155,8 @@ Links specifications to test implementations via unique identifiers.
 
 ### TDD Cycle Management
 
-#### `/xtdd` - Complete TDD Cycle
-Orchestrates Red-Green-Refactor-Commit cycle for specification-driven development.
+#### `/xtdd` - Run Complete TDD Workflow
+Automate the full Red-Green-Refactor-Commit cycle for any feature.
 
 ```bash
 /xtdd --red <spec-id>        # Start: write failing test
@@ -165,13 +165,13 @@ Orchestrates Red-Green-Refactor-Commit cycle for specification-driven developmen
 /xtdd --commit <spec-id>     # Commit with spec reference
 ```
 
-#### `/xred` - Red Phase (Failing Test)
+#### `/xred` - Write Failing Tests First
 ```bash
 /xred --spec <spec-id>       # Create test for specific requirement
 /xred --component <name>     # Create test for new component
 ```
 
-#### `/xgreen` - Green Phase (Minimal Implementation)
+#### `/xgreen` - Make Tests Pass
 ```bash
 /xgreen --minimal            # Implement just enough to pass
 /xgreen --check              # Verify tests pass
