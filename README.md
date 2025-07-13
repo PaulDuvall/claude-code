@@ -4,8 +4,8 @@ This repository contains custom slash commands for Claude Code.
 
 ## Commands
 
-- **`/acp`** - Add, Commit, Push workflow with Conventional Commits format
-- **`/refactor`** - Interactive code refactoring assistant with smell detection and suggestions
+- **`/xacp`** - Add, Commit, Push workflow with Conventional Commits format
+- **`/xrefactor`** - Interactive code refactoring assistant with smell detection and suggestions
 
 ## Deployment
 

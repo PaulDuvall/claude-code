@@ -1,4 +1,4 @@
-# /acp — Add • Commit • Push with detailed description
+# /xacp — Add • Commit • Push with detailed description
 
 Automates the complete git workflow: stages all changes, generates a Conventional Commits message, commits, and pushes to the current branch.
 
@@ -16,7 +16,7 @@ Automates the complete git workflow: stages all changes, generates a Conventiona
 
 ## Usage:
 ```
-/acp
+/xacp
 ```
 
 No arguments needed - it handles everything automatically!

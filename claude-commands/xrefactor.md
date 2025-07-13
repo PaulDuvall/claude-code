@@ -1,4 +1,4 @@
-# /refactor — Code Refactoring Assistant
+# /xrefactor — Code Refactoring Assistant
 
 Interactive refactoring assistant based on Martin Fowler's catalog and project-specific rules. Analyzes code for smells and suggests specific refactoring techniques.
 
@@ -17,7 +17,7 @@ Interactive refactoring assistant based on Martin Fowler's catalog and project-s
 
 ## Usage:
 ```
-/refactor [file_path] [--smell=smell_id] [--priority=high|medium|low]
+/xrefactor [file_path] [--smell=smell_id] [--priority=high|medium|low]
 ```
 
 Options:
@@ -26,10 +26,10 @@ Options:
 - `--priority`: Filter by priority level
 
 Examples:
-- `/refactor` - Analyze current directory for all smells
-- `/refactor src/email_processor.py` - Analyze specific file
-- `/refactor --smell=long_method` - Find only long method smells
-- `/refactor --priority=high` - Show only high-priority issues
+- `/xrefactor` - Analyze current directory for all smells
+- `/xrefactor src/email_processor.py` - Analyze specific file
+- `/xrefactor --smell=long_method` - Find only long method smells
+- `/xrefactor --priority=high` - Show only high-priority issues
 
 ---
 
