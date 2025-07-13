@@ -89,21 +89,21 @@ elif echo "$DIFF_OUTPUT" | grep -q "refactor\|rename\|move"; then
     COMMIT_TYPE="refactor"
 else
     # Default logic based on change patterns
-    if [ "$NEW_FILES" -gt 0 ]; then
+    if [ "${NEW_FILES:-0}" -gt 0 ]; then
         COMMIT_TYPE="feat"
-    elif [ "$DELETED_FILES" -gt 0 ]; then
+    elif [ "${DELETED_FILES:-0}" -gt 0 ]; then
         COMMIT_TYPE="refactor"
     fi
 fi
 
 # Generate commit description based on changes
-if [ "$NEW_FILES" -gt 0 ] && [ "$MODIFIED_FILES" -gt 0 ]; then
+if [ "${NEW_FILES:-0}" -gt 0 ] && [ "${MODIFIED_FILES:-0}" -gt 0 ]; then
     COMMIT_DESCRIPTION="add new files and update existing code"
-elif [ "$NEW_FILES" -gt 0 ]; then
+elif [ "${NEW_FILES:-0}" -gt 0 ]; then
     COMMIT_DESCRIPTION="add new functionality"
-elif [ "$DELETED_FILES" -gt 0 ]; then
+elif [ "${DELETED_FILES:-0}" -gt 0 ]; then
     COMMIT_DESCRIPTION="remove unused code"
-elif [ "$MODIFIED_FILES" -gt 0 ]; then
+elif [ "${MODIFIED_FILES:-0}" -gt 0 ]; then
     COMMIT_DESCRIPTION="update existing functionality"
 else
     COMMIT_DESCRIPTION="update project files"
@@ -118,9 +118,9 @@ while IFS= read -r line; do
         if [ -n "$COMMIT_BODY" ]; then
             COMMIT_BODY="$COMMIT_BODY"$'\n'
         fi
-        COMMIT_BODY="$COMMIT_BODY• $filename: $changes changes"
+        COMMIT_BODY="$COMMIT_BODY* $filename: $changes changes"
     fi
-done <<< "$STAT_OUTPUT"
+done <<< "$(echo "$STAT_OUTPUT" | grep -v "^ [0-9]")"
 
 # Create final commit message
 COMMIT_SUMMARY="$COMMIT_TYPE: $COMMIT_DESCRIPTION"
@@ -142,9 +142,9 @@ print_status "Committing changes..."
 
 # Create commit with proper message format
 if [ -n "$COMMIT_BODY" ]; then
-    git commit -m "$COMMIT_SUMMARY" -m "$COMMIT_BODY" -m "🤖 Generated with [Claude Code](https://claude.ai/code)" -m "Co-Authored-By: Claude <noreply@anthropic.com>"
+    git commit -m "$COMMIT_SUMMARY" -m "$COMMIT_BODY" -m "Generated with [Claude Code](https://claude.ai/code)" -m "Co-Authored-By: Claude <noreply@anthropic.com>"
 else
-    git commit -m "$COMMIT_SUMMARY" -m "🤖 Generated with [Claude Code](https://claude.ai/code)" -m "Co-Authored-By: Claude <noreply@anthropic.com>"
+    git commit -m "$COMMIT_SUMMARY" -m "Generated with [Claude Code](https://claude.ai/code)" -m "Co-Authored-By: Claude <noreply@anthropic.com>"
 fi
 
 # Get the commit hash
