@@ -1,3 +1,8 @@
+---
+description: Product management and strategic planning tools for feature development and product lifecycle management
+tags: [product-management, strategy, backlog, features, roadmap, metrics]
+---
+
 # `/xproduct` - Product Management & Strategy
 
 Product management and strategic planning tools for feature development and product lifecycle management.

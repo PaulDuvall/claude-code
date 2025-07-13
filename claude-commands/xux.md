@@ -1,3 +1,8 @@
+---
+description: User experience optimization, frontend testing, and accessibility compliance with SpecDriven AI methodology integration
+tags: [ux, frontend, accessibility, performance, testing, user-journey]
+---
+
 # /xux - User Experience & Frontend
 
 ## Purpose

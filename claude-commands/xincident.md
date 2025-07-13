@@ -1,3 +1,8 @@
+---
+description: Incident response automation, post-mortem analysis, and system reliability improvement through SpecDriven AI methodology
+tags: [incident-response, monitoring, post-mortem, reliability, automation]
+---
+
 # /xincident - Incident Response & Management
 
 ## Purpose
