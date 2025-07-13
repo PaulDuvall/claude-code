@@ -5,7 +5,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_DIR="${SCRIPT_DIR}/claude-commands"
+SOURCE_DIR="${SCRIPT_DIR}/slash-commands"
 TARGET_DIR="${HOME}/.claude/commands"
 
 # Function to show usage
@@ -18,7 +18,7 @@ show_help() {
     echo "  -h, --help     Show this help message"
     echo "  -r, --remove   Remove all x-prefixed commands from ~/.claude/commands"
     echo "  --reset        Remove commands and exit Claude environment"
-    echo "  (no options)   Deploy all commands from claude-commands directory"
+    echo "  (no options)   Deploy all commands from slash-commands directory"
     echo ""
     echo "Examples:"
     echo "  $0              # Deploy all commands"
