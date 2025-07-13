@@ -1,6 +1,30 @@
+# /acp — Add • Commit • Push with detailed description
+
+Automates the complete git workflow: stages all changes, generates a Conventional Commits message, commits, and pushes to the current branch.
+
+## What it does:
+1. **Stages** all changes with `git add .`
+2. **Analyzes** changes to generate smart commit messages
+3. **Commits** with Conventional Commits format (feat:, fix:, docs:, etc.)
+4. **Pushes** to remote with upstream tracking
+
+## Smart commit message generation:
+- Detects commit type based on file patterns and content
+- Creates detailed bullet-point summaries of changes
+- Follows Conventional Commits specification
+- Keeps summary under 50 characters
+
+## Usage:
+```
+/acp
+```
+
+No arguments needed - it handles everything automatically!
+
+---
+
 #!/bin/bash
 
-# /acp — Add • Commit • Push with detailed description
 # Custom Claude Code slash‑command that stages everything, generates a Conventional Commits message
 # covering all changes since the last push, commits, and then pushes to the current branch's upstream.
 

@@ -50,3 +50,8 @@ echo "💡 Commands are now available as slash commands in Claude Code"
 echo ""
 echo "📝 Deployed commands:"
 ls -la "$TARGET_DIR"/*.md 2>/dev/null | awk '{print "  •", $9}' | sed "s|$TARGET_DIR/||g"
+
+echo ""
+echo "🔄 To use the new commands, restart Claude Code:"
+echo "  • Type 'exit' to quit the current session"
+echo "  • Run 'claude' to start a new session with the updated commands"
