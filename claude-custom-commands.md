@@ -49,6 +49,10 @@ This document describes custom Claude commands for development projects implemen
 - [Documentation & Reporting](#documentation--reporting)
 - [Debugging & Analysis](#debugging--analysis)
 - [Governance & Rules](#governance--rules)
+- [Evaluation & Assessment](#evaluation--assessment)
+- [Development Metrics](#development-metrics)
+- [Traceability Analysis](#traceability-analysis)
+- [Workflow Management](#workflow-management)
 
 ## Quick Reference
 
@@ -129,8 +133,11 @@ This document describes custom Claude commands for development projects implemen
 | `/xproduct` | Product management and strategy | [Product Management](#product-management) |
 | `/xrefactor` | Get suggestions to improve code quality | [Architecture & Design](#architecture--design) |
 | `/xrelease` | Release management and coordination | [Release Management](#release-management) |
-| `/xsprint` | Sprint and project management | [Project Management](#project-management) |
 | `/xux` | User experience and frontend | [User Experience](#user-experience) |
+| `/xevaluate` | Comprehensive evaluation and assessment | [Evaluation & Assessment](#evaluation--assessment) |
+| `/xmetrics` | Development metrics and analytics | [Development Metrics](#development-metrics) |
+| `/xtrace` | SpecDriven AI traceability analysis | [Traceability Analysis](#traceability-analysis) |
+| `/xworkflow` | Workflow management and automation | [Workflow Management](#workflow-management) |
 
 ---
 
@@ -519,16 +526,6 @@ Implements: specs/specifications/cli-interface.md#{#cli1a authority=developer}
 
 ### Project Management
 
-#### `/xsprint` - Sprint & Project Management
-```bash
-/xsprint --plan <iteration>   # Sprint planning
-/xsprint --track <progress>   # Progress tracking
-/xsprint --retrospective      # Sprint retrospectives
-/xsprint --velocity           # Team velocity analysis
-/xsprint --assignment         # Task assignment automation
-/xsprint --reporting          # Stakeholder reporting
-```
-
 ### Knowledge Management
 
 #### `/xknowledge` - Knowledge & Team Management
@@ -719,6 +716,86 @@ Breaks complex tasks into 4-8 hour units.
 /xrisk --monitor             # Monitor levels
 /xrisk --report              # Generate report
 ```
+
+---
+
+## Operations & Management (Extended)
+
+### Evaluation & Assessment
+
+#### `/xevaluate` - Comprehensive Evaluation and Assessment
+Comprehensive evaluation and assessment tools for code quality, project health, and development practices.
+
+```bash
+/xevaluate --quality         # Assess code quality
+/xevaluate --project         # Evaluate project health
+/xevaluate --team            # Team performance assessment
+/xevaluate --process         # Process effectiveness evaluation
+/xevaluate --report          # Generate evaluation reports
+```
+
+**Quality Assessment:**
+- **Code Quality**: Maintainability, reliability, performance, security
+- **Project Health**: Delivery predictability, technical debt, risk exposure
+- **Team Performance**: Velocity, collaboration, learning metrics
+- **Process Effectiveness**: Cycle time, efficiency, continuous improvement
+
+### Development Metrics
+
+#### `/xmetrics` - Comprehensive Development Metrics
+Advanced metrics collection and analysis for development process optimization and SpecDriven AI insights.
+
+```bash
+/xmetrics --dashboard        # View comprehensive metrics dashboard
+/xmetrics --coverage         # Detailed coverage analysis
+/xmetrics --velocity         # Team velocity and productivity metrics
+/xmetrics --quality          # Code quality trend analysis
+/xmetrics --spec <spec-id>   # Specification-specific metrics
+```
+
+**SpecDriven AI Metrics:**
+- **Dual Coverage**: Code and specification coverage tracking
+- **Authority Coverage**: Coverage by authority level (system/platform/developer)
+- **Implementation Rate**: Specifications with complete implementations
+- **Traceability Coverage**: Tests linked to specifications
+
+### Traceability Analysis
+
+#### `/xtrace` - SpecDriven AI Traceability Analysis
+Comprehensive traceability tracking and analysis for SpecDriven AI development with end-to-end requirement tracking.
+
+```bash
+/xtrace --spec <spec-id>     # Trace specification to implementation
+/xtrace --test <test-name>   # Trace test to specifications
+/xtrace --code <file>        # Trace code to requirements
+/xtrace --coverage           # Traceability coverage analysis
+/xtrace --gaps               # Identify traceability gaps
+```
+
+**Traceability Features:**
+- **Forward Tracing**: Specification → Tests → Code → Commits
+- **Backward Tracing**: Code → Tests → Specifications → Requirements
+- **Authority Tracking**: Authority level propagation through chain
+- **Gap Identification**: Missing links in traceability chain
+
+### Workflow Management
+
+#### `/xworkflow` - Workflow Management and Automation
+Automate and optimize development workflows with configurable automation patterns.
+
+```bash
+/xworkflow --create <name>   # Create new workflow
+/xworkflow --run <workflow>  # Execute workflow
+/xworkflow --list            # List workflows
+/xworkflow --optimize        # Optimize workflows
+/xworkflow --monitor         # Monitor execution
+```
+
+**Predefined Workflows:**
+- **Feature Development**: Complete feature development cycle
+- **TDD Cycle**: Automated Red-Green-Refactor workflow
+- **Quality Gate**: Pre-commit quality validation
+- **Deployment**: Environment-specific deployment workflow
 
 ---
 
