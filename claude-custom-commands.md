@@ -58,6 +58,7 @@ Trigger extended thinking with specific keywords (ordered by thinking budget):
 | Run tests | `/xtest --spec` | `/xtest --spec` |
 | Check quality | `/xquality --all` | `/xquality --all` |
 | Commit with trace | `/xcommit --tdd <id>` | `/xcommit --tdd cli1a` |
+| Auto add/commit/push | `/xacp` | `/xacp` |
 | Setup environment | `/xsetup --env` | `/xsetup --env` |
 
 ### Thinking Modes (by complexity)
@@ -119,6 +120,7 @@ Trigger extended thinking with specific keywords (ordered by thinking budget):
 | `/xtemplate` | Template generation | [AI-Assisted Generation](#ai-assisted-generation) |
 | `/xtest` | Test execution | [Testing & Quality](#testing--quality) |
 | `/xvalidate` | Project validation | [Documentation & Reporting](#documentation--reporting) |
+| `/xacp` | Add, commit, push with smart messages | [Commit & Version Control](#commit--version-control) |
 | `/xatdd` | ATDD/BDD workflow management | [ATDD/BDD Development](#attdbdd-development) |
 | `/xbdd` | Behavior-driven development | [ATDD/BDD Development](#attdbdd-development) |
 | `/xcicd` | CI/CD pipeline operations | [CI/CD Pipeline Management](#cicd-pipeline-management) |
@@ -209,6 +211,19 @@ Orchestrates Red-Green-Refactor-Commit cycle for specification-driven developmen
 /xcommit --message <spec-id> # Generate commit message
 /xcommit --trace             # Include traceability info
 ```
+
+#### `/xacp` - Add, Commit, Push Automation
+Automates the complete git workflow: stages all changes, generates smart commit messages, commits, and pushes.
+
+```bash
+/xacp                        # Stage all, commit with smart message, push
+```
+
+**Features:**
+- **Smart commit type detection**: Analyzes file patterns to determine commit type (feat, fix, docs, etc.)
+- **Conventional Commits format**: Generates proper commit messages with type and description
+- **Automatic push**: Pushes to remote with upstream tracking
+- **Error handling**: Clear feedback and troubleshooting information
 
 **Commit Message Format:**
 ```
