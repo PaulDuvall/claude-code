@@ -1,74 +1,168 @@
-<!-- File: claude-commands/acp.md -->
-<!-- Purpose: Custom Claude Code slash‑command `/acp` that stages everything, generates a Conventional Commits message
-     covering all changes since the last push, commits, and then pushes to the current branch's upstream. -->
+#!/bin/bash
 
 # /acp — Add • Commit • Push with detailed description
+# Custom Claude Code slash‑command that stages everything, generates a Conventional Commits message
+# covering all changes since the last push, commits, and then pushes to the current branch's upstream.
 
-## Objective
-Automate a reliable "add → describe → commit → push" workflow so the project history stays readable and every push includes a Conventional Commits‑style message that accurately reflects all work since the previous push.
+set -e
 
-## Workflow
-1. **Stage** every change in the working tree  
-   ```bash
-   git add .
-   ```
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-2. **Inspect** what will be committed to craft an accurate message
+# Function to print colored output
+print_status() {
+    echo -e "${GREEN}[ACP]${NC} $1"
+}
 
-   ```bash
-   # File‑level summary
-   git diff --cached --stat
+print_warning() {
+    echo -e "${YELLOW}[ACP]${NC} $1"
+}
 
-   # Full staged diff (limit output for readability)
-   git diff --cached --color=never | head -100
+print_error() {
+    echo -e "${RED}[ACP]${NC} $1"
+}
 
-   # Context: commits not yet pushed (fallback if no upstream)
-   git log --oneline --graph @{u}.. 2>/dev/null || git log --oneline -5
-   ```
+# Check if we're in a git repository
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    print_error "Not in a git repository"
+    exit 1
+fi
 
-3. **Generate** a Conventional Commits message
+# Check if there are any changes to stage
+if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+    print_warning "No changes to commit"
+    exit 0
+fi
 
-   * **Summary line** (<50 chars) beginning with a type prefix:
-     - `feat:` new functionality
-     - `fix:` bug fixes  
-     - `docs:` documentation changes
-     - `refactor:` code restructuring
-     - `test:` adding/updating tests
-     - `chore:` maintenance tasks
-   * Blank line.
-   * **Bullet list** detailing each significant change (file/module → what changed & why).
-   * Optional `BREAKING CHANGE:` paragraph if anything is backward‑incompatible.
+print_status "Staging all changes..."
 
-4. **Commit** using that message
+# Stage everything
+git add .
 
-   ```bash
-   git commit -m "<summary line>" -m "<bullet list details>"
-   ```
+# Check if anything was actually staged
+if git diff --cached --quiet; then
+    print_warning "No changes staged for commit"
+    exit 0
+fi
 
-5. **Push** the commit (and any tags created in the same session)
+print_status "Inspecting staged changes..."
 
-   ```bash
-   # Push with upstream tracking if needed
-   git push --follow-tags --set-upstream origin $(git branch --show-current) 2>/dev/null || git push --follow-tags
-   ```
+# Get file-level summary
+STAT_OUTPUT=$(git diff --cached --stat)
+echo "$STAT_OUTPUT"
+echo
 
-6. **Confirm** completion
+# Get detailed diff (limited for readability)
+DIFF_OUTPUT=$(git diff --cached --color=never | head -100)
 
-   ```bash
-   echo "✅ Pushed $(git rev-parse --short HEAD) to $(git branch --show-current) → $(git remote get-url --push origin)"
-   ```
+# Get context of commits not yet pushed
+UNPUSHED_COMMITS=$(git log --oneline --graph @{u}.. 2>/dev/null || git log --oneline -5)
 
-## Error handling
+print_status "Generating Conventional Commits message..."
 
-* Check for uncommitted changes before starting
-* Verify upstream branch exists before pushing  
-* Handle merge conflicts gracefully
-* Provide clear error messages for common failure scenarios
+# Analyze changes to determine commit type and generate message
+COMMIT_TYPE="chore"
+COMMIT_SCOPE=""
+COMMIT_DESCRIPTION=""
+COMMIT_BODY=""
 
-## Expected output
+# Count different types of changes
+NEW_FILES=$(echo "$STAT_OUTPUT" | grep -c "create mode" || echo "0")
+MODIFIED_FILES=$(echo "$STAT_OUTPUT" | grep -c "file changed\|files changed" || echo "0")
+DELETED_FILES=$(echo "$STAT_OUTPUT" | grep -c "delete mode" || echo "0")
 
-* New commit hash
-* Remote repository URL  
-* Branch name
-* Commit summary line
-* Success confirmation with visual indicator
+# Analyze file patterns to determine commit type
+if echo "$STAT_OUTPUT" | grep -q "\.md\|README\|CHANGELOG\|LICENSE\|\.txt"; then
+    COMMIT_TYPE="docs"
+elif echo "$STAT_OUTPUT" | grep -q "test\|spec\|\.test\.\|\.spec\."; then
+    COMMIT_TYPE="test"
+elif echo "$STAT_OUTPUT" | grep -q "package\.json\|yarn\.lock\|package-lock\.json\|Cargo\.toml\|requirements\.txt\|go\.mod"; then
+    COMMIT_TYPE="chore"
+elif [ "$NEW_FILES" -gt 0 ] && echo "$DIFF_OUTPUT" | grep -q "^+.*function\|^+.*class\|^+.*def \|^+.*fn \|^+.*export"; then
+    COMMIT_TYPE="feat"
+elif echo "$DIFF_OUTPUT" | grep -q "fix\|bug\|error\|issue"; then
+    COMMIT_TYPE="fix"
+elif echo "$DIFF_OUTPUT" | grep -q "refactor\|rename\|move"; then
+    COMMIT_TYPE="refactor"
+else
+    # Default logic based on change patterns
+    if [ "$NEW_FILES" -gt 0 ]; then
+        COMMIT_TYPE="feat"
+    elif [ "$DELETED_FILES" -gt 0 ]; then
+        COMMIT_TYPE="refactor"
+    fi
+fi
+
+# Generate commit description based on changes
+if [ "$NEW_FILES" -gt 0 ] && [ "$MODIFIED_FILES" -gt 0 ]; then
+    COMMIT_DESCRIPTION="add new files and update existing code"
+elif [ "$NEW_FILES" -gt 0 ]; then
+    COMMIT_DESCRIPTION="add new functionality"
+elif [ "$DELETED_FILES" -gt 0 ]; then
+    COMMIT_DESCRIPTION="remove unused code"
+elif [ "$MODIFIED_FILES" -gt 0 ]; then
+    COMMIT_DESCRIPTION="update existing functionality"
+else
+    COMMIT_DESCRIPTION="update project files"
+fi
+
+# Generate detailed commit body
+COMMIT_BODY=""
+while IFS= read -r line; do
+    if [[ "$line" =~ ^[[:space:]]*([^[:space:]]+)[[:space:]]+\|[[:space:]]*([0-9]+)[[:space:]]*[\+\-]+ ]]; then
+        filename="${BASH_REMATCH[1]}"
+        changes="${BASH_REMATCH[2]}"
+        if [ -n "$COMMIT_BODY" ]; then
+            COMMIT_BODY="$COMMIT_BODY"$'\n'
+        fi
+        COMMIT_BODY="$COMMIT_BODY• $filename: $changes changes"
+    fi
+done <<< "$STAT_OUTPUT"
+
+# Create final commit message
+COMMIT_SUMMARY="$COMMIT_TYPE: $COMMIT_DESCRIPTION"
+
+# Ensure summary is under 50 characters
+if [ ${#COMMIT_SUMMARY} -gt 50 ]; then
+    COMMIT_SUMMARY="${COMMIT_SUMMARY:0:47}..."
+fi
+
+print_status "Commit message:"
+echo "Summary: $COMMIT_SUMMARY"
+if [ -n "$COMMIT_BODY" ]; then
+    echo "Details:"
+    echo "$COMMIT_BODY"
+fi
+echo
+
+print_status "Committing changes..."
+
+# Create commit with proper message format
+if [ -n "$COMMIT_BODY" ]; then
+    git commit -m "$COMMIT_SUMMARY" -m "$COMMIT_BODY" -m "🤖 Generated with [Claude Code](https://claude.ai/code)" -m "Co-Authored-By: Claude <noreply@anthropic.com>"
+else
+    git commit -m "$COMMIT_SUMMARY" -m "🤖 Generated with [Claude Code](https://claude.ai/code)" -m "Co-Authored-By: Claude <noreply@anthropic.com>"
+fi
+
+# Get the commit hash
+COMMIT_HASH=$(git rev-parse --short HEAD)
+BRANCH_NAME=$(git branch --show-current)
+
+print_status "Pushing to remote..."
+
+# Push with upstream tracking
+if git push --follow-tags --set-upstream origin "$BRANCH_NAME" 2>/dev/null; then
+    REMOTE_URL=$(git remote get-url --push origin 2>/dev/null || echo "unknown")
+    print_status "✅ Pushed $COMMIT_HASH to $BRANCH_NAME → $REMOTE_URL"
+    echo "Commit: $COMMIT_SUMMARY"
+elif git push --follow-tags 2>/dev/null; then
+    REMOTE_URL=$(git remote get-url --push origin 2>/dev/null || echo "unknown")
+    print_status "✅ Pushed $COMMIT_HASH to $BRANCH_NAME → $REMOTE_URL"
+    echo "Commit: $COMMIT_SUMMARY"
+else
+    print_error "Failed to push changes"
+    exit 1
+fi
