@@ -1,266 +1,116 @@
-# `/xtemplate` - Template Generation Command
+---
+description: Generate code templates, boilerplate, and standardized patterns for consistent development practices
+tags: [templates, boilerplate, code-generation, patterns, scaffolding]
+---
 
-Generate code templates, boilerplate, and standardized patterns for consistent development practices.
+Generate templates and boilerplate code based on the arguments provided in $ARGUMENTS.
 
-## Purpose
-Create and manage reusable templates for code, configurations, documentation, and project structures.
+First, examine the current project structure to understand context:
+!ls -la package.json requirements.txt setup.py pyproject.toml 2>/dev/null | head -3
+!find . -name "*.template" -o -name "*.tmpl" -o -name "*template*" | head -5 2>/dev/null
+!ls -la templates/ scaffolds/ generators/ 2>/dev/null || echo "No template directories found"
+!git remote -v 2>/dev/null | head -1 || echo "No git remote configured"
 
-## Options
+Based on $ARGUMENTS, perform the appropriate template generation operation:
 
-### Code Templates
-```bash
-/xtemplate --code <type>       # Generate code templates (class, function, module)
-/xtemplate --component <framework> # Generate component templates
-/xtemplate --service <pattern> # Generate service layer templates
-/xtemplate --model <schema>    # Generate data model templates
-/xtemplate --controller <api>  # Generate API controller templates
-```
+## 1. Code Template Generation
 
-### Test Templates
-```bash
-/xtemplate --test <pattern>    # Generate test templates (unit, integration)
-/xtemplate --mock <service>    # Generate mock templates
-/xtemplate --fixture <data>    # Generate test fixture templates
-/xtemplate --assertion <type>  # Generate assertion templates
-/xtemplate --spec-test <id>    # Generate test from specification
-```
+If generating code templates (--code, --component, --service, --model):
+!find . -name "*.py" -o -name "*.js" -o -name "*.ts" | head -10
+!ls -la src/ app/ lib/ components/ services/ models/ 2>/dev/null | head -5
+!which python 2>/dev/null && python --version || echo "Python not available"
+!which node 2>/dev/null && node --version || echo "Node.js not available"
 
-### Project Templates
-```bash
-/xtemplate --project <type>    # Generate project structure templates
-/xtemplate --microservice      # Microservice project template
-/xtemplate --api <framework>   # API project template
-/xtemplate --library <lang>    # Library project template
-/xtemplate --cli <tool>        # CLI application template
-```
+Generate code templates:
+- Class and function templates
+- Component and service templates
+- Data model and schema templates
+- API controller and endpoint templates
+- Module and package structures
 
-### Configuration Templates
-```bash
-/xtemplate --config <type>     # Generate configuration templates
-/xtemplate --docker            # Docker and container templates
-/xtemplate --ci-cd <platform>  # CI/CD pipeline templates
-/xtemplate --infrastructure    # Infrastructure as code templates
-/xtemplate --deployment <env>  # Deployment configuration templates
-```
+## 2. Test Template Generation
 
-### Documentation Templates
-```bash
-/xtemplate --docs <type>       # Generate documentation templates
-/xtemplate --api-docs          # API documentation templates
-/xtemplate --readme <project>  # README template generation
-/xtemplate --architecture      # Architecture documentation templates
-/xtemplate --runbook <service> # Operational runbook templates
-```
+If generating test templates (--test, --mock, --fixture, --spec-test):
+!find . -name "*test*" -o -name "*spec*" | head -10 2>/dev/null
+!ls -la tests/ test/ spec/ __tests__/ 2>/dev/null | head -3
+!python -c "import pytest; print('pytest available')" 2>/dev/null || npm test --version 2>/dev/null || echo "No test framework detected"
 
-### Specification Templates
-```bash
-/xtemplate --spec <type>       # Generate specification templates
-/xtemplate --requirement       # Requirement specification templates
-/xtemplate --design <component> # Design specification templates
-/xtemplate --user-story        # User story templates
-/xtemplate --acceptance        # Acceptance criteria templates
-```
+Generate test templates:
+- Unit and integration test templates
+- Mock object and service templates
+- Test fixture and data templates
+- Assertion and expectation templates
+- Specification-driven test templates
 
-### Workflow Templates
-```bash
-/xtemplate --workflow <pattern> # Generate workflow templates
-/xtemplate --pr-template       # Pull request templates
-/xtemplate --issue-template    # Issue tracking templates
-/xtemplate --review-checklist  # Code review checklist templates
-/xtemplate --deployment-guide  # Deployment guide templates
-```
+## 3. Project Structure Templates
 
-## Examples
+If generating project templates (--project, --microservice, --api, --library):
+!ls -la README.md LICENSE .gitignore 2>/dev/null | head -3
+!find . -name "Dockerfile" -o -name "docker-compose.yml" | head -2
+!ls -la .github/ .gitlab/ .circleci/ 2>/dev/null | head -2
 
-### Code Generation
-```bash
-# Generate Python class template
-/xtemplate --code python-class
+Generate project structures:
+- Complete project scaffolding
+- Microservice architecture templates
+- API and web service templates
+- Library and package templates
+- CLI application templates
 
-# Generate React component
-/xtemplate --component react
+## 4. Configuration Templates
 
-# Generate REST API service
-/xtemplate --service rest-api
-```
+If generating configuration templates (--config, --docker, --ci-cd, --infrastructure):
+!find . -name "*.yml" -o -name "*.yaml" -o -name "*.json" | grep -E "(config|docker|ci|cd)" | head -5
+!ls -la config/ configs/ .env* docker-compose.yml Dockerfile 2>/dev/null | head -5
+!which docker 2>/dev/null && docker --version || echo "Docker not available"
 
-### Test Templates
-```bash
-# Generate unit test template
-/xtemplate --test unit
+Generate configuration templates:
+- Application configuration files
+- Docker and container templates
+- CI/CD pipeline configurations
+- Infrastructure as code templates
+- Environment-specific configurations
 
-# Generate mock service template
-/xtemplate --mock user-service
+## 5. Documentation Templates
 
-# Generate test from specification
-/xtemplate --spec-test auth1a
-```
+If generating documentation templates (--docs, --readme, --api-docs, --architecture):
+!find . -name "*.md" | head -10
+!ls -la docs/ documentation/ README.md 2>/dev/null | head -3
+!find . -name "openapi.yml" -o -name "swagger.yml" -o -name "api.yml" | head -2 2>/dev/null
 
-### Project Setup
-```bash
-# Generate microservice project
-/xtemplate --microservice
+Generate documentation templates:
+- README and project documentation
+- API documentation templates
+- Architecture documentation
+- User guides and tutorials
+- Technical specifications
 
-# Generate FastAPI project
-/xtemplate --api fastapi
+Think step by step about template generation requirements and provide:
 
-# Generate CLI tool template
-/xtemplate --cli python
-```
+1. **Template Analysis**:
+   - Current project structure assessment
+   - Language and framework detection
+   - Existing template identification
+   - Template requirements gathering
 
-### Configuration Files
-```bash
-# Generate Docker templates
-/xtemplate --docker
+2. **Generation Strategy**:
+   - Template type selection and customization
+   - Variable substitution and parameterization
+   - Best practice integration
+   - Consistency and standardization
 
-# Generate GitHub Actions template
-/xtemplate --ci-cd github-actions
+3. **Implementation Plan**:
+   - Template creation and validation
+   - Integration with existing codebase
+   - Documentation and usage guidelines
+   - Maintenance and update procedures
 
-# Generate Terraform template
-/xtemplate --infrastructure terraform
-```
+4. **Quality Assurance**:
+   - Template testing and validation
+   - Code quality and standard compliance
+   - Reusability and maintainability
+   - Team adoption and feedback
 
-## Template Categories
+Generate comprehensive templates with proper structure, documentation, best practices, and customization options.
 
-### Language-Specific Templates
-- **Python**: Classes, modules, FastAPI services, Django models
-- **JavaScript/TypeScript**: Components, services, Express APIs
-- **Java**: Classes, Spring Boot services, Maven projects
-- **Go**: Packages, handlers, gRPC services
-- **Rust**: Structs, traits, Cargo projects
+If no specific operation is provided, analyze current project structure and recommend appropriate template generation strategy based on detected languages, frameworks, and project patterns.
 
-### Framework Templates
-- **Web Frameworks**: React, Vue, Angular, Django, Flask
-- **API Frameworks**: FastAPI, Express, Spring Boot, Gin
-- **Testing Frameworks**: pytest, Jest, JUnit, Go testing
-- **Database**: SQLAlchemy, Prisma, GORM, MongoDB
-
-### Architecture Patterns
-- **Microservices**: Service templates with common patterns
-- **Hexagonal Architecture**: Clean architecture templates
-- **Event-Driven**: Event sourcing and CQRS templates
-- **Serverless**: Lambda, Azure Functions, Google Cloud Functions
-- **Container**: Docker, Kubernetes, Docker Compose
-
-## Template Features
-
-### Parameterization
-- **Variable Substitution**: Template variables for customization
-- **Conditional Logic**: Include/exclude sections based on parameters
-- **Iteration**: Loop over collections for repeated structures
-- **Inheritance**: Template inheritance and extension
-- **Composition**: Combine multiple templates
-
-### Validation
-- **Schema Validation**: Ensure template parameters are valid
-- **Dependency Checking**: Verify required dependencies
-- **Naming Conventions**: Enforce naming standards
-- **Security Checks**: Validate security configurations
-- **Best Practices**: Ensure templates follow guidelines
-
-### Customization
-- **Project-Specific**: Custom templates for organization
-- **Team Conventions**: Align with team coding standards
-- **Technology Stack**: Match current technology choices
-- **Compliance**: Meet regulatory and security requirements
-- **Integration**: Work with existing toolchain
-
-## Template Management
-
-### Template Repository
-- **Central Repository**: Shared template library
-- **Version Control**: Template versioning and history
-- **Access Control**: Permission-based template access
-- **Search and Discovery**: Find relevant templates
-- **Usage Analytics**: Track template usage patterns
-
-### Template Development
-- **Template Language**: Template syntax and features
-- **Testing**: Validate template output
-- **Documentation**: Template usage instructions
-- **Examples**: Sample template outputs
-- **Migration**: Update templates across versions
-
-### Template Distribution
-- **Package Management**: Distribute templates as packages
-- **Registry**: Central template registry
-- **Local Storage**: Project-specific templates
-- **Cloud Storage**: Shared cloud-based templates
-- **CLI Integration**: Command-line template access
-
-## Integration Points
-
-### Development Tools
-- **IDE Integration**: Template support in development environments
-- **CLI Tools**: Command-line template generation
-- **Build Systems**: Integration with build processes
-- **Code Generators**: Automated code generation tools
-- **Project Scaffolding**: New project creation
-
-### CI/CD Systems
-- **Pipeline Templates**: Standard CI/CD configurations
-- **Deployment Templates**: Environment-specific deployments
-- **Testing Templates**: Automated testing setups
-- **Security Templates**: Security scanning configurations
-- **Monitoring Templates**: Observability setups
-
-### Documentation Systems
-- **Wiki Integration**: Template documentation in wikis
-- **README Generation**: Automated documentation creation
-- **API Documentation**: Auto-generated API docs
-- **Architecture Diagrams**: Template-based diagrams
-- **Runbooks**: Operational documentation templates
-
-## Best Practices
-
-### Template Design
-1. **Keep It Simple**: Start with basic, widely-applicable templates
-2. **Parameterize Wisely**: Balance flexibility with complexity
-3. **Follow Conventions**: Align with industry and team standards
-4. **Document Thoroughly**: Provide clear usage instructions
-5. **Test Templates**: Validate generated code works correctly
-
-### Template Maintenance
-1. **Version Control**: Track template changes over time
-2. **Regular Updates**: Keep templates current with best practices
-3. **Deprecation Process**: Safely retire outdated templates
-4. **User Feedback**: Incorporate user suggestions and improvements
-5. **Performance**: Ensure template generation is fast
-
-### Template Usage
-1. **Start with Standards**: Use established templates before creating new ones
-2. **Customize Gradually**: Modify templates to fit specific needs
-3. **Share Knowledge**: Document custom templates for team use
-4. **Review Generated Code**: Always review template output
-5. **Maintain Consistency**: Use templates to ensure code consistency
-
-## Template Types
-
-### Development Templates
-- **Project Structure**: Standard directory layouts
-- **Code Patterns**: Common coding patterns and idioms
-- **Configuration Files**: Standard configuration templates
-- **Build Scripts**: Build and deployment scripts
-- **Environment Setup**: Development environment configuration
-
-### Testing Templates
-- **Test Suites**: Comprehensive test suite structures
-- **Mock Objects**: Standard mock implementations
-- **Test Data**: Sample data for testing
-- **Performance Tests**: Load and stress test templates
-- **Security Tests**: Security testing patterns
-
-### Documentation Templates
-- **API Documentation**: Standard API documentation format
-- **User Guides**: End-user documentation templates
-- **Developer Guides**: Technical documentation templates
-- **Architecture Documents**: System design documentation
-- **Troubleshooting Guides**: Problem resolution templates
-
-## Dependencies
-
-- Template engines (Jinja2, Handlebars, etc.)
-- Code generation tools
-- Project scaffolding systems
-- Documentation generators
-- Version control integration
