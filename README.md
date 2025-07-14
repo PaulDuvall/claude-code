@@ -14,6 +14,32 @@ Commands are organized into two categories:
 
 ## Quick Start
 
+### 1. Claude Code Installation & Configuration
+
+First, install and configure Claude Code:
+
+```bash
+# Install Claude Code globally
+npm install -g @anthropic-ai/claude-code
+
+# Set your API key
+export ANTHROPIC_API_KEY='sk-ant-...'
+
+# Configure Claude Code for macOS/Windsurf (with security warnings)
+./configure-claude-code.sh --dry-run  # Preview changes first
+./configure-claude-code.sh             # Apply configuration
+```
+
+The `configure-claude-code.sh` script automates Claude Code setup with:
+- ⚠️ **Security warnings** and backup mechanisms
+- API key configuration and validation
+- Windsurf IDE extension installation
+- MCP server setup (Docker required)
+- Trust settings and permissions
+- Interactive mode with dry-run option
+
+### 2. Deploy Custom Commands
+
 Deploy active commands locally:
 
 ```bash
@@ -184,12 +210,47 @@ Core workflow: `/xacp`, `/xtest`, `/xquality`, `/xdebug`, `/xrefactor`
 
 ## Installation & Development
 
-### Quick Setup
+### Complete Setup
+
 ```bash
+# Clone repository
 git clone <repository>
 cd claude-code-commands
+
+# Install and configure Claude Code
+npm install -g @anthropic-ai/claude-code
+export ANTHROPIC_API_KEY='sk-ant-...'
+
+# Configure Claude Code (review script first!)
+./configure-claude-code.sh --dry-run  # Preview changes
+./configure-claude-code.sh             # Apply configuration
+
+# Deploy custom commands
 ./deploy.sh
 ```
+
+### Configuration Script Options
+
+The `configure-claude-code.sh` script supports several modes:
+
+```bash
+# Safe preview mode (recommended first run)
+./configure-claude-code.sh --dry-run
+
+# Interactive mode with backups (default)
+./configure-claude-code.sh
+
+# Non-interactive with backups
+./configure-claude-code.sh --non-interactive
+
+# Force mode (skip all prompts - use with caution)
+./configure-claude-code.sh --force
+
+# Show help
+./configure-claude-code.sh --help
+```
+
+**⚠️ Security Note:** Always review the configuration script before running it. It modifies system configurations and handles API keys.
 
 ### Development Workflow
 1. **Create new commands** in the `slash-commands/active/` directory as `.md` files (for essential commands) or `slash-commands/experiments/` (for specialized commands)
