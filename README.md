@@ -8,9 +8,11 @@ These commands provide intelligent automation for every stage of the software de
 
 ### Project Structure
 
-Commands are organized into two categories:
+The repository is organized into three main categories:
 - **`slash-commands/active/`** - 15 essential commands for daily development workflows
 - **`slash-commands/experiments/`** - 38+ specialized commands for advanced use cases
+- **`hooks/`** - Enterprise governance hooks for security, compliance, and workflow automation
+- **`docs/`** - Comprehensive documentation including the complete hooks system specification
 
 ## Quick Start
 
@@ -47,6 +49,26 @@ Deploy active commands locally:
 ```
 
 This copies essential command files from `slash-commands/active/` to `~/.claude/commands/`, making them available as slash commands in Claude Code.
+
+### 3. Enable Enterprise Hooks (Optional)
+
+For enterprise-grade governance and security, enable the hooks system:
+
+```bash
+# Copy security hook to Claude Code hooks directory
+cp hooks/prevent-credential-exposure.sh ~/.claude/hooks/
+
+# Make executable
+chmod +x ~/.claude/hooks/prevent-credential-exposure.sh
+
+# Configure in ~/.claude/settings.json (see hooks/README.md for details)
+```
+
+The hooks system provides:
+- 🔒 **Real-time Security**: Prevents credential exposure in AI-generated code
+- 📊 **Audit Trails**: Complete logging of all AI actions and decisions
+- 🛡️ **Policy Enforcement**: Automated compliance and governance
+- 🔄 **Workflow Integration**: Seamless CI/CD and development tool integration
 
 ### Using Experimental Commands
 
@@ -266,6 +288,55 @@ Each command follows this pattern:
 - Integration points with other commands
 - Output formatting and reporting
 
+## Enterprise Hooks System
+
+This repository includes a next-generation **Claude Code Hooks System** that transforms AI-assisted development into an enterprise-grade platform with comprehensive governance, security, and integration capabilities.
+
+### Current Implementation
+
+The `/hooks/` directory contains production-ready security hooks:
+
+- **`prevent-credential-exposure.sh`**: Enterprise-grade security hook that prevents accidental credential exposure in AI-generated code
+  - Detects 15+ credential patterns (API keys, tokens, passwords, private keys)
+  - Blocks dangerous operations with detailed warnings and audit trails
+  - Security team notifications via webhooks
+  - Emergency override capability for authorized users
+
+### Future Vision: Three-Tier Enterprise Platform
+
+Our roadmap transforms Claude Code into a comprehensive enterprise AI development platform:
+
+#### **Tier 1: AI Security & Governance**
+- **AI Sandbox Enforcement**: Network isolation and credential protection
+- **Prompt Injection Detection**: Real-time scanning and blocking of malicious prompts
+- **Model Usage Governance**: Cost tracking, budget enforcement, usage analytics
+- **Output Sanitization**: Comprehensive validation of AI-generated content
+- **Bias Detection Framework**: Monitor AI outputs for bias patterns
+
+#### **Tier 2: Development Workflow Integration**
+- **Git Workflow Enforcement**: Branch naming, commit standards, PR requirements
+- **CI/CD Pipeline Orchestration**: Automated build triggers and deployment gates
+- **Issue Tracking Synchronization**: Link AI work to tickets, update project status
+- **Environment Validation**: Ensure proper deployment targets and configurations
+- **Compliance Policy Engine**: Automated GDPR, SOX, security policy enforcement
+
+#### **Tier 3: Quality & Observability Framework**
+- **Technical Debt Forecasting**: Analyze trends, predict maintenance costs
+- **Atomic Task Validation**: Enforce 4-8 hour task sizing from AI development patterns
+- **Specification-Driven Development**: Validate outputs against formal specifications
+- **Observable AI Development**: Comprehensive logging, metrics, analytics
+- **Progressive Enhancement Tracking**: Monitor incremental improvement patterns
+
+### Business Value
+
+- **Risk Reduction**: Automated security and compliance enforcement
+- **Quality Improvement**: Consistent standards and automated validation
+- **Cost Control**: Usage monitoring and budget enforcement
+- **Productivity Gains**: Automated workflows and reduced manual processes
+- **Audit Compliance**: Complete audit trails and governance documentation
+
+See [`docs/claude-code-hooks-system.md`](docs/claude-code-hooks-system.md) for the complete enterprise hooks system specification.
+
 ## Integration with Development Tools
 
 These commands integrate seamlessly with:
@@ -276,12 +347,31 @@ These commands integrate seamlessly with:
 - **Security** scanners and compliance tools
 - **Infrastructure** tools (Terraform, Kubernetes, Docker)
 - **Monitoring** platforms (Prometheus, Grafana)
+- **Enterprise Hooks**: Real-time governance and policy enforcement
 
 ## Contributing
 
 1. **Add new commands** following the existing patterns
-2. **Update documentation** when adding new functionality
-3. **Test thoroughly** before sharing
-4. **Follow security best practices** for all defensive tooling
+2. **Develop enterprise hooks** for governance and automation
+3. **Update documentation** when adding new functionality
+4. **Test thoroughly** before sharing
+5. **Follow security best practices** for all defensive tooling
 
-This command collection transforms Claude Code into a comprehensive development platform that guides teams through best practices while automating repetitive tasks and ensuring consistent quality across all projects.
+### Hook Development
+
+Contributing to the hooks ecosystem:
+1. **Security First**: All hooks must enhance security, never compromise it
+2. **Enterprise Grade**: Focus on scalable, auditable, production-ready solutions
+3. **Integration Patterns**: Ensure hooks work seamlessly with existing development tools
+4. **Documentation**: Comprehensive docs with configuration examples and troubleshooting
+
+## Vision: AI Development Governance Platform
+
+This repository represents the future of AI-assisted development - a platform that combines the power of AI with enterprise-grade governance, security, and observability. By implementing the hooks system, organizations can:
+
+- **Maintain Control**: Deterministic governance over AI development processes
+- **Ensure Security**: Real-time protection against AI-generated security vulnerabilities
+- **Enable Scale**: Automated workflows that grow with your organization
+- **Provide Visibility**: Complete audit trails and analytics for AI development ROI
+
+The command collection and hooks system together transform Claude Code into a comprehensive development platform that guides teams through best practices while automating repetitive tasks and ensuring consistent quality, security, and compliance across all projects.
