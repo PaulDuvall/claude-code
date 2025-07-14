@@ -1,126 +1,75 @@
 # Claude Code Custom Commands
 
-A comprehensive collection of 50+ custom slash commands for Claude Code that accelerate software development workflows through AI-powered automation.
+A comprehensive collection of custom slash commands for Claude Code that accelerate software development workflows through AI-powered automation.
 
 ## Overview
 
 These commands provide intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring. Each command leverages AI to analyze your codebase and provide contextual assistance.
 
+### Project Structure
+
+Commands are organized into two categories:
+- **`slash-commands/active/`** - 15 essential commands for daily development workflows
+- **`slash-commands/experiments/`** - 38+ specialized commands for advanced use cases
+
 ## Quick Start
 
-Deploy all commands locally:
+Deploy active commands locally:
 
 ```bash
 ./deploy.sh
 ```
 
-This copies all command files from `claude-commands/` to `~/.claude/commands/`, making them available as slash commands in Claude Code.
+This copies essential command files from `slash-commands/active/` to `~/.claude/commands/`, making them available as slash commands in Claude Code.
 
-## Complete Command Reference
+### Using Experimental Commands
+
+To use experimental commands, temporarily modify `deploy.sh` to use `slash-commands/experiments/` or copy specific experimental commands manually to `~/.claude/commands/`.
+
+## Active Commands Reference
+
+These 15 essential commands cover the core development workflow and are deployed by default:
 
 ### 🎯 Planning & Strategy
 - **`/xplanning`** - AI-assisted project planning with roadmaps, estimation, and risk analysis
-- **`/xproduct`** - Product management with feature planning and user story generation
-- **`/xrisk`** - Risk assessment and mitigation planning
 
 ### 🏗️ Architecture & Design
 - **`/xarchitecture`** - System architecture design and analysis with proven patterns
-- **`/xdesign`** - Software design patterns and architectural decisions
-- **`/xconstraints`** - Design constraint analysis and trade-off evaluation
 
 ### 📋 Requirements & Specifications
 - **`/xspec`** - Requirements specification with ATDD/BDD integration
-- **`/xatomic`** - Atomic task decomposition and user story breakdown
-- **`/xvalidate`** - Specification validation and requirement traceability
 
 ### 💻 Development & Code Quality
 - **`/xrefactor`** - Interactive code refactoring with smell detection
 - **`/xquality`** - Comprehensive code quality analysis with linting and type checking
 - **`/xtdd`** - Test-driven development with automated test generation
 - **`/xtest`** - Comprehensive testing with specification traceability
-- **`/xcoverage`** - Code coverage analysis and reporting
 - **`/xdebug`** - Advanced debugging assistance and error analysis
-- **`/xtrace`** - Code tracing and execution flow analysis
-
-### 🔌 API & Integration
-- **`/xapi`** - REST/GraphQL API design, implementation, and testing
-- **`/xdb`** - Database design, optimization, and migration management
-- **`/xaws`** - AWS services integration and cloud architecture
 
 ### 🔒 Security & Compliance
 - **`/xsecurity`** - Security vulnerability scanning and remediation
-- **`/xcompliance`** - Compliance checking and regulatory requirements
-- **`/xpolicy`** - Policy enforcement and governance automation
 
 ### 🚀 CI/CD & Deployment
 - **`/xacp`** - Automated Add, Commit, Push workflow with smart commit messages
 - **`/xcicd`** - CI/CD pipeline setup and management
 - **`/xpipeline`** - Build pipeline optimization and automation
 - **`/xrelease`** - Release management and deployment automation
-- **`/xworkflow`** - Workflow automation and process optimization
-
-### 🏗️ Infrastructure & Operations
-- **`/xinfra`** - Infrastructure as Code with Terraform/K8s management
-- **`/xiac`** - Infrastructure automation and provisioning
-- **`/xmonitoring`** - Application monitoring and observability setup
-- **`/xobservable`** - Observability stack configuration
-- **`/xmetrics`** - Performance metrics collection and analysis
 
 ### 🛠️ Configuration & Setup
 - **`/xconfig`** - Configuration management and environment setup
-- **`/xsetup`** - Project initialization and tooling setup
-- **`/xtemplate`** - Code template generation and scaffolding
-- **`/xgenerate`** - Automated code generation and boilerplate
-
-### 📊 Analysis & Optimization
-- **`/xanalyze`** - Codebase analysis and technical debt assessment
-- **`/xperformance`** - Performance profiling and optimization
-- **`/xoptimize`** - Code and system optimization recommendations
-- **`/xanalytics`** - Development analytics and insights
 
 ### 📚 Documentation & Knowledge
 - **`/xdocs`** - Documentation generation and maintenance
-- **`/xknowledge`** - Knowledge base creation and management
-- **`/xfootnote`** - Documentation footnotes and references
 
-### 🎨 User Experience & Interface
-- **`/xux`** - User experience analysis and design recommendations
-- **`/xdesign`** - UI/UX design patterns and best practices
+### Additional Commands
 
-### 🔄 Development Workflow
-- **`/xcommit`** - Smart commit message generation
-- **`/xsandbox`** - Isolated development environment setup
-- **`/xgovernance`** - Development governance and standards
-- **`/xmaturity`** - Process maturity assessment and improvement
-
-### 🚨 Incident & Operations
-- **`/xincident`** - Incident response and troubleshooting
-- **`/xreadiness`** - Production readiness assessment
-- **`/xred`** - Red team security testing
-- **`/xgreen`** - Green deployment and environment management
-
-### 🔍 Code Intelligence
-- **`/xscan`** - Comprehensive codebase scanning and analysis
-- **`/xrules`** - Custom rule definition and enforcement
-- **`/xevaluate`** - Code evaluation and quality scoring
+38+ experimental and specialized commands are available in `slash-commands/experiments/` for advanced use cases including analytics, compliance, infrastructure, monitoring, and more.
 
 ## Typical Builder Workflow
 
-Here's a comprehensive workflow showing how builders can use these commands throughout the development lifecycle:
+Here's a comprehensive workflow showing how builders can use the active commands throughout the development lifecycle:
 
-### 1. Project Initialization (New Project)
-```bash
-# Set up new project structure and tooling
-/xsetup --project-type web-app --framework react-typescript
-
-# Generate project templates and boilerplate
-/xtemplate --type fullstack --database postgresql
-
-# Initialize CI/CD pipeline
-/xcicd --init github --stages "build,test,deploy"
-```
-
-### 2. Planning & Architecture (Every Sprint/Feature)
+### 1. Project Planning & Architecture
 ```bash
 # Create project roadmap and estimates
 /xplanning --roadmap --epic "user-authentication" --estimate
@@ -132,103 +81,73 @@ Here's a comprehensive workflow showing how builders can use these commands thro
 /xspec --feature "user-login" --gherkin --acceptance-criteria
 ```
 
-### 3. Development Workflow (Daily)
+### 2. Development Workflow (Daily)
 ```bash
 # Start with TDD approach
 /xtdd --component AuthService --test-first
-
-# Implement APIs with full documentation
-/xapi --design --openapi --generate --test
 
 # Ensure code quality throughout development
 /xquality --ruff --mypy --fix
 
 # Refactor code when needed
 /xrefactor --analyze --bloaters --fix
+
+# Debug issues as they arise
+/xdebug --analyze --trace --fix
 ```
 
-### 4. Security & Compliance (Weekly)
+### 3. Security & Testing (Weekly)
 ```bash
 # Run comprehensive security scans
 /xsecurity --secrets --dependencies --code
 
-# Check compliance requirements
-/xcompliance --gdpr --sox --audit
-
-# Review security policies
-/xpolicy --security --access-control --review
-```
-
-### 5. Testing & Validation (Before Each Release)
-```bash
 # Execute comprehensive test suite
 /xtest --coverage --integration --performance
-
-# Validate against specifications
-/xvalidate --requirements --traceability
-
-# Analyze test coverage gaps
-/xcoverage --report --gaps --improve
 ```
 
-### 6. Performance & Optimization (Monthly)
+### 4. Configuration & Documentation
 ```bash
-# Profile application performance
-/xperformance --profile --bottlenecks --database
+# Manage project configuration
+/xconfig --environment --secrets --validate
 
-# Optimize code and infrastructure
-/xoptimize --code --database --infrastructure
-
-# Monitor system metrics
-/xmetrics --dashboard --alerts --trends
+# Generate and update documentation
+/xdocs --api --architecture --runbooks
 ```
 
-### 7. Deployment & Operations (Per Release)
+### 5. CI/CD & Deployment (Per Release)
 ```bash
 # Automated git workflow
 /xacp  # Stages, commits with smart messages, and pushes
 
+# Set up CI/CD pipeline
+/xcicd --init github --stages "build,test,deploy"
+
 # Deploy through pipeline
 /xpipeline --deploy staging --promote production
 
-# Set up monitoring and observability
-/xmonitoring --setup --alerts --dashboards
-
-# Verify production readiness
-/xreadiness --checklist --smoke-tests
-```
-
-### 8. Maintenance & Improvement (Ongoing)
-```bash
-# Analyze technical debt
-/xanalyze --debt --complexity --dependencies
-
-# Generate and update documentation
-/xdocs --api --architecture --runbooks
-
-# Assess process maturity
-/xmaturity --devops --security --quality
+# Manage releases
+/xrelease --prepare --notes --deploy
 ```
 
 ## Command Categories by Use Case
 
 ### For New Developers
-Start with: `/xsetup`, `/xtemplate`, `/xdocs`, `/xknowledge`
+Start with: `/xconfig`, `/xdocs`, `/xplanning`
 
 ### For Code Quality Focus
-Use: `/xquality`, `/xrefactor`, `/xcoverage`, `/xtest`, `/xvalidate`
+Use: `/xquality`, `/xrefactor`, `/xtest`, `/xtdd`
 
 ### For Security-First Development
-Essential: `/xsecurity`, `/xcompliance`, `/xpolicy`, `/xred`
-
-### For Performance-Critical Applications
-Leverage: `/xperformance`, `/xoptimize`, `/xmetrics`, `/xmonitoring`
+Essential: `/xsecurity`, `/xtest`, `/xquality`
 
 ### For DevOps Engineers
-Focus on: `/xcicd`, `/xinfra`, `/xpipeline`, `/xrelease`, `/xobservable`
+Focus on: `/xcicd`, `/xpipeline`, `/xrelease`, `/xconfig`
 
 ### For Product Teams
-Utilize: `/xplanning`, `/xproduct`, `/xux`, `/xanalytics`
+Utilize: `/xplanning`, `/xspec`, `/xarchitecture`
+
+### For Daily Development
+Core workflow: `/xacp`, `/xtest`, `/xquality`, `/xdebug`, `/xrefactor`
 
 ## Advanced Usage Patterns
 
@@ -238,7 +157,6 @@ Utilize: `/xplanning`, `/xproduct`, `/xux`, `/xanalytics`
 /xtest --coverage --report
 /xquality --all --baseline
 /xsecurity --scan --report
-/xcompliance --validate --audit
 ```
 
 ### Code Review Workflow
@@ -249,19 +167,19 @@ Utilize: `/xplanning`, `/xproduct`, `/xux`, `/xanalytics`
 /xdocs --update --api
 
 # After feedback
-/xvalidate --requirements --traceability
+/xtest --validate --requirements
 ```
 
 ### Production Deployment Workflow
 ```bash
 # Pre-deployment checks
-/xreadiness --production --checklist
 /xsecurity --final-scan
-/xperformance --load-test
+/xtest --integration --smoke
+/xconfig --validate --production
 
-# Post-deployment
-/xmonitoring --verify --alerts
-/xmetrics --baseline --dashboard
+# Deployment
+/xpipeline --deploy production
+/xrelease --finalize --notes
 ```
 
 ## Installation & Development
@@ -274,7 +192,7 @@ cd claude-code-commands
 ```
 
 ### Development Workflow
-1. **Create new commands** in the `claude-commands/` directory as `.md` files
+1. **Create new commands** in the `slash-commands/active/` directory as `.md` files (for essential commands) or `slash-commands/experiments/` (for specialized commands)
 2. **Test locally** by running `./deploy.sh` and using the command in Claude Code
 3. **Follow the established patterns** for command structure and documentation
 4. **Commit and share** improvements with the team

@@ -5,7 +5,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_DIR="${SCRIPT_DIR}/slash-commands"
+SOURCE_DIR="${SCRIPT_DIR}/slash-commands/active"
 TARGET_DIR="${HOME}/.claude/commands"
 
 # Function to show usage
@@ -18,10 +18,10 @@ show_help() {
     echo "  -h, --help     Show this help message"
     echo "  -r, --remove   Remove all x-prefixed commands from ~/.claude/commands"
     echo "  --reset        Remove commands and exit Claude environment"
-    echo "  (no options)   Deploy all commands from slash-commands directory"
+    echo "  (no options)   Deploy active commands from slash-commands/active directory"
     echo ""
     echo "Examples:"
-    echo "  $0              # Deploy all commands"
+    echo "  $0              # Deploy active commands"
     echo "  $0 --remove     # Remove x-prefixed commands"
     echo "  $0 --reset      # Remove commands and reset environment"
 }
@@ -101,7 +101,7 @@ if [[ ! -d "$TARGET_DIR" ]]; then
 fi
 
 # Copy all .md files from source to target
-echo "📋 Copying commands from $SOURCE_DIR to $TARGET_DIR"
+echo "📋 Copying active commands from $SOURCE_DIR to $TARGET_DIR"
 
 # Count files to copy
 file_count=$(find "$SOURCE_DIR" -name "*.md" | wc -l)
