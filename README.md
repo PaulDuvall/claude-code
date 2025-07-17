@@ -4,7 +4,7 @@ A comprehensive collection of custom slash commands for Claude Code that acceler
 
 ## Overview
 
-These commands provide intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring. Each command leverages AI to analyze your codebase and provide contextual assistance.
+**This repository contains extensions FOR Claude Code, not Claude Code itself.** These custom commands extend the functionality of Anthropic's Claude Code CLI tool, providing intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring. Each command leverages AI to analyze your codebase and provide contextual assistance.
 
 ### Project Structure
 
@@ -14,11 +14,11 @@ The repository is organized into three main categories:
 - **`hooks/`** - Enterprise governance hooks for security, compliance, and workflow automation
 - **`docs/`** - Comprehensive documentation including the complete hooks system specification
 
-## Quick Start
+## Prerequisites
 
-### 1. Claude Code Installation & Configuration
+**You must have Claude Code installed and configured before using these custom commands.**
 
-First, install and configure Claude Code:
+If you don't have Claude Code installed yet:
 
 ```bash
 # Install Claude Code globally
@@ -26,7 +26,27 @@ npm install -g @anthropic-ai/claude-code
 
 # Set your API key
 export ANTHROPIC_API_KEY='sk-ant-...'
+```
 
+For detailed Claude Code installation and configuration, see [Claude Code documentation](https://docs.anthropic.com/en/docs/claude-code).
+
+## Quick Start
+
+### 1. Deploy Custom Commands
+
+Deploy the 15 essential commands to your Claude Code installation:
+
+```bash
+./deploy.sh
+```
+
+This copies essential command files from `slash-commands/active/` to `~/.claude/commands/`, making them available as slash commands in Claude Code.
+
+### 2. Optional: Configure Claude Code (Convenience Script)
+
+This repository includes a convenience script for Claude Code configuration:
+
+```bash
 # Configure Claude Code for macOS/Windsurf (with security warnings)
 ./configure-claude-code.sh --dry-run  # Preview changes first
 ./configure-claude-code.sh             # Apply configuration
@@ -39,16 +59,6 @@ The `configure-claude-code.sh` script automates Claude Code setup with:
 - MCP server setup (Docker required)
 - Trust settings and permissions
 - Interactive mode with dry-run option
-
-### 2. Deploy Custom Commands
-
-Deploy active commands locally:
-
-```bash
-./deploy.sh
-```
-
-This copies essential command files from `slash-commands/active/` to `~/.claude/commands/`, making them available as slash commands in Claude Code.
 
 ### 3. Enable Enterprise Hooks (Optional)
 
@@ -72,7 +82,14 @@ The hooks system provides:
 
 ### Using Experimental Commands
 
-To use experimental commands, temporarily modify `deploy.sh` to use `slash-commands/experiments/` or copy specific experimental commands manually to `~/.claude/commands/`.
+**Note: Experimental commands are conceptual specifications, not fully implemented tools.**
+
+The 38+ commands in `slash-commands/experiments/` are well-structured design documents that represent sophisticated frameworks for advanced development workflows. These are conceptual specifications that would require implementation to become functional commands.
+
+To explore experimental commands:
+- Review the `.md` files in `slash-commands/experiments/` to understand their potential capabilities
+- Use them as blueprints for developing actual implementations
+- Temporarily modify `deploy.sh` to use `slash-commands/experiments/` if you want to experiment with the conceptual frameworks
 
 ## Active Commands Reference
 
@@ -112,6 +129,8 @@ These 15 essential commands cover the core development workflow and are deployed
 ### Additional Commands
 
 38+ experimental and specialized commands are available in `slash-commands/experiments/` for advanced use cases including analytics, compliance, infrastructure, monitoring, and more.
+
+**Important:** These experimental commands are conceptual specifications rather than working implementations. They represent sophisticated frameworks that would be valuable if implemented, but currently serve as design documents and blueprints for future development.
 
 ## Typical Builder Workflow
 
