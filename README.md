@@ -31,7 +31,7 @@ Claude Code supports multiple authentication methods:
 
 #### Option 1: Web-Based Authentication (Recommended)
 Most users can authenticate through their browser:
-1. Run `claude-code` for the first time
+1. Run `claude` for the first time
 2. Follow the browser authentication prompts
 3. If you're already logged into claude.ai (especially as a Pro user), it will automatically connect
 
