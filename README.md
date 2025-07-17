@@ -11,7 +11,7 @@ A comprehensive collection of custom slash commands for Claude Code that acceler
 The repository is organized into three main categories:
 - **`slash-commands/active/`** - 15 essential commands for daily development workflows
 - **`slash-commands/experiments/`** - 38+ specialized commands for advanced use cases
-- **`hooks/`** - Enterprise governance hooks for security, compliance, and workflow automation
+- **`hooks/`** - Security hooks for governance, compliance, and workflow automation
 - **`docs/`** - Comprehensive documentation including the complete hooks system specification
 
 ## Prerequisites
@@ -378,7 +378,7 @@ Our roadmap transforms Claude Code into a comprehensive AI development platform:
 - **Productivity Gains**: Automated workflows and reduced manual processes
 - **Audit Compliance**: Complete audit trails and governance documentation
 
-See [`docs/claude-code-hooks-system.md`](docs/claude-code-hooks-system.md) for the complete enterprise hooks system specification.
+See [`docs/claude-code-hooks-system.md`](docs/claude-code-hooks-system.md) for the complete hooks system specification.
 
 ## Integration with Development Tools
 
@@ -390,12 +390,12 @@ These commands integrate seamlessly with:
 - **Security** scanners and compliance tools
 - **Infrastructure** tools (Terraform, Kubernetes, Docker)
 - **Monitoring** platforms (Prometheus, Grafana)
-- **Enterprise Hooks**: Real-time governance and policy enforcement
+- **Security Hooks**: Real-time governance and policy enforcement
 
 ## Contributing
 
 1. **Add new commands** following the existing patterns
-2. **Develop enterprise hooks** for governance and automation
+2. **Develop security hooks** for governance and automation
 3. **Update documentation** when adding new functionality
 4. **Test thoroughly** before sharing
 5. **Follow security best practices** for all defensive tooling
