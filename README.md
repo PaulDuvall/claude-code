@@ -18,17 +18,33 @@ The repository is organized into three main categories:
 
 **You must have Claude Code installed and configured before using these custom commands.**
 
-If you don't have Claude Code installed yet:
+### Install Claude Code
 
 ```bash
 # Install Claude Code globally
 npm install -g @anthropic-ai/claude-code
+```
 
-# Set your API key
+### Authentication Setup
+
+Claude Code supports multiple authentication methods:
+
+#### Option 1: Web-Based Authentication (Recommended)
+Most users can authenticate through their browser:
+1. Run `claude-code` for the first time
+2. Follow the browser authentication prompts
+3. If you're already logged into claude.ai (especially as a Pro user), it will automatically connect
+
+#### Option 2: Manual API Key Setup
+For programmatic use, CI/CD environments, or specific enterprise setups:
+```bash
+# Set your API key as an environment variable
 export ANTHROPIC_API_KEY='sk-ant-...'
 ```
 
-For detailed Claude Code installation and configuration, see [Claude Code documentation](https://docs.anthropic.com/en/docs/claude-code).
+**Most users will use web-based authentication and won't need to manually set an API key.**
+
+For detailed installation and configuration options, see [Claude Code documentation](https://docs.anthropic.com/en/docs/claude-code).
 
 ## Quick Start
 
@@ -258,9 +274,11 @@ Core workflow: `/xacp`, `/xtest`, `/xquality`, `/xdebug`, `/xrefactor`
 git clone <repository>
 cd claude-code-commands
 
-# Install and configure Claude Code
+# Install Claude Code
 npm install -g @anthropic-ai/claude-code
-export ANTHROPIC_API_KEY='sk-ant-...'
+
+# Authenticate (web-based authentication will prompt automatically)
+# Or set API key manually if needed: export ANTHROPIC_API_KEY='sk-ant-...'
 
 # Configure Claude Code (review script first!)
 ./configure-claude-code.sh --dry-run  # Preview changes
