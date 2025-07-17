@@ -76,9 +76,9 @@ The `configure-claude-code.sh` script automates Claude Code setup with:
 - Trust settings and permissions
 - Interactive mode with dry-run option
 
-### 3. Enable Enterprise Hooks (Optional)
+### 3. Enable Security Hooks (Optional)
 
-For enterprise-grade governance and security, enable the hooks system:
+For automated governance and security monitoring, enable the hooks system:
 
 ```bash
 # Copy security hook to Claude Code hooks directory
@@ -89,6 +89,12 @@ chmod +x ~/.claude/hooks/prevent-credential-exposure.sh
 
 # Configure in ~/.claude/settings.json (see hooks/README.md for details)
 ```
+
+**When Hooks Execute:**
+- **Tool calls**: Triggered when Claude Code invokes tools like Bash, Edit, or Write
+- **Code generation**: Activated when AI generates code that might contain sensitive information
+- **File operations**: Executed before writing files or making changes to the codebase
+- **Command execution**: Run when slash commands are invoked
 
 The hooks system provides:
 - 🔒 **Real-time Security**: Prevents credential exposure in AI-generated code
@@ -325,23 +331,23 @@ Each command follows this pattern:
 - Integration points with other commands
 - Output formatting and reporting
 
-## Enterprise Hooks System
+## Security Hooks System
 
-This repository includes a next-generation **Claude Code Hooks System** that transforms AI-assisted development into an enterprise-grade platform with comprehensive governance, security, and integration capabilities.
+This repository includes a **Claude Code Hooks System** that adds automated governance, security monitoring, and integration capabilities to AI-assisted development workflows.
 
 ### Current Implementation
 
 The `/hooks/` directory contains production-ready security hooks:
 
-- **`prevent-credential-exposure.sh`**: Enterprise-grade security hook that prevents accidental credential exposure in AI-generated code
+- **`prevent-credential-exposure.sh`**: Security hook that prevents accidental credential exposure in AI-generated code
   - Detects 15+ credential patterns (API keys, tokens, passwords, private keys)
   - Blocks dangerous operations with detailed warnings and audit trails
   - Security team notifications via webhooks
   - Emergency override capability for authorized users
 
-### Future Vision: Three-Tier Enterprise Platform
+### Future Vision: Three-Tier Development Platform
 
-Our roadmap transforms Claude Code into a comprehensive enterprise AI development platform:
+Our roadmap transforms Claude Code into a comprehensive AI development platform:
 
 #### **Tier 1: AI Security & Governance**
 - **AI Sandbox Enforcement**: Network isolation and credential protection
@@ -398,13 +404,13 @@ These commands integrate seamlessly with:
 
 Contributing to the hooks ecosystem:
 1. **Security First**: All hooks must enhance security, never compromise it
-2. **Enterprise Grade**: Focus on scalable, auditable, production-ready solutions
+2. **Production Ready**: Focus on scalable, auditable, reliable solutions
 3. **Integration Patterns**: Ensure hooks work seamlessly with existing development tools
 4. **Documentation**: Comprehensive docs with configuration examples and troubleshooting
 
 ## Vision: AI Development Governance Platform
 
-This repository represents the future of AI-assisted development - a platform that combines the power of AI with enterprise-grade governance, security, and observability. By implementing the hooks system, organizations can:
+This repository represents the future of AI-assisted development - a platform that combines the power of AI with automated governance, security, and observability. By implementing the hooks system, organizations can:
 
 - **Maintain Control**: Deterministic governance over AI development processes
 - **Ensure Security**: Real-time protection against AI-generated security vulnerabilities
