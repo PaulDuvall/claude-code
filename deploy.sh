@@ -141,8 +141,8 @@ get_source_dirs() {
 # Function to check if command should be included
 should_include_command() {
     local cmd="$1"
-    local include_list=("${INCLUDE_COMMANDS[@]}")
-    local exclude_list=("${EXCLUDE_COMMANDS[@]}")
+    local include_list=("${INCLUDE_COMMANDS[@]+"${INCLUDE_COMMANDS[@]}"}")
+    local exclude_list=("${EXCLUDE_COMMANDS[@]+"${EXCLUDE_COMMANDS[@]}"}")
     
     # If include list is specified, only include commands in the list
     if [[ ${#include_list[@]} -gt 0 ]]; then
