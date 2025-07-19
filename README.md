@@ -4,7 +4,15 @@ A comprehensive collection of custom slash commands for Claude Code that acceler
 
 ## Overview
 
-**This repository contains extensions FOR Claude Code, not Claude Code itself.** These custom commands extend the functionality of Anthropic's Claude Code CLI tool, providing intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring. Each command leverages AI to analyze your codebase and provide contextual assistance.
+**What is this?** This repository provides **custom slash commands** that extend Anthropic's Claude Code CLI tool with powerful development automation.
+
+**Think of it like browser extensions:** Just as Chrome extensions add new features to your browser, these commands add new capabilities to Claude Code.
+
+**You need both:**
+1. **Claude Code** (the base CLI tool from Anthropic) - install with `npm install -g @anthropic-ai/claude-code`
+2. **These custom commands** (this repository) - adds `/xtest`, `/xquality`, `/xsecurity`, etc.
+
+These custom commands provide intelligent automation for every stage of software development, from testing and quality checks to security scanning and deployment. Each command leverages AI to analyze your codebase and provide contextual assistance.
 
 ### Project Structure
 
