@@ -139,13 +139,13 @@ These 15 essential commands cover the core development workflow and are deployed
 
 ### 💻 Development & Code Quality
 - **`/xrefactor`** - Interactive code refactoring with smell detection
-- **`/xquality`** - Comprehensive code quality analysis with linting and type checking
+- **`/xquality`** - Code quality analysis with smart defaults (no parameters needed)
 - **`/xtdd`** - Test-driven development with automated test generation
-- **`/xtest`** - Comprehensive testing with specification traceability
+- **`/xtest`** - Test execution with intelligent defaults (runs all tests if no arguments)
 - **`/xdebug`** - Advanced debugging assistance and error analysis
 
 ### 🔒 Security & Compliance
-- **`/xsecurity`** - Security vulnerability scanning and remediation
+- **`/xsecurity`** - Security scanning with comprehensive defaults (no parameters needed)
 
 ### 🚀 CI/CD & Deployment
 - **`/xacp`** - Automated Add, Commit, Push workflow with smart commit messages
@@ -164,6 +164,33 @@ These 15 essential commands cover the core development workflow and are deployed
 38+ experimental and specialized commands are available in `slash-commands/experiments/` for advanced use cases including analytics, compliance, infrastructure, monitoring, and more.
 
 **Important:** These experimental commands are conceptual specifications rather than working implementations. They represent sophisticated frameworks that would be valuable if implemented, but currently serve as design documents and blueprints for future development.
+
+## Simple Usage Patterns
+
+The active commands are designed with **smart defaults** and **simple usage patterns**:
+
+### Basic Usage (No Parameters Needed)
+```bash
+/xquality    # Runs all quality checks (formatting, linting, type checking)
+/xtest       # Runs all available tests
+/xsecurity   # Runs comprehensive security scan
+```
+
+### Quick Actions (Single Word Arguments)
+```bash
+/xquality fix      # Auto-fix common quality issues
+/xtest coverage    # Run tests with coverage analysis
+/xtest unit        # Run unit tests only
+/xsecurity secrets # Quick secret scan
+/xsecurity deps    # Dependency vulnerability check
+```
+
+### Detailed Analysis (When You Need More Info)
+```bash
+/xquality report   # Detailed quality metrics and recommendations
+```
+
+**Design Philosophy:** Simple things should be simple, complex things should be possible. Most commands work perfectly with no parameters, while advanced options remain available when needed.
 
 ## Typical Builder Workflow
 
@@ -187,7 +214,8 @@ Here's a comprehensive workflow showing how builders can use the active commands
 /xtdd --component AuthService --test-first
 
 # Ensure code quality throughout development
-/xquality --ruff --mypy --fix
+/xquality         # Runs all quality checks by default
+/xquality fix     # Auto-fix common issues
 
 # Refactor code when needed
 /xrefactor --analyze --bloaters --fix
@@ -199,10 +227,12 @@ Here's a comprehensive workflow showing how builders can use the active commands
 ### 3. Security & Testing (Weekly)
 ```bash
 # Run comprehensive security scans
-/xsecurity --secrets --dependencies --code
+/xsecurity        # Runs all security checks by default
+/xsecurity secrets # Quick secret scan if needed
 
 # Execute comprehensive test suite
-/xtest --coverage --integration --performance
+/xtest            # Runs all available tests
+/xtest coverage   # Include coverage analysis
 ```
 
 ### 4. Configuration & Documentation
@@ -235,10 +265,10 @@ Here's a comprehensive workflow showing how builders can use the active commands
 Start with: `/xconfig`, `/xdocs`, `/xplanning`
 
 ### For Code Quality Focus
-Use: `/xquality`, `/xrefactor`, `/xtest`, `/xtdd`
+Use: `/xquality`, `/xquality fix`, `/xrefactor`, `/xtest`, `/xtdd`
 
 ### For Security-First Development
-Essential: `/xsecurity`, `/xtest`, `/xquality`
+Essential: `/xsecurity`, `/xtest coverage`, `/xquality`
 
 ### For DevOps Engineers
 Focus on: `/xcicd`, `/xpipeline`, `/xrelease`, `/xconfig`
@@ -247,34 +277,34 @@ Focus on: `/xcicd`, `/xpipeline`, `/xrelease`, `/xconfig`
 Utilize: `/xplanning`, `/xspec`, `/xarchitecture`
 
 ### For Daily Development
-Core workflow: `/xacp`, `/xtest`, `/xquality`, `/xdebug`, `/xrefactor`
+Core workflow: `/xacp`, `/xtest`, `/xquality`, `/xquality fix`, `/xdebug`, `/xrefactor`
 
 ## Advanced Usage Patterns
 
 ### Continuous Integration Workflow
 ```bash
 # In your CI pipeline
-/xtest --coverage --report
-/xquality --all --baseline
-/xsecurity --scan --report
+/xtest coverage
+/xquality report
+/xsecurity
 ```
 
 ### Code Review Workflow
 ```bash
 # Before code review
 /xrefactor --analyze --recommendations
-/xquality --check --report
+/xquality report
 /xdocs --update --api
 
 # After feedback
-/xtest --validate --requirements
+/xtest
 ```
 
 ### Production Deployment Workflow
 ```bash
 # Pre-deployment checks
-/xsecurity --final-scan
-/xtest --integration --smoke
+/xsecurity
+/xtest
 /xconfig --validate --production
 
 # Deployment
