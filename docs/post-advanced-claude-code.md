@@ -335,7 +335,7 @@ $ /xspec "Add contact form"
 
 **9:30 AM - TDD implementation**
 ```bash
-$ /xtdd --component UserAuth
+$ /xtdd --component ContactForm
 → Creates: Failing tests → Implementation → Green tests → Refactor
 ```
 
