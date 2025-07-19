@@ -133,7 +133,7 @@ Design DDD + 12-Factor architectural solutions:
 If validating principles (--validate, --solid, --ddd, --clean, --ubiquitous-language, --12factor):
 !find . -name "*.py" -o -name "*.js" -o -name "*.ts" | xargs grep -E "class|function|interface" | wc -l
 !find . -name "test*" -o -name "*test*" | head -5 2>/dev/null
-!grep -r "TODO\|FIXME\|HACK" . --include="*.py" --include="*.js" --include="*.ts" | wc -l
+!grep -r "TODO\|FIXME\|XXX" . --include="*.py" --include="*.js" --include="*.ts" | wc -l
 
 **DDD Strategic Design Validation:**
 !grep -r "UbiquitousLanguage\|DomainExpert\|BoundedContext" . --include="*.py" --include="*.js" --include="*.ts" --include="*.md" | wc -l

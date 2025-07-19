@@ -1,3 +1,8 @@
+---
+description: AI-assisted project planning with roadmaps, estimation, and risk analysis
+tags: [planning, roadmap, estimation, project-management]
+---
+
 # `/xplanning` - AI-Assisted Planning
 
 Strategic planning and project management with AI-driven insights and estimation.
