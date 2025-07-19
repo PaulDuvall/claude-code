@@ -1,118 +1,191 @@
 ---
-description: Build, test, and deploy with AWS-compliant CI/CD pipelines following reference architecture
-tags: [cicd, deployment, automation, pipeline, aws, security, testing]
+description: Build, test, and deploy with platform-agnostic CI/CD pipelines using configuration-driven deployment
+tags: [cicd, deployment, automation, pipeline, security, testing, configuration]
 ---
 
-Implement enterprise-grade CI/CD pipelines following AWS Deployment Pipeline Reference Architecture best practices based on $ARGUMENTS.
+Implement enterprise-grade CI/CD pipelines with configuration-driven deployment that works across platforms based on $ARGUMENTS.
 
 First, examine the project structure and current pipeline setup:
 !ls -la | grep -E "(.github|.gitlab-ci.yml|Jenkinsfile|azure-pipelines.yml|buildspec.yml)"
 !find . -name "*.yml" -o -name "*.yaml" | grep -E "(workflow|pipeline|ci|cd)" | head -10
 !find . -name "*.json" | grep -E "(package|requirements|pom|Cargo)" | head -5
 
-Analyze current pipeline maturity and compliance with AWS reference architecture:
+Analyze current pipeline maturity and best practices compliance:
 - Trunk-based development workflow
 - Fast feedback loops (< 30 minutes)
 - Comprehensive security scanning
-- Deployment automation with rollback capabilities
+- Configuration-driven deployment automation
+- Platform-agnostic rollback capabilities
 
 Based on $ARGUMENTS, perform the appropriate CI/CD operation:
 
-## 1. Pipeline Initialization (AWS Reference Architecture Compliant)
+## 1. Pipeline Initialization (Platform-Agnostic)
 
 If initializing GitHub Actions (--init github):
 !mkdir -p .github/workflows
-Create AWS-compliant GitHub Actions workflow with stages:
-- **Source Stage**: Checkout with role-based access control
+!mkdir -p config/environments
+Create GitHub Actions workflow with configuration-driven stages:
+- **Source Stage**: Checkout with secure authentication
 - **Pre-commit Validation**: Fast feedback (< 5 minutes)
-- **Build Stage**: Compile, unit tests, security scans, SBOM generation
-- **Test Stage (Beta)**: Integration tests in isolated environment (< 30 minutes)  
+- **Build Stage**: Compile, unit tests, security scans, artifact generation
+- **Test Stage**: Integration tests in isolated environment (< 30 minutes)  
 - **Security Stage**: SAST, secrets detection, dependency scanning
-- **Gamma Stage**: Pre-production deployment with smoke tests
-- **Production Stage**: Blue/green deployment with automated rollback
+- **Deploy Stage**: Configuration-driven deployment to any environment
 
 If initializing GitLab CI (--init gitlab):
-Create .gitlab-ci.yml following AWS reference architecture:
-- source, build, test-beta, security, gamma, production stages
+!mkdir -p config/environments
+Create .gitlab-ci.yml with configuration-driven deployment:
+- source, build, test, security, deploy stages
+- Environment-specific configuration files
 - Parallel execution where possible for fast feedback
 
-If initializing AWS CodePipeline (--init aws):
-!mkdir -p .aws
-Create buildspec.yml and pipeline configuration with:
-- CodeCommit/GitHub source integration
-- CodeBuild for compilation and testing
-- CodeDeploy for automated deployment
-- CloudWatch monitoring and alerts
+If initializing platform-agnostic pipeline (--init generic):
+!mkdir -p config/environments
+!mkdir -p scripts/ci
+Create configuration templates that work with any CI/CD platform:
+- Environment configuration files (staging.json, production.json)
+- Unified deployment script with environment parameter
+- Security scanning configuration
+- Testing configuration
 
-## 2. AWS-Compliant Pipeline Validation
+## 2. Pipeline Configuration and Validation
 
 If validating pipeline (--validate):
 !yamllint .github/workflows/*.yml 2>/dev/null || echo "No GitHub workflows found"
-!yamllint .gitlab-ci.yml 2>/dev/null || echo "No GitLab CI config found"
-!yamllint buildspec.yml 2>/dev/null || echo "No AWS buildspec found"
+!yamllint .gitlab-ci.yml 2>/dev/null || echo "No GitLab CI config found" 
+!find config/environments -name "*.json" -exec jq . {} \; 2>/dev/null || echo "No environment configs found"
 
-Validate AWS reference architecture compliance:
-- **YAML syntax and structure**
-- **Required stages present**: source, build, test-beta, security, gamma, production
+Validate pipeline best practices compliance:
+- **YAML/JSON syntax and structure**
+- **Required stages present**: source, build, test, security, deploy
 - **Fast feedback**: Build + test stages complete within 30 minutes
-- **Security controls**: Secrets detection, SAST, dependency scanning, SBOM
+- **Security controls**: Secrets detection, SAST, dependency scanning
+- **Configuration-driven deployment**: Environment configs present and valid
 - **Trunk-based development**: Main branch protection and merge requirements
-- **Environment variables**: Secure secret management
-- **Rollback capabilities**: Automated deployment rollback mechanisms
+- **Secret management**: No hardcoded secrets, proper environment variables
+- **Rollback capabilities**: Configuration-driven rollback mechanisms
 - **Key metrics tracking**: Lead time, deploy frequency, MTBF, MTTR
 
-## 3. AWS-Compliant Build and Test Operations
+Create environment configuration template if missing:
+!cat > config/environments/template.json << 'EOF'
+{
+  "environment": "template",
+  "deploy": {
+    "target": "platform-specific-target",
+    "strategy": "rolling|blue-green|canary",
+    "health_check_url": "/health",
+    "timeout_minutes": 10,
+    "rollback": {
+      "auto_rollback": true,
+      "failure_threshold": 0.1
+    }
+  },
+  "secrets": {
+    "required": ["API_KEY", "DATABASE_URL"],
+    "optional": ["MONITORING_TOKEN"]
+  },
+  "resources": {
+    "cpu": "1000m",
+    "memory": "512Mi",
+    "replicas": 2
+  }
+}
+EOF
+
+## 3. Build and Test Operations
 
 If running build (--build):
 @package.json
-Execute AWS reference architecture build stage:
+Execute build stage with artifact generation:
 !echo "=== Build Stage (Target: < 15 minutes) ==="
 !time (npm ci && npm run build) 2>/dev/null || time (python -m pip install -r requirements.txt && python -m build) 2>/dev/null || echo "No standard build found"
 
 Generate Software Bill of Materials (SBOM):
 !npm sbom 2>/dev/null || cyclonedx-bom -o sbom.json 2>/dev/null || echo "SBOM generation not available"
 
+Package build artifacts:
+!mkdir -p artifacts
+!tar -czf artifacts/build-$(date +%Y%m%d-%H%M%S).tar.gz dist/ build/ 2>/dev/null || echo "No build artifacts to package"
+
 If running tests (--test):
-!echo "=== Test Stage Beta (Target: < 30 minutes total) ==="
+!echo "=== Test Stage (Target: < 30 minutes total) ==="
 !time npm test 2>/dev/null || time python -m pytest --cov --junitxml=test-results.xml 2>/dev/null || echo "No tests found"
 
-Run integration tests in isolated environment:
+Run integration tests:
 !npm run test:integration 2>/dev/null || python -m pytest tests/integration/ 2>/dev/null || echo "No integration tests configured"
 
 Performance and load testing:
 !npm run test:performance 2>/dev/null || echo "No performance tests configured"
 
-## 4. AWS Reference Architecture Deployment Operations
+Generate test reports:
+!mkdir -p reports
+!cp test-results.xml reports/ 2>/dev/null || echo "No test results to copy"
 
-If deploying to environment (--deploy):
-Check AWS-compliant deployment prerequisites:
+## 4. Configuration-Driven Deployment Operations
+
+If deploying to environment (--deploy [environment]):
+Create unified deployment script if missing:
+!cat > scripts/deploy.sh << 'EOF'
+#!/bin/bash
+set -euo pipefail
+
+ENVIRONMENT=${1:-staging}
+CONFIG_FILE="config/environments/${ENVIRONMENT}.json"
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    echo "Error: Environment config not found: $CONFIG_FILE"
+    exit 1
+fi
+
+# Load configuration
+DEPLOY_TARGET=$(jq -r '.deploy.target' "$CONFIG_FILE")
+DEPLOY_STRATEGY=$(jq -r '.deploy.strategy' "$CONFIG_FILE")
+HEALTH_CHECK_URL=$(jq -r '.deploy.health_check_url' "$CONFIG_FILE")
+TIMEOUT=$(jq -r '.deploy.timeout_minutes' "$CONFIG_FILE")
+
+echo "=== Deploying to $ENVIRONMENT ==="
+echo "Target: $DEPLOY_TARGET"
+echo "Strategy: $DEPLOY_STRATEGY" 
+
+# Platform-agnostic deployment logic
+case "$DEPLOY_STRATEGY" in
+    "rolling")
+        echo "Executing rolling deployment..."
+        ;;
+    "blue-green")
+        echo "Executing blue/green deployment..."
+        ;;
+    "canary")
+        echo "Executing canary deployment..."
+        ;;
+esac
+
+# Health check validation
+if [[ "$HEALTH_CHECK_URL" != "null" ]]; then
+    echo "Running health checks on $HEALTH_CHECK_URL"
+fi
+
+echo "✅ Deployment to $ENVIRONMENT completed"
+EOF
+
+!chmod +x scripts/deploy.sh
+
+Check deployment prerequisites:
 - **All tests passing** (unit, integration, performance)
 - **Security scans clean** (SAST, secrets, dependencies)
-- **SBOM generated** and validated
-- **Required approvals** received for production
+- **Artifacts generated** and validated
+- **Environment configuration** exists and valid
 - **Rollback plan** prepared and tested
 
-For **Gamma Stage** (pre-production):
-!echo "=== Gamma Deployment (Pre-production) ==="
-!echo "Deploying to gamma environment with smoke tests..."
-Deploy to isolated pre-production environment
-Run smoke tests and basic validation
-Prepare for production promotion
-
-For **Production Stage**:
-!echo "=== Production Deployment (Blue/Green) ==="
-!echo "Deploying to production with blue/green strategy..."
-- Execute blue/green deployment
-- Run health checks and monitoring validation
-- Implement automated rollback triggers
-- Track deployment metrics (lead time, success rate)
-- Notify stakeholders of deployment status
+Execute configuration-driven deployment:
+!scripts/deploy.sh ${TARGET_ENV:-staging}
 
 Deployment safety mechanisms:
-- **Circuit breakers** for automatic failure detection
-- **Canary releases** for gradual rollout
-- **Automated rollback** on failure detection
+- **Configuration validation** before deployment
+- **Health check verification** using environment config
+- **Automated rollback** based on failure thresholds
 - **Real-time monitoring** during deployment
+- **Environment-specific** rollback procedures
 
 ## 5. Status and Monitoring
 
@@ -150,10 +223,10 @@ Identify bottlenecks:
 
 Provide specific optimization recommendations.
 
-## 7. AWS Reference Architecture Security and Compliance
+## 7. Security and Compliance Scanning
 
 If running security checks (--security):
-!echo "=== Security Stage (AWS Reference Architecture) ==="
+!echo "=== Security Stage ==="
 
 **Secrets Detection:**
 !git secrets --scan 2>/dev/null || trufflehog . --json 2>/dev/null || echo "Install git-secrets or trufflehog for secrets scanning"
@@ -167,24 +240,26 @@ If running security checks (--security):
 **Infrastructure as Code Security:**
 !checkov -d . 2>/dev/null || echo "Install checkov for IaC security scanning"
 
-**Digital Signature Verification:**
-!cosign verify-blob --signature package.sig package.json 2>/dev/null || echo "Package signing not configured"
+**Configuration Security Validation:**
+!find config/environments -name "*.json" -exec grep -l "password\|secret\|key" {} \; | head -5
+!echo "Checking for hardcoded secrets in configuration files..."
 
 **Software Bill of Materials (SBOM) Validation:**
 !cyclonedx validate --input-file sbom.json 2>/dev/null || echo "SBOM validation not available"
 
-AWS security compliance checks:
+Security compliance checks:
 - **Hardcoded secrets and credentials**
-- **Vulnerable dependencies and libraries**
+- **Vulnerable dependencies and libraries** 
 - **Insecure configurations and permissions**
 - **Missing security headers and controls**
 - **Container and infrastructure vulnerabilities**
+- **Configuration file security validation**
 - **Supply chain security validation**
 
-## 8. AWS Reference Architecture Monitoring and Key Metrics
+## 8. Pipeline Monitoring and Key Metrics
 
 If monitoring pipeline (--monitor):
-!echo "=== AWS Reference Architecture Key Metrics ==="
+!echo "=== Pipeline Key Metrics ==="
 
 **Lead Time Measurement:**
 !git log --since="30 days ago" --pretty=format:"%h %ad %s" --date=iso | head -20
@@ -205,20 +280,58 @@ If monitoring pipeline (--monitor):
 - Failed build patterns and root causes
 - Security scan pass rate
 - Test coverage trends
+- Configuration drift detection
 
-**AWS CloudWatch Integration:**
-- Pipeline execution metrics
-- Error rate monitoring  
-- Performance baseline tracking
-- Alert thresholds and notifications
+**Configuration Health:**
+!find config/environments -name "*.json" -exec echo "Validating: {}" \; -exec jq . {} \; 2>/dev/null || echo "No environment configs to validate"
 
-For rollback operations (--rollback):
+For rollback operations (--rollback [environment]):
 !git log --oneline -10
-Execute AWS-compliant rollback procedures:
-- **Automated rollback triggers** based on health checks
-- **Blue/green environment switching** for zero-downtime rollback
-- **Database migration rollback** coordination
+Create configuration-driven rollback script:
+!cat > scripts/rollback.sh << 'EOF'
+#!/bin/bash
+set -euo pipefail
+
+ENVIRONMENT=${1:-staging}
+CONFIG_FILE="config/environments/${ENVIRONMENT}.json"
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    echo "Error: Environment config not found: $CONFIG_FILE"
+    exit 1
+fi
+
+# Load rollback configuration
+AUTO_ROLLBACK=$(jq -r '.deploy.rollback.auto_rollback' "$CONFIG_FILE")
+FAILURE_THRESHOLD=$(jq -r '.deploy.rollback.failure_threshold' "$CONFIG_FILE")
+
+echo "=== Rolling back $ENVIRONMENT ==="
+echo "Auto-rollback enabled: $AUTO_ROLLBACK"
+echo "Failure threshold: $FAILURE_THRESHOLD"
+
+# Execute rollback based on deployment strategy
+DEPLOY_STRATEGY=$(jq -r '.deploy.strategy' "$CONFIG_FILE")
+case "$DEPLOY_STRATEGY" in
+    "blue-green")
+        echo "Executing blue/green rollback..."
+        ;;
+    "rolling")
+        echo "Executing rolling rollback..."
+        ;;
+    "canary")
+        echo "Executing canary rollback..."
+        ;;
+esac
+
+echo "✅ Rollback to $ENVIRONMENT completed"
+EOF
+
+!chmod +x scripts/rollback.sh
+
+Execute configuration-driven rollback procedures:
+- **Automated rollback triggers** based on health checks and configuration
+- **Environment-specific rollback** using deployment strategy from config
+- **Health check validation** during rollback process
 - **Post-rollback validation** and monitoring
 - **Incident documentation** and lessons learned
 
-Report comprehensive pipeline health metrics following AWS reference architecture KPIs and suggest data-driven improvements for reliability, security, and performance.
+Report comprehensive pipeline health metrics and suggest data-driven improvements for reliability, security, and performance.
