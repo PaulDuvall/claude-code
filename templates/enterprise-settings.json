@@ -1,0 +1,109 @@
+{
+  "// Enterprise Claude Code settings.json template": "Copy to ~/.claude/settings.json",
+  "// Full enterprise setup with hooks, governance, and monitoring": "",
+  
+  "allowedTools": [
+    "Edit",
+    "Bash",
+    "Read",
+    "Write",
+    "MultiEdit",
+    "Glob",
+    "Grep",
+    "LS"
+  ],
+  
+  "// API key helper (set by configure-claude-code.sh)": "",
+  "apiKeyHelper": "~/.claude/anthropic_key_helper.sh",
+  
+  "// Trust and onboarding settings": "",
+  "hasTrustDialogAccepted": true,
+  "hasCompletedProjectOnboarding": true,
+  
+  "// Performance optimization for enterprise": "",
+  "parallelTasksCount": 5,
+  
+  "// Comprehensive security hooks": "",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/prevent-credential-exposure.sh",
+            "blocking": true,
+            "timeout": 10000
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command", 
+            "command": "~/.claude/hooks/audit-bash-commands.sh",
+            "blocking": false,
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/log-all-operations.sh", 
+            "blocking": false,
+            "timeout": 3000
+          }
+        ]
+      }
+    ]
+  },
+  
+  "// Enterprise environment variables": "",
+  "env": {
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "true",
+    "BASH_DEFAULT_TIMEOUT_MS": "300000",
+    "MCP_TIMEOUT": "60000",
+    "SECURITY_WEBHOOK_URL": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
+    "CLAUDE_SECURITY_OVERRIDE": "false",
+    "ANTHROPIC_LOG": "info",
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "0"
+  },
+  
+  "// Enterprise-grade permissions": "",
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(python -m *)",
+      "Bash(git *)",
+      "Bash(docker *)",
+      "Bash(kubectl *)",
+      "Bash(terraform *)",
+      "Edit(*)",
+      "Read(*)",
+      "Write(*)",
+      "MultiEdit(*)"
+    ],
+    "deny": [
+      "Bash(curl *://*/admin*)",
+      "Bash(wget *://*/admin*)",
+      "Bash(ssh *prod*)",
+      "Bash(sudo *)",
+      "Bash(rm -rf *)",
+      "Bash(*production*)"
+    ]
+  },
+  
+  "// MCP servers for enterprise features": "",
+  "mcpServers": {
+    "puppeteer": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "--init", "-e", "DOCKER_CONTAINER=true", "mcp/puppeteer"]
+    }
+  }
+}

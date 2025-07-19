@@ -1,0 +1,65 @@
+{
+  "// Security-focused Claude Code settings.json template": "Copy to ~/.claude/settings.json",
+  "// Includes security hooks and enhanced governance": "",
+  
+  "allowedTools": [
+    "Edit",
+    "Bash",
+    "Read",
+    "Write",
+    "MultiEdit"
+  ],
+  
+  "// API key helper (set by configure-claude-code.sh)": "",
+  "apiKeyHelper": "~/.claude/anthropic_key_helper.sh",
+  
+  "// Trust and onboarding settings": "",
+  "hasTrustDialogAccepted": true,
+  "hasCompletedProjectOnboarding": true,
+  
+  "// Performance optimization": "",
+  "parallelTasksCount": 3,
+  
+  "// Security hooks configuration": "",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/prevent-credential-exposure.sh",
+            "blocking": true,
+            "timeout": 10000
+          }
+        ]
+      }
+    ]
+  },
+  
+  "// Security-focused environment variables": "",
+  "env": {
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "true",
+    "BASH_DEFAULT_TIMEOUT_MS": "120000",
+    "SECURITY_WEBHOOK_URL": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
+    "CLAUDE_SECURITY_OVERRIDE": "false"
+  },
+  
+  "// Restrictive permissions for security": "",
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(python -m *)",
+      "Bash(git *)",
+      "Edit(*)",
+      "Read(*)",
+      "Write(*)"
+    ],
+    "deny": [
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(ssh *)",
+      "Bash(sudo *)"
+    ]
+  }
+}

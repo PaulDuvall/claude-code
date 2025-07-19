@@ -16,12 +16,20 @@ These custom commands provide intelligent automation for every stage of software
 
 ### Project Structure
 
-The repository is organized into four main categories:
+The repository is organized into six main categories:
 - **`slash-commands/active/`** - 14 essential commands for daily development workflows
-- **`slash-commands/experiments/`** - 38+ specialized commands for advanced use cases
+- **`slash-commands/experiments/`** - 40+ specialized commands for advanced use cases
+- **`templates/`** - Settings.json configuration templates for different use cases
 - **`hooks/`** - Security hooks for governance, compliance, and workflow automation
 - **`specs/`** - Command specifications and validation framework
 - **`docs/`** - Comprehensive documentation including the complete hooks system specification
+
+**Key Scripts:**
+- **`setup.sh`** - Single-command complete setup (recommended)
+- **`verify-setup.sh`** - Comprehensive diagnostic and validation tool
+- **`validate-commands.sh`** - Enhanced validation framework with integration testing
+- **`deploy.sh`** - Deploy custom commands to Claude Code
+- **`configure-claude-code.sh`** - Configure Claude Code itself
 
 ## Prerequisites
 
@@ -57,45 +65,55 @@ For detailed installation and configuration options, see [Claude Code documentat
 
 ## Quick Start
 
-### 1. Validate Commands (Optional)
+### Option 1: Complete Setup (Recommended)
 
-Validate command specifications and ensure quality standards:
+**Single command setup** - runs everything automatically:
 
+```bash
+# Preview what will be done (recommended first run)
+./setup.sh --dry-run
+
+# Complete setup with basic configuration
+./setup.sh
+
+# Security-focused setup with hooks
+./setup.sh --setup-type security
+
+# Full enterprise setup with governance
+./setup.sh --setup-type enterprise
+```
+
+This single script handles:
+1. ✅ Validates prerequisites (Claude Code, API key)
+2. ✅ Runs `configure-claude-code.sh` (sets up Claude Code)
+3. ✅ Runs `deploy.sh` (installs 14 custom commands)
+4. ✅ Installs security hooks (if requested)
+5. ✅ Applies appropriate settings.json template
+6. ✅ Validates complete setup
+
+**That's it!** Skip to [Using Commands](#simple-usage-patterns) section.
+
+### Option 2: Manual Step-by-Step Setup
+
+If you prefer manual control:
+
+#### Step 1: Validate Commands (Optional)
 ```bash
 ./validate-commands.sh
 ```
 
-This script creates a virtual environment, installs dependencies, and runs the command validation test suite to ensure all commands meet specifications.
+#### Step 2: Configure Claude Code
+```bash
+./configure-claude-code.sh --dry-run  # Preview changes
+./configure-claude-code.sh             # Apply configuration
+```
 
-### 2. Deploy Custom Commands
-
-Deploy the 14 essential commands to your Claude Code installation:
-
+#### Step 3: Deploy Custom Commands
 ```bash
 ./deploy.sh
 ```
 
-This copies essential command files from `slash-commands/active/` to `~/.claude/commands/`, making them available as slash commands in Claude Code.
-
-### 3. Optional: Configure Claude Code (Convenience Script)
-
-This repository includes a convenience script for Claude Code configuration:
-
-```bash
-# Configure Claude Code for macOS/Windsurf (with security warnings)
-./configure-claude-code.sh --dry-run  # Preview changes first
-./configure-claude-code.sh             # Apply configuration
-```
-
-The `configure-claude-code.sh` script automates Claude Code setup with:
-- ⚠️ **Security warnings** and backup mechanisms
-- API key configuration and validation
-- Windsurf IDE extension installation
-- MCP server setup (Docker required)
-- Trust settings and permissions
-- Interactive mode with dry-run option
-
-### 4. Enable Security Hooks (Optional)
+#### Step 4: Enable Security Hooks (Optional)
 
 For automated governance and security monitoring, enable the hooks system:
 
@@ -332,6 +350,17 @@ npm install -g @anthropic-ai/claude-code
 # Authenticate (web-based authentication will prompt automatically)
 # Or set API key manually if needed: export ANTHROPIC_API_KEY='sk-ant-...'
 
+# Complete setup with one command
+./setup.sh --dry-run    # Preview what will be done
+./setup.sh              # Apply basic setup
+
+# Or for security-focused setup
+./setup.sh --setup-type security
+```
+
+### Manual Setup (Advanced Users)
+
+```bash
 # Validate commands (optional but recommended)
 ./validate-commands.sh
 
@@ -341,6 +370,9 @@ npm install -g @anthropic-ai/claude-code
 
 # Deploy custom commands
 ./deploy.sh
+
+# Apply settings template manually
+cp templates/basic-settings.json ~/.claude/settings.json
 ```
 
 ### Configuration Script Options
@@ -450,13 +482,113 @@ These commands integrate seamlessly with:
 - **Monitoring** platforms (Prometheus, Grafana)
 - **Security Hooks**: Real-time governance and policy enforcement
 
+## Troubleshooting
+
+### Quick Diagnostics
+
+```bash
+# Run complete diagnostic check
+./verify-setup.sh
+
+# Validate all commands and configuration
+./validate-commands.sh --check-settings
+
+# Check Claude Code installation
+claude --version
+
+# List installed custom commands
+ls ~/.claude/commands/x*.md
+```
+
+### Common Issues
+
+#### 1. **Custom commands not available**
+**Problem**: `/xtest` or other commands not recognized
+
+**Solutions**:
+- Restart Claude Code: Exit and run `claude` again
+- Check deployment: `ls ~/.claude/commands/x*.md`
+- Re-deploy: `./deploy.sh`
+- Check settings: `cat ~/.claude/settings.json | jq .allowedTools`
+
+#### 2. **Permission denied errors**
+**Problem**: Claude Code can't execute commands
+
+**Solutions**:
+- Check API key: `echo $ANTHROPIC_API_KEY`
+- Verify settings: `cat ~/.claude/settings.json | jq .allowedTools`
+- Re-run configuration: `./configure-claude-code.sh`
+- Check file permissions: `ls -la ~/.claude/`
+
+#### 3. **Security hooks not working**
+**Problem**: Hooks not preventing credential exposure
+
+**Solutions**:
+- Check hook installation: `ls -la ~/.claude/hooks/`
+- Verify executable permissions: `chmod +x ~/.claude/hooks/*.sh`
+- Check settings.json hooks section: `cat ~/.claude/settings.json | jq .hooks`
+- Re-apply security template: `cp templates/security-focused-settings.json ~/.claude/settings.json`
+
+#### 4. **Setup script fails**
+**Problem**: `./setup.sh` encounters errors
+
+**Solutions**:
+- Run with dry-run first: `./setup.sh --dry-run`
+- Check prerequisites: Claude Code installed, API key set
+- Review error messages carefully
+- Try manual setup steps individually
+- Check disk space and permissions
+
+#### 5. **Configuration conflicts**
+**Problem**: Multiple settings files or conflicting configs
+
+**Solutions**:
+- Check settings hierarchy: `~/.claude/settings.json` → `.claude/settings.json` → `.claude/settings.local.json`
+- Backup and remove conflicting files
+- Start fresh: `./setup.sh --force`
+- Validate JSON syntax: `jq . ~/.claude/settings.json`
+
+### Getting Help
+
+1. **Check logs**: `~/.claude/logs/` directory
+2. **Run diagnostics**: `./verify-setup.sh`
+3. **Validate setup**: `./validate-commands.sh`
+4. **Review documentation**:
+   - Command usage: This README
+   - Security hooks: `hooks/README.md`
+   - Settings templates: `templates/README.md`
+5. **Submit issues**: Include diagnostic output and error messages
+
+### Recovery Procedures
+
+#### Reset to clean state:
+```bash
+# Remove all custom configuration
+rm -rf ~/.claude/commands/x*.md
+rm -rf ~/.claude/hooks/
+rm -f ~/.claude/settings.json
+
+# Start over with fresh setup
+./setup.sh
+```
+
+#### Restore from backup:
+```bash
+# Check available backups
+ls ~/.claude-backups/
+
+# Restore configuration (replace TIMESTAMP)
+cp ~/.claude-backups/TIMESTAMP/.claude.json ~/
+cp -r ~/.claude-backups/TIMESTAMP/.claude ~/
+```
+
 ## Contributing
 
 1. **Add new commands** following the existing patterns
 2. **Validate compliance** by running `./validate-commands.sh` before submitting
-3. **Develop security hooks** for governance and automation
+3. **Test setup script** with different configurations
 4. **Update documentation** when adding new functionality
-5. **Test thoroughly** before sharing
+5. **Test thoroughly** with different environments
 6. **Follow security best practices** for all defensive tooling
 
 ### Hook Development

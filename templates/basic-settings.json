@@ -1,0 +1,27 @@
+{
+  "// Basic Claude Code settings.json template": "Copy to ~/.claude/settings.json",
+  "// This provides minimal configuration for custom commands to work": "",
+  
+  "allowedTools": [
+    "Edit",
+    "Bash",
+    "Read",
+    "Write"
+  ],
+  
+  "// API key helper (set by configure-claude-code.sh)": "",
+  "apiKeyHelper": "~/.claude/anthropic_key_helper.sh",
+  
+  "// Trust and onboarding settings": "",
+  "hasTrustDialogAccepted": true,
+  "hasCompletedProjectOnboarding": true,
+  
+  "// Performance optimization": "",
+  "parallelTasksCount": 3,
+  
+  "// Optional: Environment variables": "",
+  "env": {
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "true",
+    "BASH_DEFAULT_TIMEOUT_MS": "120000"
+  }
+}
