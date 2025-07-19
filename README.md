@@ -316,7 +316,7 @@ Here's a comprehensive workflow showing how builders can use the active commands
 /xarchitecture --design --pattern microservices --database-per-service
 
 # Create detailed specifications
-/xspec --feature "user-login" --gherkin --acceptance-criteria
+/xspec --feature "add-todo-item" --gherkin --acceptance-criteria
 ```
 
 ### 2. Development Workflow (Daily)
