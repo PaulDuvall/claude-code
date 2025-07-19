@@ -78,6 +78,30 @@ main "$@"
 
 Place hooks in `.claude/hooks/` and they'll run automatically. They're your safety net—the difference between a toy and a production tool.
 
+## System Architecture
+
+```mermaid
+graph TD
+    A[Your Code] --> B[Hooks Layer]
+    B --> C[Claude Code Engine]
+    C --> D[Git/CI/CD]
+    
+    B -.-> E[Governance]
+    E --> F[Security Checks]
+    E --> G[Quality Gates]
+    E --> H[Compliance Rules]
+    
+    C -.-> I[Intelligence]
+    I --> J[57 Custom Commands]
+    I --> K[Context Awareness]
+    I --> L[Pattern Recognition]
+    
+    style B fill:#f9f,stroke:#333,stroke-width:2px
+    style C fill:#bbf,stroke:#333,stroke-width:2px
+    style E fill:#ffd,stroke:#333,stroke-width:2px
+    style I fill:#dfd,stroke:#333,stroke-width:2px
+```
+
 ## My Implementation
 
 I built [CLAUDE.md](https://github.com/PaulDuvall/claude-code/blob/main/CLAUDE.md) (inspired by [Paul Hammond](https://github.com/citypaul/.dotfiles/blob/main/claude/.claude/CLAUDE.md)) as Claude's reference guide. It contains:
@@ -105,6 +129,23 @@ I've built [14 active commands](https://github.com/PaulDuvall/claude-code/tree/m
 
 **Security & Compliance**
 - `/xsecurity` - Vulnerability scanning
+
+```bash
+$ /xsecurity
+
+🔍 Security Scan Results
+━━━━━━━━━━━━━━━━━━━━━━
+✗ SQL Injection Risk: user_auth.py:42
+  └─ Unsanitized input: request.form.get('username')
+  └─ Fix: Use parameterized queries
+  
+✗ Hardcoded Secret: config.py:18
+  └─ AWS key exposed: AKIA************
+  └─ Fix: Move to environment variables
+
+Generated fixes in: .claude/security-fixes/
+Apply with: /xsecurity --apply-fixes
+```
 
 **DevOps & Automation**
 - `/xcicd` - AWS reference architecture pipelines
@@ -159,10 +200,23 @@ My deployment system copies custom commands to `~/.claude/commands/`, making the
 
 The script validates each command, backs up existing ones, and ensures proper permissions. Once deployed, these commands work in any repository—no per-project setup needed.
 
+**⚠️ Before Deployment:** Always review what you're deploying:
+```bash
+# Preview what will be deployed (ALWAYS do this first)
+./deploy.sh --dry-run --all
+
+# Review specific commands before deploying
+cat slash-commands/active/xtest.md
+
+# Then deploy with confidence
+./deploy.sh
+```
+
 Example workflow:
 ```bash
 # Test GitHub Actions locally before pushing
-./deploy.sh --experiments --include xact
+./deploy.sh --experiments --include xact --dry-run  # Preview first
+./deploy.sh --experiments --include xact            # Then deploy
 claude
 /xact --install-deps  # Auto-install nektos/act and Docker
 /xact                 # Test workflows locally
@@ -185,13 +239,13 @@ When it runs:
 Real example:
 ```bash
 # Edit any file - hook will log but never block:
-echo "console.log('Hello World');" > test.js
+echo "print('Hello World')" > test.py
 
 # Hook output in ~/.claude/logs/file-logger.log:
 # [2025-01-19 10:30:15] [file-logger] Hook triggered!
 # [2025-01-19 10:30:15] [file-logger] Tool: Write
-# [2025-01-19 10:30:15] [file-logger] File: test.js
-# [2025-01-19 10:30:15] [file-logger] File size: 29 bytes
+# [2025-01-19 10:30:15] [file-logger] File: test.py
+# [2025-01-19 10:30:15] [file-logger] File size: 22 bytes
 # [2025-01-19 10:30:15] [file-logger] Operation allowed - no blocking behavior
 ```
 
@@ -217,44 +271,46 @@ Seven deployment modes with validation and rollback.
 
 All scripts include dry-run modes, automatic backups, and comprehensive validation. They're production-ready, not demos.
 
-## Real Workflows That Save Time
+## A Day in the Life: Building a New Feature
 
-### Daily Development
+**9:00 AM - Start with requirements**
 ```bash
-/xtdd --component UserAuth  # Generate tests and implementation
-/xquality                   # Run quality checks
-/xsecurity                  # Scan vulnerabilities
-/xacp                      # Commit with smart message
+$ /xspec "User authentication with OAuth2"
+→ Generates: BDD specs, acceptance criteria, test cases
 ```
 
-### CI/CD Pipeline Generation
+**9:30 AM - TDD implementation**
 ```bash
-/xcicd --init github --stages "source,build,test,security,production"
-
-# Creates complete pipeline with:
-# - Fast feedback (< 30 minutes)
-# - Security scanning
-# - Blue/green deployment
-# - Monitoring and alerts
+$ /xtdd --component UserAuth
+→ Creates: Failing tests → Implementation → Green tests
 ```
 
-### Test Before Push
+**10:00 AM - Security check**
 ```bash
-/xact --install-deps  # Setup local testing
-/xact                 # Run all workflows
-/xact --job test      # Test specific job
+$ /xsecurity
+→ Finds: 2 OWASP vulnerabilities, generates fixes
 ```
 
-## Implementation: Days, Not Weeks
+**10:15 AM - Deploy**
+```bash
+$ /xcicd --deploy staging
+→ Runs: 847 tests, 12 security scans, deploys in 4 min
+```
 
-Things move fast with Claude Code. I built all of this in a couple of weeks. Here's a practical approach:
+Total time: 75 minutes for a feature that used to take 2 days.
 
-1. **Day 1**: Install, explore built-in commands, create CLAUDE.md
-2. **Day 2-3**: Review my custom commands, experiment with ones that fit your workflow
-3. **Day 4-5**: Create your first custom command
-4. **Week 2**: Add security hooks and automation scripts as needed
+## Implementation: Security-First Approach
 
-The key is to experiment. Review the commands I've created—they're documented and ready to adapt to your needs.
+Things move fast with Claude Code, but security comes first. Here's a practical approach:
+
+1. **Day 1**: Install Claude Code, explore built-in commands, **review all scripts before running**
+2. **Day 2-3**: **Thoroughly examine** my custom commands, understand their implementation, test with `--dry-run`
+3. **Day 4-5**: Create your first custom command **after understanding** the patterns
+4. **Week 2**: Add hooks **only after reviewing** their security implications
+
+**⚠️ Critical Security Principle:** Never run automation scripts without understanding what they do. These tools modify your development environment and could impact your workflows.
+
+The key is to experiment **safely**. Review, understand, then adapt the commands to your needs.
 
 ## Problems This Solves
 
@@ -286,13 +342,32 @@ The key is to experiment. Review the commands I've created—they're documented 
 - **14 active commands** for daily work
 - **43 experimental commands** for advanced workflows
 
-## Start Building Your Platform
+## Your Next 48 Hours
 
-1. Install: `npm install -g @anthropic-ai/claude-code`
-2. Clone my repo: [github.com/PaulDuvall/claude-code](https://github.com/PaulDuvall/claude-code)
-3. Create CLAUDE.md for your project
-4. Build one command that fixes your biggest pain
-5. Adapt scripts to your environment
+**Hour 1-2:** Install and run `/xquality` on your worst code  
+**Hour 3-4:** Create one custom command for your biggest pain point  
+**Day 2:** Deploy to your team, measure the impact
+
+Ready to start? **⚠️ Security First Approach:**
+
+```bash
+# 1. Clone and examine the repository
+git clone https://github.com/PaulDuvall/claude-code
+cd claude-code
+
+# 2. IMPORTANT: Review the code before running anything
+cat setup.sh                    # Review setup script
+cat configure-claude-code.sh    # Review configuration script
+ls slash-commands/active/       # Examine custom commands
+
+# 3. Run with preview mode first (ALWAYS do this)
+./setup.sh --dry-run
+
+# 4. Only then proceed with actual installation
+./setup.sh
+```
+
+**🔒 Security Note:** These scripts modify your Claude Code configuration and install custom commands. Always review scripts before execution, especially when they handle authentication or modify system settings.
 
 ## The Bottom Line
 

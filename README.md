@@ -136,10 +136,38 @@ For users who want granular control:
 ./deploy.sh --all              # Deploy both active and experimental
 ```
 
-#### Step 4: Enable Security Hooks (Optional)
+#### Step 4: Enable Hooks (Optional)
 
-For automated governance and security monitoring, enable the hooks system:
+For automated governance, file logging, and security monitoring, enable the hooks system:
 
+**Demo File Logger Hook (Safe for Learning):**
+```bash
+# Copy file logger hook to Claude Code hooks directory
+cp hooks/file-logger.sh ~/.claude/hooks/
+
+# Make executable
+chmod +x ~/.claude/hooks/file-logger.sh
+
+# Configure in ~/.claude/settings.json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/file-logger.sh",
+            "blocking": false
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Security Hook (Production Use):**
 ```bash
 # Copy security hook to Claude Code hooks directory
 cp hooks/prevent-credential-exposure.sh ~/.claude/hooks/
