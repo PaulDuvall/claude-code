@@ -17,7 +17,7 @@ These custom commands provide intelligent automation for every stage of software
 ### Project Structure
 
 The repository is organized into six main categories:
-- **`slash-commands/active/`** - 14 essential commands for daily development workflows
+- **`slash-commands/active/`** - 13 essential commands for daily development workflows
 - **`slash-commands/experiments/`** - 40+ specialized commands for advanced use cases
 - **`templates/`** - Settings.json configuration templates for different use cases
 - **`hooks/`** - Security hooks for governance, compliance, and workflow automation
@@ -107,7 +107,7 @@ claude
 
 **What gets installed:**
 1. ✅ Claude Code configuration and authentication
-2. ✅ 14 custom commands (`/xtest`, `/xquality`, `/xsecurity`, etc.)
+2. ✅ 13 custom commands (`/xtest`, `/xquality`, `/xsecurity`, etc.)
 3. ✅ Security hooks (if requested)
 4. ✅ Appropriate settings template
 5. ✅ Complete validation
@@ -233,7 +233,7 @@ The 42 commands in `slash-commands/experiments/` are well-structured design docu
 
 ## Active Commands Reference
 
-These 14 essential commands cover the core development workflow and are deployed by default:
+These 13 essential commands cover the core development workflow and are deployed by default:
 
 ### 🎯 Planning & Strategy
 *Planning commands available in experiments/ - see `/slash-commands/experiments/xplanning.md`*
@@ -256,7 +256,6 @@ These 14 essential commands cover the core development workflow and are deployed
 
 ### 🚀 CI/CD & Deployment
 - **`/xacp`** - Automated Add, Commit, Push workflow with smart commit messages
-- **`/xcicd`** - CI/CD pipeline setup and management
 - **`/xpipeline`** - Build pipeline optimization and automation
 - **`/xrelease`** - Release management and deployment automation
 
@@ -268,7 +267,7 @@ These 14 essential commands cover the core development workflow and are deployed
 
 ### Additional Commands
 
-42 experimental and specialized commands are available in `slash-commands/experiments/` for advanced use cases including planning, analytics, compliance, infrastructure, monitoring, and more.
+43 experimental and specialized commands are available in `slash-commands/experiments/` for advanced use cases including planning, analytics, compliance, infrastructure, monitoring, CI/CD, and more.
 
 **Deploy experimental commands using:**
 ```bash
@@ -388,8 +387,8 @@ Here's a comprehensive workflow showing how builders can use the active commands
 # Automated git workflow
 /xacp  # Stages, commits with smart messages, and pushes
 
-# Set up CI/CD pipeline
-/xcicd --init github --stages "build,test,deploy"
+# Set up CI/CD pipeline (experimental command)
+/xpipeline --init github --stages "build,test,deploy"
 
 # Deploy through pipeline
 /xpipeline --deploy staging --promote production
@@ -410,7 +409,7 @@ Use: `/xquality`, `/xquality fix`, `/xrefactor`, `/xtest`, `/xtdd`
 Essential: `/xsecurity`, `/xtest coverage`, `/xquality`
 
 ### For DevOps Engineers
-Focus on: `/xcicd`, `/xpipeline`, `/xrelease`, `/xconfig`
+Focus on: `/xpipeline`, `/xrelease`, `/xconfig`
 
 ### For Product Teams
 Utilize: `/xspec`, `/xarchitecture`, plus planning tools in experiments/

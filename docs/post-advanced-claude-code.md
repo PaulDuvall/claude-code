@@ -98,7 +98,7 @@ graph TD
     E --> E1[xsecurity, xrefactor]
     
     C --> F[CI/CD & Git]
-    F --> F1[xacp, xcicd, xpipeline]
+    F --> F1[xacp, xpipeline, xrelease]
     
     C --> G[Architecture & Planning]
     G --> G1[xarchitecture, xspec]
@@ -125,7 +125,7 @@ This context makes every AI suggestion better.
 
 ## 57 Custom Commands (And Counting)
 
-The repository includes [14 active commands](https://github.com/PaulDuvall/claude-code/tree/main/slash-commands/active) for daily use, plus [43 experimental ones](https://github.com/PaulDuvall/claude-code/tree/main/slash-commands/experiments). The commands use an "x" prefix—it makes custom commands obvious at a glance. You can use whatever prefix works for you:
+The repository includes [13 active commands](https://github.com/PaulDuvall/claude-code/tree/main/slash-commands/active) for daily use, plus [44 experimental ones](https://github.com/PaulDuvall/claude-code/tree/main/slash-commands/experiments). The commands use an "x" prefix—it makes custom commands obvious at a glance. You can use whatever prefix works for you:
 
 **Architecture & Design**
 - `/xarchitecture` - System design with proven patterns
@@ -159,8 +159,7 @@ Apply with: /xsecurity --apply-fixes
 ```
 
 **DevOps & Automation**
-- `/xcicd` - AWS reference architecture pipelines
-- `/xpipeline` - Build optimization
+- `/xpipeline` - Build optimization and deployment pipelines
 - `/xrelease` - Release orchestration with rollback
 - `/xacp` - Git workflow with smart commits
 
@@ -347,7 +346,7 @@ $ /xsecurity
 
 **10:15 AM - Deploy**
 ```bash
-$ /xcicd --deploy staging
+$ /xpipeline --deploy staging
 → Runs: existing test suite, 3 security scans, deploys in 4 min
 ```
 
@@ -393,8 +392,8 @@ The key is to experiment safely. Review, understand, then adapt the commands to 
 
 ## Results After Eight Weeks
 
-- **14 active commands** for daily work
-- **43 experimental commands** for advanced workflows
+- **13 active commands** for daily work
+- **44 experimental commands** for advanced workflows
 
 ## Your Next 48 Hours
 
