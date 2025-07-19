@@ -299,7 +299,7 @@ $ /xspec "User authentication with OAuth2"
 **9:30 AM - TDD implementation**
 ```bash
 $ /xtdd --component UserAuth
-→ Creates: Failing tests → Implementation → Green tests
+→ Creates: Failing tests → Implementation → Green tests → Refactor
 ```
 
 **10:00 AM - Security check**
@@ -311,7 +311,7 @@ $ /xsecurity
 **10:15 AM - Deploy**
 ```bash
 $ /xcicd --deploy staging
-→ Runs: 847 tests, 12 security scans, deploys in 4 min
+→ Runs: existing test suite, 3 security scans, deploys in 4 min
 ```
 
 Total time: 75 minutes for a feature that used to take 2 days.
