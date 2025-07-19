@@ -1,10 +1,10 @@
 # Claude Code: Advanced Tips Using Commands, Configuration, and Hooks
 
-Eight weeks ago, I started using Claude Code. Claude Code is a super powerful agentic coding AI experience that transforms how developers work. Today, I've built it into a comprehensive platform for AI-assisted development. Here's what I learned and built.
+Eight weeks ago, I started using Claude Code. Claude Code is a super powerful agentic coding AI experience that transforms how developers work. Today, I've built it into a comprehensive platform for AI-assisted development. Here's what was learned and built.
 
 ## Why Claude Code Is Different
 
-Most AI coding tools live inside your IDE. Claude Code doesn't. It's a terminal application that works with your existing workflow. This flexibility is what makes it powerful—and what let me build something bigger.
+Most AI coding tools live inside your IDE. Claude Code doesn't. It's a terminal application that works with your existing workflow. This flexibility is what makes it powerful—and what allows building something bigger.
 
 ## Getting Started Takes Minutes
 
@@ -32,7 +32,7 @@ Claude Code's [configuration system](https://docs.anthropic.com/en/docs/claude-c
 - **Allowed Tools**: Enable specific capabilities
 - **Authentication**: Web login (use this) or API keys for CI/CD
 
-I started with ideas from [Patrick Debois](https://gist.github.com/jedi4ever/762ca6746ef22b064550ad7c04f3bd2f) and evolved them through real use.
+The approach started with ideas from [Patrick Debois](https://gist.github.com/jedi4ever/762ca6746ef22b064550ad7c04f3bd2f) and evolved them through real use.
 
 ### 2. Slash Commands: Automate Everything
 
@@ -41,7 +41,7 @@ Claude Code ships with 50+ built-in commands. Here are a few:
 - `/review` - Code feedback
 - `/model` - Switch models for different tasks
 
-But custom commands are where it gets interesting. These are markdown files in `.claude` directories. After losing work to filesystem issues, I now version control everything in my [Claude Code repository](https://github.com/PaulDuvall/claude-code).
+But custom commands are where it gets interesting. These are markdown files in `.claude` directories. After losing work to filesystem issues, everything is now version controlled in the [Claude Code repository](https://github.com/PaulDuvall/claude-code).
 
 ### 3. Hooks: Govern Everything
 
@@ -113,9 +113,9 @@ graph TD
     style I fill:#ffd,stroke:#333,stroke-width:2px
 ```
 
-## My Implementation
+## Implementation Overview
 
-I built [CLAUDE.md](https://github.com/PaulDuvall/claude-code/blob/main/CLAUDE.md) (inspired by [Paul Hammond](https://github.com/citypaul/.dotfiles/blob/main/claude/.claude/CLAUDE.md)) as Claude's reference guide. It contains:
+The implementation includes [CLAUDE.md](https://github.com/PaulDuvall/claude-code/blob/main/CLAUDE.md) (inspired by [Paul Hammond](https://github.com/citypaul/.dotfiles/blob/main/claude/.claude/CLAUDE.md)) as Claude's reference guide. It contains:
 - Project architecture
 - Coding standards
 - Team conventions
@@ -125,7 +125,7 @@ This context makes every AI suggestion better.
 
 ## 57 Custom Commands (And Counting)
 
-I've built [14 active commands](https://github.com/PaulDuvall/claude-code/tree/main/slash-commands/active) for daily use, plus [43 experimental ones](https://github.com/PaulDuvall/claude-code/tree/main/slash-commands/experiments). I use an "x" prefix—it makes custom commands obvious at a glance. You can use whatever prefix works for you:
+The repository includes [14 active commands](https://github.com/PaulDuvall/claude-code/tree/main/slash-commands/active) for daily use, plus [43 experimental ones](https://github.com/PaulDuvall/claude-code/tree/main/slash-commands/experiments). The commands use an "x" prefix—it makes custom commands obvious at a glance. You can use whatever prefix works for you:
 
 **Architecture & Design**
 - `/xarchitecture` - System design with proven patterns
@@ -219,7 +219,7 @@ The key is clear instructions and examples. Claude follows what you write, so be
 
 ## Deployment That Works
 
-My deployment system copies custom commands to `~/.claude/commands/`, making them available in every project on your machine. Here's how it works:
+The deployment system copies custom commands to `~/.claude/commands/`, making them available in every project on your machine. Here's how it works:
 
 ```bash
 # Deploy active commands (default) - copies to global directory
@@ -261,7 +261,7 @@ claude
 
 ## Hooks That Demonstrate The System
 
-My [file logger hook](https://github.com/PaulDuvall/claude-code/tree/main/hooks) shows how the hook system works by logging file operations:
+The [file logger hook](https://github.com/PaulDuvall/claude-code/tree/main/hooks) shows how the hook system works by logging file operations:
 - Logs all Edit, Write, MultiEdit operations
 - Shows file information (size, lines, type)
 - Never blocks operations - purely educational
@@ -357,14 +357,14 @@ Total time: 75 minutes for a feature that used to take 2 days.
 
 Things move fast with Claude Code, but security comes first. Here's a practical approach:
 
-1. **Day 1**: Install Claude Code, explore built-in commands, **review all scripts before running**
-2. **Day 2-3**: **Thoroughly examine** my custom commands, understand their implementation, test with `--dry-run`
-3. **Day 4-5**: Create your first custom command **after understanding** the patterns
-4. **Week 2**: Add hooks **only after reviewing** their security implications
+1. **Day 1**: Install Claude Code, explore built-in commands, review all scripts before running
+2. **Day 2-3**: Thoroughly examine the custom commands, understand their implementation, test with `--dry-run`
+3. **Day 4-5**: Create your first custom command after understanding the patterns
+4. **Week 2**: Add hooks only after reviewing their security implications
 
 **⚠️ Critical Security Principle:** Never run automation scripts without understanding what they do. These tools modify your development environment and could impact your workflows.
 
-The key is to experiment **safely**. Review, understand, then adapt the commands to your needs.
+The key is to experiment safely. Review, understand, then adapt the commands to your needs.
 
 ## Problems This Solves
 
@@ -427,7 +427,7 @@ ls slash-commands/active/       # Examine custom commands
 
 Claude Code isn't just another AI tool—it's a platform for building your own AI-assisted development environment. With custom commands, hooks, and automation, you get the benefits of AI without sacrificing control, security, or quality.
 
-The key? Build incrementally. Understand what you need. Maintain governance. My implementation proves this works—delivering measurable improvements while enhancing security.
+The key? Build incrementally. Understand what you need. Maintain governance. This implementation proves it works—delivering measurable improvements while enhancing security.
 
 Start small. Think big. Ship code.
 
