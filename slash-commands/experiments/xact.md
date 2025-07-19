@@ -82,7 +82,7 @@ First, check project structure and workflow availability:
 
 Create enhanced Act runner script following your specifications:
 
-!cat > scripts/run-act.sh << 'EOF'
+!cat > scripts/xact.sh << 'EOF'
 #!/bin/bash
 set -euo pipefail
 
@@ -123,7 +123,7 @@ show_help() {
     echo ""
     cat << HELP_EOF
 USAGE:
-    ./scripts/run-act.sh [OPTIONS] [WORKFLOW_FILE]
+    ./scripts/xact.sh [OPTIONS] [WORKFLOW_FILE]
 
 OPTIONS:
     --help              Show this help message
@@ -137,10 +137,10 @@ OPTIONS:
     --start-docker      Start Docker daemon
     
 EXAMPLES:
-    ./scripts/run-act.sh                           # Auto-discover and run all workflows
-    ./scripts/run-act.sh .github/workflows/ci.yml # Run specific workflow
-    ./scripts/run-act.sh --job test                # Run specific job
-    ./scripts/run-act.sh --simulate                # Run in simulation mode
+    ./scripts/xact.sh                           # Auto-discover and run all workflows
+    ./scripts/xact.sh .github/workflows/ci.yml # Run specific workflow
+    ./scripts/xact.sh --job test                # Run specific job
+    ./scripts/xact.sh --simulate                # Run in simulation mode
 
 FEATURES:
     ✓ Automatic workflow discovery and validation
@@ -287,7 +287,7 @@ check_dependencies() {
     fi
     
     if [[ $missing_deps -eq 1 ]]; then
-        echo "Run './scripts/run-act.sh --install-deps' to install missing dependencies"
+        echo "Run './scripts/xact.sh --install-deps' to install missing dependencies"
         return 1
     else
         echo "All dependencies are available"
@@ -663,32 +663,32 @@ main "$@"
 EOF
 
 Make the script executable:
-!chmod +x scripts/run-act.sh
+!chmod +x scripts/xact.sh
 
 If arguments include dependency management operations:
 
 **For --install-deps:**
-!scripts/run-act.sh --install-deps
+!scripts/xact.sh --install-deps
 
 **For --check-deps:**
-!scripts/run-act.sh --check-deps
+!scripts/xact.sh --check-deps
 
 **For --start-docker (macOS specific):**
-!scripts/run-act.sh --start-docker
+!scripts/xact.sh --start-docker
 
 If arguments include workflow operations:
 
 **For --list:**
-!scripts/run-act.sh --list
+!scripts/xact.sh --list
 
 **For --workflow:**
-!scripts/run-act.sh --workflow "${workflow_file}"
+!scripts/xact.sh --workflow "${workflow_file}"
 
 **For --job:**
-!scripts/run-act.sh --job "${job_name}"
+!scripts/xact.sh --job "${job_name}"
 
 If no specific operation, auto-discover and run workflows:
-!scripts/run-act.sh
+!scripts/xact.sh
 
 ## Features
 
