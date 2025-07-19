@@ -36,7 +36,7 @@ I started with ideas from [Patrick Debois](https://gist.github.com/jedi4ever/762
 
 ### 2. Slash Commands: Automate Everything
 
-Claude Code ships with 50+ built-in commands:
+Claude Code ships with 50+ built-in commands. Here are a few:
 - `/init` - Project setup
 - `/review` - Code feedback
 - `/model` - Switch models for different tasks
@@ -45,9 +45,9 @@ But custom commands are where it gets interesting. These are markdown files in `
 
 ### 3. Hooks: Govern Everything
 
-Hooks are shell scripts that intercept Claude's operations before they execute. They examine the proposed action and can approve, modify, or block it. 
+Hooks are shell scripts that intercept Claude's operations at specific points - before tools run, after they complete, or when prompts are submitted. They can examine the action and approve, modify, or block it. 
 
-Example hook structure:
+This file logger hook runs whenever Claude edits, writes, or modifies files - it simply logs what happened:
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
@@ -76,30 +76,34 @@ main() {
 main "$@"
 ```
 
-Place hooks in `.claude/hooks/` and they'll run automatically. They're your safety net—the difference between a simple tool and a comprehensive platform.
+Place hooks in `.claude/hooks/` and they'll run automatically. Learn more in the [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks). They're your safety net—the difference between a simple tool and a comprehensive platform.
 
 ## System Architecture
 
 ```mermaid
 graph TD
-    A[Your Code] --> B[Hooks Layer]
-    B --> C[Claude Code Engine]
-    C --> D[Git/CI/CD]
+    A[Your Code] --> B[Claude Code Engine]
+    B --> C[57 Custom Commands]
     
-    B -.-> E[Governance]
-    E --> F[Security Checks]
-    E --> G[Quality Gates]
-    E --> H[Compliance Rules]
+    C --> D[Development & Quality]
+    D --> D1[/xtest, /xtdd, /xquality]
     
-    C -.-> I[Intelligence]
-    I --> J[57 Custom Commands]
-    I --> K[Context Awareness]
-    I --> L[Pattern Recognition]
+    C --> E[Security & Governance] 
+    E --> E1[/xsecurity, /xrefactor]
     
-    style B fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#bbf,stroke:#333,stroke-width:2px
-    style E fill:#ffd,stroke:#333,stroke-width:2px
-    style I fill:#dfd,stroke:#333,stroke-width:2px
+    C --> F[CI/CD & Git]
+    F --> F1[/xacp, /xcicd, /xpipeline]
+    
+    C --> G[Architecture & Planning]
+    G --> G1[/xarchitecture, /xspec]
+    
+    B -.-> H[Hooks Layer]
+    H --> H1[File Logging]
+    H --> H2[Security Monitoring]
+    
+    style B fill:#bbf,stroke:#333,stroke-width:2px
+    style C fill:#dfd,stroke:#333,stroke-width:2px
+    style H fill:#f9f,stroke:#333,stroke-width:2px
 ```
 
 ## My Implementation
@@ -176,7 +180,7 @@ When user types `/xtest coverage`, show coverage report.
 When user types `/xtest generate`, create missing tests.
 ```
 
-Save this in `.claude/commands/xtest.md` (local) or `~/.claude/commands/xtest.md` (global). Claude Code loads it automatically.
+Save this in `.claude/commands/xtest.md` (local) or `~/.claude/commands/xtest.md` (global). Claude Code loads it automatically. Learn more about [custom slash commands](https://docs.anthropic.com/en/docs/claude-code/slash-commands).
 
 The key is clear instructions and examples. Claude follows what you write, so be specific about behavior.
 
