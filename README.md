@@ -306,6 +306,34 @@ The active commands are designed with **smart defaults** and **simple usage patt
 
 **Design Philosophy:** Simple things should be simple, complex things should be possible. Most commands work perfectly with no parameters, while advanced options remain available when needed.
 
+## Command Scope: Project vs Machine-Wide
+
+Understanding where to place commands and settings is crucial for effective Claude Code usage:
+
+### Machine-Wide Commands (`~/.claude/commands/`)
+- **Available in ALL projects** on your machine
+- **Best for**: General development commands (`/xtest`, `/xquality`, `/xsecurity`)
+- **Deploy with**: `./deploy.sh` (copies to global directory)
+- **Use when**: Commands apply to any codebase
+- **Examples**: Code quality, testing, security scanning
+
+### Project-Specific Commands (`.claude/commands/`)  
+- **Only available in current project**
+- **Best for**: Project-specific workflows, team standards, domain logic
+- **Create manually**: Place `.md` files directly in project's `.claude/commands/` directory
+- **Use when**: Commands are specific to this project/team
+- **Examples**: Project build scripts, domain-specific validations
+
+### Settings Hierarchy
+Claude Code checks settings in this order (first found wins):
+1. **`.claude/settings.local.json`** - Project-specific, gitignored for secrets
+2. **`.claude/settings.json`** - Project-specific, version controlled for team  
+3. **`~/.claude/settings.json`** - Machine-wide defaults
+
+### Hooks Scope
+- **`~/.claude/hooks/`** - Apply to ALL projects (security, compliance)
+- **`.claude/hooks/`** - Project-specific hooks (team workflows)
+
 ## Typical Builder Workflow
 
 Here's a comprehensive workflow showing how builders can use the active commands throughout the development lifecycle:

@@ -76,7 +76,7 @@ main() {
 main "$@"
 ```
 
-Place hooks in `.claude/hooks/` and they'll run automatically. Learn more in the [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks). They're your safety net—the difference between a simple tool and a comprehensive platform.
+Place hooks in `~/.claude/hooks/` (machine-wide) or `.claude/hooks/` (project-specific) and they'll run automatically. Learn more in the [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks). They're your safety net—the difference between a simple tool and a comprehensive platform.
 
 ## System Architecture
 
@@ -187,7 +187,33 @@ When user types `/xtest coverage`, show coverage report.
 When user types `/xtest generate`, create missing tests.
 ```
 
-Save this in `.claude/commands/xtest.md` (local) or `~/.claude/commands/xtest.md` (global). Claude Code loads it automatically. Learn more about [custom slash commands](https://docs.anthropic.com/en/docs/claude-code/slash-commands).
+Save this in `.claude/commands/xtest.md` (project-only) or `~/.claude/commands/xtest.md` (machine-wide). Claude Code loads it automatically. Learn more about [custom slash commands](https://docs.anthropic.com/en/docs/claude-code/slash-commands).
+
+## Command Scope: Project vs Machine-Wide
+
+Understanding scope is critical for building effective Claude Code workflows:
+
+### Machine-Wide Commands (`~/.claude/commands/`)
+- **Available in ALL projects** on your machine
+- **Best for**: General development commands (`/xtest`, `/xquality`, `/xsecurity`)
+- **Deploy with**: `./deploy.sh` (copies to global directory)
+- **Use when**: Commands apply to any codebase
+
+### Project-Specific Commands (`.claude/commands/`)  
+- **Only available in current project**
+- **Best for**: Project-specific workflows, team standards, domain logic
+- **Create manually**: Place `.md` files directly in project's `.claude/commands/` directory
+- **Use when**: Commands are specific to this project/team
+
+### Settings Hierarchy
+Claude Code checks settings in this order (first found wins):
+1. **`.claude/settings.local.json`** - Project-specific, gitignored for secrets
+2. **`.claude/settings.json`** - Project-specific, version controlled for team  
+3. **`~/.claude/settings.json`** - Machine-wide defaults
+
+### Hooks Scope
+- **`~/.claude/hooks/`** - Apply to ALL projects (security, compliance)
+- **`.claude/hooks/`** - Project-specific hooks (team workflows)
 
 The key is clear instructions and examples. Claude follows what you write, so be specific about behavior.
 
