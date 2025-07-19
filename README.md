@@ -9,7 +9,7 @@ A comprehensive collection of custom slash commands for Claude Code that acceler
 ### Project Structure
 
 The repository is organized into four main categories:
-- **`slash-commands/active/`** - 15 essential commands for daily development workflows
+- **`slash-commands/active/`** - 14 essential commands for daily development workflows
 - **`slash-commands/experiments/`** - 38+ specialized commands for advanced use cases
 - **`hooks/`** - Security hooks for governance, compliance, and workflow automation
 - **`specs/`** - Command specifications and validation framework
@@ -61,7 +61,7 @@ This script creates a virtual environment, installs dependencies, and runs the c
 
 ### 2. Deploy Custom Commands
 
-Deploy the 15 essential commands to your Claude Code installation:
+Deploy the 14 essential commands to your Claude Code installation:
 
 ```bash
 ./deploy.sh
@@ -126,10 +126,10 @@ To explore experimental commands:
 
 ## Active Commands Reference
 
-These 15 essential commands cover the core development workflow and are deployed by default:
+These 14 essential commands cover the core development workflow and are deployed by default:
 
 ### 🎯 Planning & Strategy
-- **`/xplanning`** - AI-assisted project planning with roadmaps, estimation, and risk analysis
+*Planning commands available in experiments/ - see `/slash-commands/experiments/xplanning.md`*
 
 ### 🏗️ Architecture & Design
 - **`/xarchitecture`** - System architecture design and analysis with proven patterns
@@ -161,7 +161,7 @@ These 15 essential commands cover the core development workflow and are deployed
 
 ### Additional Commands
 
-38+ experimental and specialized commands are available in `slash-commands/experiments/` for advanced use cases including analytics, compliance, infrastructure, monitoring, and more.
+40+ experimental and specialized commands are available in `slash-commands/experiments/` for advanced use cases including planning, analytics, compliance, infrastructure, monitoring, and more.
 
 **Important:** These experimental commands are conceptual specifications rather than working implementations. They represent sophisticated frameworks that would be valuable if implemented, but currently serve as design documents and blueprints for future development.
 
@@ -198,9 +198,6 @@ Here's a comprehensive workflow showing how builders can use the active commands
 
 ### 1. Project Planning & Architecture
 ```bash
-# Create project roadmap and estimates
-/xplanning --roadmap --epic "user-authentication" --estimate
-
 # Design system architecture
 /xarchitecture --design --pattern microservices --database-per-service
 
@@ -262,7 +259,7 @@ Here's a comprehensive workflow showing how builders can use the active commands
 ## Command Categories by Use Case
 
 ### For New Developers
-Start with: `/xconfig`, `/xdocs`, `/xplanning`
+Start with: `/xconfig`, `/xdocs`, `/xarchitecture`
 
 ### For Code Quality Focus
 Use: `/xquality`, `/xquality fix`, `/xrefactor`, `/xtest`, `/xtdd`
@@ -274,7 +271,7 @@ Essential: `/xsecurity`, `/xtest coverage`, `/xquality`
 Focus on: `/xcicd`, `/xpipeline`, `/xrelease`, `/xconfig`
 
 ### For Product Teams
-Utilize: `/xplanning`, `/xspec`, `/xarchitecture`
+Utilize: `/xspec`, `/xarchitecture`, plus planning tools in experiments/
 
 ### For Daily Development
 Core workflow: `/xacp`, `/xtest`, `/xquality`, `/xquality fix`, `/xdebug`, `/xrefactor`
