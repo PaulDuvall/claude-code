@@ -28,7 +28,7 @@ The repository is organized into six main categories:
 - **`setup.sh`** - Single-command complete setup (recommended)
 - **`verify-setup.sh`** - Comprehensive diagnostic and validation tool
 - **`validate-commands.sh`** - Enhanced validation framework with integration testing
-- **`deploy.sh`** - Deploy custom commands to Claude Code
+- **`deploy.sh`** - Deploy custom commands with flexible options (active, experimental, or selective)
 - **`configure-claude-code.sh`** - Configure Claude Code itself
 
 ## Prerequisites
@@ -65,37 +65,58 @@ For detailed installation and configuration options, see [Claude Code documentat
 
 ## Quick Start
 
-### Option 1: Complete Setup (Recommended)
+### 🚀 5-Minute Setup (Recommended)
 
-**Single command setup** - runs everything automatically:
+**Get started in under 5 minutes:**
+
+```bash
+# 1. Install Claude Code (if not already installed)
+npm install -g @anthropic-ai/claude-code
+
+# 2. Clone this repository
+git clone <repository-url>
+cd claude-code
+
+# 3. Run automated setup
+./setup.sh
+
+# 4. Start using commands
+claude
+/xtest
+```
+
+**That's it!** Your first custom command should work immediately.
+
+### Complete Setup Options
+
+**Single command setup** - handles everything automatically:
 
 ```bash
 # Preview what will be done (recommended first run)
 ./setup.sh --dry-run
 
-# Complete setup with basic configuration
+# Basic setup - custom commands only
 ./setup.sh
 
-# Security-focused setup with hooks
+# Security setup - adds security hooks  
 ./setup.sh --setup-type security
 
-# Full enterprise setup with governance
+# Enterprise setup - full governance
 ./setup.sh --setup-type enterprise
 ```
 
-This single script handles:
-1. ✅ Validates prerequisites (Claude Code, API key)
-2. ✅ Runs `configure-claude-code.sh` (sets up Claude Code)
-3. ✅ Runs `deploy.sh` (installs 14 custom commands)
-4. ✅ Installs security hooks (if requested)
-5. ✅ Applies appropriate settings.json template
-6. ✅ Validates complete setup
+**What gets installed:**
+1. ✅ Claude Code configuration and authentication
+2. ✅ 14 custom commands (`/xtest`, `/xquality`, `/xsecurity`, etc.)
+3. ✅ Security hooks (if requested)
+4. ✅ Appropriate settings template
+5. ✅ Complete validation
 
-**That's it!** Skip to [Using Commands](#simple-usage-patterns) section.
+**Authentication is automatic** - Claude Code will open your browser for login. No API key needed for most users.
 
-### Option 2: Manual Step-by-Step Setup
+### Advanced: Manual Step-by-Step Setup
 
-If you prefer manual control:
+For users who want granular control:
 
 #### Step 1: Validate Commands (Optional)
 ```bash
@@ -110,7 +131,9 @@ If you prefer manual control:
 
 #### Step 3: Deploy Custom Commands
 ```bash
-./deploy.sh
+./deploy.sh                    # Deploy active commands (default)
+./deploy.sh --experiments      # Deploy experimental commands
+./deploy.sh --all              # Deploy both active and experimental
 ```
 
 #### Step 4: Enable Security Hooks (Optional)
@@ -143,12 +166,42 @@ The hooks system provides:
 
 **Note: Experimental commands are conceptual specifications, not fully implemented tools.**
 
-The 38+ commands in `slash-commands/experiments/` are well-structured design documents that represent sophisticated frameworks for advanced development workflows. These are conceptual specifications that would require implementation to become functional commands.
+The 42 commands in `slash-commands/experiments/` are well-structured design documents that represent sophisticated frameworks for advanced development workflows. These are conceptual specifications that would require implementation to become functional commands.
 
-To explore experimental commands:
-- Review the `.md` files in `slash-commands/experiments/` to understand their potential capabilities
-- Use them as blueprints for developing actual implementations
-- Temporarily modify `deploy.sh` to use `slash-commands/experiments/` if you want to experiment with the conceptual frameworks
+#### Deploying Experimental Commands
+
+```bash
+# Deploy all experimental commands
+./deploy.sh --experiments
+
+# Deploy specific experimental commands only
+./deploy.sh --experiments --include xplanning --include xmetrics
+
+# Deploy both active and experimental commands
+./deploy.sh --all
+
+# Preview what would be deployed
+./deploy.sh --experiments --dry-run
+
+# List all available commands
+./deploy.sh --list
+```
+
+#### Advanced Deployment Options
+
+```bash
+# Selective deployment - deploy only specific commands
+./deploy.sh --include xtest --include xquality --include xsecurity
+
+# Exclude specific commands from deployment
+./deploy.sh --all --exclude xdebug --exclude xconfig
+
+# Deploy from custom directory
+./deploy.sh --source /path/to/custom/commands
+
+# Preview deployment without making changes
+./deploy.sh --all --dry-run
+```
 
 ## Active Commands Reference
 
@@ -187,7 +240,14 @@ These 14 essential commands cover the core development workflow and are deployed
 
 ### Additional Commands
 
-40+ experimental and specialized commands are available in `slash-commands/experiments/` for advanced use cases including planning, analytics, compliance, infrastructure, monitoring, and more.
+42 experimental and specialized commands are available in `slash-commands/experiments/` for advanced use cases including planning, analytics, compliance, infrastructure, monitoring, and more.
+
+**Deploy experimental commands using:**
+```bash
+./deploy.sh --experiments              # Deploy all experimental commands
+./deploy.sh --experiments --include xplanning  # Deploy specific ones
+./deploy.sh --list                     # See all available commands
+```
 
 **Important:** These experimental commands are conceptual specifications rather than working implementations. They represent sophisticated frameworks that would be valuable if implemented, but currently serve as design documents and blueprints for future development.
 
@@ -342,21 +402,20 @@ Core workflow: `/xacp`, `/xtest`, `/xquality`, `/xquality fix`, `/xdebug`, `/xre
 ```bash
 # Clone repository
 git clone <repository>
-cd claude-code-commands
+cd claude-code
 
-# Install Claude Code
+# Install Claude Code (if not already installed)
 npm install -g @anthropic-ai/claude-code
 
-# Authenticate (web-based authentication will prompt automatically)
-# Or set API key manually if needed: export ANTHROPIC_API_KEY='sk-ant-...'
-
-# Complete setup with one command
+# Run automated setup (authentication handled automatically)
 ./setup.sh --dry-run    # Preview what will be done
 ./setup.sh              # Apply basic setup
 
 # Or for security-focused setup
 ./setup.sh --setup-type security
 ```
+
+**Note:** Authentication is handled automatically via browser login. Manual API key setup is only needed for CI/CD or enterprise environments.
 
 ### Manual Setup (Advanced Users)
 
@@ -368,12 +427,16 @@ npm install -g @anthropic-ai/claude-code
 ./configure-claude-code.sh --dry-run  # Preview changes
 ./configure-claude-code.sh             # Apply configuration
 
-# Deploy custom commands
-./deploy.sh
+# Deploy custom commands (see deployment options below)
+./deploy.sh                    # Active commands only (default)
+./deploy.sh --experiments      # Experimental commands only  
+./deploy.sh --all              # Both active and experimental
 
-# Apply settings template manually
+# Apply settings template manually (optional)
 cp templates/basic-settings.json ~/.claude/settings.json
 ```
+
+**Authentication:** Claude Code handles authentication automatically via browser login. Manual API key setup is only needed for CI/CD pipelines or enterprise environments.
 
 ### Configuration Script Options
 
@@ -401,9 +464,18 @@ The `configure-claude-code.sh` script supports several modes:
 ### Development Workflow
 1. **Create new commands** in the `slash-commands/active/` directory as `.md` files (for essential commands) or `slash-commands/experiments/` (for specialized commands)
 2. **Validate commands** by running `./validate-commands.sh` to ensure compliance with specifications
-3. **Test locally** by running `./deploy.sh` and using the command in Claude Code
+3. **Test locally** by deploying specific commands: `./deploy.sh --include yourcommand` and using the command in Claude Code
 4. **Follow the established patterns** for command structure and documentation
 5. **Commit and share** improvements with the team
+
+### Command Deployment Options
+- `./deploy.sh` - Deploy active commands only (default)
+- `./deploy.sh --experiments` - Deploy experimental commands only
+- `./deploy.sh --all` - Deploy both active and experimental commands
+- `./deploy.sh --include cmd1 cmd2` - Deploy specific commands only
+- `./deploy.sh --exclude cmd1 cmd2` - Deploy all except specific commands
+- `./deploy.sh --dry-run --all` - Preview what would be deployed
+- `./deploy.sh --list` - List all available commands
 
 ### Command Structure & Validation
 
