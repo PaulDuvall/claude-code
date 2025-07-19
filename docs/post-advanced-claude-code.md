@@ -329,7 +329,7 @@ All scripts include dry-run modes, automatic backups, and comprehensive validati
 
 **9:00 AM - Start with requirements**
 ```bash
-$ /xspec "User authentication with OAuth2"
+$ /xspec "Add contact form"
 → Generates: BDD specs, acceptance criteria, test cases
 ```
 
