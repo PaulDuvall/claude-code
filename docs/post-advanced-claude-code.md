@@ -19,9 +19,9 @@ That's it. Now ask it questions:
 - "Find dead code"
 - "What's the architecture here?"
 
-But the real power comes from three concepts: Configuration, Slash Commands, and Hooks.
+But the real power comes from three key components: Configuration, Slash Commands, and Hooks.
 
-## The Three Concepts That Matter
+## Three Key Components
 
 ### 1. Configuration: Control Everything
 
@@ -83,6 +83,12 @@ Place hooks in `.claude/hooks/` and they'll run automatically. Learn more in the
 ```mermaid
 graph TD
     A[Your Code] --> B[Claude Code Engine]
+    
+    I[Configuration Layer] -.-> B
+    I --> I1[Trust Settings]
+    I --> I2[File Permissions]
+    I --> I3[Allowed Tools]
+    
     B --> C[57 Custom Commands]
     
     C --> D[Development & Quality]
@@ -104,6 +110,7 @@ graph TD
     style B fill:#bbf,stroke:#333,stroke-width:2px
     style C fill:#dfd,stroke:#333,stroke-width:2px
     style H fill:#f9f,stroke:#333,stroke-width:2px
+    style I fill:#ffd,stroke:#333,stroke-width:2px
 ```
 
 ## My Implementation
