@@ -1,88 +1,83 @@
 ---
-description: Comprehensive security analysis for defensive development
+description: Run security scans with smart defaults (scans all areas if no arguments)
 tags: [security, vulnerabilities, scanning]
 ---
 
-Perform comprehensive security analysis to identify vulnerabilities and provide remediation guidance.
+# Security Analysis
 
-Start by checking the project type and dependencies:
-!ls -la | grep -E "(package.json|requirements.txt|go.mod|Gemfile|pom.xml)"
+Perform comprehensive security scanning with intelligent defaults. No parameters needed for basic usage.
 
-Based on $ARGUMENTS, focus the security scan on specific areas (--secrets, --dependencies, --code, or run all if no arguments).
+## Usage Examples
 
-## 1. Secret Detection
+**Basic usage (runs all security checks):**
+```
+/xsecurity
+```
 
-Scan for exposed secrets and credentials:
-!git grep -i -E "(api[_-]?key|secret|password|token|credential)" --no-index 2>/dev/null | grep -v -E "(test|spec|mock)" | head -20
+**Quick secret scan:**
+```
+/xsecurity secrets
+```
 
-Check git history for accidentally committed secrets:
-!git log -p -S"api_key" --no-merges | grep -E "^\+.*api_key" | head -10 2>/dev/null
+**Dependency vulnerability check:**
+```
+/xsecurity deps
+```
 
-## 2. Dependency Vulnerabilities
+## Implementation
 
-For Python projects:
-!pip-audit 2>/dev/null || safety check 2>/dev/null || echo "Install pip-audit or safety for dependency scanning"
+Start by detecting project type and available security tools:
+!ls -la | grep -E "(package.json|requirements.txt|go.mod|Gemfile|pom.xml|composer.json)"
 
-For Node.js projects:
-!npm audit 2>/dev/null || echo "npm audit not available"
+Determine scan scope based on $ARGUMENTS (default to comprehensive scan):
 
-For other ecosystems, check for known vulnerability scanning tools.
+**Mode 1: Comprehensive Scan (no arguments or "all")**
+If $ARGUMENTS is empty or contains "all":
 
-## 3. Code Security Analysis
+Run complete security analysis:
+1. **Secret Detection**: Scan for exposed credentials and API keys
+2. **Dependency Check**: Check for known vulnerable dependencies  
+3. **Code Analysis**: Look for common security anti-patterns
+4. **Configuration Review**: Check for insecure settings
 
-Look for common security vulnerabilities:
-- SQL injection patterns
-- Command injection risks
-- Path traversal vulnerabilities
-- Insecure cryptography usage
-- Missing authentication/authorization
+!git grep -i -E "(api[_-]?key|secret|password|token)" --no-index 2>/dev/null | grep -v -E "(test|spec|mock|example)" | head -10 || echo "✓ No secrets found in code"
+!pip-audit 2>/dev/null || npm audit --audit-level=high 2>/dev/null || echo "Dependency scan: install pip-audit or npm for dependency checks"
+!grep -r -E "(eval\(|exec\(|system\()" . --include="*.py" --include="*.js" 2>/dev/null | head -5 || echo "✓ No dangerous code patterns found"
 
-!grep -r -n -E "(exec\(|eval\(|system\(|SELECT.*FROM.*WHERE.*\+|os\.system)" . --include="*.py" --include="*.js" 2>/dev/null | head -20
+**Mode 2: Secret Scan Only (argument: "secrets")**
+If $ARGUMENTS contains "secrets":
+!git grep -i -E "(api[_-]?key|secret|password|token|credential)" --no-index 2>/dev/null | grep -v -E "(test|spec|mock|example)" | head -15
+!git log -p --all -S"api_key" --pickaxe-all 2>/dev/null | grep -E "^\+.*api_key" | head -5 || echo "✓ No secrets in git history"
 
-## 4. Configuration Security
+Focus on credential exposure:
+- Scan current files for hardcoded secrets
+- Check git history for accidentally committed credentials
+- Identify potential credential leaks
+- Provide immediate remediation steps
 
-Check for insecure configurations:
-!find . -name "*.yml" -o -name "*.yaml" -o -name "*.env" | xargs grep -l -E "(0.0.0.0|debug.*true|verify.*false)" 2>/dev/null
+**Mode 3: Dependency Check (argument: "deps")**
+If $ARGUMENTS contains "deps":
+!pip-audit --format=json 2>/dev/null || npm audit --json 2>/dev/null || echo "Checking dependencies..."
+
+Analyze dependency vulnerabilities:
+- Check for known security issues in dependencies
+- Identify outdated packages with vulnerabilities
+- Suggest version updates and fixes
+- Report critical vs non-critical issues
+
+## Security Analysis Results
 
 Think step by step about the security findings and provide:
 
-1. Severity assessment for each finding
-2. Specific remediation steps with code examples
-3. Priority order for fixes
-4. Prevention strategies
+1. **Security Status**: Overall security posture assessment
+2. **Critical Issues**: Problems requiring immediate attention 
+3. **Recommended Actions**: Priority-ordered fix list
+4. **Prevention Tips**: How to avoid similar issues
 
-Generate a security report in this format:
+Generate a clear security report showing:
+- 🔴 Critical vulnerabilities (fix immediately)
+- 🟡 Important issues (fix soon)
+- ✅ Areas that look secure
+- 🛡️ Recommended security improvements
 
-```
-🔒 SECURITY SCAN REPORT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Scan Date: [Current date/time]
-Total Issues: X (Critical: X, High: X, Medium: X, Low: X)
-
-🔴 CRITICAL ISSUES
-────────────────
-1. [Issue description]
-   File: [path:line]
-   Fix: [Specific remediation]
-   Reference: [CWE/CVE if applicable]
-
-🟡 HIGH PRIORITY
-──────────────
-1. [Issue description]
-   File: [path:line]
-   Fix: [Specific remediation]
-
-🟠 MEDIUM PRIORITY
-────────────────
-[Similar format]
-
-✅ NEXT STEPS
-───────────
-1. [Prioritized action item]
-2. [Prioritized action item]
-3. [Prioritized action item]
-```
-
-For any critical findings, provide immediate remediation code examples.
-
-If --fix argument is provided, suggest specific code changes for each issue found.
+Keep output focused on actionable findings rather than overwhelming technical details. Provide specific file locations and concrete remediation steps for any issues found.

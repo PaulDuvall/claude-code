@@ -1,146 +1,87 @@
 ---
-description: Comprehensive code quality analysis with automated formatting, linting, and type checking
-tags: [quality, formatting, linting, type-checking, mypy, ruff, standards]
+description: Run code quality checks and fixes (defaults to all checks)
+tags: [quality, formatting, linting, type-checking]
 ---
 
-Execute comprehensive code quality checks and improvements based on the arguments provided in $ARGUMENTS.
+# Code Quality Analysis
 
-First, examine the project structure and quality tools:
-!ls -la | grep -E "(pyproject.toml|setup.py|requirements.txt|package.json)"
-!python -c "import ruff" 2>/dev/null && echo "Ruff available" || echo "Ruff not available"
-!python -c "import mypy" 2>/dev/null && echo "MyPy available" || echo "MyPy not available"
+Run comprehensive code quality analysis with smart defaults. No parameters needed for basic usage.
 
-Based on $ARGUMENTS, perform the appropriate quality operation:
+## Usage Examples
 
-## 1. Type Checking Analysis
+**Basic usage (runs all checks):**
+```
+/xquality
+```
 
-If running type checking (--mypy):
-!find . -name "*.py" | head -10
-!python -c "import mypy; print('MyPy available')" 2>/dev/null || echo "Install with: pip install mypy"
+**Quick fix common issues:**
+```
+/xquality fix
+```
 
-Execute comprehensive type checking:
-- Analyze type annotations across codebase
-- Check for type consistency and errors
-- Report missing type annotations
-- Validate generic types and protocols
-- Generate type coverage metrics
+**Generate detailed report:**
+```
+/xquality report
+```
 
-## 2. Code Linting and Style
+## Implementation
 
-If running linting (--ruff):
-!python -c "import ruff; print('Ruff available')" 2>/dev/null || echo "Install with: pip install ruff"
-!ruff check . --statistics 2>/dev/null || echo "No ruff configuration found"
+First, examine the project structure and available tools:
+!ls -la | grep -E "(pyproject.toml|setup.py|requirements.txt|package.json|composer.json|go.mod)"
+!python -c "import ruff" 2>/dev/null && echo "✓ Ruff available" || echo "⚠ Ruff not available"
+!python -c "import mypy" 2>/dev/null && echo "✓ MyPy available" || echo "⚠ MyPy not available"
 
-Execute comprehensive linting:
-- Check code style and formatting
-- Identify potential bugs and issues
-- Validate import organization
-- Analyze code complexity
-- Report style violations
+Determine what to do based on $ARGUMENTS (default to comprehensive analysis if no arguments):
 
-## 3. Code Formatting
+**Mode 1: Default Analysis (no arguments or "check")**
+If $ARGUMENTS is empty or contains "check":
+!find . -name "*.py" -o -name "*.js" -o -name "*.ts" | head -10
 
-If formatting code (--format):
-!ruff format . --check 2>/dev/null && echo "Code properly formatted" || echo "Formatting needed"
-!python -c "import black" 2>/dev/null && echo "Black available" || echo "Using ruff format"
+Run comprehensive quality analysis:
+1. **Format Check**: Verify code formatting consistency
+2. **Lint Analysis**: Check for bugs, style issues, and best practices  
+3. **Type Safety**: Validate type annotations and consistency
+4. **Code Metrics**: Calculate complexity and maintainability scores
 
-Apply automated formatting:
-- Standardize code formatting
-- Fix import sorting and organization
-- Apply consistent indentation and spacing
-- Normalize string quotes and syntax
-- Generate formatting report
+!ruff check . --statistics 2>/dev/null || echo "Ruff not available - install with: pip install ruff"
+!ruff format . --check 2>/dev/null || echo "Formatting check skipped"
+!python -c "import mypy" && mypy . --ignore-missing-imports 2>/dev/null || echo "MyPy not available - install with: pip install mypy"
 
-## 4. Comprehensive Quality Analysis
+**Mode 2: Quick Fix (argument: "fix")**
+If $ARGUMENTS contains "fix":
+!ruff check . --fix-only 2>/dev/null && echo "✓ Auto-fixed linting issues" || echo "No auto-fixable issues found"
+!ruff format . 2>/dev/null && echo "✓ Applied code formatting" || echo "No formatting changes needed"
 
-If running all checks (--all):
-!find . -name "*.py" -exec wc -l {} \; | awk '{sum+=$1} END {print "Total Python lines:", sum}'
-!python -c "import ast, os; print('AST analysis available')" 2>/dev/null || echo "Basic analysis mode"
-
-Execute complete quality pipeline:
-- Run formatting checks and fixes
-- Perform comprehensive linting
-- Execute type checking analysis
-- Generate quality metrics
-- Report overall quality score
-
-## 5. Quality Metrics and Reporting
-
-If generating reports (--report, --metrics):
-!find . -name "*.py" | wc -l
-!grep -r "TODO\|FIXME\|XXX" . --include="*.py" | wc -l 2>/dev/null || echo "0"
-
-Generate comprehensive quality metrics:
-- Code coverage analysis
-- Type coverage percentage
-- Linting issue density
-- Code complexity measurements
-- Technical debt indicators
-
-## 6. Quality Baseline and Trends
-
-If establishing baseline (--baseline, --trend):
-!ls -la .quality-baseline.json 2>/dev/null || echo "No existing baseline"
-!date +%Y-%m-%d
-
-Track quality over time:
-- Establish quality baseline metrics
-- Compare current state to baseline
-- Track quality trend improvements
-- Identify quality regressions
-- Generate progress reports
-
-## 7. Configuration Management
-
-If checking configuration (--config):
-!find . -name "pyproject.toml" -o -name "ruff.toml" -o -name "mypy.ini" | head -5
-!ruff --version 2>/dev/null || echo "Ruff not installed"
-!mypy --version 2>/dev/null || echo "MyPy not installed"
-
-Manage quality tool configuration:
-- Validate configuration files
-- Check tool versions and compatibility
-- Display current configuration settings
-- Recommend configuration improvements
-- Ensure consistent tool setup
-
-## 8. Automated Quality Fixes
-
-If applying fixes (--fix):
-!ruff check . --fix-only 2>/dev/null || echo "No auto-fixable issues"
-!ruff format . 2>/dev/null || echo "No formatting needed"
-
-Apply automated quality improvements:
-- Auto-fix linting violations
+Apply automated improvements:
+- Fix common linting violations automatically
 - Apply consistent code formatting
-- Organize and sort imports
-- Remove unused imports and variables
-- Generate fix summary report
+- Organize imports and remove unused ones
+- Report what was changed
 
-Think step by step about code quality requirements and provide:
+**Mode 3: Detailed Report (argument: "report")**
+If $ARGUMENTS contains "report":
+!find . -name "*.py" | wc -l
+!grep -r "TODO\|FIXME\|XXX" . --include="*.py" --include="*.js" --include="*.ts" | wc -l 2>/dev/null || echo "0"
 
-1. **Quality Assessment**:
-   - Current quality metrics and scores
-   - Type coverage analysis
-   - Linting issue categorization
-   - Code complexity evaluation
+Generate comprehensive metrics:
+- Total lines of code and file counts
+- Technical debt indicators (TODOs, FIXMEs)
+- Quality score and recommendations
+- Comparison to industry standards
 
-2. **Issue Analysis**:
-   - Critical quality issues requiring attention
-   - Auto-fixable vs manual issues
-   - Technical debt indicators
-   - Performance impact assessment
+## Analysis and Reporting
 
-3. **Improvement Recommendations**:
-   - Priority order for quality fixes
-   - Tool configuration optimizations
-   - Code refactoring suggestions
-   - Quality process improvements
+Think step by step about the code quality findings and provide:
 
-4. **Quality Metrics Report**:
-   - Overall quality score
-   - Trend analysis and progress
-   - Comparison to quality baselines
-   - Team quality performance
+1. **Quality Summary**: Overall assessment with clear pass/fail status
+2. **Critical Issues**: Problems that need immediate attention
+3. **Quick Wins**: Easy fixes that provide high impact
+4. **Next Steps**: Prioritized action items for improvement
 
-Generate comprehensive quality report with actionable recommendations for improving code quality, maintainability, and team development standards.
+Generate a clear, actionable quality report showing:
+- ✅ What's working well
+- ⚠️ What needs attention  
+- 🔧 What can be auto-fixed
+- 📈 Improvement recommendations
+
+Keep the output focused and actionable, avoiding overwhelming technical details unless specifically requested with "report" argument.
