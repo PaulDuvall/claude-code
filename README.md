@@ -8,10 +8,11 @@ A comprehensive collection of custom slash commands for Claude Code that acceler
 
 ### Project Structure
 
-The repository is organized into three main categories:
+The repository is organized into four main categories:
 - **`slash-commands/active/`** - 15 essential commands for daily development workflows
 - **`slash-commands/experiments/`** - 38+ specialized commands for advanced use cases
 - **`hooks/`** - Security hooks for governance, compliance, and workflow automation
+- **`specs/`** - Command specifications and validation framework
 - **`docs/`** - Comprehensive documentation including the complete hooks system specification
 
 ## Prerequisites
@@ -48,7 +49,17 @@ For detailed installation and configuration options, see [Claude Code documentat
 
 ## Quick Start
 
-### 1. Deploy Custom Commands
+### 1. Validate Commands (Optional)
+
+Validate command specifications and ensure quality standards:
+
+```bash
+./validate-commands.sh
+```
+
+This script creates a virtual environment, installs dependencies, and runs the command validation test suite to ensure all commands meet specifications.
+
+### 2. Deploy Custom Commands
 
 Deploy the 15 essential commands to your Claude Code installation:
 
@@ -58,7 +69,7 @@ Deploy the 15 essential commands to your Claude Code installation:
 
 This copies essential command files from `slash-commands/active/` to `~/.claude/commands/`, making them available as slash commands in Claude Code.
 
-### 2. Optional: Configure Claude Code (Convenience Script)
+### 3. Optional: Configure Claude Code (Convenience Script)
 
 This repository includes a convenience script for Claude Code configuration:
 
@@ -76,7 +87,7 @@ The `configure-claude-code.sh` script automates Claude Code setup with:
 - Trust settings and permissions
 - Interactive mode with dry-run option
 
-### 3. Enable Security Hooks (Optional)
+### 4. Enable Security Hooks (Optional)
 
 For automated governance and security monitoring, enable the hooks system:
 
@@ -286,6 +297,9 @@ npm install -g @anthropic-ai/claude-code
 # Authenticate (web-based authentication will prompt automatically)
 # Or set API key manually if needed: export ANTHROPIC_API_KEY='sk-ant-...'
 
+# Validate commands (optional but recommended)
+./validate-commands.sh
+
 # Configure Claude Code (review script first!)
 ./configure-claude-code.sh --dry-run  # Preview changes
 ./configure-claude-code.sh             # Apply configuration
@@ -319,17 +333,26 @@ The `configure-claude-code.sh` script supports several modes:
 
 ### Development Workflow
 1. **Create new commands** in the `slash-commands/active/` directory as `.md` files (for essential commands) or `slash-commands/experiments/` (for specialized commands)
-2. **Test locally** by running `./deploy.sh` and using the command in Claude Code
-3. **Follow the established patterns** for command structure and documentation
-4. **Commit and share** improvements with the team
+2. **Validate commands** by running `./validate-commands.sh` to ensure compliance with specifications
+3. **Test locally** by running `./deploy.sh` and using the command in Claude Code
+4. **Follow the established patterns** for command structure and documentation
+5. **Commit and share** improvements with the team
 
-### Command Structure
+### Command Structure & Validation
+
 Each command follows this pattern:
 - YAML frontmatter with description and tags
 - Usage examples and parameter documentation
 - Implementation logic with bash commands and AI prompts
 - Integration points with other commands
 - Output formatting and reporting
+
+Commands must comply with specifications defined in `specs/`:
+- **`specs/command-specifications.md`** - Executable specifications with test traceability
+- **`specs/custom-command-specifications.md`** - Comprehensive development guidelines
+- **`specs/tests/test_command_validation.py`** - Automated validation test suite
+
+Run `./validate-commands.sh` to ensure all commands meet quality and security standards.
 
 ## Security Hooks System
 
@@ -395,10 +418,11 @@ These commands integrate seamlessly with:
 ## Contributing
 
 1. **Add new commands** following the existing patterns
-2. **Develop security hooks** for governance and automation
-3. **Update documentation** when adding new functionality
-4. **Test thoroughly** before sharing
-5. **Follow security best practices** for all defensive tooling
+2. **Validate compliance** by running `./validate-commands.sh` before submitting
+3. **Develop security hooks** for governance and automation
+4. **Update documentation** when adding new functionality
+5. **Test thoroughly** before sharing
+6. **Follow security best practices** for all defensive tooling
 
 ### Hook Development
 
