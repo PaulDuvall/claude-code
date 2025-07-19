@@ -76,7 +76,7 @@ main() {
 main "$@"
 ```
 
-Place hooks in `.claude/hooks/` and they'll run automatically. They're your safety net—the difference between a toy and a production tool.
+Place hooks in `.claude/hooks/` and they'll run automatically. They're your safety net—the difference between a simple tool and a comprehensive platform.
 
 ## System Architecture
 
@@ -257,7 +257,7 @@ This hook is safe for any environment and helps you understand how hooks integra
 ```bash
 ./setup.sh                          # Basic
 ./setup.sh --setup-type demo        # With demo hooks
-./setup.sh --setup-type enterprise  # Full governance
+./setup.sh --setup-type enterprise  # Advanced governance
 ```
 
 ### [configure-claude-code.sh](https://github.com/PaulDuvall/claude-code/blob/main/configure-claude-code.sh) - Safe Configuration
@@ -267,9 +267,26 @@ This hook is safe for any environment and helps you understand how hooks integra
 ```
 
 ### [deploy.sh](https://github.com/PaulDuvall/claude-code/blob/main/deploy.sh) - Smart Deployment
-Seven deployment modes with validation and rollback.
 
-All scripts include dry-run modes, automatic backups, and comprehensive validation. They're production-ready, not demos.
+**Deployment Options:**
+- `--experiments` - Deploy experimental commands
+- `--all` - Deploy both active and experimental commands  
+- `--include <cmd>` - Deploy specific commands only
+- `--exclude <cmd>` - Exclude specific commands
+- `--dry-run` - Preview deployment without changes
+- `--list` - List available commands
+- `--remove` - Remove all x-prefixed commands
+- `--reset` - Remove commands and reset environment
+
+**Examples:**
+```bash
+./deploy.sh --dry-run --all          # Preview all deployments
+./deploy.sh --include xtest xquality  # Deploy specific commands
+./deploy.sh --exclude xdebug         # Deploy all except xdebug
+./deploy.sh --list                   # See available commands
+```
+
+All scripts include dry-run modes, automatic backups, and comprehensive validation. They're designed for real workflows, not just demos.
 
 ## A Day in the Life: Building a New Feature
 
