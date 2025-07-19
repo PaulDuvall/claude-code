@@ -4,6 +4,38 @@ This directory contains security and workflow hooks for Claude Code that provide
 
 ## Available Hooks
 
+### `file-logger.sh`
+**Purpose**: Simple demonstration of hook functionality without security implications.
+
+**Features**:
+- ✅ Logs file operations (Edit, Write, MultiEdit tools)
+- ✅ Shows file information (size, lines, type)
+- ✅ Non-blocking - always allows operations to proceed
+- ✅ Perfect for learning how hooks work
+
+**Configuration**:
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./hooks/file-logger.sh",
+            "blocking": false,
+            "timeout": 5000
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Log Location**: `~/.claude/logs/file-logger.log`
+
 ### `prevent-credential-exposure.sh`
 **Purpose**: Prevents accidental credential exposure in AI-generated or AI-modified code.
 
@@ -45,10 +77,10 @@ This directory contains security and workflow hooks for Claude Code that provide
 ### Option 1: Global Installation (Recommended)
 ```bash
 # Copy to Claude Code hooks directory
-cp hooks/prevent-credential-exposure.sh ~/.claude/hooks/
+cp hooks/file-logger.sh ~/.claude/hooks/
 
 # Make executable
-chmod +x ~/.claude/hooks/prevent-credential-exposure.sh
+chmod +x ~/.claude/hooks/file-logger.sh
 
 # Configure in ~/.claude/settings.json
 ```
@@ -71,8 +103,8 @@ chmod +x ~/.claude/hooks/prevent-credential-exposure.sh
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/prevent-credential-exposure.sh",
-            "blocking": true
+            "command": "~/.claude/hooks/file-logger.sh",
+            "blocking": false
           }
         ]
       }
