@@ -1,6 +1,6 @@
 # Claude Code: Advanced Tips Using Commands, Configuration, and Hooks
 
-Eight weeks ago, I started using Claude Code. Today, I've transformed it into a comprehensive platform for AI-assisted development. Here's what I learned and built.
+Eight weeks ago, I started using Claude Code. Claude Code is a super powerful agentic coding AI experience that transforms how developers work. Today, I've built it into a comprehensive platform for AI-assisted development. Here's what I learned and built.
 
 ## Why Claude Code Is Different
 
@@ -86,16 +86,16 @@ graph TD
     B --> C[57 Custom Commands]
     
     C --> D[Development & Quality]
-    D --> D1[/xtest, /xtdd, /xquality]
+    D --> D1[xtest, xtdd, xquality]
     
     C --> E[Security & Governance] 
-    E --> E1[/xsecurity, /xrefactor]
+    E --> E1[xsecurity, xrefactor]
     
     C --> F[CI/CD & Git]
-    F --> F1[/xacp, /xcicd, /xpipeline]
+    F --> F1[xacp, xcicd, xpipeline]
     
     C --> G[Architecture & Planning]
-    G --> G1[/xarchitecture, /xspec]
+    G --> G1[xarchitecture, xspec]
     
     B -.-> H[Hooks Layer]
     H --> H1[File Logging]
