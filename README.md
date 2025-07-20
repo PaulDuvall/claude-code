@@ -265,6 +265,66 @@ These 13 essential commands cover the core development workflow and are deployed
 ### 📚 Documentation & Knowledge
 - **`/xdocs`** - Documentation generation and maintenance
 
+## Getting Help with Commands
+
+All custom commands include built-in help functionality for quick reference:
+
+### Help Usage Patterns
+
+```bash
+# Get help for any command using 'help' or '--help'
+/xsecurity help          # Shows comprehensive usage guide
+/xtest --help            # Alternative help syntax
+/xquality help           # Displays all available options
+
+# Help works with all commands
+/xarchitecture help      # Architecture design patterns
+/xtdd help              # Test-driven development guide  
+/xacp help              # Git workflow automation
+/xrefactor help         # Code refactoring options
+```
+
+### Example Help Output
+
+```bash
+$ /xsecurity help
+
+# Security Analysis
+Perform comprehensive security scanning with intelligent defaults
+
+## Usage Examples
+**Basic usage (runs all security checks):**
+/xsecurity
+
+**Quick secret scan:**
+/xsecurity secrets
+
+**Dependency vulnerability check:**
+/xsecurity deps
+
+## Scan Types
+- **Comprehensive** (default): Secrets + dependencies + code patterns + config review
+- **Secrets**: Scan for exposed credentials, API keys, tokens
+- **Dependencies**: Check for vulnerable packages and outdated versions
+
+## What it finds
+🔴 **Critical**: Hardcoded secrets, high-severity vulnerabilities
+🟡 **Important**: Code anti-patterns, medium-severity issues
+✅ **Secure**: Areas that pass security checks
+🛡️ **Recommendations**: Preventive security improvements
+```
+
+### Help for All Command Categories
+
+- **Quality Commands**: `/xquality help`, `/xrefactor help`, `/xtest help`
+- **Security Commands**: `/xsecurity help` 
+- **Development Commands**: `/xtdd help`, `/xdebug help`
+- **Architecture Commands**: `/xarchitecture help`, `/xspec help`
+- **DevOps Commands**: `/xacp help`, `/xpipeline help`, `/xrelease help`
+- **Configuration Commands**: `/xconfig help`, `/xdocs help`
+
+**Design Principle**: Every command is self-documenting with comprehensive help that includes usage patterns, examples, and parameter explanations.
+
 ### Additional Commands
 
 43 experimental and specialized commands are available in `slash-commands/experiments/` for advanced use cases including planning, analytics, compliance, infrastructure, monitoring, CI/CD, and more.

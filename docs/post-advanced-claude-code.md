@@ -158,6 +158,38 @@ Generated fixes in: .claude/security-fixes/
 Apply with: /xsecurity --apply-fixes
 ```
 
+### Getting Help with Commands
+
+All custom commands include built-in help functionality:
+
+```bash
+# Get help for any command
+/xsecurity help
+/xtest --help
+/xquality help
+
+# Example help output
+$ /xsecurity help
+
+# Security Analysis
+Perform comprehensive security scanning with intelligent defaults.
+
+## Usage Examples
+**Basic usage (runs all security checks):**
+/xsecurity
+
+**Quick secret scan:**
+/xsecurity secrets
+
+**Dependency vulnerability check:**
+/xsecurity deps
+
+## Scan Types
+- **Comprehensive** (default): Secrets + dependencies + code patterns
+- **Secrets**: Scan for exposed credentials, API keys, tokens  
+- **Dependencies**: Check for vulnerable packages
+```
+
 **DevOps & Automation**
 - `/xpipeline` - Build optimization and deployment pipelines
 - `/xrelease` - Release orchestration with rollback
