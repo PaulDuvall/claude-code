@@ -98,7 +98,7 @@ graph TD
     E --> E1[xsecurity, xrefactor]
     
     C --> F[CI/CD & Git]
-    F --> F1[xacp, xpipeline, xrelease]
+    F --> F1[xgit, xpipeline, xrelease]
     
     C --> G[Architecture & Planning]
     G --> G1[xarchitecture, xspec]
@@ -193,7 +193,7 @@ Perform comprehensive security scanning with intelligent defaults.
 **DevOps & Automation**
 - `/xpipeline` - Build optimization and deployment pipelines
 - `/xrelease` - Release orchestration with rollback
-- `/xacp` - Git workflow with smart commits
+- `/xgit` - Git workflow with smart commits
 
 ## Creating Your Own Slash Commands
 

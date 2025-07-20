@@ -66,7 +66,7 @@ This document describes custom Claude commands for development projects implemen
 | Run tests | `/xtest --spec` | `/xtest --spec` |
 | Check quality | `/xquality --all` | `/xquality --all` |
 | Commit with trace | `/xcommit --tdd <id>` | `/xcommit --tdd cli1a` |
-| Auto add/commit/push | `/xacp` | `/xacp` |
+| Auto add/commit/push | `/xgit` | `/xgit` |
 | Setup environment | `/xsetup --env` | `/xsetup --env` |
 
 
@@ -121,7 +121,7 @@ This document describes custom Claude commands for development projects implemen
 | `/xtemplate` | Generate code templates and boilerplate | [AI-Assisted Generation](#ai-assisted-generation) |
 | `/xtest` | Run tests with various options | [Testing & Quality](#testing--quality) |
 | `/xvalidate` | Validate project completeness and quality | [Documentation & Reporting](#documentation--reporting) |
-| `/xacp` | Auto stage, commit, and push changes | [Commit & Version Control](#commit--version-control) |
+| `/xgit` | Auto stage, commit, and push changes | [Commit & Version Control](#commit--version-control) |
 | `/xanalytics` | Business and performance analytics | [Analytics & Business Intelligence](#analytics--business-intelligence) |
 | `/xapi` | API design and management | [API Management](#api-management) |
 | `/xcicd` | Manage CI/CD pipelines and deployments | [CI/CD Pipeline Management](#cicd-pipeline-management) |
@@ -277,11 +277,11 @@ feat: implement [requirement] via TDD (^cli1a)
 Implements: specs/specifications/cli-interface.md#{#cli1a authority=developer}
 ```
 
-#### `/xacp` - Add, Commit, Push Automation
+#### `/xgit` - Git Workflow Automation
 Automates the complete git workflow: stages all changes, generates smart commit messages, commits, and pushes.
 
 ```bash
-/xacp                        # Stage all, commit with smart message, push
+/xgit                        # Stage all, commit with smart message, push
 ```
 
 **Features:**

@@ -255,7 +255,7 @@ These 13 essential commands cover the core development workflow and are deployed
 - **`/xsecurity`** - Security scanning with comprehensive defaults (no parameters needed)
 
 ### 🚀 CI/CD & Deployment
-- **`/xacp`** - Automated Add, Commit, Push workflow with smart commit messages
+- **`/xgit`** - Automated Git workflow with smart commit messages
 - **`/xpipeline`** - Build pipeline optimization and automation
 - **`/xrelease`** - Release management and deployment automation
 
@@ -280,7 +280,7 @@ All custom commands include built-in help functionality for quick reference:
 # Help works with all commands
 /xarchitecture help      # Architecture design patterns
 /xtdd help              # Test-driven development guide  
-/xacp help              # Git workflow automation
+/xgit help              # Git workflow automation
 /xrefactor help         # Code refactoring options
 ```
 
@@ -320,7 +320,7 @@ Perform comprehensive security scanning with intelligent defaults
 - **Security Commands**: `/xsecurity help` 
 - **Development Commands**: `/xtdd help`, `/xdebug help`
 - **Architecture Commands**: `/xarchitecture help`, `/xspec help`
-- **DevOps Commands**: `/xacp help`, `/xpipeline help`, `/xrelease help`
+- **DevOps Commands**: `/xgit help`, `/xpipeline help`, `/xrelease help`
 - **Configuration Commands**: `/xconfig help`, `/xdocs help`
 
 **Design Principle**: Every command is self-documenting with comprehensive help that includes usage patterns, examples, and parameter explanations.
@@ -445,7 +445,7 @@ Here's a comprehensive workflow showing how builders can use the active commands
 ### 5. CI/CD & Deployment (Per Release)
 ```bash
 # Automated git workflow
-/xacp  # Stages, commits with smart messages, and pushes
+/xgit  # Stages, commits with smart messages, and pushes
 
 # Set up CI/CD pipeline (experimental command)
 /xpipeline --init github --stages "build,test,deploy"
@@ -475,7 +475,7 @@ Focus on: `/xpipeline`, `/xrelease`, `/xconfig`
 Utilize: `/xspec`, `/xarchitecture`, plus planning tools in experiments/
 
 ### For Daily Development
-Core workflow: `/xacp`, `/xtest`, `/xquality`, `/xquality fix`, `/xdebug`, `/xrefactor`
+Core workflow: `/xgit`, `/xtest`, `/xquality`, `/xquality fix`, `/xdebug`, `/xrefactor`
 
 ## Advanced Usage Patterns
 

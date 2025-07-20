@@ -9,27 +9,27 @@ Automate the complete git workflow with intelligent commit message generation an
 
 **Basic automated workflow:**
 ```
-/xacp
+/xgit
 ```
 
 **Push to specific branch:**
 ```
-/xacp --branch feature-123
+/xgit --branch feature-123
 ```
 
 **Create new branch and push:**
 ```
-/xacp --create-branch fix-bug
+/xgit --create-branch fix-bug
 ```
 
 **Custom commit message:**
 ```
-/xacp --message "Custom commit"
+/xgit --message "Custom commit"
 ```
 
 **Help and options:**
 ```
-/xacp --help
+/xgit --help
 ```
 
 ## Implementation

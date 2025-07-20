@@ -31,7 +31,7 @@ claude-code/
 ├── docs/                              # Documentation directory
 │   └── custom-command-specifications.md  # Command specifications
 └── slash-commands/                    # Command implementations
-    ├── xacp.md                        # Automated Add, Commit, Push
+    ├── xgit.md                        # Automated Git workflow
     ├── xarchitecture.md               # Architecture design and analysis
     ├── xcicd.md                       # CI/CD pipeline setup
     ├── xsecurity.md                   # Security scanning and analysis
@@ -66,7 +66,7 @@ claude-code/
 - `/xpolicy` - Policy enforcement and governance
 
 ### 🚀 CI/CD & Deployment
-- `/xacp` - Automated Add, Commit, Push workflow
+- `/xgit` - Automated Git workflow
 - `/xcicd` - CI/CD pipeline management
 - `/xpipeline` - Build pipeline optimization
 - `/xrelease` - Release management
@@ -162,7 +162,7 @@ Commands are designed to work together in workflows:
 /xtdd --component AuthService       # Implement with TDD
 /xquality --ruff --mypy --fix      # Check code quality
 /xsecurity --scan --report         # Security analysis
-/xacp                              # Automated commit workflow
+/xgit                              # Automated commit workflow
 ```
 
 ### CI/CD Integration

@@ -88,7 +88,7 @@ Display this usage information and exit.
 - xpipeline, xrefactor, xrelease, xspec, xtdd (currently minimal help)
 
 **Phase 3 - Enhancement Commands** (Low Priority):
-- xacp, xdocs (currently moderate help)
+- xgit, xdocs (currently moderate help)
 
 ## Success Metrics
 

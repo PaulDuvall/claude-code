@@ -336,7 +336,7 @@ check_custom_commands() {
             verbose "Commands found: $(ls ~/.claude/commands/x*.md 2>/dev/null | xargs -n1 basename | tr '\n' ', ' | sed 's/,$//')"
             
             # Check for key commands
-            key_commands=("xtest.md" "xquality.md" "xsecurity.md" "xacp.md")
+            key_commands=("xtest.md" "xquality.md" "xsecurity.md" "xgit.md")
             for cmd in "${key_commands[@]}"; do
                 if [[ -f ~/.claude/commands/$cmd ]]; then
                     verbose "Key command '$cmd' deployed"
