@@ -5,17 +5,37 @@ tags: [git, commit, automation, workflow, branching]
 
 Automate the complete git workflow with intelligent commit message generation and branch management.
 
-## Usage
+## Usage Examples
 
-```bash
-/xacp                           # Commit and push to current branch
-/xacp --branch feature-123      # Commit and push to specific branch
-/xacp --branch main             # Commit and push to main branch
-/xacp --create-branch fix-bug   # Create new branch, commit, and push
-/xacp --message "Custom commit" # Use custom commit message
+**Basic automated workflow:**
+```
+/xacp
+```
+
+**Push to specific branch:**
+```
+/xacp --branch feature-123
+```
+
+**Create new branch and push:**
+```
+/xacp --create-branch fix-bug
+```
+
+**Custom commit message:**
+```
+/xacp --message "Custom commit"
+```
+
+**Help and options:**
+```
+/xacp --help
 ```
 
 ## Implementation
+
+If $ARGUMENTS contains "help" or "--help":
+Display this usage information and exit.
 
 First, verify this is a git repository and check current status:
 !git rev-parse --git-dir 2>/dev/null || echo "Not a git repository"

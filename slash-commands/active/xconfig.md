@@ -5,6 +5,33 @@ tags: [configuration, environment, validation, schema, security]
 
 Manage configuration files and settings based on the arguments provided in $ARGUMENTS.
 
+## Usage Examples
+
+**Basic configuration analysis:**
+```
+/xconfig
+```
+
+**Validate configuration files:**
+```
+/xconfig --validate
+```
+
+**Check for security issues:**
+```
+/xconfig --secrets
+```
+
+**Convert between formats:**
+```
+/xconfig --convert yaml json
+```
+
+## Implementation
+
+If $ARGUMENTS contains "help" or "--help":
+Display this usage information and exit.
+
 First, examine the project structure for configuration files:
 !ls -la | grep -E "(config|env|\.yml|\.yaml|\.json|\.toml)"
 !find . -maxdepth 2 -name "*.yml" -o -name "*.yaml" -o -name "*.json" -o -name "*.toml" -o -name ".env*" | head -10

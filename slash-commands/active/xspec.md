@@ -5,6 +5,33 @@ tags: [specifications, traceability, ai-generation, coverage, requirements, auth
 
 Manage SpecDriven AI specifications based on the arguments provided in $ARGUMENTS.
 
+## Usage Examples
+
+**Basic specification analysis:**
+```
+/xspec
+```
+
+**Read specifications:**
+```
+/xspec --read
+```
+
+**Create new specification:**
+```
+/xspec --new "Add contact form"
+```
+
+**Help and options:**
+```
+/xspec --help
+```
+
+## Implementation
+
+If $ARGUMENTS contains "help" or "--help":
+Display this usage information and exit.
+
 First, verify SpecDriven AI project structure:
 !ls -la specs/ 2>/dev/null || echo "No specs directory found"
 !find specs/specifications/ -name "*.md" 2>/dev/null | head -5 || echo "No specifications found"

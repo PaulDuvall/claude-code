@@ -5,6 +5,33 @@ tags: [architecture, design, patterns, ddd, domain-driven-design, bounded-contex
 
 Analyze and design system architecture using Domain-Driven Design, 12-Factor App principles, and proven patterns based on $ARGUMENTS.
 
+## Usage Examples
+
+**Basic architecture analysis:**
+```
+/xarchitecture
+```
+
+**Analyze Domain-Driven Design patterns:**
+```
+/xarchitecture --ddd
+```
+
+**Check 12-Factor App compliance:**
+```
+/xarchitecture --12factor
+```
+
+**Design microservices architecture:**
+```
+/xarchitecture --microservices
+```
+
+## Implementation
+
+If $ARGUMENTS contains "help" or "--help":
+Display this usage information and exit.
+
 First, examine the current project structure:
 !find . -type f -name "*.py" -o -name "*.js" -o -name "*.ts" | grep -v node_modules | grep -v __pycache__ | head -20
 !ls -la src/ app/ lib/ services/ controllers/ models/ 2>/dev/null || echo "No standard architecture directories found"

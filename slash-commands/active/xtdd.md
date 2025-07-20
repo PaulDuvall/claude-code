@@ -5,6 +5,33 @@ tags: [tdd, testing, red-green-refactor, workflow, specifications, automation]
 
 Execute complete TDD workflow automation based on the arguments provided in $ARGUMENTS.
 
+## Usage Examples
+
+**Basic TDD workflow:**
+```
+/xtdd
+```
+
+**Start RED phase:**
+```
+/xtdd --red ContactForm
+```
+
+**Implement GREEN phase:**
+```
+/xtdd --green
+```
+
+**Help and options:**
+```
+/xtdd --help
+```
+
+## Implementation
+
+If $ARGUMENTS contains "help" or "--help":
+Display this usage information and exit.
+
 First, verify project structure and TDD readiness:
 !ls -la specs/ 2>/dev/null || echo "No specs directory found"
 !find specs/tests/ -name "*.py" | head -5 2>/dev/null || echo "No tests found"

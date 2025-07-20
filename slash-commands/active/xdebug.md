@@ -5,6 +5,33 @@ tags: [debugging, troubleshooting, errors]
 
 Debug and analyze errors with root cause identification and fix suggestions.
 
+## Usage Examples
+
+**Analyze recent errors:**
+```
+/xdebug
+```
+
+**Debug specific error:**
+```
+/xdebug "ImportError: No module named 'requests'"
+```
+
+**Debug failing test:**
+```
+/xdebug test_user_login
+```
+
+**Help and debugging options:**
+```
+/xdebug --help
+```
+
+## Implementation
+
+If $ARGUMENTS contains "help" or "--help":
+Display this usage information and exit.
+
 Parse the error or issue from $ARGUMENTS. If no specific error is provided, check for recent errors:
 !tail -50 *.log 2>/dev/null | grep -i "error\|exception\|failed" || echo "No recent errors in log files"
 

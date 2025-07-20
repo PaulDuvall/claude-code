@@ -5,6 +5,33 @@ tags: [release, deployment, planning, coordination, automation, monitoring, roll
 
 Manage comprehensive release operations based on the arguments provided in $ARGUMENTS.
 
+## Usage Examples
+
+**Basic release analysis:**
+```
+/xrelease
+```
+
+**Plan release:**
+```
+/xrelease --plan
+```
+
+**Deploy release:**
+```
+/xrelease --deploy
+```
+
+**Help and options:**
+```
+/xrelease --help
+```
+
+## Implementation
+
+If $ARGUMENTS contains "help" or "--help":
+Display this usage information and exit.
+
 First, examine the project release environment and status:
 !git tag --sort=-version:refname | head -10 2>/dev/null || echo "No git tags found"
 !git log --oneline -10 2>/dev/null || echo "No git repository found"

@@ -5,6 +5,33 @@ tags: [pipeline, cicd, automation, deployment, orchestration, optimization, arti
 
 Configure and manage CI/CD pipelines based on the arguments provided in $ARGUMENTS.
 
+## Usage Examples
+
+**Basic pipeline analysis:**
+```
+/xpipeline
+```
+
+**Initialize new pipeline:**
+```
+/xpipeline --init
+```
+
+**Configure deployment stage:**
+```
+/xpipeline --deploy-stage production
+```
+
+**Help and options:**
+```
+/xpipeline --help
+```
+
+## Implementation
+
+If $ARGUMENTS contains "help" or "--help":
+Display this usage information and exit.
+
 First, examine the current pipeline configuration and environment:
 !find . -name "*.yml" -o -name "*.yaml" | grep -E "(pipeline|workflow|ci|cd)" | head -10
 !ls -la .github/workflows/ .gitlab-ci.yml Jenkinsfile azure-pipelines.yml 2>/dev/null || echo "No CI/CD configurations found"

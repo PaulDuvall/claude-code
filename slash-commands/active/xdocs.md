@@ -5,6 +5,38 @@ tags: [documentation, generation, maintenance]
 
 Generate and maintain documentation from code, keeping it in sync with implementation.
 
+## Usage Examples
+
+**Basic documentation generation:**
+```
+/xdocs
+```
+
+**Generate API documentation:**
+```
+/xdocs --api
+```
+
+**Check documentation coverage:**
+```
+/xdocs --check
+```
+
+**Generate README:**
+```
+/xdocs --readme
+```
+
+**Help and options:**
+```
+/xdocs --help
+```
+
+## Implementation
+
+If $ARGUMENTS contains "help" or "--help":
+Display this usage information and exit.
+
 Parse documentation options from $ARGUMENTS (--generate, --api, --readme, --check, or specific module/file).
 
 ## 1. Analyze Current Documentation

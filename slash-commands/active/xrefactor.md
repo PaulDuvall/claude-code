@@ -5,6 +5,33 @@ tags: [refactoring, code-smells, quality, patterns, analysis]
 
 Analyze code for refactoring opportunities based on the arguments provided in $ARGUMENTS.
 
+## Usage Examples
+
+**Basic refactoring analysis:**
+```
+/xrefactor
+```
+
+**Detect code smells:**
+```
+/xrefactor --smell
+```
+
+**Find duplicate code:**
+```
+/xrefactor --duplicates
+```
+
+**Help and options:**
+```
+/xrefactor --help
+```
+
+## Implementation
+
+If $ARGUMENTS contains "help" or "--help":
+Display this usage information and exit.
+
 First, examine the project structure for Python files to analyze:
 !find . -name "*.py" -type f | grep -v __pycache__ | head -20
 !ls -la src/ app/ lib/ 2>/dev/null || echo "No standard Python directories found"
