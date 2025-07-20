@@ -53,7 +53,7 @@ Most users can authenticate through their browser:
 3. If you're already logged into claude.ai (especially as a Pro user), it will automatically connect
 
 #### Option 2: Manual API Key Setup
-For programmatic use, CI/CD environments, or specific enterprise setups:
+For programmatic use, CI/CD environments, or specific organizational setups:
 ```bash
 # Set your API key as an environment variable
 export ANTHROPIC_API_KEY='sk-ant-...'
@@ -101,8 +101,8 @@ claude
 # Security setup - adds security hooks  
 ./setup.sh --setup-type security
 
-# Enterprise setup - full governance
-./setup.sh --setup-type enterprise
+# Comprehensive setup - full governance
+./setup.sh --setup-type comprehensive
 ```
 
 **What gets installed:**
@@ -530,7 +530,7 @@ npm install -g @anthropic-ai/claude-code
 ./setup.sh --setup-type security
 ```
 
-**Note:** Authentication is handled automatically via browser login. Manual API key setup is only needed for CI/CD or enterprise environments.
+**Note:** Authentication is handled automatically via browser login. Manual API key setup is only needed for CI/CD or organizational environments.
 
 ### Manual Setup (Advanced Users)
 
@@ -551,7 +551,7 @@ npm install -g @anthropic-ai/claude-code
 cp templates/basic-settings.json ~/.claude/settings.json
 ```
 
-**Authentication:** Claude Code handles authentication automatically via browser login. Manual API key setup is only needed for CI/CD pipelines or enterprise environments.
+**Authentication:** Claude Code handles authentication automatically via browser login. Manual API key setup is only needed for CI/CD pipelines or organizational environments.
 
 ### Configuration Script Options
 

@@ -17,7 +17,7 @@ FORCE=false
 SKIP_CONFIGURE=false
 SKIP_DEPLOY=false
 SKIP_HOOKS=false
-SETUP_TYPE="basic"  # basic, security, enterprise
+SETUP_TYPE="basic"  # basic, security, comprehensive
 
 ##################################
 # Parse command line arguments
@@ -34,7 +34,7 @@ DESCRIPTION:
     custom commands deployment, and security hooks installation.
 
 OPTIONS:
-    --setup-type TYPE     Setup type: basic, security, enterprise (default: basic)
+    --setup-type TYPE     Setup type: basic, security, comprehensive (default: basic)
     --dry-run            Show what would be done without making changes
     --force              Skip all prompts and apply all changes
     --non-interactive    Run without prompts but still create backups
@@ -44,15 +44,15 @@ OPTIONS:
     --help               Show this help message
 
 SETUP TYPES:
-    basic       Basic custom commands setup (default)
-    security    Includes security hooks and restrictive permissions
-    enterprise  Full enterprise setup with governance and monitoring
+    basic        Basic custom commands setup (default)
+    security     Includes security hooks and restrictive permissions
+    comprehensive Full setup with governance, monitoring, and advanced features
 
 EXAMPLES:
     $0                           # Interactive basic setup
     $0 --dry-run                 # Preview all changes without applying
     $0 --setup-type security     # Security-focused setup
-    $0 --setup-type enterprise   # Full enterprise setup
+    $0 --setup-type comprehensive # Full comprehensive setup
     $0 --skip-configure          # Only deploy commands and hooks
     $0 --force                   # Apply all changes without prompts
 
@@ -120,8 +120,8 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         --setup-type)
             SETUP_TYPE="$2"
-            if [[ ! "$SETUP_TYPE" =~ ^(basic|security|enterprise)$ ]]; then
-                error "Invalid setup type: $SETUP_TYPE. Must be: basic, security, enterprise"
+            if [[ ! "$SETUP_TYPE" =~ ^(basic|security|comprehensive)$ ]]; then
+                error "Invalid setup type: $SETUP_TYPE. Must be: basic, security, comprehensive"
                 exit 1
             fi
             shift 2
@@ -300,8 +300,8 @@ main() {
         security)
             template_file="$SCRIPT_DIR/templates/security-focused-settings.json"
             ;;
-        enterprise)
-            template_file="$SCRIPT_DIR/templates/enterprise-settings.json"
+        comprehensive)
+            template_file="$SCRIPT_DIR/templates/comprehensive-settings.json"
             ;;
     esac
     

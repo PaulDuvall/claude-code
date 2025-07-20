@@ -1,6 +1,6 @@
 {
-  "// Enterprise Claude Code settings.json template": "Copy to ~/.claude/settings.json",
-  "// Full enterprise setup with hooks, governance, and monitoring": "",
+  "// Comprehensive Claude Code settings.json template": "Copy to ~/.claude/settings.json",
+  "// Full comprehensive setup with hooks, governance, and monitoring": "",
   
   "allowedTools": [
     "Edit",
@@ -20,7 +20,7 @@
   "hasTrustDialogAccepted": true,
   "hasCompletedProjectOnboarding": true,
   
-  "// Performance optimization for enterprise": "",
+  "// Performance optimization for comprehensive setup": "",
   "parallelTasksCount": 5,
   
   "// Comprehensive security hooks": "",
@@ -64,7 +64,7 @@
     ]
   },
   
-  "// Enterprise environment variables": "",
+  "// Comprehensive environment variables": "",
   "env": {
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "true",
     "BASH_DEFAULT_TIMEOUT_MS": "300000",
@@ -75,7 +75,7 @@
     "CLAUDE_CODE_ENABLE_TELEMETRY": "0"
   },
   
-  "// Enterprise-grade permissions": "",
+  "// Comprehensive permissions": "",
   "permissions": {
     "allow": [
       "Bash(npm run *)",
@@ -99,7 +99,7 @@
     ]
   },
   
-  "// MCP servers for enterprise features": "",
+  "// MCP servers for comprehensive features": "",
   "mcpServers": {
     "puppeteer": {
       "command": "docker",

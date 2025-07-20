@@ -38,12 +38,12 @@ cp templates/security-focused-settings.json ~/.claude/settings.json
 # Edit SECURITY_WEBHOOK_URL to your actual webhook
 ```
 
-### 3. `enterprise-settings.json`
-**Use case**: Enterprise development with full governance
+### 3. `comprehensive-settings.json`
+**Use case**: Comprehensive development with full governance
 **Features**:
 - All security features plus:
 - Comprehensive audit logging
-- Enterprise-grade permissions
+- Comprehensive permissions
 - MCP server integration
 - Enhanced performance settings
 - Full monitoring and compliance
@@ -51,12 +51,12 @@ cp templates/security-focused-settings.json ~/.claude/settings.json
 **Prerequisites**: 
 - Install all security hooks
 - Docker Desktop running (for MCP servers)
-- Configure enterprise webhooks
+- Configure organizational webhooks
 
 **To use**:
 ```bash
-cp templates/enterprise-settings.json ~/.claude/settings.json
-# Configure webhooks and enterprise-specific settings
+cp templates/comprehensive-settings.json ~/.claude/settings.json
+# Configure webhooks and organizational settings
 ```
 
 ## Configuration Notes

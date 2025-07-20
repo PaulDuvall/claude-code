@@ -325,7 +325,7 @@ This hook is safe for any environment and helps you understand how hooks integra
 ```bash
 ./setup.sh                          # Basic
 ./setup.sh --setup-type demo        # With demo hooks
-./setup.sh --setup-type enterprise  # Advanced governance
+./setup.sh --setup-type comprehensive  # Advanced governance
 ```
 
 ### [configure-claude-code.sh](https://github.com/PaulDuvall/claude-code/blob/main/configure-claude-code.sh) - Safe Configuration
