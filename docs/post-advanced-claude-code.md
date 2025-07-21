@@ -30,7 +30,7 @@ Claude Code's [configuration system](https://docs.anthropic.com/en/docs/claude-c
 - **Trust Settings**: What Claude can access
 - **File Permissions**: Read/write boundaries
 - **Allowed Tools**: Enable specific capabilities
-- **Authentication**: Web login (use this) or API keys for CI/CD
+- **Authentication**: Web-based login (recommended for most users) or API keys for CI/CD
 
 The approach started with ideas from [Patrick Debois](https://gist.github.com/jedi4ever/762ca6746ef22b064550ad7c04f3bd2f) and evolved them through daily use.
 
