@@ -117,7 +117,7 @@ This diagram shows how Claude Code transforms from a simple CLI tool into a comp
 
 - **Claude Code Engine (Blue)** - The core AI that processes your codebase and executes operations
 - **Configuration Layer (Yellow)** - Controls what Claude can access and do through trust settings, file permissions, and allowed tools
-- **57 Custom Commands (Green)** - 13 active commands for daily use plus 44 experimental specifications, organized into four categories that cover the complete development lifecycle from planning to deployment
+- **57 Custom Commands (Green)** - 13 active commands for daily use plus 44 experimental custom slash commands, organized into four categories that cover the complete development lifecycle from planning to deployment
 - **Hooks Layer (Purple)** - Provides real-time governance and monitoring, intercepting operations for security and audit purposes
 
 The dotted lines show how configuration and hooks influence the engine's behavior, while solid lines show the command hierarchy and data flow.
