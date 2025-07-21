@@ -146,6 +146,11 @@ check_result() {
             warning "$message"
             ((WARNING_CHECKS++))
             ;;
+        "info")
+            info "$message"
+            # Info messages don't count as pass/fail/warn
+            ((TOTAL_CHECKS--))  # Don't count info messages in totals
+            ;;
     esac
 }
 
@@ -158,9 +163,14 @@ check_prerequisites() {
     
     # Check Claude Code installation
     if command -v claude &> /dev/null; then
-        claude_version=$(claude --version 2>/dev/null || echo "unknown")
-        check_result "pass" "Claude Code installed (version: $claude_version)"
-        verbose "Claude Code path: $(which claude)"
+        claude_path=$(which claude 2>/dev/null || echo "unknown")
+        # Try to get version, but don't fail if it prompts for setup
+        if claude_version=$(timeout 3s claude --version </dev/null 2>/dev/null); then
+            check_result "pass" "Claude Code installed (version: $claude_version)"
+        else
+            check_result "pass" "Claude Code installed (may need initial setup)"
+        fi
+        verbose "Claude Code path: $claude_path"
     else
         check_result "fail" "Claude Code not installed - run: npm install -g @anthropic-ai/claude-code"
         return
@@ -183,17 +193,18 @@ check_prerequisites() {
         check_result "warn" "npm not found (usually comes with Node.js)"
     fi
     
-    # Check API key
+    # Check API key (modern Claude Code uses web authentication by default)
     if [[ -n "${ANTHROPIC_API_KEY:-}" ]]; then
         if [[ "$ANTHROPIC_API_KEY" =~ ^sk-ant- ]]; then
             api_key_preview="${ANTHROPIC_API_KEY:0:10}...${ANTHROPIC_API_KEY: -4}"
-            check_result "pass" "ANTHROPIC_API_KEY set ($api_key_preview)"
+            check_result "pass" "ANTHROPIC_API_KEY set ($api_key_preview) - using API key authentication"
             verbose "API key length: ${#ANTHROPIC_API_KEY} characters"
         else
             check_result "warn" "ANTHROPIC_API_KEY set but doesn't match expected format (sk-ant-...)"
         fi
     else
-        check_result "fail" "ANTHROPIC_API_KEY environment variable not set"
+        check_result "pass" "Using web-based authentication (recommended) - no API key needed"
+        verbose "Modern Claude Code defaults to browser-based authentication"
     fi
     
     # Check jq (used by setup scripts)
@@ -222,9 +233,13 @@ check_claude_configuration() {
             fi
             
             if jq -e '.customApiKeyResponses.approved[]' ~/.claude.json > /dev/null 2>&1; then
-                check_result "pass" "API key approved in configuration"
+                check_result "pass" "API key approved in configuration (API key mode)"
             else
-                check_result "warn" "API key not approved in configuration"
+                if [[ -n "${ANTHROPIC_API_KEY:-}" ]]; then
+                    check_result "warn" "API key not approved in configuration (may need approval)"
+                else
+                    check_result "pass" "No API key approval needed (web authentication mode)"
+                fi
             fi
             
         else
@@ -251,7 +266,7 @@ check_claude_configuration() {
         check_result "fail" "~/.claude directory not found"
     fi
     
-    # Check API key helper
+    # Check API key helper (only needed for API key authentication)
     if [[ -f ~/.claude/anthropic_key_helper.sh ]]; then
         if [[ -x ~/.claude/anthropic_key_helper.sh ]]; then
             check_result "pass" "API key helper script exists and is executable"
@@ -260,7 +275,11 @@ check_claude_configuration() {
             check_result "warn" "API key helper script exists but is not executable"
         fi
     else
-        check_result "warn" "API key helper script not found"
+        if [[ -n "${ANTHROPIC_API_KEY:-}" ]]; then
+            check_result "warn" "API key helper script not found (needed for API key mode)"
+        else
+            check_result "pass" "API key helper not needed (using web authentication)"
+        fi
     fi
 }
 
@@ -408,12 +427,12 @@ check_security_hooks() {
 check_integration() {
     section "Integration Testing"
     
-    # Test Claude Code basic functionality
-    if claude --version > /dev/null 2>&1; then
+    # Test Claude Code basic functionality (non-interactive)
+    if timeout 3s claude --version </dev/null > /dev/null 2>&1; then
         check_result "pass" "Claude Code responds to --version"
     else
-        check_result "fail" "Claude Code does not respond to commands"
-        return
+        check_result "warn" "Claude Code may need authentication setup"
+        verbose "Try running 'claude' interactively to complete setup"
     fi
     
     # Test settings loading (attempt to read config)
