@@ -370,11 +370,18 @@ This hook is safe for any environment and helps you understand how hooks integra
 ./setup.sh --setup-type comprehensive  # Advanced governance
 ```
 
-### [configure-claude-code.sh](https://github.com/PaulDuvall/claude-code/blob/main/configure-claude-code.sh) - Safe Configuration
+### [configure-claude-code.sh](https://github.com/PaulDuvall/claude-code/blob/main/configure-claude-code.sh) - Configuration Automation
 ```bash
 ./configure-claude-code.sh --dry-run  # Preview
 ./configure-claude-code.sh            # Apply with backups
 ```
+
+**Expands on [Patrick Debois' original examples](https://gist.github.com/jedi4ever/762ca6746ef22b064550ad7c04f3bd2f) with:**
+- **API key management** - Creates secure helper script for authentication
+- **Claude configuration** - Sets up `.claude.json` with trust settings and theme
+- **MCP server setup** - Configures Docker-based servers (if Docker available)
+- **IDE extension** - Installs Claude Code extension for Windsurf
+- **Security permissions** - Restricts file access and creates backups
 
 ### [deploy.sh](https://github.com/PaulDuvall/claude-code/blob/main/deploy.sh) - Smart Deployment
 
