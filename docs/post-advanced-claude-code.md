@@ -372,15 +372,20 @@ This hook is safe for any environment and helps you understand how hooks integra
 
 ### [configure-claude-code.sh](https://github.com/PaulDuvall/claude-code/blob/main/configure-claude-code.sh) - Configuration Automation
 ```bash
-./configure-claude-code.sh --dry-run  # Preview
-./configure-claude-code.sh            # Apply with backups
+./configure-claude-code.sh --help                    # Comprehensive help
+./configure-claude-code.sh --dry-run                 # Preview changes
+./configure-claude-code.sh --os linux --ide vscode  # Cross-platform setup
+./configure-claude-code.sh                           # Apply with backups
 ```
 
 **Expands on [Patrick Debois' original examples](https://gist.github.com/jedi4ever/762ca6746ef22b064550ad7c04f3bd2f) with:**
-- **API key management** - Creates secure helper script for authentication
+- **Modern authentication** - Defaults to web-based auth (no API key required)
+- **Cross-platform support** - Works on macOS and Linux with multiple IDEs
+- **Comprehensive help** - Built-in documentation and usage examples
 - **Claude configuration** - Sets up `.claude.json` with trust settings and theme
 - **MCP server setup** - Configures Docker-based servers (if Docker available)
-- **IDE extension** - Installs Claude Code extension for Windsurf
+- **Multi-IDE support** - Installs extensions for Windsurf, VSCode, or Cursor
+- **Maintainable architecture** - Modular design for easy updates and testing
 - **Security permissions** - Restricts file access and creates backups
 
 ### [deploy.sh](https://github.com/PaulDuvall/claude-code/blob/main/deploy.sh) - Smart Deployment
