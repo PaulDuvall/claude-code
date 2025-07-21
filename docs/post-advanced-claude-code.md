@@ -124,7 +124,16 @@ The dotted lines show how configuration and hooks influence the engine's behavio
 
 ## Implementation Overview
 
-This implementation systematizes patterns from my [AI Development Patterns](https://github.com/PaulDuvall/ai-development-patterns/) research into concrete Claude Code configuration, custom slash commands, and hooks. What started as documented patterns became automated workflows.
+This implementation systematizes some of the patterns from my [AI Development Patterns](https://github.com/PaulDuvall/ai-development-patterns/) repo into concrete Claude Code configuration, custom slash commands, and hooks. What started as documented patterns became automated workflows.
+
+**From Theory to Practice:**
+- **AI-Assisted Testing Workflows** → `/xtest`, `/xtdd`, `/xcoverage` commands that automate test generation and execution
+- **Security-First AI Development** → `/xsecurity` command with hooks that prevent credential exposure and scan for vulnerabilities 
+- **Quality Governance Patterns** → `/xquality`, `/xrefactor` commands that enforce standards automatically
+- **Architecture Documentation** → `/xarchitecture`, `/xspec` commands that generate living documentation
+- **CI/CD Integration Patterns** → `/xpipeline`, `/xrelease`, `/xgit` commands that automate deployment workflows
+
+The patterns repo documents the theoretical approaches; this Claude Code implementation provides the executable automation layer that transforms those patterns into daily practice.
 
 The implementation includes [CLAUDE.md](https://github.com/PaulDuvall/claude-code/blob/main/CLAUDE.md) (inspired by [Paul Hammond](https://github.com/citypaul/.dotfiles/blob/main/claude/.claude/CLAUDE.md)) as Claude's reference guide. It contains:
 - Project architecture
