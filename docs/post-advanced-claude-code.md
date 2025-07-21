@@ -117,12 +117,14 @@ This diagram shows how Claude Code transforms from a simple CLI tool into a comp
 
 - **Claude Code Engine (Blue)** - The core AI that processes your codebase and executes operations
 - **Configuration Layer (Yellow)** - Controls what Claude can access and do through trust settings, file permissions, and allowed tools
-- **57 Custom Commands (Green)** - Organized into four categories that cover the complete development lifecycle from planning to deployment
+- **57 Custom Commands (Green)** - 13 active commands for daily use plus 44 experimental specifications, organized into four categories that cover the complete development lifecycle from planning to deployment
 - **Hooks Layer (Purple)** - Provides real-time governance and monitoring, intercepting operations for security and audit purposes
 
 The dotted lines show how configuration and hooks influence the engine's behavior, while solid lines show the command hierarchy and data flow.
 
 ## Implementation Overview
+
+This implementation systematizes patterns from my [AI Development Patterns](https://github.com/PaulDuvall/ai-development-patterns/) research into concrete Claude Code configuration, custom slash commands, and hooks. What started as documented patterns became automated workflows.
 
 The implementation includes [CLAUDE.md](https://github.com/PaulDuvall/claude-code/blob/main/CLAUDE.md) (inspired by [Paul Hammond](https://github.com/citypaul/.dotfiles/blob/main/claude/.claude/CLAUDE.md)) as Claude's reference guide. It contains:
 - Project architecture
