@@ -361,7 +361,7 @@ echo "print('Hello World')" > test.py
 
 This hook is safe for any environment and helps you understand how hooks integrate with Claude Code's operation flow.
 
-## Three Scripts That Do The Heavy Lifting
+## Four Scripts That Do The Heavy Lifting
 
 ### [setup.sh](https://github.com/PaulDuvall/claude-code/blob/main/setup.sh) - One-Command Setup
 ```bash
@@ -407,6 +407,24 @@ This hook is safe for any environment and helps you understand how hooks integra
 ./deploy.sh --exclude xdebug         # Deploy all except xdebug
 ./deploy.sh --list                   # See available commands
 ```
+
+### [verify-setup.sh](https://github.com/PaulDuvall/claude-code/blob/main/verify-setup.sh) - Comprehensive Diagnostics
+```bash
+./verify-setup.sh                   # Standard validation
+./verify-setup.sh --verbose         # Detailed diagnostics  
+./verify-setup.sh --output report   # Save results to file
+./verify-setup.sh --quiet --output log # Silent with file output
+```
+
+**Validates your complete setup:**
+- **Prerequisites** - Claude Code, Node.js, API keys, dependencies
+- **Configuration** - ~/.claude.json, settings.json, permissions
+- **Custom commands** - Deployment status, file accessibility
+- **Security hooks** - Installation, permissions, functionality  
+- **Integration** - End-to-end functionality testing
+- **Diagnostics** - Logs, error detection, performance checks
+
+Perfect for troubleshooting or confirming everything works after setup.
 
 All scripts include dry-run modes, automatic backups, and comprehensive validation. They're designed for real workflows, not just demos.
 
