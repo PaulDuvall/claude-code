@@ -7,11 +7,13 @@ set -euo pipefail
 # Always use --dry-run first to preview changes.
 # Review the source code to understand what it does before executing.
 
-# Script to automate Claude Code after installation on macOS with Windsurf
+# Script to automate Claude Code configuration across platforms and IDEs
 # Based on Patrick Debois' original script: https://gist.github.com/jedi4ever/762ca6746ef22b064550ad7c04f3bd2f
 # 
 # This version adds:
-# - macOS and Windsurf specific adaptations
+# - Cross-platform support (macOS, Linux)
+# - Multi-IDE support (Windsurf, VSCode, Cursor)
+# - Configurable shell environment detection
 # - Backup and recovery mechanisms
 # - Interactive mode with dry-run option
 # - Better error handling and validation
@@ -20,10 +22,11 @@ set -euo pipefail
 
 # Key features:
 # - Backs up existing configuration before making changes
-# - Interactive mode to preview changes
-# - Dry-run option to see what would be changed
-# - Configure API keys, trust directory, MCP servers, permissions
-# - macOS and Windsurf specific configurations
+# - Interactive mode to preview changes with --dry-run
+# - Cross-platform OS detection and configuration
+# - Multi-IDE extension installation support
+# - Configurable shell environment setup
+# - API key management, MCP servers, permissions
 
 ##################################
 # Configuration and Constants
@@ -32,12 +35,85 @@ BACKUP_DIR="$HOME/.claude-backups/$(date +%Y%m%d_%H%M%S)"
 DRY_RUN=false
 INTERACTIVE=true
 FORCE=false
+TARGET_OS=""
+TARGET_IDE=""
+SHELL_CONFIG=""
+
+##################################
+# Help function
+##################################
+show_help() {
+    cat << 'EOF'
+Claude Code Configuration Script
+
+USAGE:
+    ./configure-claude-code.sh [OPTIONS]
+
+DESCRIPTION:
+    Automates Claude Code setup with configurable OS and IDE support.
+    Based on Patrick Debois' original work with cross-platform enhancements.
+
+OPTIONS:
+    -h, --help              Show this help message
+    --dry-run              Preview changes without applying them
+    --force                Skip all prompts and apply changes (use with caution)
+    --non-interactive      Run without prompts but still create backups
+    
+    --os <OS>              Target operating system
+                          Values: macos, linux, auto (default: auto-detect)
+    
+    --ide <IDE>            Target IDE/editor for extension installation
+                          Values: windsurf, vscode, cursor, none (default: windsurf)
+    
+    --shell-config <FILE>  Shell configuration file to reference
+                          Values: auto, ~/.zshrc, ~/.bashrc, ~/.bash_profile
+                          (default: auto-detect based on shell)
+
+EXAMPLES:
+    # Interactive setup with auto-detection
+    ./configure-claude-code.sh
+    
+    # Preview changes for Linux + VSCode
+    ./configure-claude-code.sh --dry-run --os linux --ide vscode
+    
+    # Force setup for macOS + Cursor with custom shell config
+    ./configure-claude-code.sh --force --os macos --ide cursor --shell-config ~/.bashrc
+    
+    # Skip IDE extension installation
+    ./configure-claude-code.sh --ide none
+    
+    # Linux setup with bash configuration
+    ./configure-claude-code.sh --os linux --ide vscode --shell-config ~/.bashrc
+
+SUPPORTED PLATFORMS:
+    Operating Systems: macOS, Linux
+    IDEs: Windsurf, VSCode, Cursor
+    Shells: zsh, bash, fish (auto-detected)
+
+ENVIRONMENT VARIABLES:
+    ANTHROPIC_API_KEY      Required: Your Anthropic API key (sk-ant-...)
+    
+SECURITY:
+    - Always use --dry-run first to preview changes
+    - Review script contents before execution
+    - Backups are automatically created in ~/.claude-backups/
+    - Configuration files get restricted permissions (600/700)
+
+MORE INFO:
+    Repository: https://github.com/PaulDuvall/claude-code
+    Based on: https://gist.github.com/jedi4ever/762ca6746ef22b064550ad7c04f3bd2f
+EOF
+}
 
 ##################################
 # Parse command line arguments
 ##################################
 while [[ $# -gt 0 ]]; do
     case $1 in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
         --dry-run)
             DRY_RUN=true
             shift
@@ -51,20 +127,17 @@ while [[ $# -gt 0 ]]; do
             INTERACTIVE=false
             shift
             ;;
-        --help)
-            echo "Usage: $0 [OPTIONS]"
-            echo ""
-            echo "Options:"
-            echo "  --dry-run          Show what would be changed without making changes"
-            echo "  --force            Skip all prompts and backup checks (use with caution)"
-            echo "  --non-interactive  Run without prompts (but still create backups)"
-            echo "  --help             Show this help message"
-            echo ""
-            echo "Examples:"
-            echo "  $0                 # Interactive mode with backups"
-            echo "  $0 --dry-run       # Preview changes without applying"
-            echo "  $0 --force         # Apply all changes without prompts"
-            exit 0
+        --os)
+            TARGET_OS="$2"
+            shift 2
+            ;;
+        --ide)
+            TARGET_IDE="$2"
+            shift 2
+            ;;
+        --shell-config)
+            SHELL_CONFIG="$2"
+            shift 2
             ;;
         *)
             echo "Unknown option: $1"
@@ -176,14 +249,102 @@ if [[ -f "$HOME/.claude.json" ]] || [[ -d "$HOME/.claude" ]]; then
 fi
 
 ##################################
-# Detect OS and validate environment
+# Auto-detect and validate environment
 ##################################
-if [[ "$OSTYPE" != "darwin"* ]]; then
-    echo "This script is configured for macOS. Detected OS: $OSTYPE"
-    if ! confirm "Continue anyway?"; then
-        exit 1
+detect_os() {
+    if [[ "$TARGET_OS" == "auto" ]] || [[ -z "$TARGET_OS" ]]; then
+        case "$OSTYPE" in
+            darwin*)
+                TARGET_OS="macos"
+                ;;
+            linux*)
+                TARGET_OS="linux"
+                ;;
+            *)
+                TARGET_OS="unknown"
+                ;;
+        esac
     fi
-fi
+    
+    log "Detected/specified OS: $TARGET_OS"
+}
+
+detect_ide() {
+    if [[ -z "$TARGET_IDE" ]]; then
+        TARGET_IDE="windsurf"  # Default
+    fi
+    
+    case "$TARGET_IDE" in
+        windsurf)
+            IDE_CMD="windsurf"
+            ;;
+        vscode)
+            IDE_CMD="code"
+            ;;
+        cursor)
+            IDE_CMD="cursor"
+            ;;
+        none)
+            IDE_CMD=""
+            ;;
+        *)
+            echo "Unknown IDE: $TARGET_IDE"
+            echo "Supported IDEs: windsurf, vscode, cursor, none"
+            exit 1
+            ;;
+    esac
+    
+    log "Target IDE: $TARGET_IDE"
+}
+
+detect_shell_config() {
+    if [[ "$SHELL_CONFIG" == "auto" ]] || [[ -z "$SHELL_CONFIG" ]]; then
+        case "$SHELL" in
+            */zsh)
+                SHELL_CONFIG="~/.zshrc"
+                ;;
+            */bash)
+                if [[ "$TARGET_OS" == "macos" ]]; then
+                    SHELL_CONFIG="~/.bash_profile"
+                else
+                    SHELL_CONFIG="~/.bashrc"
+                fi
+                ;;
+            */fish)
+                SHELL_CONFIG="~/.config/fish/config.fish"
+                ;;
+            *)
+                SHELL_CONFIG="~/.profile"
+                ;;
+        esac
+    fi
+    
+    log "Shell configuration file: $SHELL_CONFIG"
+}
+
+# Run detection functions
+detect_os
+detect_ide  
+detect_shell_config
+
+# Validate OS support
+case "$TARGET_OS" in
+    macos|linux)
+        log "✓ OS $TARGET_OS is supported"
+        ;;
+    unknown)
+        echo "Warning: Unknown OS detected ($OSTYPE)"
+        echo "This script is tested on macOS and Linux"
+        if ! confirm "Continue anyway?"; then
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Unsupported OS: $TARGET_OS"
+        echo "Supported values: macos, linux, auto"
+        exit 1
+        ;;
+esac
 
 # Check if claude is installed
 if ! command -v claude &> /dev/null; then
@@ -384,53 +545,68 @@ else
 fi
 
 #################################
-# IDE extension for Windsurf:
-# - Claude code comes with a VSCODE/Cursor extension
-# - this extension is not available through the marketplace
-# - it is part of the npm package
-# - Note: this only works in an IDE terminal , not in postcreate commands , I set it in my .bashrc
+# IDE extension installation:
+# - Claude code comes with a VSCode/Cursor compatible extension
+# - This extension is not available through the marketplace
+# - It is part of the npm package
+# - Supports: Windsurf, VSCode, Cursor, and compatible editors
 #################################
-# set the IDE code for Windsurf
-IDE_CMD=windsurf
 
-# Check if Windsurf command exists
-if ! command -v $IDE_CMD &> /dev/null; then
-    echo "Windsurf command not found. Please ensure Windsurf is installed and the command-line tool is available."
-    echo "You may need to install the Windsurf command-line tool from within the IDE."
-    echo "Skipping extension installation..."
-else
-    if [[ "$DRY_RUN" == "true" ]]; then
-        log "[DRY-RUN] Would install Claude Code extension for Windsurf"
+if [[ "$TARGET_IDE" != "none" ]] && [[ -n "$IDE_CMD" ]]; then
+    # Check if IDE command exists
+    if ! command -v "$IDE_CMD" &> /dev/null; then
+        echo "$TARGET_IDE command '$IDE_CMD' not found."
+        echo "Please ensure $TARGET_IDE is installed and the command-line tool is available."
+        if [[ "$TARGET_IDE" == "vscode" ]]; then
+            echo "Install VSCode command line tools: View > Command Palette > 'Shell Command: Install code command in PATH'"
+        elif [[ "$TARGET_IDE" == "cursor" ]]; then
+            echo "Install Cursor command line tools from the application menu"
+        elif [[ "$TARGET_IDE" == "windsurf" ]]; then
+            echo "Install Windsurf command line tools from within the IDE"
+        fi
+        echo "Skipping extension installation..."
     else
-        # Do this in a tempdir (macOS compatible)
-        tempdir=$(mktemp -d -t claude-install)
-        cd "$tempdir"
-
-        # downloads the package
-        if ! npm pack @anthropic-ai/claude-code; then
-            error "Failed to download Claude Code package"
-            exit 1
-        fi
-        
-        if ! tar -xzvf anthropic-ai-claude-code-*.tgz; then
-            error "Failed to extract Claude Code package"
-            exit 1
-        fi
-        
-        # Install the extension
-        # requires a reload of the editor
-        echo "Installing Claude Code extension for Windsurf..."
-        if ! $IDE_CMD --install-extension package/vendor/claude-code.vsix; then
-            error "Failed to install Claude Code extension for Windsurf"
-            echo "You may need to install it manually later"
+        if [[ "$DRY_RUN" == "true" ]]; then
+            log "[DRY-RUN] Would install Claude Code extension for $TARGET_IDE"
         else
-            echo "✓ Extension installed successfully"
+            # Create temp directory (cross-platform compatible)
+            if [[ "$TARGET_OS" == "macos" ]]; then
+                tempdir=$(mktemp -d -t claude-install)
+            else
+                tempdir=$(mktemp -d --tmpdir claude-install.XXXXXX)
+            fi
+            cd "$tempdir"
+
+            # Download the package
+            echo "Downloading Claude Code package..."
+            if ! npm pack @anthropic-ai/claude-code; then
+                error "Failed to download Claude Code package"
+                exit 1
+            fi
+            
+            if ! tar -xzf anthropic-ai-claude-code-*.tgz; then
+                error "Failed to extract Claude Code package"
+                exit 1
+            fi
+            
+            # Install the extension
+            echo "Installing Claude Code extension for $TARGET_IDE..."
+            if ! "$IDE_CMD" --install-extension package/vendor/claude-code.vsix; then
+                error "Failed to install Claude Code extension for $TARGET_IDE"
+                echo "You may need to install it manually later"
+                echo "Extension file: $tempdir/package/vendor/claude-code.vsix"
+            else
+                echo "✓ Extension installed successfully for $TARGET_IDE"
+                echo "  You may need to reload/restart $TARGET_IDE for the extension to take effect"
+            fi
+            
+            # Cleanup
+            cd - > /dev/null
+            rm -rf "$tempdir"
         fi
-        
-        # Cleanup
-        cd - > /dev/null
-        rm -rf "$tempdir"
     fi
+else
+    log "Skipping IDE extension installation (TARGET_IDE=$TARGET_IDE)"
 fi
 
 #################################
@@ -470,7 +646,7 @@ if [[ -d "$BACKUP_DIR" ]] && [[ "$DRY_RUN" != "true" ]]; then
     echo ""
 fi
 
-echo "To use the following environment variables, add them to your ~/.zshrc or ~/.bash_profile:"
+echo "To use the following environment variables, add them to your $SHELL_CONFIG:"
 echo ""
 echo "# Claude Code Environment Variables"
 echo "export ANTHROPIC_API_KEY='your-api-key-here'"
@@ -485,7 +661,7 @@ echo "# Optional: increase timeouts for long-running commands"
 echo "# export BASH_DEFAULT_TIMEOUT_MS=300000  # 5 minutes"
 echo "# export MCP_TIMEOUT=60000  # 1 minute"
 echo ""
-echo "Don't forget to restart your terminal or run: source ~/.zshrc"
+echo "Don't forget to restart your terminal or run: source $SHELL_CONFIG"
 echo ""
 
 if [[ "$DRY_RUN" == "true" ]]; then
@@ -510,7 +686,11 @@ else
 fi
 
 echo ""
-echo "Setup complete! You may need to restart Windsurf for the extension to take effect."
+if [[ "$TARGET_IDE" != "none" ]]; then
+    echo "Setup complete! You may need to restart $TARGET_IDE for the extension to take effect."
+else
+    echo "Setup complete!"
+fi
 echo ""
 echo "🔐 Security Reminder:"
 echo "- Your API key is stored in ~/.claude/anthropic_key_helper.sh"
