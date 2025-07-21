@@ -32,7 +32,7 @@ Claude Code's [configuration system](https://docs.anthropic.com/en/docs/claude-c
 - **Allowed Tools**: Enable specific capabilities
 - **Authentication**: Web login (use this) or API keys for CI/CD
 
-The approach started with ideas from [Patrick Debois](https://gist.github.com/jedi4ever/762ca6746ef22b064550ad7c04f3bd2f) and evolved them through real use.
+The approach started with ideas from [Patrick Debois](https://gist.github.com/jedi4ever/762ca6746ef22b064550ad7c04f3bd2f) and evolved them through daily use.
 
 ### 2. Slash Commands: Automate Everything
 
@@ -112,6 +112,15 @@ graph TD
     style H fill:#f9f,stroke:#333,stroke-width:2px
     style I fill:#ffd,stroke:#333,stroke-width:2px
 ```
+
+This diagram shows how Claude Code transforms from a simple CLI tool into a comprehensive AI development platform through layered architecture:
+
+- **Claude Code Engine (Blue)** - The core AI that processes your codebase and executes operations
+- **Configuration Layer (Yellow)** - Controls what Claude can access and do through trust settings, file permissions, and allowed tools
+- **57 Custom Commands (Green)** - Organized into four categories that cover the complete development lifecycle from planning to deployment
+- **Hooks Layer (Purple)** - Provides real-time governance and monitoring, intercepting operations for security and audit purposes
+
+The dotted lines show how configuration and hooks influence the engine's behavior, while solid lines show the command hierarchy and data flow.
 
 ## Implementation Overview
 
@@ -247,6 +256,37 @@ Claude Code checks settings in this order (first found wins):
 - **`.claude/hooks/`** - Project-specific hooks (team workflows)
 
 The key is clear instructions and examples. Claude follows what you write, so be specific about behavior.
+
+## Per-Project Configuration
+
+Quick setup for project-specific settings:
+
+```bash
+# Create project configuration
+mkdir -p .claude/{commands,hooks}
+
+# Team settings (version controlled)
+echo '{
+  "model": "claude-3-haiku-20240307",
+  "project": {
+    "testCommand": "npm test",
+    "lintCommand": "eslint ."
+  }
+}' > .claude/settings.json
+
+# Personal overrides (gitignored)
+echo '{
+  "allowedTools": ["Bash", "Edit", "Read"]
+}' > .claude/settings.local.json
+
+# Project-specific command
+echo '---
+name: deploy-staging
+---
+Deploy to staging environment with project-specific validation' > .claude/commands/deploy-staging.md
+```
+
+Add `.claude/settings.local.json` to `.gitignore` for personal settings.
 
 ## Deployment That Works
 
