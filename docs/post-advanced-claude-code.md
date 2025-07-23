@@ -1,6 +1,6 @@
 # Claude Code: Advanced Tips Using Commands, Configuration, and Hooks
 
-About eight weeks ago, I started using Claude Code. Claude Code is a super powerful agentic coding AI experience that transforms how developers work. Today, I've built it into a comprehensive platform for AI-assisted development. Here's what was learned and built.
+For a few months now, I've been using Claude Code. Claude Code is a super powerful agentic coding AI experience that transforms how developers work. Today, I've built it into a comprehensive platform for AI-assisted development. Here's what was learned and built.
 
 https://github.com/PaulDuvall/claude-code/
 

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Claude Code Custom Commands is a comprehensive collection of 50+ custom slash commands for Claude Code that accelerate software development workflows through AI-powered automation. These commands provide intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring.
+Claude Code Custom Commands is a comprehensive collection of 57 custom slash commands for Claude Code that accelerate software development workflows through AI-powered automation. These commands provide intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring.
 
 ## Core Philosophy
 
@@ -26,18 +26,63 @@ All commands are designed to enhance developer productivity while maintaining se
 claude-code/
 ├── CLAUDE.md                           # This file - project guidance
 ├── README.md                           # Main project documentation
-├── deploy.sh                          # Deployment script for commands
-├── claude-custom-commands.md          # Command reference guide
+├── setup.sh                           # One-command setup script
+├── configure-claude-code.sh            # Configuration automation
+├── deploy.sh                          # Command deployment script
+├── verify-setup.sh                    # Setup validation and diagnostics
+├── validate-commands.sh               # Command validation script
 ├── docs/                              # Documentation directory
-│   └── custom-command-specifications.md  # Command specifications
-└── slash-commands/                    # Command implementations
-    ├── xgit.md                        # Automated Git workflow
-    ├── xarchitecture.md               # Architecture design and analysis
-    ├── xcicd.md                       # CI/CD pipeline setup
-    ├── xsecurity.md                   # Security scanning and analysis
-    ├── xtest.md                       # Testing automation
-    ├── xquality.md                    # Code quality analysis
-    └── [40+ other command files...]   # Complete command collection
+│   ├── claude-custom-commands.md      # Command reference guide
+│   ├── claude-code-hooks-system.md    # Hooks documentation
+│   └── post-advanced-claude-code.md   # Advanced usage guide
+├── hooks/                             # Hook implementations
+│   ├── file-logger.sh                # File operation logging
+│   └── prevent-credential-exposure.sh # Security hook
+├── lib/                               # Shared utility libraries
+│   ├── auth.sh                        # Authentication utilities
+│   ├── config.sh                     # Configuration management
+│   ├── ide.sh                        # IDE integration
+│   ├── mcp.sh                        # MCP server setup
+│   ├── os-detection.sh               # OS detection utilities
+│   ├── utils.sh                      # General utilities
+│   └── validation.sh                 # Validation functions
+├── slash-commands/                    # Command implementations
+│   ├── active/                        # 13 production-ready commands
+│   │   ├── xarchitecture.md          # Architecture design and analysis
+│   │   ├── xconfig.md                # Configuration management
+│   │   ├── xdebug.md                 # Advanced debugging
+│   │   ├── xdocs.md                  # Documentation generation
+│   │   ├── xgit.md                   # Automated Git workflow
+│   │   ├── xpipeline.md              # CI/CD pipeline management
+│   │   ├── xquality.md               # Code quality analysis
+│   │   ├── xrefactor.md              # Code refactoring automation
+│   │   ├── xrelease.md               # Release management
+│   │   ├── xsecurity.md              # Security scanning and analysis
+│   │   ├── xspec.md                  # Specification generation
+│   │   ├── xtdd.md                   # Test-driven development
+│   │   └── xtest.md                  # Testing automation
+│   └── experiments/                   # 44 experimental commands
+│       ├── xact.md                   # GitHub Actions testing
+│       ├── xanalytics.md             # Analytics and metrics
+│       ├── xapi.md                   # API development tools
+│       ├── xaws.md                   # AWS integration
+│       ├── xcicd.md                  # Advanced CI/CD
+│       ├── xcompliance.md            # Compliance checking
+│       ├── xinfra.md                 # Infrastructure as Code
+│       ├── xmonitoring.md            # Application monitoring
+│       ├── xperformance.md           # Performance optimization
+│       ├── xplanning.md              # Project planning
+│       ├── xrisk.md                  # Risk assessment
+│       └── [32 additional commands]  # Complete experimental collection
+├── specs/                             # Command specifications
+│   ├── command-specifications.md      # Command development specs
+│   ├── custom-command-specifications.md # Custom command guidelines
+│   ├── help-functionality-specification.md # Help system specs
+│   └── tests/                        # Specification tests
+└── templates/                         # Configuration templates
+    ├── basic-settings.json           # Basic Claude Code settings
+    ├── comprehensive-settings.json   # Advanced settings
+    └── security-focused-settings.json # Security-focused config
 ```
 
 ## Command Categories
@@ -80,7 +125,7 @@ claude-code/
 
 ### Command Structure
 
-Each command in `slash-commands/` follows this pattern:
+Each command in `slash-commands/active/` and `slash-commands/experiments/` follows this pattern:
 
 ```markdown
 ---
@@ -121,32 +166,51 @@ The actual command logic and automation steps.
 ### Testing Commands
 
 ```bash
-# Deploy all commands locally
+# Validate all commands before deployment
+./validate-commands.sh
+
+# Deploy active commands locally (default)
 ./deploy.sh
+
+# Deploy experimental commands
+./deploy.sh --experiments
 
 # Test a specific command in Claude Code
 /xtest --help
 
-# Verify command functionality
-/xquality --check --report
+# Verify complete setup and functionality
+./verify-setup.sh --verbose
 ```
 
 ### Adding New Commands
 
-1. **Create command file** in `slash-commands/` directory as `.md` file
+1. **Create command file** in `slash-commands/active/` (production) or `slash-commands/experiments/` (testing) directory as `.md` file
 2. **Follow naming convention**: Use `x` prefix (e.g., `xnewfeature.md`)
 3. **Include proper documentation** with description, usage, and examples
-4. **Test thoroughly** before committing
-5. **Update README.md** to include the new command in appropriate category
+4. **Validate with**: `./validate-commands.sh` before committing
+5. **Test thoroughly**: Deploy and test in actual Claude Code environment
+6. **Update documentation**: Add to appropriate category in README.md and documentation
 
 ### Deployment Process
 
 ```bash
-# Deploy all commands to Claude Code
+# One-time setup (installs Claude Code, configures settings, deploys commands)
+./setup.sh
+
+# Deploy active commands to Claude Code (default)
 ./deploy.sh
 
-# Verify deployment
-ls ~/.claude/commands/
+# Deploy experimental commands
+./deploy.sh --experiments
+
+# Deploy specific commands only
+./deploy.sh --include xtest xquality
+
+# Preview deployment without changes
+./deploy.sh --dry-run --all
+
+# Verify deployment and complete setup
+./verify-setup.sh
 
 # Test commands in Claude Code interface
 /xhelp  # List available commands
@@ -195,10 +259,14 @@ When working with this repository:
 
 ### File Management
 
-- **Command files**: Store in `slash-commands/` directory with `.md` extension
-- **Documentation**: Update both README.md and relevant docs/ files
-- **Deployment**: Use `./deploy.sh` to install commands locally
-- **Testing**: Test commands in actual Claude Code environment
+- **Active commands**: Store production-ready commands in `slash-commands/active/` directory with `.md` extension
+- **Experimental commands**: Store experimental commands in `slash-commands/experiments/` directory
+- **Documentation**: Update README.md and relevant docs/ files
+- **Hooks**: Store in `hooks/` directory for security and governance automation
+- **Configuration templates**: Use templates in `templates/` directory for different setup scenarios
+- **Deployment**: Use `./deploy.sh` with options to install commands locally
+- **Setup automation**: Use `./setup.sh` for complete environment setup
+- **Validation**: Use `./validate-commands.sh` and `./verify-setup.sh` for testing
 
 ### Quality Standards
 
