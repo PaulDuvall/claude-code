@@ -1,12 +1,12 @@
 # Claude Code: Advanced Tips Using Commands, Configuration, and Hooks
 
-For a few months now, I've been using Claude Code. Claude Code is a super powerful agentic coding AI experience that transforms how developers work. Today, I've built it into a comprehensive platform for AI-assisted development. Here's what was learned and built.
+For a few months now, I've been using Claude Code—a powerful agentic coding AI that transforms how developers work. I've built it into a comprehensive platform for AI-assisted development. Here's what I learned and built.
 
-https://github.com/PaulDuvall/claude-code/
+You can find the repo with all of the code and configuration here: https://github.com/PaulDuvall/claude-code/
 
 ## Why Claude Code Is Different
 
-Most AI coding tools live inside your IDE. Claude Code doesn't. It's a terminal application that works with your existing workflow. This flexibility is what makes it powerful—and what allows building something bigger.
+Most AI coding tools live inside your IDE. Claude Code doesn't. It's a terminal application that adapts to your existing workflow. Unlike traditional assistants, it provides raw model access without prescribing how to work—automatically pulling codebase context, executing commands, and integrating with your tools. This unopinionated design creates a flexible power tool that excels at agentic workflows: exploring codebases to answer questions, planning before coding, iterating against tests or visual targets, and managing git operations. That flexibility is what makes it powerful—and what allows building something bigger.
 
 ## Getting Started Takes Minutes
 
@@ -49,7 +49,7 @@ But custom commands are where it gets interesting. These are markdown files in `
 
 Hooks are shell scripts that intercept Claude's operations at specific points - before tools run, after they complete, or when prompts are submitted. They can examine the action and approve, modify, or block it. 
 
-This file logger hook runs whenever Claude edits, writes, or modifies files - it simply logs what happened:
+This file logger hook I wrote runs whenever Claude edits, writes, or modifies files - it simply logs what happened:
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
@@ -421,23 +421,22 @@ This hook is safe for any environment and helps you understand how hooks integra
 
 ### [verify-setup.sh](https://github.com/PaulDuvall/claude-code/blob/main/verify-setup.sh) - Comprehensive Diagnostics
 ```bash
-./verify-setup.sh                   # Standard validation
-./verify-setup.sh --verbose         # Detailed diagnostics  
-./verify-setup.sh --output report   # Save results to file
-./verify-setup.sh --quiet --output log # Silent with file output
+./verify-setup.sh                   # Complete system validation (18 checks)
 ```
 
-**Validates your complete setup:**
-- **Prerequisites** - Claude Code, Node.js, API keys, dependencies
-- **Configuration** - ~/.claude.json, settings.json, permissions
-- **Custom commands** - Deployment status, file accessibility
-- **Security hooks** - Installation, permissions, functionality  
-- **Integration** - End-to-end functionality testing
-- **Diagnostics** - Logs, error detection, performance checks
+**Validates your complete setup with 18 comprehensive checks:**
+- **Prerequisites** - Claude Code, Node.js, npm installation and compatibility
+- **Authentication** - API key format validation or web-based auth confirmation
+- **Configuration** - ~/.claude.json validity, trust settings, file permissions (600/700)
+- **Security** - Environment credential exposure, file permissions, settings integrity
+- **Custom Commands** - Deployment status, command format validation, accessibility
+- **Security Hooks** - Installation status and functionality
+- **Development Environment** - Git integration, Docker support for MCP servers
+- **System Health** - Disk space, backup system status, functionality testing
 
-Perfect for troubleshooting or confirming everything works after setup.
+This catches issues before they become problems and gives you confidence everything is properly configured.
 
-All scripts include dry-run modes, automatic backups, and comprehensive validation. They're designed for real workflows, not just demos.
+These scripts aren't just proof-of-concepts—they include dry-run modes, create backups automatically, and handle edge cases you'll encounter in daily use.
 
 ## A Day in the Life: Building a New Feature
 
