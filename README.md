@@ -108,9 +108,10 @@ claude
 **What gets installed:**
 1. ✅ Claude Code configuration and authentication
 2. ✅ 13 custom commands (`/xtest`, `/xquality`, `/xsecurity`, etc.)
-3. ✅ Security hooks (if requested)
-4. ✅ Appropriate settings template
-5. ✅ Complete validation
+3. ✅ Debug Specialist Sub-Agent with persistent context
+4. ✅ Security hooks (if requested)
+5. ✅ Appropriate settings template
+6. ✅ Complete validation
 
 **Authentication is automatic** - Claude Code will open your browser for login. No API key needed for most users.
 
@@ -233,7 +234,7 @@ The 42 commands in `slash-commands/experiments/` are well-structured design docu
 
 ## Active Commands Reference
 
-These 13 essential commands cover the core development workflow and are deployed by default:
+These 13 essential commands cover the core development workflow and are deployed by default. Several commands now integrate with specialized sub-agents for enhanced capabilities:
 
 ### 🎯 Planning & Strategy
 *Planning commands available in experiments/ - see `/slash-commands/experiments/xplanning.md`*
@@ -249,7 +250,7 @@ These 13 essential commands cover the core development workflow and are deployed
 - **`/xquality`** - Code quality analysis with smart defaults (no parameters needed)
 - **`/xtdd`** - Test-driven development with automated test generation
 - **`/xtest`** - Test execution with intelligent defaults (runs all tests if no arguments)
-- **`/xdebug`** - Advanced debugging assistance and error analysis
+- **`/xdebug`** - Advanced debugging assistance with Debug Specialist sub-agent integration
 
 ### 🔒 Security & Compliance
 - **`/xsecurity`** - Security scanning with comprehensive defaults (no parameters needed)
@@ -264,6 +265,113 @@ These 13 essential commands cover the core development workflow and are deployed
 
 ### 📚 Documentation & Knowledge
 - **`/xdocs`** - Documentation generation and maintenance
+
+## Sub-Agents: Specialized AI Assistants
+
+This repository now includes **Claude Code Sub-Agents** - specialized AI assistants that provide expert-level capabilities with persistent context for complex tasks.
+
+### Available Sub-Agents
+
+#### 🐛 Debug Specialist Sub-Agent
+**Integrated with `/xdebug`** - Expert debugging assistant with persistent debugging sessions
+
+**Capabilities:**
+- **Root Cause Analysis**: Systematic investigation of complex errors
+- **Multi-Language Support**: Python, JavaScript, Java, Go, and more
+- **Persistent Context**: Maintains debugging state across conversations
+- **Performance Debugging**: Memory leaks, bottlenecks, optimization
+- **Environment Troubleshooting**: Dependencies, configuration, deployment issues
+
+**Usage:**
+```bash
+# Automatic delegation for complex issues
+/xdebug "Intermittent database connection failures"
+
+# Manual invocation for deep analysis
+@debug-specialist analyze this segmentation fault with stack trace
+
+# Persistent debugging sessions
+@debug-specialist continuing our investigation of the memory leak issue
+```
+
+**Features:**
+- **Investigation History**: Tracks hypotheses, tests, and solutions attempted
+- **Context Awareness**: Remembers environment details and previous findings
+- **Solution Validation**: Provides verification steps and prevention strategies
+- **Multi-Session Support**: Handle multiple debugging investigations simultaneously
+
+### Sub-Agent Integration
+
+Sub-agents work seamlessly with slash commands:
+
+- **Automatic Delegation**: Commands automatically route complex issues to appropriate sub-agents
+- **Context Handoff**: Seamless transition from command to sub-agent with full context
+- **Persistent Sessions**: Sub-agents maintain state across multiple interactions
+- **Specialized Expertise**: Each sub-agent has deep knowledge in their domain
+
+### Deployment
+
+Sub-agents are deployed using the flexible `deploy-subagents.sh` script:
+
+```bash
+# Deploy all available sub-agents
+./deploy-subagents.sh --all
+
+# Deploy only the Debug Specialist Sub-Agent (default)
+./deploy-subagents.sh
+
+# Deploy specific sub-agents
+./deploy-subagents.sh --include debug-specialist
+
+# List available sub-agents
+./deploy-subagents.sh --list
+
+# Preview deployment without making changes
+./deploy-subagents.sh --all --dry-run
+
+# Verify installation
+ls ~/.claude/sub-agents/
+```
+
+### Deployment Options
+
+The `deploy-subagents.sh` script provides flexible deployment options:
+
+```bash
+# Basic usage
+./deploy-subagents.sh                          # Deploy debug-specialist (default)
+./deploy-subagents.sh --all                    # Deploy all available sub-agents
+./deploy-subagents.sh --list                   # List available sub-agents
+
+# Specific deployments
+./deploy-subagents.sh --include debug-specialist          # Deploy specific sub-agent
+./deploy-subagents.sh --include debug-specialist --include security-analyst  # Multiple sub-agents
+
+# Preview mode
+./deploy-subagents.sh --all --dry-run          # Preview without making changes
+./deploy-subagents.sh --help                   # Show all options
+```
+
+**Files Created:**
+- `~/.claude/sub-agents/debug-specialist.md` - Sub-agent configuration
+- `~/.claude/sub-agents/debug-context.md` - Context management system
+- `~/.claude/debug-sessions/` - Persistent debugging session storage
+- Updated `~/.claude/settings.json` with sub-agent configuration
+
+### When to Use Sub-Agents vs Commands
+
+**Use Slash Commands** (`/xdebug`) for:
+- Quick error analysis
+- Simple environment issues
+- One-time debugging tasks
+- Basic syntax or configuration errors
+
+**Use Sub-Agents** (`@debug-specialist`) for:
+- Complex, multi-step investigations
+- Performance issues requiring profiling
+- Intermittent or hard-to-reproduce bugs
+- Issues requiring persistent context across sessions
+- Deep system-level debugging
 
 ## Getting Help with Commands
 
@@ -418,8 +526,9 @@ Here's a comprehensive workflow showing how builders can use the active commands
 # Refactor code when needed
 /xrefactor --analyze --bloaters --fix
 
-# Debug issues as they arise
-/xdebug --analyze --trace --fix
+# Debug issues with persistent context and expert analysis
+/xdebug "ImportError: No module named 'requests'"  # Simple issues handled directly
+@debug-specialist analyze this complex performance issue  # Complex issues use sub-agent
 ```
 
 ### 3. Security & Testing (Weekly)
@@ -734,6 +843,25 @@ ls ~/.claude/commands/x*.md
 - Backup and remove conflicting files
 - Start fresh: `./setup.sh --force`
 - Validate JSON syntax: `jq . ~/.claude/settings.json`
+
+#### 6. **Sub-agents not working**
+**Problem**: `@debug-specialist` or other sub-agents not responding
+
+**Solutions**:
+- Check sub-agent installation: `ls ~/.claude/sub-agents/`
+- Verify settings configuration: `cat ~/.claude/settings.json | jq .sub_agents`
+- Re-deploy sub-agents: `./deploy-subagents.sh`
+- Check debug sessions directory: `ls ~/.claude/debug-sessions/`
+- Test with simple invocation: `@debug-specialist hello`
+
+#### 7. **Debug sessions not persisting**
+**Problem**: Sub-agents don't remember previous conversations
+
+**Solutions**:
+- Check debug sessions directory exists: `ls ~/.claude/debug-sessions/`
+- Verify write permissions: `touch ~/.claude/debug-sessions/test.txt`
+- Check sub-agent context configuration in settings.json
+- Clear corrupted sessions: `rm ~/.claude/debug-sessions/*.json`
 
 ### Getting Help
 

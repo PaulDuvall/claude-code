@@ -1,9 +1,9 @@
 ---
-description: Interactive debugging support with error analysis and fix suggestions
-tags: [debugging, troubleshooting, errors]
+description: Interactive debugging support with error analysis and fix suggestions - integrates with Debug Specialist sub-agent for complex issues
+tags: [debugging, troubleshooting, errors, sub-agent]
 ---
 
-Debug and analyze errors with root cause identification and fix suggestions.
+Debug and analyze errors with root cause identification and fix suggestions. For complex debugging sessions, automatically delegates to the Debug Specialist sub-agent for persistent context and deep analysis.
 
 ## Usage Examples
 
@@ -34,6 +34,33 @@ Display this usage information and exit.
 
 Parse the error or issue from $ARGUMENTS. If no specific error is provided, check for recent errors:
 !tail -50 *.log 2>/dev/null | grep -i "error\|exception\|failed" || echo "No recent errors in log files"
+
+**Decision Point: Quick Analysis vs Deep Debugging**
+
+Determine if this requires simple analysis or complex debugging session:
+
+**Simple/Quick Issues** (handle directly):
+- Single error messages with clear solutions
+- Common environment issues (missing dependencies, path problems)
+- Basic syntax errors
+- Simple configuration problems
+
+**Complex Issues** (delegate to Debug Specialist sub-agent):
+- Multi-step debugging requiring persistent context
+- Performance problems needing profiling
+- Intermittent issues requiring investigation over time
+- Complex stack traces with multiple potential causes
+- Issues requiring environment analysis and hypothesis testing
+
+**For Complex Issues:** Use Task tool to delegate to debug-specialist:
+```
+Use the Task tool with:
+description: "Complex debugging analysis"
+prompt: "Acting as Debug Specialist sub-agent, analyze this error: [ERROR_DETAILS]. Provide comprehensive root cause analysis, systematic troubleshooting steps, and solution validation."
+subagent_type: "debug-specialist"
+```
+
+**For Simple Issues, continue with direct analysis:**
 
 Based on the error context, perform the following debugging steps:
 
