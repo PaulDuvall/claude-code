@@ -24,7 +24,16 @@ Run tests with intelligent defaults. No parameters needed for basic usage.
 /xtest unit
 ```
 
+**Help and options:**
+```
+/xtest help
+/xtest --help
+```
+
 ## Implementation
+
+If $ARGUMENTS contains "help" or "--help":
+Display this usage information and exit.
 
 First, examine the project structure and detect testing framework:
 !ls -la | grep -E "(test|spec|__tests__|\.test\.|\.spec\.)"

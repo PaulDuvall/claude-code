@@ -24,7 +24,16 @@ Perform comprehensive security scanning with intelligent defaults. No parameters
 /xsecurity deps
 ```
 
+**Help and options:**
+```
+/xsecurity help
+/xsecurity --help
+```
+
 ## Implementation
+
+If $ARGUMENTS contains "help" or "--help":
+Display this usage information and exit.
 
 Start by detecting project type and available security tools:
 !ls -la | grep -E "(package.json|requirements.txt|go.mod|Gemfile|pom.xml|composer.json)"

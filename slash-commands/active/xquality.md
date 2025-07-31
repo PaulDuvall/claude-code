@@ -24,7 +24,16 @@ Run comprehensive code quality analysis with smart defaults. No parameters neede
 /xquality report
 ```
 
+**Help and options:**
+```
+/xquality help
+/xquality --help
+```
+
 ## Implementation
+
+If $ARGUMENTS contains "help" or "--help":
+Display this usage information and exit.
 
 First, examine the project structure and available tools:
 !ls -la | grep -E "(pyproject.toml|setup.py|requirements.txt|package.json|composer.json|go.mod)"
