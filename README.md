@@ -1,5 +1,13 @@
 # Claude Code Custom Commands
 
+![GitHub Actions](https://github.com/PaulDuvall/claude-code/actions/workflows/test.yml/badge.svg)
+![License](https://img.shields.io/github/license/PaulDuvall/claude-code)
+![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-blue)
+![Active Commands](https://img.shields.io/badge/active%20commands-13-blue)
+![Experimental Commands](https://img.shields.io/badge/experimental%20commands-44-orange)
+![Total Commands](https://img.shields.io/badge/total%20commands-57-brightgreen)
+![Sub-agents](https://img.shields.io/badge/sub--agents-1-purple)
+
 A comprehensive collection of custom slash commands for Claude Code that accelerate software development workflows through AI-powered automation.
 
 ## Overview
