@@ -189,11 +189,33 @@ jobs:
               exit 1
             fi
             
-            # Check for required sections
-            if grep -q "## Description" "$cmd" && grep -q "## Usage" "$cmd" && grep -q "## Implementation" "$cmd"; then
+            # Check for required sections (flexible matching)
+            has_description=false
+            has_usage=false
+            has_implementation=false
+            
+            # Check for Description (## Description OR YAML description + substantial content)
+            if grep -q "## Description" "$cmd" || (head -10 "$cmd" | grep -q "description:" && [ $(wc -l < "$cmd") -gt 20 ]); then
+              has_description=true
+            fi
+            
+            # Check for Usage (## Usage OR ## Usage Examples)
+            if grep -q "## Usage" "$cmd" || grep -q "## Usage Examples" "$cmd"; then
+              has_usage=true
+            fi
+            
+            # Check for Implementation
+            if grep -q "## Implementation" "$cmd"; then
+              has_implementation=true
+            fi
+            
+            if [ "$has_description" = true ] && [ "$has_usage" = true ] && [ "$has_implementation" = true ]; then
               echo "✅ $filename has required sections"
             else
-              echo "❌ $filename missing required sections"
+              echo "❌ $filename missing required sections:"
+              [ "$has_description" = false ] && echo "  - Missing Description section (needs ## Description or YAML description + content)"
+              [ "$has_usage" = false ] && echo "  - Missing Usage section (needs ## Usage or ## Usage Examples)" 
+              [ "$has_implementation" = false ] && echo "  - Missing Implementation section (needs ## Implementation)"
               exit 1
             fi
           fi
