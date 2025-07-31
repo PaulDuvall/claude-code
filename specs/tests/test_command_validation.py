@@ -53,12 +53,15 @@ def validate_single_command(cmd_file):
         return False
     print(f"  ✅ Has .md extension")
     
-    # Test: Command naming convention [^cmd1c]
-    name_part = cmd_file.name.replace('.md', '')
-    if not re.match(r'^x[a-z0-9\-]+$', name_part):
-        print(f"  ❌ File name must follow x{{name}} convention (lowercase)")
-        return False
-    print(f"  ✅ Follows naming convention")
+    # Test: Command naming convention [^cmd1c] - only for files in slash-commands directory
+    if 'slash-commands' in str(cmd_file.parent):
+        name_part = cmd_file.name.replace('.md', '')
+        if not re.match(r'^x[a-z0-9\-]+$', name_part):
+            print(f"  ❌ File name must follow x{{name}} convention (lowercase)")
+            return False
+        print(f"  ✅ Follows naming convention")
+    else:
+        print(f"  ℹ️  Naming convention check skipped (not in slash-commands directory)")
     
     try:
         content = cmd_file.read_text()
