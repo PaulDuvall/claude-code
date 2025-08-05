@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source utility functions for dependency validation
+source "$SCRIPT_DIR/lib/utils.sh" 2>/dev/null || {
+    # Fallback functions if utils.sh not available
+    check_dependency() {
+        local cmd="$1"
+        if ! command -v "$cmd" &> /dev/null; then
+            return 1
+        fi
+        return 0
+    }
+}
+
 # Simple Claude Code Setup Verification
 echo "🔍 Claude Code Setup Verification"
 echo "================================="
@@ -86,8 +100,123 @@ else
     echo "ℹ️  No hooks directory (basic setup)"
 fi
 
-# Check file permissions on sensitive files
+# Security validation section
+echo ""
+echo "🔒 Security Validation"
+echo "====================="
+
+# Check dependency validation system
+echo -n "Dependency Validation: "
+if [[ -f "$SCRIPT_DIR/dependencies.txt" ]]; then
+    deps_count=$(grep -v '^#' "$SCRIPT_DIR/dependencies.txt" | grep -v '^$' | wc -l | tr -d ' ')
+    echo "✅ System available ($deps_count dependencies defined)"
+    
+    # Run dependency validation
+    if validate_dependencies "$SCRIPT_DIR/dependencies.txt" >/dev/null 2>&1; then
+        echo "  ✅ All required dependencies satisfied"
+    else
+        echo "  ⚠️  Some dependencies missing - run: source lib/utils.sh && validate_dependencies dependencies.txt"
+    fi
+else
+    echo "⚠️  Dependencies config not found"
+fi
+
+# Check file permissions on sensitive files  
 echo -n "File Permissions: "
+permission_issues=0
+
+check_file_permissions() {
+    local file="$1"
+    local expected="$2"
+    local description="$3"
+    
+    if [[ -f "$file" ]]; then
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            actual=$(stat -f %A "$file" 2>/dev/null || echo "unknown")
+        else
+            actual=$(stat -c %a "$file" 2>/dev/null || echo "unknown")
+        fi
+        
+        if [[ "$actual" != "$expected" ]]; then
+            if [[ $permission_issues -eq 0 ]]; then
+                echo ""
+            fi
+            echo "  ⚠️  $description: $actual (should be $expected)"
+            ((permission_issues++))
+        fi
+    fi
+}
+
+# Check directory permissions
+check_dir_permissions() {
+    local dir="$1"
+    local expected="$2"
+    local description="$3"
+    
+    if [[ -d "$dir" ]]; then
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            actual=$(stat -f %A "$dir" 2>/dev/null || echo "unknown")
+        else
+            actual=$(stat -c %a "$dir" 2>/dev/null || echo "unknown")
+        fi
+        
+        if [[ "$actual" != "$expected" ]]; then
+            if [[ $permission_issues -eq 0 ]]; then
+                echo ""
+            fi
+            echo "  ⚠️  $description: $actual (should be $expected)"
+            ((permission_issues++))
+        fi
+    fi
+}
+
+# Check critical file permissions
+check_file_permissions ~/.claude/settings.json 600 "settings.json"
+check_file_permissions ~/.claude/logs/security-hooks.log 600 "security hooks log"
+check_file_permissions ~/.claude/logs/credential-violations.log 600 "credential violations log"
+check_file_permissions ~/.claude/logs/file-logger.log 600 "file logger log"
+
+# Check directory permissions  
+check_dir_permissions ~/.claude 700 "~/.claude directory"
+check_dir_permissions ~/.claude/hooks 700 "hooks directory"
+check_dir_permissions ~/.claude/logs 700 "logs directory"
+
+if [[ $permission_issues -eq 0 ]]; then
+    echo "✅ Secure permissions set"
+else
+    echo "  💡 Run setup.sh to fix permission issues"
+fi
+
+# Check security hooks validation
+echo -n "Security Hooks Validation: "
+hooks_with_validation=0
+total_hooks=0
+
+if [[ -d ~/.claude/hooks ]]; then
+    for hook in ~/.claude/hooks/*.sh; do
+        if [[ -f "$hook" ]]; then
+            ((total_hooks++))
+            if grep -q "validate.*dependencies\|check_dependency" "$hook" 2>/dev/null; then
+                ((hooks_with_validation++))
+            fi
+        fi
+    done
+    
+    if [[ $total_hooks -eq 0 ]]; then
+        echo "ℹ️  No hooks installed"
+    elif [[ $hooks_with_validation -eq $total_hooks ]]; then
+        echo "✅ All $total_hooks hooks have dependency validation"
+    else
+        echo "⚠️  $hooks_with_validation/$total_hooks hooks have dependency validation"
+    fi
+else
+    echo "ℹ️  No hooks directory"
+fi
+
+echo ""
+echo "📋 Legacy File Permissions Check"
+echo "================================"
+echo -n "Claude Config (.claude.json): "
 if [[ -f ~/.claude.json ]]; then
     if [[ "$OSTYPE" == "darwin"* ]]; then
         perms=$(stat -f %A ~/.claude.json 2>/dev/null)

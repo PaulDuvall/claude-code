@@ -105,6 +105,64 @@ apply_change() {
 }
 
 ##################################
+# Dependency Validation
+##################################
+check_dependency() {
+    local cmd="$1"
+    local install_msg="${2:-Install $cmd}"
+    local required="${3:-true}"
+    
+    if ! command -v "$cmd" &> /dev/null; then
+        if [[ "$required" == "true" ]]; then
+            error "Required dependency '$cmd' not found"
+            echo "  $install_msg"
+            return 1
+        else
+            log "Optional dependency '$cmd' not found - some features may be limited"
+            echo "  $install_msg"
+            return 2
+        fi
+    fi
+    return 0
+}
+
+validate_dependencies() {
+    local deps_file="$1"
+    local failed_deps=()
+    local missing_optional=()
+    
+    if [[ ! -f "$deps_file" ]]; then
+        log "No dependency file specified, skipping validation"
+        return 0
+    fi
+    
+    log "Validating dependencies from $deps_file..."
+    
+    # Read dependencies file (format: command|install_message|required)
+    while IFS='|' read -r cmd install_msg required; do
+        # Skip comments and empty lines
+        [[ "$cmd" =~ ^#.*$ ]] || [[ -z "$cmd" ]] && continue
+        
+        case $(check_dependency "$cmd" "$install_msg" "$required") in
+            1) failed_deps+=("$cmd") ;;
+            2) missing_optional+=("$cmd") ;;
+        esac
+    done < "$deps_file"
+    
+    if [[ ${#failed_deps[@]} -gt 0 ]]; then
+        error "Missing ${#failed_deps[@]} required dependencies: ${failed_deps[*]}"
+        return 1
+    fi
+    
+    if [[ ${#missing_optional[@]} -gt 0 ]]; then
+        log "Missing ${#missing_optional[@]} optional dependencies: ${missing_optional[*]}"
+    fi
+    
+    log "Dependency validation completed successfully"
+    return 0
+}
+
+##################################
 # Initialization
 ##################################
 init_backup_dir() {

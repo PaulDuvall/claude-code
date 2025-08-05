@@ -5,6 +5,19 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source utility functions for dependency validation
+source "$SCRIPT_DIR/lib/utils.sh" 2>/dev/null || {
+    # Fallback basic dependency check if utils.sh not available
+    check_dependency() {
+        local cmd="$1"
+        if ! command -v "$cmd" &> /dev/null; then
+            echo "❌ Error: Required dependency '$cmd' not found"
+            return 1
+        fi
+        return 0
+    }
+}
 SOURCE_DIR="${SCRIPT_DIR}/slash-commands/active"
 TARGET_DIR="${HOME}/.claude/commands"
 
@@ -247,6 +260,15 @@ while [[ $# -gt 0 ]]; do
             exit 1
             ;;
     esac
+done
+
+# Validate critical dependencies before proceeding
+echo "🔍 Validating dependencies..."
+critical_deps=("bash" "cp" "mkdir" "chmod")
+for dep in "${critical_deps[@]}"; do
+    if ! check_dependency "$dep"; then
+        exit 1
+    fi
 done
 
 # Get source directories based on deployment mode

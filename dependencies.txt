@@ -1,0 +1,36 @@
+# Claude Code Custom Commands Dependencies
+# Format: command|install_message|required (true/false)
+# Comments start with #
+
+# Core dependencies (required)
+bash|Install bash shell|true
+jq|Install with: brew install jq (macOS) or apt-get install jq (Ubuntu)|true
+curl|Install with: brew install curl (macOS) or apt-get install curl (Ubuntu)|true
+git|Install with: brew install git (macOS) or apt-get install git (Ubuntu)|true
+
+# Node.js ecosystem (required for Claude Code)
+node|Install Node.js from: https://nodejs.org/|true
+npm|Install Node.js from: https://nodejs.org/ (includes npm)|true
+
+# Claude Code (required)
+claude|Install with: npm install -g @anthropic-ai/claude-code|true
+
+# Security tools (optional but recommended)
+rg|Install ripgrep with: brew install ripgrep (macOS) or apt-get install ripgrep (Ubuntu)|false
+find|Standard Unix utility - should be available|true
+grep|Standard Unix utility - should be available|true
+file|Standard Unix utility - should be available|true
+
+# Development tools (optional)
+diff|Standard Unix utility - should be available|false
+wc|Standard Unix utility - should be available|false
+head|Standard Unix utility - should be available|false
+tail|Standard Unix utility - should be available|false
+chmod|Standard Unix utility - should be available|true
+mkdir|Standard Unix utility - should be available|true
+cp|Standard Unix utility - should be available|true
+mv|Standard Unix utility - should be available|true
+rm|Standard Unix utility - should be available|true
+
+# GitHub CLI (optional)
+gh|Install with: brew install gh (macOS) or follow https://cli.github.com/|false

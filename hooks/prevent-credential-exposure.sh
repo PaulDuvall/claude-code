@@ -18,8 +18,13 @@ LOG_FILE="$HOME/.claude/logs/security-hooks.log"
 VIOLATION_LOG="$HOME/.claude/logs/credential-violations.log"
 NOTIFICATION_WEBHOOK="${SECURITY_WEBHOOK_URL:-}"
 
-# Ensure log directory exists
+# Ensure log directory exists with secure permissions
 mkdir -p "$(dirname "$LOG_FILE")"
+chmod 700 "$(dirname "$LOG_FILE")"
+
+# Create log files with restrictive permissions if they don't exist
+touch "$LOG_FILE" "$VIOLATION_LOG"
+chmod 600 "$LOG_FILE" "$VIOLATION_LOG"
 
 ##################################
 # Logging Functions
@@ -100,7 +105,12 @@ scan_file_content() {
     local violations=()
     
     # Skip if file doesn't exist or is binary
-    if [[ ! -f "$file_path" ]] || file "$file_path" | grep -q "binary"; then
+    if [[ ! -f "$file_path" ]]; then
+        return 0
+    fi
+    
+    # Check if file is binary (avoid scanning binary files)
+    if file "$file_path" 2>/dev/null | grep -q "binary"; then
         return 0
     fi
     
@@ -149,9 +159,31 @@ check_environment_leakage() {
 }
 
 ##################################
+# Dependency Validation
+##################################
+validate_hook_dependencies() {
+    local deps=("grep" "file" "sed" "head")
+    local missing=()
+    
+    for dep in "${deps[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            missing+=("$dep")
+        fi
+    done
+    
+    if [[ ${#missing[@]} -gt 0 ]]; then
+        log "ERROR: Missing required dependencies: ${missing[*]}"
+        echo "Install missing tools and retry"
+        exit 1
+    fi
+}
+
+##################################
 # Main Hook Logic
 ##################################
 main() {
+    # Validate dependencies first
+    validate_hook_dependencies
     local tool_name="${CLAUDE_TOOL:-unknown}"
     local file_path="${CLAUDE_FILE:-}"
     local content=""

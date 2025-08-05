@@ -10,6 +10,9 @@ set -euo pipefail
 SETUP_VERSION="1.0.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Source utility functions
+source "$SCRIPT_DIR/lib/utils.sh"
+
 # Configuration
 DRY_RUN=false
 INTERACTIVE=true
@@ -174,24 +177,23 @@ main() {
         log "Running in DRY-RUN mode - no changes will be made"
     fi
     
-    # Step 1: Validate Prerequisites
-    log "Step 1: Validating prerequisites..."
+    # Step 1: Validate Prerequisites and Dependencies
+    log "Step 1: Validating prerequisites and dependencies..."
     
-    if ! check_prerequisite "claude" "Install with: npm install -g @anthropic-ai/claude-code"; then
+    # Validate dependencies using the new validation system
+    if ! validate_dependencies "$SCRIPT_DIR/dependencies.txt"; then
+        error "Dependency validation failed - please install missing required dependencies"
         exit 1
     fi
     
-    if ! check_prerequisite "node" "Install Node.js from: https://nodejs.org/"; then
-        exit 1
-    fi
-    
+    # Check API key
     if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
         error "ANTHROPIC_API_KEY environment variable is not set"
         echo "Set it with: export ANTHROPIC_API_KEY='sk-ant-...'"
         exit 1
     fi
     
-    success "Prerequisites validated"
+    success "Prerequisites and dependencies validated"
     
     # Step 2: Configure Claude Code
     if [[ "$SKIP_CONFIGURE" != "true" ]]; then
@@ -262,6 +264,7 @@ main() {
         else
             log "Installing security hooks..."
             mkdir -p ~/.claude/hooks/
+            chmod 700 ~/.claude/hooks/
             
             if [[ -f "$SCRIPT_DIR/hooks/prevent-credential-exposure.sh" ]]; then
                 cp "$SCRIPT_DIR/hooks/prevent-credential-exposure.sh" ~/.claude/hooks/
@@ -323,6 +326,11 @@ main() {
         
         # Apply template (remove JSON comments first)
         log "Applying $SETUP_TYPE settings template..."
+        
+        # Ensure .claude directory has secure permissions
+        mkdir -p ~/.claude
+        chmod 700 ~/.claude
+        
         grep -v '^\s*//' "$template_file" | jq '.' > ~/.claude/settings.json
         chmod 600 ~/.claude/settings.json
     fi

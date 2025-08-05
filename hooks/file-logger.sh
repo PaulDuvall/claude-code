@@ -16,8 +16,13 @@ set -euo pipefail
 HOOK_NAME="file-logger"
 LOG_FILE="$HOME/.claude/logs/file-logger.log"
 
-# Ensure log directory exists
+# Ensure log directory exists with secure permissions
 mkdir -p "$(dirname "$LOG_FILE")"
+chmod 700 "$(dirname "$LOG_FILE")"
+
+# Create log file with restrictive permissions if it doesn't exist
+touch "$LOG_FILE"
+chmod 600 "$LOG_FILE"
 
 ##################################
 # Logging Functions
@@ -27,9 +32,31 @@ log() {
 }
 
 ##################################
+# Dependency Validation
+##################################
+validate_hook_dependencies() {
+    local deps=("wc" "file")
+    local missing=()
+    
+    for dep in "${deps[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            missing+=("$dep")
+        fi
+    done
+    
+    if [[ ${#missing[@]} -gt 0 ]]; then
+        log "ERROR: Missing required dependencies: ${missing[*]}"
+        echo "Install missing tools and retry"
+        exit 1
+    fi
+}
+
+##################################
 # Main Hook Logic
 ##################################
 main() {
+    # Validate dependencies first
+    validate_hook_dependencies
     local tool_name="${CLAUDE_TOOL:-unknown}"
     local file_path="${CLAUDE_FILE:-unknown}"
     

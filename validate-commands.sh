@@ -1,9 +1,25 @@
 #!/bin/bash
 # Enhanced validation script for Claude Code custom commands and configuration
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source utility functions for dependency validation
+source "$SCRIPT_DIR/lib/utils.sh" 2>/dev/null || {
+    # Fallback basic dependency check if utils.sh not available
+    check_dependency() {
+        local cmd="$1"
+        if ! command -v "$cmd" &> /dev/null; then
+            echo "❌ Error: Required dependency '$cmd' not found"
+            return 1
+        fi
+        return 0
+    }
+}
+
 # Parse arguments
 CHECK_SETTINGS=false
 CHECK_INTEGRATION=false
+CHECK_SECURITY=false
 VERBOSE=false
 
 while [[ $# -gt 0 ]]; do
@@ -16,6 +32,10 @@ while [[ $# -gt 0 ]]; do
             CHECK_INTEGRATION=true
             shift
             ;;
+        --check-security)
+            CHECK_SECURITY=true
+            shift
+            ;;
         --verbose)
             VERBOSE=true
             shift
@@ -26,13 +46,15 @@ while [[ $# -gt 0 ]]; do
             echo "Options:"
             echo "  --check-settings     Also validate settings.json files"
             echo "  --check-integration  Run integration tests"
+            echo "  --check-security     Validate security improvements"
             echo "  --verbose           Show detailed output"
             echo "  --help              Show this help"
             echo ""
             echo "Examples:"
             echo "  $0                           # Basic command validation"
             echo "  $0 --check-settings          # Include settings validation"
-            echo "  $0 --check-integration       # Run full integration tests"
+            echo "  $0 --check-security          # Validate security improvements"
+            echo "  $0 --check-integration       # Full integration testing"
             exit 0
             ;;
         *)
@@ -147,6 +169,92 @@ if [ "$CHECK_INTEGRATION" = true ]; then
         fi
     else
         echo "  ⚠️  Claude Code not installed - skipping setup script test"
+    fi
+fi
+
+# Security validation
+if [ "$CHECK_SECURITY" = true ]; then
+    echo ""
+    echo "🔒 Security Validation"
+    echo "===================="
+    
+    # Check dependency validation system
+    echo -n "  Dependency validation system: "
+    if [[ -f "$SCRIPT_DIR/dependencies.txt" ]]; then
+        echo "✅ Available"
+        
+        # Test dependency validation
+        if validate_dependencies "$SCRIPT_DIR/dependencies.txt" >/dev/null 2>&1; then
+            echo "    ✅ All required dependencies satisfied"
+        else
+            echo "    ⚠️  Some dependencies missing"
+            exit_code=1
+        fi
+    else
+        echo "❌ Dependencies config missing"
+        exit_code=1
+    fi
+    
+    # Check hooks have dependency validation
+    echo -n "  Security hooks validation: "
+    hooks_with_validation=0
+    total_hooks=0
+    
+    for hook in hooks/*.sh; do
+        if [[ -f "$hook" ]]; then
+            ((total_hooks++))
+            if grep -q "validate.*dependencies\|check_dependency" "$hook" 2>/dev/null; then
+                ((hooks_with_validation++))
+            fi
+        fi
+    done
+    
+    if [[ $total_hooks -eq 0 ]]; then
+        echo "⚠️  No hooks found"
+    elif [[ $hooks_with_validation -eq $total_hooks ]]; then
+        echo "✅ All $total_hooks hooks have dependency validation"
+    else
+        echo "⚠️  Only $hooks_with_validation/$total_hooks hooks have dependency validation"
+        exit_code=1
+    fi
+    
+    # Check main scripts have dependency validation
+    echo -n "  Main scripts validation: "
+    scripts_with_validation=0
+    main_scripts=("setup.sh" "deploy.sh")
+    
+    for script in "${main_scripts[@]}"; do
+        if [[ -f "$script" ]]; then
+            if grep -q "validate_dependencies\|check_dependency" "$script" 2>/dev/null; then
+                ((scripts_with_validation++))
+            fi
+        fi
+    done
+    
+    if [[ $scripts_with_validation -eq ${#main_scripts[@]} ]]; then
+        echo "✅ All main scripts have dependency validation"
+    else
+        echo "⚠️  Only $scripts_with_validation/${#main_scripts[@]} main scripts have dependency validation"
+        exit_code=1
+    fi
+    
+    # Check file permission settings in scripts
+    echo -n "  Secure permissions in scripts: "
+    scripts_with_perms=0
+    
+    for script in "${main_scripts[@]}" hooks/*.sh; do
+        if [[ -f "$script" ]]; then
+            if grep -q "chmod.*[67]00\|chmod.*600" "$script" 2>/dev/null; then
+                ((scripts_with_perms++))
+            fi
+        fi
+    done
+    
+    if [[ $scripts_with_perms -gt 0 ]]; then
+        echo "✅ Scripts implement secure permissions"
+    else
+        echo "⚠️  Scripts may not set secure permissions"
+        exit_code=1
     fi
 fi
 
