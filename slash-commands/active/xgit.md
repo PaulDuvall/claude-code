@@ -37,8 +37,9 @@ Automate the complete git workflow with intelligent commit message generation an
 If $ARGUMENTS contains "help" or "--help":
 Display this usage information and exit.
 
-First, verify this is a git repository and check current status:
+First, verify this is a git repository and sync with remote:
 !git rev-parse --git-dir 2>/dev/null || echo "Not a git repository"
+!git pull 2>/dev/null || echo "Pull failed or no upstream configured"
 !git status --porcelain
 
 Parse arguments to determine branch operations and custom messages:
@@ -63,7 +64,9 @@ Handle branch operations based on arguments:
 !echo "Created and switched to new branch: ${TARGET_BRANCH}"
 
 **If switching to existing branch (--branch):**
+!git pull 2>/dev/null || echo "Pull failed for current branch"
 !git checkout "${TARGET_BRANCH}" 2>/dev/null || echo "Branch switch failed - branch may not exist"
+!git pull 2>/dev/null || echo "Pull failed for target branch"
 !echo "Switched to branch: ${TARGET_BRANCH}"
 
 **Current branch status:**
