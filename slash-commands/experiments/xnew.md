@@ -58,19 +58,41 @@ specs/
 ├── context.md                 # Data classification and context management
 └── github-actions-requirements.md  # CI/CD automation specs
 
-### EARS Requirements Pattern
-All requirements use Official EARS Syntax (https://alistairmavin.com/ears/):
-- Event-Driven: When <trigger>, the <system> shall <response>
-- State-Driven: While <precondition>, the <system> shall <response>
-- Ubiquitous: The <system> shall <response> (always active)
-- Optional Feature: Where <feature>, the <system> shall <response>
-- Unwanted Behavior: If <trigger>, then the <system> shall <response>
+### AWS Kiro EARS Requirements Pattern
+All Requirements Now Follow Official EARS Syntax:
+
+- **Event-Driven**: "When [trigger], the system shall [response]"
+- **State-Driven**: "While [precondition], the system shall [response]"
+- **Ubiquitous**: "The system shall [response]"
+- **Optional Feature**: "Where [feature], the system shall [response]"
+- **Unwanted Behavior**: "If [trigger], then the system shall [response]"
+
+The validation tool now shows **100% EARS compliance**
 
 ### Specification Coverage Requirements
 - Every feature must have corresponding specifications
 - Every specification must have corresponding tests
 - Minimum spec coverage: 95% of all features
 - Spec-to-test mapping: Automated validation required
+- **EARS compliance: 100% mandatory for all requirements**
+
+### EARS Validation Rules
+🚨 **MANDATORY COMPLIANCE**:
+- All requirements MUST use exact AWS Kiro EARS syntax with brackets
+- No exceptions allowed - 100% compliance required
+- Validation tool enforces strict format checking
+- Requirements failing EARS format are rejected automatically
+
+**EARS Format Validation Examples**:
+✅ CORRECT: "When [user clicks save], the system shall [persist data to database]"
+✅ CORRECT: "While [backup is running], the system shall [display progress indicator]" 
+✅ CORRECT: "The system shall [authenticate users before access]"
+✅ CORRECT: "Where [admin privileges], the system shall [allow user management]"
+✅ CORRECT: "If [network timeout occurs], then the system shall [retry 3 times]"
+
+❌ INCORRECT: "User can save data" (not EARS format)
+❌ INCORRECT: "System should authenticate" (missing brackets)
+❌ INCORRECT: "When user saves, validate" (incomplete structure)
 
 ## 🎯 Project Goals & Context
 - Primary objective: [Define main goal and success metrics]
@@ -81,14 +103,21 @@ All requirements use Official EARS Syntax (https://alistairmavin.com/ears/):
 
 ## 📋 Requirements Management
 
-### Requirements Framework (EARS)
+### Requirements Framework (AWS Kiro EARS)
 requirement_structure:
   id: "REQ-XXX"
   pattern: "Event-Driven|State-Driven|Ubiquitous|Optional|Unwanted"
-  requirement: "Clear EARS-formatted statement"
+  requirement: "MUST follow exact EARS syntax with brackets"
+  ears_format_examples:
+    - "When [user submits form], the system shall [validate all fields]"
+    - "While [user is authenticated], the system shall [display user dashboard]"  
+    - "The system shall [encrypt all data at rest]"
+    - "Where [premium feature enabled], the system shall [allow advanced analytics]"
+    - "If [invalid login attempt], then the system shall [lock account after 3 failures]"
   rationale: "Why this requirement exists"
   acceptance_criteria: "Testable criteria for validation"
   priority: "MVP|ADVANCED"
+  ears_compliance: "MANDATORY - 100% compliance required"
 
 ### MVP vs Advanced Features
 - MVP Features: Core functionality for initial release
@@ -215,18 +244,39 @@ def test_req_001_ticker_submission():
    - Implement according to specs/design.md
    - Follow task sequence from specs/tasks.md
 
-3. Validation Phase
+3. Validation Phase (MANDATORY GATE)
    - Run specification compliance tests
+   - **CRITICAL**: ALL tests must pass (100%) before proceeding
    - Validate performance against benchmarks
    - Update specifications if gaps found
 
+### Test-First Development Gate
+⚠️ **BLOCKING REQUIREMENT**: Before proceeding to the next specification or feature:
+
+1. **Run Tests**: Execute `./scripts/run.sh test` 
+2. **Verify 100% Pass Rate**: ALL tests must pass - zero failures allowed
+3. **Check Coverage**: Ensure specification coverage meets requirements
+4. **Document Results**: Log test results in AI_INTERACTIONS.md
+
+**If ANY test fails:**
+- ❌ STOP all development work immediately
+- 🔧 Fix failing tests before any new work
+- ✅ Re-run tests until 100% pass rate achieved
+- 📝 Only then proceed to next specification
+
+This gate ensures each specification is fully validated before moving forward.
+
 ### Code Review Checklist
 - [ ] References correct specification (REQ-XXX)
+- [ ] **100% EARS COMPLIANCE VERIFIED** (all requirements use AWS Kiro format)
 - [ ] Specification tests added/updated
+- [ ] **100% TEST PASS RATE VERIFIED** (blocking requirement)
 - [ ] Implementation matches specs/design.md
 - [ ] Performance meets specs/performance-benchmarks.md
 - [ ] Documentation updated in specs/
 - [ ] No unspecified functionality added
+- [ ] Test results logged in AI_INTERACTIONS.md
+- [ ] EARS validation tool shows 100% compliance
 
 ## 📝 Documentation Standards
 
@@ -259,9 +309,27 @@ Guidelines:
 - Reference specifications in prompts: "Implement REQ-001 from specs/requirements.md"
 - Follow the methodology: This project uses Specification-Driven Development
 - Validate against specs: All AI-generated code must meet specifications
+- **ENFORCE TEST GATE**: AI assistants MUST run tests and verify 100% pass before proceeding
+
+### AI Assistant Test Requirements
+🚨 **MANDATORY FOR ALL AI ASSISTANTS**:
+
+1. **Validate EARS compliance**: All requirements MUST use AWS Kiro EARS format with brackets
+2. **Before implementing new specs**: Run `./scripts/run.sh test` to ensure current state is clean
+3. **After any code changes**: Execute `./scripts/run.sh test` immediately  
+4. **Verify 100% success**: All tests must pass - no exceptions
+5. **Block on failures**: If ANY test fails, stop all work and fix tests first
+6. **Document results**: Log test outcomes in AI_INTERACTIONS.md
+
+**AI assistants must refuse to proceed with new specifications if:**
+- Requirements are not in proper AWS Kiro EARS format (100% compliance required)
+- Current tests are failing
+- Test coverage is insufficient
+- Test gate has not been satisfied
+- EARS validation shows any non-compliant requirements
 
 ### Effective Prompts
-Template: "I'm implementing [REQ-XXX] from specs/requirements.md. This is an [MVP/ADVANCED] feature with [EARS-PATTERN] pattern. Please help me implement this following specs/design.md architecture."
+Template: "I'm implementing [REQ-XXX] from specs/requirements.md. This is an [MVP/ADVANCED] feature with [EARS-PATTERN] pattern. Please help me implement this following specs/design.md architecture. REQUIREMENTS: 1) Ensure requirement uses AWS Kiro EARS format with brackets, 2) Run tests and verify 100% pass before proceeding to next spec, 3) Validate EARS compliance shows 100%."
 
 ## ✅ Definition of Done
 
@@ -269,14 +337,18 @@ A feature is considered "done" when ALL criteria are met:
 
 ### Specification Compliance
 - [ ] All requirements from specs/requirements.md implemented
+- [ ] **100% EARS COMPLIANCE** - All requirements use AWS Kiro format with brackets
 - [ ] Design follows specs/design.md architecture
 - [ ] Performance meets specs/performance-benchmarks.md targets
 - [ ] User testing passes per specs/user-testing-strategy.md
+- [ ] EARS validation tool confirms 100% compliance
 
 ### Code Quality
 - [ ] Code follows all standards in CLAUDE.md
 - [ ] Specification tests written and passing (100% coverage)
 - [ ] Unit tests written and passing (≥80% coverage)
+- [ ] **ALL TESTS PASS (100%) - ZERO FAILURES ALLOWED**
+- [ ] Test execution verified via `./scripts/run.sh test`
 - [ ] Documentation updated in specs/ and code
 - [ ] Code reviewed and approved
 
@@ -776,7 +848,8 @@ Created:
 
 Key Features:
 ✓ Specification-Driven Development enforced
-✓ EARS requirements format with traceability
+✓ **AWS Kiro EARS requirements format with 100% compliance**
+✓ EARS validation tool ensures perfect format compliance
 ✓ AI interaction logging with timestamps
 ✓ Specification evolution from discoveries
 ✓ Unified automation via scripts/run.sh
@@ -803,7 +876,9 @@ Next steps:
 
 Remember: 
 - ALWAYS check specs/ before implementing!
+- **ENSURE 100% AWS Kiro EARS compliance with brackets!**
 - USE ./scripts/run.sh for all operations!
+- **RUN TESTS and verify 100% pass before next spec!**
 - LOG significant AI interactions!
 - UPDATE specs when you learn something new!
 
@@ -814,4 +889,10 @@ The scripts/run.sh is your single entry point for:
 ✅ Building, deploying, and development workflows
 ✅ Local GitHub Actions testing with nektos/act
 ✅ Proper virtual environment cleanup
+
+🚨 **CRITICAL TEST GATE**:
+- Before implementing new specs: `./scripts/run.sh test`
+- ALL tests must pass (100%) - zero failures allowed
+- AI assistants MUST enforce this gate
+- Block all work if tests fail until fixed
 ```
