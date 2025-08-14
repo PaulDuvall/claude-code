@@ -93,29 +93,66 @@ jobs:
         echo "  ℹ️  Claude Code setup tests skipped (not available in CI)"
         echo "✅ All CI-compatible integration tests passed"
         
-    - name: Run individual test suites
+    - name: Run test suites
       run: |
-        echo "🧪 Running Individual Test Suites"
-        echo "Running test_command_validation.py..."
-        python3 specs/tests/test_command_validation.py
+        echo "🧪 Running All Test Suites from specs/tests/"
         
-        echo "Running test_git_commands.py..."
-        python3 specs/tests/test_git_commands.py
+        # Find and run all Python test files in specs/tests/
+        test_files=$(find specs/tests/ -name "test_*.py" -type f | sort)
         
-        echo "Running test_quality_commands.py..."
-        python3 specs/tests/test_quality_commands.py
+        if [ -z "$test_files" ]; then
+          echo "❌ No test files found in specs/tests/"
+          exit 1
+        fi
         
-        echo "Running test_security_commands.py..."
-        python3 specs/tests/test_security_commands.py
+        echo "Found $(echo "$test_files" | wc -l) test files:"
+        echo "$test_files"
+        echo ""
         
-        echo "Running test_validation_system.py..."
-        python3 specs/tests/test_validation_system.py
+        failed_tests=0
+        total_tests=0
         
-        echo "Running test_user_experience.py..."
-        python3 specs/tests/test_user_experience.py
+        for test_file in $test_files; do
+          total_tests=$((total_tests + 1))
+          test_name=$(basename "$test_file")
+          
+          echo "▶️  Running $test_name..."
+          
+          # Special handling for test_coverage.py which may be slow
+          if [[ "$test_name" == "test_coverage.py" ]]; then
+            if timeout 60s python3 "$test_file"; then
+              echo "✅ $test_name passed"
+            else
+              exit_code=$?
+              if [ $exit_code -eq 124 ]; then
+                echo "⏰ $test_name timed out (60s limit)"
+              else
+                echo "❌ $test_name failed"
+                failed_tests=$((failed_tests + 1))
+              fi
+            fi
+          else
+            if python3 "$test_file"; then
+              echo "✅ $test_name passed"
+            else
+              echo "❌ $test_name failed"
+              failed_tests=$((failed_tests + 1))
+            fi
+          fi
+          echo ""
+        done
         
-        echo "Running test_coverage.py (with timeout)..."
-        timeout 60s python3 specs/tests/test_coverage.py || echo "Coverage test completed or timed out"
+        echo "📊 Test Results Summary:"
+        echo "  Total tests: $total_tests"
+        echo "  Passed: $((total_tests - failed_tests))"
+        echo "  Failed: $failed_tests"
+        
+        if [ $failed_tests -gt 0 ]; then
+          echo "❌ Some tests failed"
+          exit 1
+        else
+          echo "✅ All tests passed!"
+        fi
         
     - name: Run setup verification (CI mode)
       run: |
@@ -228,7 +265,7 @@ jobs:
         echo "📊 Test Summary:"
         echo "✅ Debug sub-agent tests"
         echo "✅ Command validation"
-        echo "✅ Individual test suites" 
+        echo "✅ All test suites from specs/tests/ directory" 
         echo "✅ JSON template validation"
         echo "✅ Repository structure checks"
         echo "✅ Command file structure validation"

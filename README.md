@@ -44,9 +44,10 @@ claude
 /xquality       # Check and fix code quality issues
 /xsecurity      # Scan for security vulnerabilities
 /xgit           # Automated git workflow with smart commits
+@debug-specialist # Access AI debugging specialist
 ```
 
-**That's it!** You now have 13 powerful AI development commands available in any project.
+**That's it!** You now have 13 powerful AI development commands + intelligent subagents available in any project.
 
 ## Core Commands (Always Available)
 
@@ -200,8 +201,10 @@ Deploy with: `./deploy.sh --experiments`
 ```bash
 git clone https://github.com/PaulDuvall/claude-code.git
 cd claude-code
-./setup.sh                    # Basic setup with 13 core commands
-./setup.sh --setup-type security   # Includes security hooks
+./setup.sh                           # Basic setup with 13 core commands + subagents
+./setup.sh --setup-type security     # Includes security hooks
+./setup.sh --setup-type comprehensive # All commands + all subagents + security
+./setup.sh --skip-subagents          # Skip subagent deployment
 ```
 
 ### ⚙️ **Manual Setup**
@@ -209,6 +212,8 @@ cd claude-code
 ./deploy.sh                   # Deploy core commands only
 ./deploy.sh --experiments     # Deploy experimental commands  
 ./deploy.sh --all            # Deploy all 57 commands
+./deploy-subagents.sh         # Deploy subagents separately
+./deploy-subagents.sh --all   # Deploy all available subagents
 ```
 
 ### 🔧 **Troubleshooting**
@@ -227,6 +232,7 @@ ls ~/.claude/commands/x*.md  # List installed commands
 
 - **`slash-commands/active/`** - 13 production-ready commands (deployed by default)
 - **`slash-commands/experiments/`** - 44 experimental/conceptual commands  
+- **`sub-agents/`** - AI specialist subagents with persistent context
 - **`hooks/`** - Security hooks for governance and compliance
 - **`templates/`** - Configuration templates for different use cases
 - **`specs/`** - Command specifications and validation framework

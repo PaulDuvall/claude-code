@@ -13,9 +13,6 @@
     "LS"
   ],
   
-  "// API key helper (set by configure-claude-code.sh)": "",
-  "apiKeyHelper": "~/.claude/anthropic_key_helper.sh",
-  
   "// Trust and onboarding settings": "",
   "hasTrustDialogAccepted": true,
   "hasCompletedProjectOnboarding": true,

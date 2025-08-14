@@ -20,6 +20,7 @@ FORCE=false
 SKIP_CONFIGURE=false
 SKIP_DEPLOY=false
 SKIP_HOOKS=false
+SKIP_SUBAGENTS=false
 SETUP_TYPE="basic"  # basic, security, comprehensive
 
 ##################################
@@ -44,6 +45,7 @@ OPTIONS:
     --skip-configure     Skip Claude Code configuration step
     --skip-deploy        Skip custom commands deployment step  
     --skip-hooks         Skip security hooks installation step
+    --skip-subagents     Skip subagents deployment step
     --help               Show this help message
 
 SETUP TYPES:
@@ -68,9 +70,10 @@ WORKFLOW:
     1. Validate prerequisites and environment
     2. Run configure-claude-code.sh (sets up Claude Code)
     3. Run deploy.sh (installs custom commands)
-    4. Install security hooks (if requested)
-    5. Apply appropriate settings.json template
-    6. Validate complete setup
+    4. Run deploy-subagents.sh (installs subagents)
+    5. Install security hooks (if requested)
+    6. Apply appropriate settings.json template
+    7. Validate complete setup
 
 EOF
 }
@@ -152,6 +155,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --skip-hooks)
             SKIP_HOOKS=true
+            shift
+            ;;
+        --skip-subagents)
+            SKIP_SUBAGENTS=true
             shift
             ;;
         --help)
@@ -253,9 +260,44 @@ main() {
         log "Step 3: Skipping custom commands deployment"
     fi
     
-    # Step 4: Install Security Hooks (if requested)
+    # Step 4: Deploy Subagents
+    if [[ "$SKIP_SUBAGENTS" != "true" ]]; then
+        log "Step 4: Deploying subagents..."
+        
+        if [[ ! -f "$SCRIPT_DIR/deploy-subagents.sh" ]]; then
+            error "deploy-subagents.sh not found in $SCRIPT_DIR"
+            exit 1
+        fi
+        
+        subagent_args=""
+        if [[ "$DRY_RUN" == "true" ]]; then
+            subagent_args="--dry-run"
+        fi
+        
+        if [[ "$DRY_RUN" == "true" ]]; then
+            log "[DRY-RUN] Would run: ./deploy-subagents.sh $subagent_args"
+            log "[DRY-RUN] Would deploy default subagent (debug-specialist)"
+        else
+            log "Deploying subagents..."
+            # Deploy debug-specialist by default, use --all for comprehensive setup
+            if [[ "$SETUP_TYPE" == "comprehensive" ]]; then
+                subagent_args="--all $subagent_args"
+            fi
+            
+            if ! "$SCRIPT_DIR/deploy-subagents.sh" $subagent_args; then
+                error "Subagent deployment failed"
+                exit 1
+            fi
+        fi
+        
+        success "Subagents deployed"
+    else
+        log "Step 4: Skipping subagent deployment"
+    fi
+    
+    # Step 5: Install Security Hooks (if requested)
     if [[ "$SKIP_HOOKS" != "true" ]] && [[ "$SETUP_TYPE" != "basic" ]]; then
-        log "Step 4: Installing security hooks..."
+        log "Step 5: Installing security hooks..."
         
         if [[ "$DRY_RUN" == "true" ]]; then
             log "[DRY-RUN] Would create ~/.claude/hooks/ directory"
@@ -286,14 +328,14 @@ main() {
         success "Security hooks installed"
     else
         if [[ "$SETUP_TYPE" == "basic" ]]; then
-            log "Step 4: Skipping security hooks (basic setup)"
+            log "Step 5: Skipping security hooks (basic setup)"
         else
-            log "Step 4: Skipping security hooks installation"
+            log "Step 5: Skipping security hooks installation"
         fi
     fi
     
-    # Step 5: Apply Settings Template
-    log "Step 5: Applying settings template..."
+    # Step 6: Apply Settings Template
+    log "Step 6: Applying settings template..."
     
     template_file=""
     case "$SETUP_TYPE" in
@@ -337,8 +379,8 @@ main() {
     
     success "Settings template applied"
     
-    # Step 6: Validate Setup
-    log "Step 6: Validating setup..."
+    # Step 7: Validate Setup
+    log "Step 7: Validating setup..."
     
     if [[ "$DRY_RUN" == "true" ]]; then
         log "[DRY-RUN] Would run validation checks"
@@ -379,6 +421,16 @@ main() {
             fi
         fi
         
+        # Check subagents (if applicable)
+        if [[ "$SKIP_SUBAGENTS" != "true" ]]; then
+            if [[ -d ~/.claude/sub-agents ]] && [[ $(ls ~/.claude/sub-agents/*.md 2>/dev/null | wc -l) -gt 0 ]]; then
+                log "✓ Subagents deployed ($(ls ~/.claude/sub-agents/*.md 2>/dev/null | wc -l) subagents)"
+            else
+                error "Subagents not found in ~/.claude/sub-agents"
+                validation_passed=false
+            fi
+        fi
+        
         if [[ "$validation_passed" == "true" ]]; then
             success "All validation checks passed"
         else
@@ -395,6 +447,9 @@ main() {
     echo ""
     echo "Setup type: $SETUP_TYPE"
     echo "Commands deployed: $(ls ~/.claude/commands/x*.md 2>/dev/null | wc -l) custom commands"
+    if [[ "$SKIP_SUBAGENTS" != "true" ]]; then
+        echo "Subagents deployed: $(ls ~/.claude/sub-agents/*.md 2>/dev/null | wc -l) subagents"
+    fi
     if [[ "$SETUP_TYPE" != "basic" ]] && [[ "$SKIP_HOOKS" != "true" ]]; then
         echo "Security hooks: Enabled"
     fi

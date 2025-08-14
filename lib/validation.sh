@@ -31,18 +31,14 @@ run_final_validation() {
     fi
 
     # Check configuration files
-    if [[ "$USE_API_KEY" == "true" ]]; then
-        if [ -f ~/.claude.json ] && [ -f ~/.claude/anthropic_key_helper.sh ]; then
+    if [ -f ~/.claude.json ]; then
+        if [[ "$USE_API_KEY" == "true" ]]; then
             echo "✓ Configuration files created successfully (API key mode)"
         else
-            echo "✗ Configuration files missing"
+            echo "✓ Configuration files created successfully (web authentication mode)"
         fi
     else
-        if [ -f ~/.claude.json ]; then
-            echo "✓ Configuration files created successfully (web authentication mode)"
-        else
-            echo "✗ Configuration files missing"
-        fi
+        echo "✗ Configuration files missing"
     fi
 }
 
@@ -98,7 +94,7 @@ show_backup_info() {
 show_security_reminder() {
     echo "🔐 Security Reminder:"
     if [[ "$USE_API_KEY" == "true" ]]; then
-        echo "- Your API key is stored in ~/.claude/anthropic_key_helper.sh"
+        echo "- Using API key authentication via ANTHROPIC_API_KEY environment variable"
     else
         echo "- Using web-based authentication (no API key stored locally)"
     fi

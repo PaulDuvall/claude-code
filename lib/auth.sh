@@ -40,54 +40,13 @@ detect_authentication_method() {
     fi
 }
 
-##################################
-# API Helper Script Setup
-##################################
-setup_api_helper() {
-    if [[ "$USE_API_KEY" != "true" ]]; then
-        log "Skipping API helper setup (using web-based authentication)"
-        return
-    fi
-
-    local api_helper_content='#!/usr/bin/env bash
-echo ${ANTHROPIC_API_KEY}'
-    
-    local api_helper_path="$HOME/.claude/anthropic_key_helper.sh"
-
-    if [[ "$INTERACTIVE" == "true" ]] && [[ -f "$api_helper_path" ]]; then
-        show_diff "$api_helper_path" "$api_helper_content"
-        if ! confirm "Update API helper script?"; then
-            log "Skipping API helper update"
-        else
-            apply_change "echo '$api_helper_content' > $api_helper_path && chmod +x $api_helper_path" \
-                         "Creating API helper script"
-        fi
-    else
-        apply_change "echo '$api_helper_content' > $api_helper_path && chmod +x $api_helper_path" \
-                     "Creating API helper script"
-    fi
-}
-
-##################################
-# API Helper Configuration
-##################################
-configure_api_helper() {
-    if [[ "$USE_API_KEY" != "true" ]]; then
-        log "Skipping API helper configuration (using web-based authentication)"
-        return
-    fi
-
-    if [[ "$DRY_RUN" == "true" ]]; then
-        log "[DRY-RUN] Would configure API helper in settings"
-    else
-        claude config set --global apiKeyHelper ~/.claude/anthropic_key_helper.sh
-    fi
-}
+# API Helper functions removed - Claude Code handles authentication natively
+# When ANTHROPIC_API_KEY is set, Claude Code uses it directly
+# When not set, Claude Code uses web-based authentication
 
 ##################################
 # Main Authentication Setup
 ##################################
 setup_authentication() {
     detect_authentication_method
-    setup_api_helper
 }
