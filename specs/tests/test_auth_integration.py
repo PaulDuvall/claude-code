@@ -58,12 +58,25 @@ class TestAuthenticationIntegration:
         if os.path.exists(temp_dir):
             shutil.rmtree(temp_dir)
     
+    def _is_claude_available(self):
+        """Check if Claude Code is available for testing."""
+        try:
+            result = subprocess.run(['claude', '--version'], capture_output=True, text=True)
+            return result.returncode == 0
+        except FileNotFoundError:
+            return False
+    
     def test_full_setup_with_api_key(self):
         """Test: Complete setup process with API key doesn't create conflicts.
         
         Addresses: https://github.com/PaulDuvall/claude-code/issues/1
         """
         print("Testing full setup with API key...")
+        
+        # Skip if Claude Code not available (CI environment)
+        if not self._is_claude_available():
+            print("⏭ Skipping full setup test - Claude Code not available (CI environment)")
+            return
         
         temp_dir, temp_home, test_env = self.setup_isolated_env('sk-ant-test-integration-key')
         
@@ -109,6 +122,11 @@ class TestAuthenticationIntegration:
         """Test: Complete setup process without API key uses web auth."""
         print("Testing full setup without API key...")
         
+        # Skip if Claude Code not available (CI environment)
+        if not self._is_claude_available():
+            print("⏭ Skipping full setup test - Claude Code not available (CI environment)")
+            return
+        
         temp_dir, temp_home, test_env = self.setup_isolated_env()
         
         try:
@@ -144,6 +162,11 @@ class TestAuthenticationIntegration:
         where users transition from Cursor + Claude to VSCode + Claude Code.
         """
         print("Testing transition from old to new authentication...")
+        
+        # Skip if Claude Code not available (CI environment)
+        if not self._is_claude_available():
+            print("⏭ Skipping transition test - Claude Code not available (CI environment)")
+            return
         
         temp_dir, temp_home, test_env = self.setup_isolated_env('sk-ant-transition-test')
         
@@ -194,6 +217,11 @@ class TestAuthenticationIntegration:
         """
         print("Testing single authentication method enforcement...")
         
+        # Skip if Claude Code not available (CI environment)
+        if not self._is_claude_available():
+            print("⏭ Skipping auth method test - Claude Code not available (CI environment)")
+            return
+        
         temp_dir, temp_home, test_env = self.setup_isolated_env('sk-ant-single-auth-test')
         
         try:
@@ -235,6 +263,11 @@ class TestAuthenticationIntegration:
     def test_settings_template_generation(self):
         """Test: Generated settings don't include apiKeyHelper."""
         print("Testing settings template generation...")
+        
+        # Skip if Claude Code not available (CI environment)
+        if not self._is_claude_available():
+            print("⏭ Skipping template test - Claude Code not available (CI environment)")
+            return
         
         temp_dir, temp_home, test_env = self.setup_isolated_env('sk-ant-template-test')
         
@@ -284,11 +317,24 @@ class TestAuthenticationIntegration:
         
         passed = 0
         failed = 0
+        skipped = 0
         
         for test in tests:
             try:
-                test()
-                passed += 1
+                # Capture output to detect skips
+                import io
+                import contextlib
+                f = io.StringIO()
+                with contextlib.redirect_stdout(f):
+                    test()
+                output = f.getvalue()
+                
+                if "⏭ Skipping" in output:
+                    skipped += 1
+                    print(output.strip())  # Print the skip message
+                else:
+                    passed += 1
+                    print(output.strip()) if output.strip() else None
             except Exception as e:
                 print(f"❌ {test.__name__} failed: {e}")
                 failed += 1
@@ -296,12 +342,15 @@ class TestAuthenticationIntegration:
                 print(traceback.format_exc())
         
         print("\n" + "=" * 60)
-        print(f"Integration tests: {passed} passed, {failed} failed")
+        print(f"Integration tests: {passed} passed, {failed} failed, {skipped} skipped")
         
         if failed > 0:
             sys.exit(1)
         else:
-            print("🎉 All integration tests passed!")
+            if skipped > 0:
+                print(f"🎉 All available tests passed! ({skipped} tests skipped in CI environment)")
+            else:
+                print("🎉 All integration tests passed!")
             return True
 
 
