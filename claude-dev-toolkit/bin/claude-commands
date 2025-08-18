@@ -1,0 +1,132 @@
+#!/usr/bin/env node
+
+/**
+ * Claude Commands CLI
+ * Main entry point for the claude-dev-toolkit
+ */
+
+const path = require('path');
+const fs = require('fs');
+const os = require('os');
+const { program } = require('commander');
+const { version, description } = require('../package.json');
+
+program
+    .name('claude-commands')
+    .description(description)
+    .version(version);
+
+program
+    .command('list')
+    .description('List all available commands')
+    .option('-a, --active', 'Show only active commands')
+    .option('-e, --experimental', 'Show only experimental commands')
+    .action((options) => {
+        const claudeDir = path.join(os.homedir(), '.claude', 'commands');
+        const activeDir = path.join(claudeDir, 'active');
+        const experimentalDir = path.join(claudeDir, 'experimental');
+        
+        console.log('📦 Claude Custom Commands\n');
+        
+        if (!options.experimental) {
+            console.log('🎯 Active Commands:');
+            if (fs.existsSync(activeDir)) {
+                const activeCommands = fs.readdirSync(activeDir)
+                    .filter(f => f.endsWith('.md'))
+                    .map(f => f.replace('.md', ''))
+                    .sort();
+                
+                if (activeCommands.length > 0) {
+                    activeCommands.forEach(cmd => console.log(`  /${cmd}`));
+                } else {
+                    console.log('  No active commands found');
+                }
+            } else {
+                console.log('  Commands directory not found');
+            }
+            console.log('');
+        }
+        
+        if (!options.active) {
+            console.log('🧪 Experimental Commands:');
+            if (fs.existsSync(experimentalDir)) {
+                const expCommands = fs.readdirSync(experimentalDir)
+                    .filter(f => f.endsWith('.md'))
+                    .map(f => f.replace('.md', ''))
+                    .sort();
+                
+                if (expCommands.length > 0) {
+                    expCommands.forEach(cmd => console.log(`  /${cmd}`));
+                } else {
+                    console.log('  No experimental commands found');
+                }
+            } else {
+                console.log('  Commands directory not found');
+            }
+            console.log('');
+        }
+        
+        console.log('💡 Usage: Try /xhelp in Claude Code to see all commands');
+    });
+
+program
+    .command('install')
+    .description('Install command sets')
+    .option('--active', 'Install active commands only')
+    .option('--experimental', 'Install experimental commands')
+    .option('--all', 'Install all commands')
+    .action((options) => {
+        const installer = require('../lib/installer');
+        installer.install(options);
+    });
+
+program
+    .command('status')
+    .description('Show installation status')
+    .action(() => {
+        const claudeDir = path.join(os.homedir(), '.claude', 'commands');
+        const activeDir = path.join(claudeDir, 'active');
+        const experimentalDir = path.join(claudeDir, 'experimental');
+        
+        console.log('📊 Claude Dev Toolkit Status\n');
+        
+        // Check Claude directory
+        console.log('📁 Installation Paths:');
+        console.log(`   Claude directory: ${fs.existsSync(claudeDir) ? '✅' : '❌'} ${claudeDir}`);
+        console.log(`   Active commands:  ${fs.existsSync(activeDir) ? '✅' : '❌'} ${activeDir}`);
+        console.log(`   Experimental:     ${fs.existsSync(experimentalDir) ? '✅' : '❌'} ${experimentalDir}\n`);
+        
+        // Count commands
+        let activeCount = 0;
+        let expCount = 0;
+        
+        if (fs.existsSync(activeDir)) {
+            activeCount = fs.readdirSync(activeDir).filter(f => f.endsWith('.md')).length;
+        }
+        
+        if (fs.existsSync(experimentalDir)) {
+            expCount = fs.readdirSync(experimentalDir).filter(f => f.endsWith('.md')).length;
+        }
+        
+        console.log('📦 Command Inventory:');
+        console.log(`   Active commands:      ${activeCount}`);
+        console.log(`   Experimental commands: ${expCount}`);
+        console.log(`   Total commands:       ${activeCount + expCount}\n`);
+        
+        // Package info
+        console.log('📋 Package Information:');
+        console.log(`   Version: ${version}`);
+        console.log(`   CLI Location: ${process.argv[1]}\n`);
+        
+        // Quick health check
+        const isHealthy = fs.existsSync(claudeDir) && (activeCount > 0 || expCount > 0);
+        console.log(`🔍 Overall Status: ${isHealthy ? '✅ Healthy' : '⚠️  Issues detected'}`);
+        
+        if (!isHealthy) {
+            console.log('\n💡 Troubleshooting:');
+            console.log('   • Try: npm install -g claude-dev-toolkit');
+            console.log('   • Or reinstall to refresh commands');
+        }
+    });
+
+program.parse(process.argv);

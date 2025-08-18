@@ -1,0 +1,54 @@
+{
+  "name": "claude-dev-toolkit",
+  "version": "0.0.1-alpha.1",
+  "description": "Custom commands toolkit for Claude Code - streamline your development workflow",
+  "author": "Paul Duvall",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "claude",
+    "ai",
+    "development",
+    "automation",
+    "commands"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PaulDuvall/claude-code.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PaulDuvall/claude-code/issues"
+  },
+  "homepage": "https://github.com/PaulDuvall/claude-code#readme",
+  "bin": {
+    "claude-commands": "./bin/claude-commands"
+  },
+  "scripts": {
+    "postinstall": "node scripts/postinstall.js",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "jest --testPathPattern=tests/unit",
+    "test:integration": "jest --testPathPattern=tests/integration",
+    "lint": "eslint lib/**/*.js bin/**/*.js",
+    "validate": "node scripts/validate.js"
+  },
+  "dependencies": {
+    "commander": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "eslint": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "commands/",
+    "templates/",
+    "hooks/",
+    "scripts/",
+    "README.md",
+    "LICENSE"
+  ]
+}
