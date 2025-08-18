@@ -1,8 +1,8 @@
 # Claude Dev Toolkit NPM Distribution Requirements Specification
 
 ## Document Information
-- **Version:** 1.0.0
-- **Date:** 2025-08-17
+- **Version:** 1.1.0
+- **Date:** 2025-08-18
 - **Author:** Paul Duvall
 - **Status:** Draft
 
@@ -56,9 +56,9 @@ THE SYSTEM SHALL install the package globally and make the claude-commands CLI a
 #### REQ-005: Post-Install Automation
 **Priority:** High
 WHEN the npm package installation completes
-THE SYSTEM SHALL automatically execute the post-install script to begin setup process
-**Rationale:** Automates initial configuration without manual intervention
-**Acceptance Criteria:** Post-install script runs and prompts user for configuration options
+THE SYSTEM SHALL automatically execute the post-install script to begin setup process with option to skip via --skip-setup flag
+**Rationale:** Automates initial configuration without manual intervention while allowing users to defer setup
+**Acceptance Criteria:** Post-install script runs and prompts user for configuration options, or skips when flag is provided
 
 #### REQ-006: Environment Validation
 **Priority:** High
@@ -130,9 +130,9 @@ THE SYSTEM SHALL apply the specified configuration template to existing settings
 #### REQ-015: Package Updates
 **Priority:** Medium
 WHEN the user runs "npm update claude-dev-toolkit"
-THE SYSTEM SHALL update the package while preserving user configuration and installed commands
-**Rationale:** Provides standard npm update mechanism
-**Acceptance Criteria:** Update completes successfully without data loss
+THE SYSTEM SHALL update the package while preserving user configuration, installed commands, and any user-created custom commands not part of the package
+**Rationale:** Provides standard npm update mechanism while protecting user customizations
+**Acceptance Criteria:** Update completes successfully without data loss, preserving all user-created content
 
 #### REQ-016: Command Updates
 **Priority:** Medium
@@ -231,23 +231,30 @@ THE SYSTEM SHALL use secure default configurations for all settings and avoid ex
 **Rationale:** Protects users who accept default configurations
 **Acceptance Criteria:** Default settings follow security best practices
 
+#### REQ-029: Package Integrity Verification
+**Priority:** High
+BEFORE installing any commands or executing any package code
+THE SYSTEM SHALL verify package signatures and checksums to prevent tampering and ensure authenticity
+**Rationale:** Protects against supply chain attacks and malicious package modifications
+**Acceptance Criteria:** Installation fails if integrity checks fail, with clear security warning to user
+
 ## Interface Requirements
 
-#### REQ-029: Help System
+#### REQ-030: Help System
 **Priority:** Medium
 WHEN the user runs "claude-commands --help" or any subcommand with --help
 THE SYSTEM SHALL display comprehensive usage information and examples
 **Rationale:** Provides self-service support for users
 **Acceptance Criteria:** Help text is complete, accurate, and includes examples
 
-#### REQ-030: Progress Indicators
+#### REQ-031: Progress Indicators
 **Priority:** Low
 WHILE performing long-running operations like installation or validation
 THE SYSTEM SHALL display progress indicators and status messages
 **Rationale:** Improves user experience during operations
 **Acceptance Criteria:** Users receive feedback on operation progress
 
-#### REQ-031: Color-Coded Output
+#### REQ-032: Color-Coded Output
 **Priority:** Low
 WHEN displaying messages to users
 THE SYSTEM SHALL use color coding for different message types (success, error, warning, info)
@@ -256,40 +263,164 @@ THE SYSTEM SHALL use color coding for different message types (success, error, w
 
 ## Non-Functional Requirements
 
-#### REQ-032: Cross-Platform Compatibility
+#### REQ-033: Cross-Platform Compatibility
 **Priority:** High
 THE SYSTEM SHALL function correctly on Windows, macOS, and Linux operating systems
 **Rationale:** Supports diverse development environments
 **Acceptance Criteria:** All functionality works on target platforms
 
-#### REQ-033: Backward Compatibility
+#### REQ-034: Backward Compatibility
 **Priority:** Medium
 THE SYSTEM SHALL maintain compatibility with existing manual installation methods
 **Rationale:** Protects existing users during transition period
 **Acceptance Criteria:** Manual installation continues to work alongside npm package
 
-#### REQ-034: Documentation Quality
+#### REQ-035: Documentation Quality
 **Priority:** Medium
 THE SYSTEM SHALL include comprehensive documentation covering installation, configuration, and troubleshooting
 **Rationale:** Enables successful adoption and reduces support burden
 **Acceptance Criteria:** Documentation covers all user scenarios and common issues
 
+### Advanced Features Requirements
+
+#### REQ-036: Version Rollback
+**Priority:** Medium
+WHEN the user runs "claude-commands rollback" or "claude-commands rollback --version <version>"
+THE SYSTEM SHALL restore the previous version (or specified version) of installed commands and optionally configuration
+**Rationale:** Provides recovery mechanism when updates cause issues
+**Acceptance Criteria:** Rollback completes successfully, restoring previous working state with confirmation prompt
+
+#### REQ-037: Dry-Run Mode
+**Priority:** Medium
+WHEN the user adds --dry-run flag to any installation or update command
+THE SYSTEM SHALL simulate the operation and display what would be changed without making actual modifications
+**Rationale:** Allows users to preview changes before committing to them
+**Acceptance Criteria:** Dry-run shows all planned changes clearly without modifying any files
+
+#### REQ-038: Interactive Tutorials
+**Priority:** Low
+WHEN the user runs "claude-commands tutorial" or "claude-commands tutorial <command-name>"
+THE SYSTEM SHALL provide interactive, step-by-step tutorials demonstrating command usage with real examples
+**Rationale:** Accelerates user onboarding and reduces learning curve
+**Acceptance Criteria:** Tutorials are interactive, clear, and include practical examples
+
+#### REQ-039: CI/CD Integration
+**Priority:** Medium
+THE SYSTEM SHALL provide GitHub Actions workflows, GitLab CI templates, and Jenkins pipeline scripts for automated installation in CI/CD environments
+**Rationale:** Enables seamless integration into existing development pipelines
+**Acceptance Criteria:** CI/CD templates work correctly and include documentation for common scenarios
+
 ## Traceability Matrix
 
-| Requirement | Business Objective | Test Case |
-|-------------|-------------------|-----------|
-| REQ-001 | Streamlined Distribution | TC-001: Package Structure Validation |
-| REQ-004 | One-Step Installation | TC-002: NPM Global Install Test |
-| REQ-005 | Automated Setup | TC-003: Post-Install Script Test |
-| REQ-008 | Command Availability | TC-004: Command Installation Verification |
-| REQ-020 | Reliable Installation | TC-005: Error Recovery Test |
-| REQ-032 | Platform Support | TC-006: Cross-Platform Test Suite |
+| Requirement | Business Objective | Test Case | Priority |
+|-------------|-------------------|-----------|----------|
+| REQ-001 | Streamlined Distribution | TC-001: Package Structure Validation | High |
+| REQ-004 | One-Step Installation | TC-002: NPM Global Install Test | High |
+| REQ-005 | Automated Setup | TC-003: Post-Install Script Test | High |
+| REQ-006 | Environment Validation | TC-004: Dependency Check Test | High |
+| REQ-008 | Command Availability | TC-005: Command Installation Verification | High |
+| REQ-020 | Reliable Installation | TC-006: Error Recovery Test | High |
+| REQ-021 | Permission Error Handling | TC-007: Permission Error Test | High |
+| REQ-022 | Dependency Validation | TC-008: Missing Dependency Test | High |
+| REQ-023 | Claude Code Compatibility | TC-009: Compatibility Check Test | High |
+| REQ-026 | File Permission Security | TC-010: Security Permission Test | High |
+| REQ-027 | Input Validation | TC-011: Input Sanitization Test | High |
+| REQ-029 | Package Integrity | TC-012: Integrity Verification Test | High |
+| REQ-033 | Platform Support | TC-013: Cross-Platform Test Suite | High |
+| REQ-024 | Installation Speed | TC-014: Performance Test | Medium |
+| REQ-025 | Command Loading | TC-015: Load Time Test | Medium |
+| REQ-036 | Version Rollback | TC-016: Rollback Function Test | Medium |
+| REQ-037 | Dry-Run Mode | TC-017: Dry-Run Simulation Test | Medium |
+| REQ-039 | CI/CD Integration | TC-018: Pipeline Integration Test | Medium |
+| REQ-038 | Interactive Tutorials | TC-019: Tutorial System Test | Low |
+
+## User Acceptance Testing Scenarios
+
+### Scenario 1: First-Time User Installation
+**Given:** A developer who has never used Claude Code or the toolkit
+**When:** They run `npm install -g claude-dev-toolkit`
+**Then:** 
+- The package installs successfully within 30 seconds
+- Post-install wizard guides them through setup
+- They have working commands within 2 minutes total
+- Help system is immediately accessible
+
+### Scenario 2: Existing User Migration
+**Given:** A user with existing manual installation of commands
+**When:** They install the npm package
+**Then:**
+- Their existing configuration is detected and preserved
+- They are prompted to migrate or keep manual setup
+- Custom commands they created are not affected
+- No data loss occurs during migration
+
+### Scenario 3: CI/CD Pipeline Integration
+**Given:** A DevOps engineer setting up automated testing
+**When:** They use the provided CI/CD templates with API key
+**Then:**
+- Installation completes without user interaction
+- Commands are available for pipeline scripts
+- No browser authentication is required
+- Setup completes in under 1 minute
+
+### Scenario 4: Update with Rollback
+**Given:** A user with version 1.0.0 installed
+**When:** They update to 1.1.0 and encounter issues
+**Then:**
+- They can run `claude-commands rollback`
+- Previous version is restored within 30 seconds
+- All their custom settings remain intact
+- They receive confirmation of successful rollback
+
+### Scenario 5: Dry-Run Installation Preview
+**Given:** A cautious user wanting to preview changes
+**When:** They run `claude-commands install --experimental --dry-run`
+**Then:**
+- They see a detailed list of what would be installed
+- No actual changes are made to their system
+- File paths and modifications are clearly shown
+- They can make an informed decision to proceed
+
+### Scenario 6: Security-Conscious Installation
+**Given:** An enterprise user with security requirements
+**When:** They install the package
+**Then:**
+- Package integrity is verified before installation
+- They can review all file permissions that will be set
+- Security hooks can be enabled during setup
+- Input validation prevents any injection attacks
+
+## Feature Priority Classification
+
+### High Priority Features (MVP - Required for Initial Release)
+- **Requirements:** REQ-001 through REQ-008, REQ-018, REQ-020 through REQ-023, REQ-026 through REQ-029, REQ-033
+- Core package structure and installation
+- Essential error handling and recovery
+- Security requirements and package integrity
+- Cross-platform compatibility
+- Basic CLI functionality
+
+### Medium Priority Features (Post-MVP Phase 1)
+- **Requirements:** REQ-009 through REQ-017, REQ-019, REQ-024, REQ-025, REQ-030, REQ-034, REQ-035, REQ-036, REQ-037, REQ-039
+- Configuration management and templates
+- Update and maintenance features
+- Version rollback and dry-run mode
+- CI/CD integration
+- Documentation and help system
+- Performance requirements
+
+### Low Priority Features (Post-MVP Phase 2)
+- **Requirements:** REQ-031, REQ-032, REQ-038
+- UX enhancements (progress indicators, color coding)
+- Interactive tutorials
+- Advanced user experience features
 
 ## Change Log
 
 | Version | Date | Changes | Author |
 |---------|------|---------|--------|
 | 1.0.0 | 2025-08-17 | Initial requirements specification | Paul Duvall |
+| 1.1.0 | 2025-08-18 | Added advanced features (REQ-036 to REQ-039), enhanced traceability matrix, added acceptance testing scenarios, clarified ambiguous requirements, added feature priority classification | Paul Duvall |
 
 ---
 
