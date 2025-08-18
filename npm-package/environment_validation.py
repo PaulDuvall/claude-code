@@ -67,10 +67,17 @@ class NodeJSChecker:
     
     def is_available(self) -> bool:
         """Check if Node.js is available"""
+        # Support test environment variables
+        if os.environ.get('TESTING') == 'true':
+            return os.environ.get('NODEJS_AVAILABLE', 'true') == 'true'
         return shutil.which('node') is not None
     
     def get_version(self) -> Optional[str]:
         """Get Node.js version"""
+        # Support test environment variables
+        if os.environ.get('TESTING') == 'true':
+            return os.environ.get('NODEJS_VERSION')
+        
         try:
             result = subprocess.run(['node', '--version'], capture_output=True, text=True, timeout=10)
             if result.returncode == 0:
@@ -139,12 +146,20 @@ class ClaudeCodeChecker:
     
     def is_available(self) -> bool:
         """Check if Claude Code is available"""
+        # Support test environment variables
+        if os.environ.get('TESTING') == 'true':
+            return os.environ.get('CLAUDE_CODE_AVAILABLE', 'true') == 'true'
+        
         return (shutil.which('claude-code') is not None or 
                 shutil.which('claude') is not None or 
                 os.environ.get('CLAUDE_CODE_MOCK') == 'true')
     
     def get_version(self) -> Optional[str]:
         """Get Claude Code version"""
+        # Support test environment variables
+        if os.environ.get('TESTING') == 'true':
+            return os.environ.get('CLAUDE_CODE_VERSION')
+        
         try:
             if os.environ.get('CLAUDE_CODE_MOCK') == 'true':
                 return os.environ.get('CLAUDE_CODE_VERSION', '1.5.0')
@@ -457,7 +472,8 @@ class EnvironmentValidator:
         try:
             if not self._check_nodejs_command():
                 result['error_message'] = "Node.js not found. Please install Node.js version 16.0.0 or higher."
-                return self.cache.set(cache_key, result)
+                self.cache.set(cache_key, result)
+                return result
             
             current_version = self._get_nodejs_version()
             result['current_version'] = current_version
@@ -474,7 +490,8 @@ class EnvironmentValidator:
         except Exception as e:
             result['error_message'] = f"Error checking Node.js version: {str(e)}"
         
-        return self.cache.set(cache_key, result)
+        self.cache.set(cache_key, result)
+        return result
     
     def validate_claude_code_installation(self) -> Dict:
         """Validate Claude Code installation"""
@@ -497,7 +514,8 @@ class EnvironmentValidator:
             if not self._check_claude_code_command():
                 result['error_message'] = "Claude Code is not installed or not found in PATH."
                 result['installation_instructions'] = "Please install Claude Code from https://claude.ai/code"
-                return self.cache.set(cache_key, result)
+                self.cache.set(cache_key, result)
+                return result
             
             result['installed'] = True
             result['installation_path'] = self._get_claude_code_installation_path()
@@ -513,7 +531,8 @@ class EnvironmentValidator:
         except Exception as e:
             result['error_message'] = f"Error checking Claude Code installation: {str(e)}"
         
-        return self.cache.set(cache_key, result)
+        self.cache.set(cache_key, result)
+        return result
     
     def validate_system_dependencies(self) -> Dict:
         """Validate system dependencies"""
