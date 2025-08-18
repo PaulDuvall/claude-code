@@ -27,24 +27,36 @@ This repository extends [Claude Code](https://claude.ai/code) with **custom slas
 
 ## Quick Start
 
-### 🚀 Get Started in 2 Minutes
+### 🚀 Get Started in 30 Seconds (NPM Installation)
 
 ```bash
 # 1. Install Claude Code (if you haven't already)
 npm install -g @anthropic-ai/claude-code
 
-# 2. Clone and setup this repository
-git clone https://github.com/PaulDuvall/claude-code.git
-cd claude-code
-./setup.sh
+# 2. Install Claude Dev Toolkit via NPM
+npm install -g claude-dev-toolkit
 
-# 3. Start using AI-powered development commands
+# 3. Start using AI-powered development commands immediately
 claude
 /xtest          # Run all tests intelligently
 /xquality       # Check and fix code quality issues
 /xsecurity      # Scan for security vulnerabilities
 /xgit           # Automated git workflow with smart commits
+```
+
+### 🔧 Alternative: Manual Installation (Development)
+
+For contributing or customization:
+
+```bash
+# Clone and setup this repository
+git clone https://github.com/PaulDuvall/claude-code.git
+cd claude-code
+./setup.sh
+
+# Access debug specialist and experimental commands
 @debug-specialist # Access AI debugging specialist
+./deploy.sh --experiments # Enable 44 experimental commands
 ```
 
 **That's it!** You now have 13 powerful AI development commands + intelligent subagents available in any project.
@@ -197,7 +209,17 @@ Deploy with: `./deploy.sh --experiments`
 
 ## Installation Options
 
-### 🚀 **Automated Setup (Recommended)**
+### 📦 **NPM Installation (Recommended)**
+```bash
+# Global installation - works everywhere
+npm install -g claude-dev-toolkit
+
+# Commands are immediately available in Claude Code
+claude
+/xhelp    # List all available commands
+```
+
+### 🚀 **Development Setup (For Contributors)**
 ```bash
 git clone https://github.com/PaulDuvall/claude-code.git
 cd claude-code

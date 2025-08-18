@@ -285,3 +285,4 @@ When working with this repository:
 - **Audit Trail**: Maintain logs of security-relevant actions
 
 This repository transforms Claude Code into a comprehensive development platform that guides teams through best practices while automating repetitive tasks and ensuring consistent quality and security across all projects.
+- It's unacceptable to have any failing tests. 100% need to be passing before moving onto the next work

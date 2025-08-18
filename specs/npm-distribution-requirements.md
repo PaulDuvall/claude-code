@@ -310,6 +310,53 @@ THE SYSTEM SHALL provide GitHub Actions workflows, GitLab CI templates, and Jenk
 **Rationale:** Enables seamless integration into existing development pipelines
 **Acceptance Criteria:** CI/CD templates work correctly and include documentation for common scenarios
 
+### Package Testing and Quality Assurance Requirements
+
+#### REQ-040: Pre-Publication Package Testing
+**Priority:** High
+BEFORE publishing the package to the npm registry
+THE SYSTEM SHALL provide comprehensive testing mechanisms including local package installation testing, multi-platform compatibility verification, and automated test suites to validate package integrity and functionality
+**Rationale:** Prevents publishing broken packages, reduces user support burden, and maintains package quality standards
+**Acceptance Criteria:** Package testing suite covers installation, CLI functionality, cross-platform compatibility, and permission validation; all tests must pass before publication is allowed
+
+#### REQ-041: Local Package Validation
+**Priority:** High
+WHEN developers run package validation tests
+THE SYSTEM SHALL create a local package tarball using `npm pack` and test global installation, CLI command availability, help system functionality, and file permissions without requiring npm registry publication
+**Rationale:** Enables safe testing of exact package contents that would be published, allowing early detection of packaging issues
+**Acceptance Criteria:** Local testing validates all CLI commands work correctly, package installs without errors, and all expected files are included with proper permissions
+
+#### REQ-042: Multi-Environment Testing Framework
+**Priority:** Medium
+THE SYSTEM SHALL provide Docker-based testing environments for validating package installation across multiple Node.js versions (16, 18, 20+) and operating systems (Linux amd64, Linux arm64, macOS, Windows)
+**Rationale:** Ensures cross-platform compatibility and prevents platform-specific installation failures
+**Acceptance Criteria:** Automated tests run in isolated environments for each supported platform and Node.js version, reporting success/failure for each combination
+
+#### REQ-043: Automated Test Suite Execution
+**Priority:** Medium
+WHEN package testing is initiated
+THE SYSTEM SHALL execute a comprehensive test suite covering CLI command functionality, file system operations, permission validation, error handling, and integration scenarios through automated scripts
+**Rationale:** Provides systematic validation of all package functionality to prevent regression and ensure consistent behavior
+**Acceptance Criteria:** Test suite covers all CLI commands, validates expected outputs, tests error conditions, and reports detailed pass/fail status with specific error information
+
+#### REQ-044: Package Content Verification
+**Priority:** Medium
+BEFORE publication, THE SYSTEM SHALL verify that the package tarball contains all required files, correct file permissions, proper directory structure, valid package.json configuration, and no sensitive or unwanted files
+**Rationale:** Prevents accidentally publishing incomplete packages, sensitive data, or development artifacts
+**Acceptance Criteria:** Verification includes file manifest validation, permission checks, package.json validation, and security scanning for sensitive content
+
+#### REQ-045: Performance and Size Validation
+**Priority:** Low
+THE SYSTEM SHALL validate that package installation completes within performance thresholds (installation time < 30 seconds, package size < 10MB, dependency count < 20) and report package size and dependency metrics
+**Rationale:** Ensures package remains lightweight and installs quickly for good user experience
+**Acceptance Criteria:** Performance tests measure and report installation time, package size, and dependency metrics with pass/fail thresholds
+
+#### REQ-046: Production Installation Strategy
+**Priority:** High
+THE SYSTEM SHALL install only active commands by default during production releases, with experimental commands available through explicit opt-in installation via "claude-commands install --experimental"
+**Rationale:** Provides stable first-time user experience while preserving access to advanced features for power users
+**Acceptance Criteria:** Default installation includes 13 active commands only, experimental commands require explicit user action
+
 ## Traceability Matrix
 
 | Requirement | Business Objective | Test Case | Priority |
@@ -332,7 +379,14 @@ THE SYSTEM SHALL provide GitHub Actions workflows, GitLab CI templates, and Jenk
 | REQ-036 | Version Rollback | TC-016: Rollback Function Test | Medium |
 | REQ-037 | Dry-Run Mode | TC-017: Dry-Run Simulation Test | Medium |
 | REQ-039 | CI/CD Integration | TC-018: Pipeline Integration Test | Medium |
-| REQ-038 | Interactive Tutorials | TC-019: Tutorial System Test | Low |
+| REQ-040 | Pre-Publication Testing | TC-019: Package Testing Suite | High |
+| REQ-041 | Local Package Validation | TC-020: Local Installation Test | High |
+| REQ-042 | Multi-Environment Testing | TC-021: Cross-Platform Test Suite | Medium |
+| REQ-043 | Automated Test Execution | TC-022: Test Suite Automation | Medium |
+| REQ-044 | Package Content Verification | TC-023: Content Validation Test | Medium |
+| REQ-045 | Performance Validation | TC-024: Performance Metrics Test | Low |
+| REQ-046 | Production Installation Strategy | TC-025: Installation Strategy Test | High |
+| REQ-038 | Interactive Tutorials | TC-026: Tutorial System Test | Low |
 
 ## User Acceptance Testing Scenarios
 
@@ -393,26 +447,29 @@ THE SYSTEM SHALL provide GitHub Actions workflows, GitLab CI templates, and Jenk
 ## Feature Priority Classification
 
 ### High Priority Features (MVP - Required for Initial Release)
-- **Requirements:** REQ-001 through REQ-008, REQ-018, REQ-020 through REQ-023, REQ-026 through REQ-029, REQ-033
+- **Requirements:** REQ-001 through REQ-008, REQ-018, REQ-020 through REQ-023, REQ-026 through REQ-029, REQ-033, REQ-040, REQ-041
 - Core package structure and installation
 - Essential error handling and recovery
 - Security requirements and package integrity
 - Cross-platform compatibility
 - Basic CLI functionality
+- Pre-publication testing and validation
 
 ### Medium Priority Features (Post-MVP Phase 1)
-- **Requirements:** REQ-009 through REQ-017, REQ-019, REQ-024, REQ-025, REQ-030, REQ-034, REQ-035, REQ-036, REQ-037, REQ-039
+- **Requirements:** REQ-009 through REQ-017, REQ-019, REQ-024, REQ-025, REQ-030, REQ-034, REQ-035, REQ-036, REQ-037, REQ-039, REQ-042, REQ-043, REQ-044
 - Configuration management and templates
 - Update and maintenance features
 - Version rollback and dry-run mode
 - CI/CD integration
 - Documentation and help system
 - Performance requirements
+- Multi-environment testing and package content verification
 
 ### Low Priority Features (Post-MVP Phase 2)
-- **Requirements:** REQ-031, REQ-032, REQ-038
+- **Requirements:** REQ-031, REQ-032, REQ-038, REQ-045
 - UX enhancements (progress indicators, color coding)
 - Interactive tutorials
+- Performance metrics and size validation
 - Advanced user experience features
 
 ## Change Log
@@ -421,6 +478,7 @@ THE SYSTEM SHALL provide GitHub Actions workflows, GitLab CI templates, and Jenk
 |---------|------|---------|--------|
 | 1.0.0 | 2025-08-17 | Initial requirements specification | Paul Duvall |
 | 1.1.0 | 2025-08-18 | Added advanced features (REQ-036 to REQ-039), enhanced traceability matrix, added acceptance testing scenarios, clarified ambiguous requirements, added feature priority classification | Paul Duvall |
+| 1.2.0 | 2025-08-18 | Added package testing and quality assurance requirements (REQ-040 to REQ-045), updated traceability matrix and feature priorities to include pre-publication testing requirements | Paul Duvall |
 
 ---
 
