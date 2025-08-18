@@ -34,12 +34,13 @@ jobs:
       run: |
         chmod +x validate-commands.sh
         chmod +x verify-setup.sh
-        chmod +x test-debug-subagent.py
+        chmod +x scripts/testing/test-debug-subagent.py
+        chmod +x scripts/deploy-subagents.sh
         
     - name: Run debug sub-agent tests
       run: |
         echo "🧪 Running Debug Sub-Agent Tests"
-        python3 test-debug-subagent.py
+        python3 scripts/testing/test-debug-subagent.py
         
     - name: Run command validation
       run: |
@@ -154,6 +155,52 @@ jobs:
           echo "✅ All tests passed!"
         fi
         
+    - name: Run NPM package tests
+      run: |
+        echo "🧪 Running NPM Package Test Suite"
+        
+        # Find and run all NPM package tests
+        npm_test_files=$(find tests/npm-package/ -name "test_*.py" -type f | sort)
+        
+        if [ -z "$npm_test_files" ]; then
+          echo "⚠️  No NPM package test files found in tests/npm-package/"
+        else
+          echo "Found $(echo "$npm_test_files" | wc -l) NPM package test files:"
+          echo "$npm_test_files"
+          echo ""
+          
+          failed_npm_tests=0
+          total_npm_tests=0
+          
+          for test_file in $npm_test_files; do
+            total_npm_tests=$((total_npm_tests + 1))
+            test_name=$(basename "$test_file")
+            
+            echo "▶️  Running NPM $test_name..."
+            
+            # Set up Python path for npm-package modules
+            if PYTHONPATH="$(pwd)/npm-package:$PYTHONPATH" python3 "$test_file"; then
+              echo "✅ NPM $test_name passed"
+            else
+              echo "❌ NPM $test_name failed"
+              failed_npm_tests=$((failed_npm_tests + 1))
+            fi
+            echo ""
+          done
+          
+          echo "📊 NPM Package Test Results:"
+          echo "  Total NPM tests: $total_npm_tests"
+          echo "  Passed: $((total_npm_tests - failed_npm_tests))"
+          echo "  Failed: $failed_npm_tests"
+          
+          if [ $failed_npm_tests -gt 0 ]; then
+            echo "❌ Some NPM package tests failed"
+            exit 1
+          else
+            echo "✅ All NPM package tests passed!"
+          fi
+        fi
+        
     - name: Run setup verification (CI mode)
       run: |
         echo "🔍 Running Setup Verification (CI mode - Claude Code not expected)"
@@ -265,9 +312,11 @@ jobs:
         echo "📊 Test Summary:"
         echo "✅ Debug sub-agent tests"
         echo "✅ Command validation"
-        echo "✅ All test suites from specs/tests/ directory" 
+        echo "✅ All test suites from specs/tests/ directory"
+        echo "✅ NPM package test suite (11 requirements)"
         echo "✅ JSON template validation"
         echo "✅ Repository structure checks"
         echo "✅ Command file structure validation"
         echo ""
         echo "🚀 Repository is ready for deployment!"
+        echo "📦 NPM package (claude-dev-toolkit) ready for distribution!"
