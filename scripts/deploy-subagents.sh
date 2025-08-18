@@ -32,10 +32,17 @@ detect_available_subagents() {
             fi
         done < <(find "$SUBAGENTS_SOURCE_DIR" -name "*.md" -print0 2>/dev/null)
     fi
-    printf '%s\n' "${subagents[@]}" | sort
+    if [ ${#subagents[@]} -gt 0 ]; then
+        printf '%s\n' "${subagents[@]}" | sort
+    fi
 }
 
-AVAILABLE_SUBAGENTS=($(detect_available_subagents))
+AVAILABLE_SUBAGENTS_OUTPUT=$(detect_available_subagents)
+if [ -n "$AVAILABLE_SUBAGENTS_OUTPUT" ]; then
+    AVAILABLE_SUBAGENTS=($AVAILABLE_SUBAGENTS_OUTPUT)
+else
+    AVAILABLE_SUBAGENTS=()
+fi
 
 # Default values
 DRY_RUN=false
@@ -64,7 +71,7 @@ EXAMPLES:
     $0 --all --dry-run                         # Preview all deployments
 
 AVAILABLE SUB-AGENTS:
-$(printf "    %s\n" "${AVAILABLE_SUBAGENTS[@]}")
+$(if [ ${#AVAILABLE_SUBAGENTS[@]} -gt 0 ]; then printf "    %s\n" "${AVAILABLE_SUBAGENTS[@]}"; else echo "    (No sub-agents found)"; fi)
 
 EOF
 }

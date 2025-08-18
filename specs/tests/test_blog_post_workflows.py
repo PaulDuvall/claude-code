@@ -76,14 +76,24 @@ class TestBlogPostWorkflows:
             'setup.sh',
             'deploy.sh', 
             'CLAUDE.md',
-            'configure-claude-code.sh',
-            'deploy-subagents.sh'
+            'configure-claude-code.sh'
         ]
         
         for file_name in essential_files:
             file_path = self.script_dir / file_name
             assert file_path.exists(), f"Essential file missing: {file_name}"
             assert file_path.is_file(), f"Path exists but is not a file: {file_name}"
+        
+        # Check reorganized files in their new locations
+        reorganized_files = {
+            'scripts/deploy-subagents.sh': 'Sub-agent deployment script',
+            'scripts/testing/test-debug-subagent.py': 'Debug sub-agent test script'
+        }
+        
+        for file_path, description in reorganized_files.items():
+            full_path = self.script_dir / file_path
+            assert full_path.exists(), f"Reorganized file missing: {file_path} ({description})"
+            assert full_path.is_file(), f"Path exists but is not a file: {file_path}"
         
         # Check directory structure
         essential_dirs = [
@@ -472,14 +482,14 @@ class TestBlogPostWorkflows:
             subagent_files = list(subagents_dir.glob('*.md'))
             print(f"Found {len(subagent_files)} sub-agent files")
             
-            # Check deploy-subagents script
-            deploy_subagents = self.script_dir / 'deploy-subagents.sh'
-            assert deploy_subagents.exists(), "deploy-subagents.sh script missing"
-            assert os.access(deploy_subagents, os.X_OK), "deploy-subagents.sh not executable"
+            # Check deploy-subagents script (moved to scripts directory)
+            deploy_subagents = self.script_dir / 'scripts' / 'deploy-subagents.sh'
+            assert deploy_subagents.exists(), "scripts/deploy-subagents.sh script missing"
+            assert os.access(deploy_subagents, os.X_OK), "scripts/deploy-subagents.sh not executable"
             
             # Test deploy-subagents help
-            success, stdout, stderr = self._run_command("./deploy-subagents.sh --help")
-            assert success, f"deploy-subagents.sh --help failed: {stderr}"
+            success, stdout, stderr = self._run_command("./scripts/deploy-subagents.sh --help")
+            assert success, f"scripts/deploy-subagents.sh --help failed: {stderr}"
             assert "Deploy Claude Code Sub-Agents" in stdout
         else:
             print("⚠️  Sub-agents directory not found (optional feature)")
