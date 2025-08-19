@@ -4,11 +4,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-blue)
 ![Active Commands](https://img.shields.io/badge/active%20commands-13-blue)
-![Experimental Commands](https://img.shields.io/badge/experimental%20commands-47-orange)
-![Total Commands](https://img.shields.io/badge/total%20commands-60-brightgreen)
+![Experimental Commands](https://img.shields.io/badge/experimental%20commands-49-orange)
+![Total Commands](https://img.shields.io/badge/total%20commands-62-brightgreen)
 ![Sub-agents](https://img.shields.io/badge/sub--agents-1-purple)
 
-**Transform Claude Code into a complete development platform** with 60 AI-powered commands that automate your entire software development workflow.
+**Transform Claude Code into a complete development platform** with 62 AI-powered commands that automate your entire software development workflow.
 
 ## What This Does
 
