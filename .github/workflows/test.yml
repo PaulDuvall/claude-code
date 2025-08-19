@@ -327,6 +327,32 @@ jobs:
         echo "   • Built-in validation and testing"
         echo "   • Proper file structure creation"
         
+    - name: Auto-update badges
+      run: |
+        echo "🏷️ Auto-updating command count badges..."
+        ACTIVE=$(ls slash-commands/active/*.md 2>/dev/null | wc -l | tr -d ' ')
+        EXPERIMENTAL=$(ls slash-commands/experiments/*.md 2>/dev/null | wc -l | tr -d ' ')
+        TOTAL=$((ACTIVE + EXPERIMENTAL))
+        
+        echo "Counts: ${ACTIVE} active + ${EXPERIMENTAL} experimental = ${TOTAL} total"
+        
+        # Update badges in README.md
+        sed -i "s/active%20commands-[0-9]*/active%20commands-${ACTIVE}/g" README.md
+        sed -i "s/experimental%20commands-[0-9]*/experimental%20commands-${EXPERIMENTAL}/g" README.md
+        sed -i "s/total%20commands-[0-9]*/total%20commands-${TOTAL}/g" README.md
+        
+        # Commit if changed
+        if git diff --quiet README.md; then
+          echo "✅ Badges already up to date"
+        else
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          git commit -m "auto: update command count badges to ${ACTIVE}+${EXPERIMENTAL}=${TOTAL}"
+          git push
+          echo "✅ Badges updated and committed"
+        fi
+        
     - name: Run setup verification (CI mode)
       run: |
         echo "🔍 Running Setup Verification (CI mode - Claude Code not expected)"
@@ -450,6 +476,7 @@ jobs:
         echo "✅ User Experience"
         echo "✅ Validation System"
         echo "✅ UX/Manual Test Suite (user experience validation)"
+        echo "✅ Automated badge updates"
         echo "✅ Package validation"
         echo "✅ JSON template validation"
         echo "✅ Repository structure checks"
