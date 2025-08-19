@@ -13,8 +13,7 @@ jobs:
     permissions:
       contents: write
       actions: read
-      issues: write
-      repository-projects: write
+      administration: write
     
     steps:
     - name: Checkout repository
@@ -355,22 +354,29 @@ jobs:
         REPO_DESCRIPTION="Transform Claude Code into a complete development platform with ${TOTAL} AI-powered commands that automate your entire software development workflow."
         echo "Updating repository description: $REPO_DESCRIPTION"
         
-        # Update repository description using GitHub API
+        # Update repository description using GitHub API with proper JSON escaping
         echo "ℹ️  Attempting to update repository description via GitHub API..."
-        if curl -s -X PATCH \
+        
+        # Escape quotes in description for JSON
+        ESCAPED_DESC=$(echo "$REPO_DESCRIPTION" | sed 's/"/\\"/g')
+        
+        # Make API call with proper error handling
+        HTTP_CODE=$(curl -s -w "%{http_code}" -X PATCH \
           -H "Authorization: token $GITHUB_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/${{ github.repository }} \
-          -d "{\"description\":\"$REPO_DESCRIPTION\"}" > /tmp/repo_update.json; then
-          if grep -q '"description"' /tmp/repo_update.json; then
-            echo "✅ Repository description updated successfully via API"
-          else
-            echo "⚠️ API call made but response unclear - checking response:"
-            cat /tmp/repo_update.json
-          fi
+          -H "Content-Type: application/json" \
+          "https://api.github.com/repos/${{ github.repository }}" \
+          -d "{\"description\":\"$ESCAPED_DESC\"}" \
+          -o /tmp/repo_update.json)
+        
+        if [ "$HTTP_CODE" = "200" ]; then
+          echo "✅ Repository description updated successfully (HTTP 200)"
+          echo "New description: $REPO_DESCRIPTION"
         else
-          echo "⚠️ Repository description update failed via API"
-          echo "ℹ️  Badge updates will continue - description update skipped"
+          echo "⚠️ Repository description update failed (HTTP $HTTP_CODE)"
+          echo "Response body:"
+          cat /tmp/repo_update.json
+          echo "ℹ️  Badge updates will continue - description update failed"
         fi
         
         # Commit if badges changed
