@@ -448,7 +448,12 @@ class ClaudeCodeCompatibility {
             timestamp: new Date().toISOString(),
             installation: installation,
             version: installation.installed ? 
-                this.validateClaudeCodeVersion(installation.version) : null,
+                this.validateClaudeCodeVersion(installation.version) : {
+                    compatible: false,
+                    currentVersion: null,
+                    minimumRequired: '0.1.0',
+                    message: 'Claude Code not installed'
+                },
             configuration: configuration,
             environment: environment,
             summary: {
