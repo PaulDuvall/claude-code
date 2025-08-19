@@ -68,28 +68,27 @@ done
 echo "🚀 Claude Code Command Validation"
 echo "================================="
 
-# Create virtual environment if it doesn't exist
-if [ ! -d "venv" ]; then
-    echo "📦 Creating virtual environment..."
-    python3 -m venv venv
+# Check for Node.js
+if ! command -v node &> /dev/null; then
+    echo "❌ Node.js is required but not installed"
+    exit 1
 fi
 
-# Activate virtual environment
-echo "🔧 Activating virtual environment..."
-source venv/bin/activate
+echo "🟢 Using Node.js version: $(node --version)"
 
-# Install Python 3.11 in venv (note: venv inherits Python version from system)
-echo "🐍 Using Python version: $(python --version)"
-
-# Install dependencies
-echo "📥 Installing dependencies..."
-pip install PyYAML
-
-# Run the validation
+# Run the validation using JavaScript tests
 echo "🔍 Running command validation..."
-python specs/tests/test_command_validation.py
-
-exit_code=$?
+if [ -d "claude-dev-toolkit/tests" ]; then
+    echo "📥 Installing NPM dependencies..."
+    cd claude-dev-toolkit
+    npm install --silent > /dev/null 2>&1
+    npm run test:commands
+    exit_code=$?
+    cd ..
+else
+    echo "❌ No JavaScript test suite found"
+    exit_code=1
+fi
 
 # Additional validations if requested
 if [ "$CHECK_SETTINGS" = true ]; then
@@ -258,9 +257,8 @@ if [ "$CHECK_SECURITY" = true ]; then
     fi
 fi
 
-# Deactivate virtual environment
-echo "🔚 Deactivating virtual environment..."
-deactivate
+# Clean up
+echo "🧹 Validation complete..."
 
 if [ $exit_code -eq 0 ]; then
     echo ""

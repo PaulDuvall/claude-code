@@ -9,6 +9,12 @@
     "Write"
   ],
   
+  "// Basic hooks configuration": "",
+  "hooks": {
+    "PreToolUse": [],
+    "PostToolUse": []
+  },
+  
   "// Trust and onboarding settings": "",
   "hasTrustDialogAccepted": true,
   "hasCompletedProjectOnboarding": true,

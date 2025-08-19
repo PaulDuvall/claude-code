@@ -1,8 +1,8 @@
 # Claude Dev Toolkit NPM Distribution Requirements Specification
 
 ## Document Information
-- **Version:** 1.1.0
-- **Date:** 2025-08-18
+- **Version:** 1.5.0
+- **Date:** 2025-08-19
 - **Author:** Paul Duvall
 - **Status:** Draft
 
@@ -14,6 +14,9 @@
 - **Experimental Commands**: 44 experimental commands in `slash-commands/experiments/`
 - **Security Hooks**: Automated security validation scripts
 - **Configuration Templates**: Pre-defined settings for different installation types
+- **Subagents**: Specialized Claude Code agents that provide enhanced capabilities for specific tasks like debugging and context analysis
+- **Debug Specialist**: A subagent focused on advanced debugging workflows and error analysis
+- **Debug Context**: A subagent that provides context-aware debugging assistance and environment analysis
 
 ## Assumptions and Dependencies
 - Claude Code is installed via `npm install -g @anthropic-ai/claude-code`
@@ -28,19 +31,22 @@
 
 #### REQ-001: NPM Package Structure
 **Priority:** High
+WHEN the npm package is built
 THE SYSTEM SHALL create an npm package named "claude-dev-toolkit" with a standardized directory structure including bin/, lib/, commands/, templates/, hooks/, and configuration files
 **Rationale:** Provides organized, maintainable package structure following npm best practices
 **Acceptance Criteria:** Package contains all required directories and follows npm package conventions
 
 #### REQ-002: Command Organization
 **Priority:** High
+WHEN the package structure is created
 THE SYSTEM SHALL organize custom commands into two directories: commands/active/ containing 13 production commands and commands/experimental/ containing 44 experimental commands
 **Rationale:** Separates stable commands from experimental features for user choice
 **Acceptance Criteria:** All 57 commands are correctly categorized and accessible
 
 #### REQ-003: CLI Entry Point
 **Priority:** High
-THE SYSTEM SHALL provide a global CLI command "claude-commands" accessible after npm installation via the bin/claude-commands executable
+WHEN npm installation completes
+THE SYSTEM SHALL make the "claude-commands" CLI globally accessible via the bin/claude-commands executable
 **Rationale:** Enables user interaction with the toolkit through standard CLI patterns
 **Acceptance Criteria:** Command is globally accessible and responds to --help flag
 
@@ -152,7 +158,7 @@ THE SYSTEM SHALL remove all installed commands and optionally reset configuratio
 
 #### REQ-018: Security Hook Installation
 **Priority:** High
-WHERE security hooks are requested during installation
+WHEN security hooks are requested during installation
 THE SYSTEM SHALL install security validation scripts to the hooks/ directory
 **Rationale:** Provides automated security checking for development workflows
 **Acceptance Criteria:** Security hooks are installed and functional
@@ -163,6 +169,51 @@ WHEN the user runs "claude-commands hooks --install" or "claude-commands hooks -
 THE SYSTEM SHALL add or remove security hooks from the Claude Code configuration
 **Rationale:** Allows users to modify security settings post-installation
 **Acceptance Criteria:** Hooks are properly configured/removed in Claude Code
+
+### Subagent Support Requirements
+
+#### REQ-047: Subagent Installation
+**Priority:** Medium
+WHEN subagents are requested during installation
+THE SYSTEM SHALL install specialized Claude Code subagent configurations to the ~/.claude/subagents/ directory
+**Rationale:** Extends Claude Code capabilities with specialized debugging and context-aware agents for enhanced development workflows
+**Acceptance Criteria:** Subagents are installed with correct YAML configuration and are discoverable by Claude Code
+
+#### REQ-048: Subagent Discovery and Listing
+**Priority:** Medium
+WHEN the user runs "claude-commands subagents --list"
+THE SYSTEM SHALL display all available subagents with their descriptions, capabilities, and installation status
+**Rationale:** Provides visibility into available specialized agents and their current deployment status
+**Acceptance Criteria:** Command lists all subagents from package, shows installation status, and displays capability descriptions
+
+#### REQ-049: Selective Subagent Deployment
+**Priority:** Medium
+WHEN the user runs "claude-commands subagents --install <subagent-name>" or "--install-all"
+THE SYSTEM SHALL deploy the specified subagent(s) to ~/.claude/subagents/ with appropriate YAML configuration
+**Rationale:** Allows users to selectively install specialized agents based on their development needs
+**Acceptance Criteria:** Selected subagents are deployed correctly, YAML files are valid, and agents are functional in Claude Code
+
+#### REQ-050: Subagent Removal
+**Priority:** Low
+WHEN the user runs "claude-commands subagents --remove <subagent-name>" or "--remove-all"
+THE SYSTEM SHALL remove the specified subagent(s) from ~/.claude/subagents/ directory
+**Rationale:** Enables clean removal of unused subagents to reduce clutter and potential conflicts
+**Acceptance Criteria:** Specified subagents are completely removed without affecting other Claude Code configurations
+
+#### REQ-051: Subagent Configuration in Setup Wizard
+**Priority:** Medium
+WHILE the interactive setup wizard is running
+WHEN the user reaches the features selection step
+THE SYSTEM SHALL present available subagents as an optional installation choice with descriptions of their capabilities
+**Rationale:** Integrates subagent selection into the initial setup flow for a streamlined installation experience
+**Acceptance Criteria:** Setup wizard displays subagent options, accepts user selections, and installs chosen subagents
+
+#### REQ-052: Subagent Validation
+**Priority:** Medium
+WHEN subagents are installed or updated
+THE SYSTEM SHALL validate the YAML configuration syntax and required fields for each subagent
+**Rationale:** Ensures subagent configurations are valid and will function correctly in Claude Code
+**Acceptance Criteria:** Invalid YAML is detected with clear error messages, required fields are verified, and validation prevents broken installations
 
 ### Error Handling Requirements
 
@@ -214,6 +265,7 @@ THE SYSTEM SHALL ensure commands load within 2 seconds
 
 #### REQ-026: File Permission Security
 **Priority:** High
+WHEN components are installed
 THE SYSTEM SHALL set appropriate file permissions (644 for files, 755 for directories) on all installed components
 **Rationale:** Follows security best practices for file system permissions
 **Acceptance Criteria:** All installed files have correct permissions
@@ -225,15 +277,23 @@ THE SYSTEM SHALL validate and sanitize all input parameters
 **Rationale:** Prevents security vulnerabilities from malicious input
 **Acceptance Criteria:** Input validation prevents injection attacks and invalid data
 
-#### REQ-028: Secure Defaults
+#### REQ-028: Secure Default Configurations
 **Priority:** High
-THE SYSTEM SHALL use secure default configurations for all settings and avoid exposing sensitive information
+WHEN configurations are applied
+THE SYSTEM SHALL use secure default configurations for all settings
 **Rationale:** Protects users who accept default configurations
 **Acceptance Criteria:** Default settings follow security best practices
 
+#### REQ-028A: Sensitive Information Protection
+**Priority:** High
+WHEN handling sensitive information
+THE SYSTEM SHALL avoid exposing sensitive information in configurations or outputs
+**Rationale:** Prevents accidental exposure of credentials and sensitive data
+**Acceptance Criteria:** No sensitive information is exposed in logs, configs, or error messages
+
 #### REQ-029: Package Integrity Verification
 **Priority:** High
-BEFORE installing any commands or executing any package code
+WHEN package installation is initiated
 THE SYSTEM SHALL verify package signatures and checksums to prevent tampering and ensure authenticity
 **Rationale:** Protects against supply chain attacks and malicious package modifications
 **Acceptance Criteria:** Installation fails if integrity checks fail, with clear security warning to user
@@ -265,18 +325,21 @@ THE SYSTEM SHALL use color coding for different message types (success, error, w
 
 #### REQ-033: Cross-Platform Compatibility
 **Priority:** High
+WHEN the system is executed
 THE SYSTEM SHALL function correctly on Windows, macOS, and Linux operating systems
 **Rationale:** Supports diverse development environments
 **Acceptance Criteria:** All functionality works on target platforms
 
 #### REQ-034: Backward Compatibility
 **Priority:** Medium
+WHEN npm package installation is performed
 THE SYSTEM SHALL maintain compatibility with existing manual installation methods
 **Rationale:** Protects existing users during transition period
 **Acceptance Criteria:** Manual installation continues to work alongside npm package
 
 #### REQ-035: Documentation Quality
 **Priority:** Medium
+WHEN the package is built
 THE SYSTEM SHALL include comprehensive documentation covering installation, configuration, and troubleshooting
 **Rationale:** Enables successful adoption and reduces support burden
 **Acceptance Criteria:** Documentation covers all user scenarios and common issues
@@ -341,18 +404,21 @@ THE SYSTEM SHALL execute a comprehensive test suite covering CLI command functio
 
 #### REQ-044: Package Content Verification
 **Priority:** Medium
-BEFORE publication, THE SYSTEM SHALL verify that the package tarball contains all required files, correct file permissions, proper directory structure, valid package.json configuration, and no sensitive or unwanted files
+WHEN publication is initiated
+THE SYSTEM SHALL verify that the package tarball contains all required files, correct file permissions, proper directory structure, valid package.json configuration, and no sensitive or unwanted files
 **Rationale:** Prevents accidentally publishing incomplete packages, sensitive data, or development artifacts
 **Acceptance Criteria:** Verification includes file manifest validation, permission checks, package.json validation, and security scanning for sensitive content
 
 #### REQ-045: Performance and Size Validation
 **Priority:** Low
+WHEN package validation is performed
 THE SYSTEM SHALL validate that package installation completes within performance thresholds (installation time < 30 seconds, package size < 10MB, dependency count < 20) and report package size and dependency metrics
 **Rationale:** Ensures package remains lightweight and installs quickly for good user experience
 **Acceptance Criteria:** Performance tests measure and report installation time, package size, and dependency metrics with pass/fail thresholds
 
 #### REQ-046: Production Installation Strategy
 **Priority:** High
+WHEN production installation is performed
 THE SYSTEM SHALL install only active commands by default during production releases, with experimental commands available through explicit opt-in installation via "claude-commands install --experimental"
 **Rationale:** Provides stable first-time user experience while preserving access to advanced features for power users
 **Acceptance Criteria:** Default installation includes 13 active commands only, experimental commands require explicit user action
@@ -387,6 +453,12 @@ THE SYSTEM SHALL install only active commands by default during production relea
 | REQ-045 | Performance Validation | TC-024: Performance Metrics Test | Low |
 | REQ-046 | Production Installation Strategy | TC-025: Installation Strategy Test | High |
 | REQ-038 | Interactive Tutorials | TC-026: Tutorial System Test | Low |
+| REQ-047 | Subagent Installation | TC-027: Subagent Installation Test | Medium |
+| REQ-048 | Subagent Discovery | TC-028: Subagent Listing Test | Medium |
+| REQ-049 | Selective Subagent Deployment | TC-029: Subagent Deployment Test | Medium |
+| REQ-050 | Subagent Removal | TC-030: Subagent Removal Test | Low |
+| REQ-051 | Subagent Setup Wizard Integration | TC-031: Setup Wizard Subagent Test | Medium |
+| REQ-052 | Subagent Validation | TC-032: Subagent YAML Validation Test | Medium |
 
 ## User Acceptance Testing Scenarios
 
@@ -444,6 +516,17 @@ THE SYSTEM SHALL install only active commands by default during production relea
 - Security hooks can be enabled during setup
 - Input validation prevents any injection attacks
 
+### Scenario 7: Subagent-Enhanced Development
+**Given:** A developer working on complex debugging tasks
+**When:** They install the package and select subagents during setup
+**Then:**
+- Available subagents are clearly described with their capabilities
+- They can select specific subagents (debug-specialist, debug-context) or all
+- Subagents are deployed to ~/.claude/subagents/ with valid YAML
+- They can verify installation with `claude-commands subagents --list`
+- Subagents are immediately available in Claude Code interface
+- They can later add/remove subagents without full reinstallation
+
 ## Feature Priority Classification
 
 ### High Priority Features (MVP - Required for Initial Release)
@@ -456,7 +539,7 @@ THE SYSTEM SHALL install only active commands by default during production relea
 - Pre-publication testing and validation
 
 ### Medium Priority Features (Post-MVP Phase 1)
-- **Requirements:** REQ-009 through REQ-017, REQ-019, REQ-024, REQ-025, REQ-030, REQ-034, REQ-035, REQ-036, REQ-037, REQ-039, REQ-042, REQ-043, REQ-044
+- **Requirements:** REQ-009 through REQ-017, REQ-019, REQ-024, REQ-025, REQ-030, REQ-034, REQ-035, REQ-036, REQ-037, REQ-039, REQ-042, REQ-043, REQ-044, REQ-047 through REQ-049, REQ-051, REQ-052
 - Configuration management and templates
 - Update and maintenance features
 - Version rollback and dry-run mode
@@ -464,13 +547,16 @@ THE SYSTEM SHALL install only active commands by default during production relea
 - Documentation and help system
 - Performance requirements
 - Multi-environment testing and package content verification
+- Subagent installation and management
+- Subagent setup wizard integration
 
 ### Low Priority Features (Post-MVP Phase 2)
-- **Requirements:** REQ-031, REQ-032, REQ-038, REQ-045
+- **Requirements:** REQ-031, REQ-032, REQ-038, REQ-045, REQ-050
 - UX enhancements (progress indicators, color coding)
 - Interactive tutorials
 - Performance metrics and size validation
 - Advanced user experience features
+- Subagent removal functionality
 
 ## Change Log
 
@@ -479,6 +565,9 @@ THE SYSTEM SHALL install only active commands by default during production relea
 | 1.0.0 | 2025-08-17 | Initial requirements specification | Paul Duvall |
 | 1.1.0 | 2025-08-18 | Added advanced features (REQ-036 to REQ-039), enhanced traceability matrix, added acceptance testing scenarios, clarified ambiguous requirements, added feature priority classification | Paul Duvall |
 | 1.2.0 | 2025-08-18 | Added package testing and quality assurance requirements (REQ-040 to REQ-045), updated traceability matrix and feature priorities to include pre-publication testing requirements | Paul Duvall |
+| 1.3.0 | 2025-08-19 | Added subagent support requirements (REQ-047 to REQ-052) following EARS format, updated traceability matrix, added Scenario 7 for subagent-enhanced development, classified subagent features by priority | Claude |
+| 1.4.0 | 2025-08-19 | EARS compliance fixes: Added WHEN triggers to REQ-001, REQ-002, REQ-003, REQ-026, REQ-033, REQ-034, REQ-035; Split compound REQ-028 into REQ-028 and REQ-028A; Achieved 89% EARS compliance | Claude |
+| 1.5.0 | 2025-08-19 | Final EARS compliance: Fixed WHERE→WHEN patterns (REQ-018, REQ-047), BEFORE→WHEN patterns (REQ-029, REQ-044), added triggers to REQ-045, REQ-046; Achieved 100% EARS compliance across all 53 requirements | Claude |
 
 ---
 

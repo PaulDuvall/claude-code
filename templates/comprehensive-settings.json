@@ -10,8 +10,30 @@
     "MultiEdit",
     "Glob",
     "Grep",
-    "LS"
+    "LS",
+    "Task",
+    "WebFetch",
+    "WebSearch",
+    "NotebookEdit",
+    "BashOutput",
+    "KillBash"
   ],
+  
+  "// Comprehensive tools configuration": "",
+  "tools": {
+    "bash": {
+      "defaultTimeout": 300000,
+      "maxParallelCommands": 3
+    },
+    "edit": {
+      "autoBackup": true,
+      "validateChanges": true
+    },
+    "web": {
+      "allowedDomains": ["github.com", "docs.anthropic.com", "stackoverflow.com"],
+      "timeout": 30000
+    }
+  },
   
   "// Trust and onboarding settings": "",
   "hasTrustDialogAccepted": true,
