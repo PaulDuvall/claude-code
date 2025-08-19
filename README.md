@@ -6,7 +6,7 @@
 ![Active Commands](https://img.shields.io/badge/active%20commands-13-blue)
 ![Experimental Commands](https://img.shields.io/badge/experimental%20commands-45-orange)
 ![Total Commands](https://img.shields.io/badge/total%20commands-58-brightgreen)
-![Sub-agents](https://img.shields.io/badge/sub--agents-1-purple)
+![Sub-agents](https://img.shields.io/badge/sub--agents-25-purple)
 
 **Transform Claude Code into a complete development platform** with 58 AI-powered commands that automate your entire software development workflow.
 
