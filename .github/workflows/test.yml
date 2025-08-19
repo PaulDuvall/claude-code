@@ -128,21 +128,93 @@ jobs:
           echo "Ensuring NPM dependencies..."
           npm install --silent
           
-          # Run individual test suites for detailed reporting
+          # Run all 10 individual test suites for detailed reporting
           echo "▶️  Running REQ-007 Interactive Setup Wizard tests..."
           if npm run test:req007; then
-            echo "✅ REQ-007 tests passed"
+            echo "✅ REQ-007 Interactive Setup Wizard: PASSED"
           else
-            echo "❌ REQ-007 tests failed"
+            echo "❌ REQ-007 Interactive Setup Wizard: FAILED"
+            exit 1
+          fi
+          
+          echo "▶️  Running REQ-009 Configuration Template Application tests..."
+          if npm run test:req009; then
+            echo "✅ REQ-009 Configuration Template Application: PASSED"
+          else
+            echo "❌ REQ-009 Configuration Template Application: FAILED"
+            exit 1
+          fi
+          
+          echo "▶️  Running REQ-018 Security Hook Installation tests..."
+          if npm run test:req018; then
+            echo "✅ REQ-018 Security Hook Installation: PASSED"
+          else
+            echo "❌ REQ-018 Security Hook Installation: FAILED"
+            exit 1
+          fi
+          
+          echo "▶️  Running Command Validation tests..."
+          if npm run test:commands; then
+            echo "✅ Command Validation: PASSED"
+          else
+            echo "❌ Command Validation: FAILED"
+            exit 1
+          fi
+          
+          echo "▶️  Running Core Workflow Commands tests..."
+          if npm run test:workflow; then
+            echo "✅ Core Workflow Commands: PASSED"
+          else
+            echo "❌ Core Workflow Commands: FAILED"
+            exit 1
+          fi
+          
+          echo "▶️  Running Security Commands tests..."
+          if npm run test:security; then
+            echo "✅ Security Commands: PASSED"
+          else
+            echo "❌ Security Commands: FAILED"
+            exit 1
+          fi
+          
+          echo "▶️  Running Quality Commands tests..."
+          if npm run test:quality; then
+            echo "✅ Quality Commands: PASSED"
+          else
+            echo "❌ Quality Commands: FAILED"
+            exit 1
+          fi
+          
+          echo "▶️  Running Git Commands tests..."
+          if npm run test:git; then
+            echo "✅ Git Commands: PASSED"
+          else
+            echo "❌ Git Commands: FAILED"
+            exit 1
+          fi
+          
+          echo "▶️  Running User Experience tests..."
+          if npm run test:ux; then
+            echo "✅ User Experience: PASSED"
+          else
+            echo "❌ User Experience: FAILED"
+            exit 1
+          fi
+          
+          echo "▶️  Running Validation System tests..."
+          if npm run test:validation; then
+            echo "✅ Validation System: PASSED"
+          else
+            echo "❌ Validation System: FAILED"
             exit 1
           fi
           
           # Run package validation
           echo "▶️  Running package validation..."
           if npm run validate; then
-            echo "✅ Package validation passed"
+            echo "✅ Package Validation: PASSED"
           else
-            echo "❌ Package validation failed"
+            echo "❌ Package Validation: FAILED"
             exit 1
           fi
           
@@ -270,8 +342,18 @@ jobs:
         echo "📊 Test Summary:"
         echo "✅ Debug sub-agent tests (Python)"
         echo "✅ Command validation (JavaScript)"
-        echo "✅ Consolidated test suites (JavaScript)"
-        echo "✅ Additional NPM package validations"
+        echo "✅ Comprehensive test suite (JavaScript - all 10 suites)"
+        echo "✅ REQ-007 Interactive Setup Wizard"
+        echo "✅ REQ-009 Configuration Template Application"
+        echo "✅ REQ-018 Security Hook Installation"
+        echo "✅ Command Validation"
+        echo "✅ Core Workflow Commands"
+        echo "✅ Security Commands"
+        echo "✅ Quality Commands"
+        echo "✅ Git Commands"
+        echo "✅ User Experience"
+        echo "✅ Validation System"
+        echo "✅ Package validation"
         echo "✅ JSON template validation"
         echo "✅ Repository structure checks"
         echo "✅ Command file structure validation"
