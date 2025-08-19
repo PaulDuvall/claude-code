@@ -9,10 +9,14 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 
+// Import extracted classes for better separation of concerns
+const SetupWizardUI = require('./setup-wizard-ui');
+const InstallationConfiguration = require('./installation-configuration');
+const CommandSelector = require('./command-selector');
+
 class InteractiveSetupWizard {
     constructor(packageRoot) {
         this.packageRoot = packageRoot;
-        this.configFile = path.join(packageRoot, 'setup-config.json');
         
         // Import config module for template application
         const config = require('./config');
@@ -23,36 +27,12 @@ class InteractiveSetupWizard {
         this.installSecurityHooks = hookInstaller.installSecurityHooks;
         this.getAvailableHooks = hookInstaller.getAvailableHooks;
         
-        // Initialize data
-        this.installationTypes = [
-            {
-                id: 1,
-                name: 'Minimal Installation',
-                description: 'Essential commands only - lightweight setup',
-                commands: ['xhelp', 'xversion', 'xstatus']
-            },
-            {
-                id: 2,
-                name: 'Standard Installation',
-                description: 'Recommended commands for most developers',
-                commands: ['xgit', 'xtest', 'xquality', 'xdocs', 'xsecurity']
-            },
-            {
-                id: 3,
-                name: 'Full Installation',
-                description: 'All available commands - complete toolkit',
-                commands: ['all']
-            }
-        ];
+        // Initialize extracted components
+        this.ui = new SetupWizardUI();
+        this.config = new InstallationConfiguration(packageRoot);
+        this.commandSelector = new CommandSelector();
         
-        this.commandCategories = {
-            'planning': ['xplanning', 'xspec', 'xarchitecture'],
-            'development': ['xgit', 'xtest', 'xquality', 'xrefactor', 'xtdd'],
-            'security': ['xsecurity', 'xpolicy', 'xcompliance'],
-            'deployment': ['xrelease', 'xpipeline', 'xinfra'],
-            'documentation': ['xdocs']
-        };
-        
+        // Legacy data for backward compatibility
         this.securityHooks = [
             {
                 id: 1,
@@ -67,48 +47,6 @@ class InteractiveSetupWizard {
                 file: 'file-logger.sh'
             }
         ];
-        
-        this.configurationTemplates = [
-            {
-                id: 1,
-                name: 'basic',
-                description: 'Basic Claude Code configuration',
-                file: 'basic-settings.json'
-            },
-            {
-                id: 2,
-                name: 'security-focused',
-                description: 'Security-focused configuration with enhanced hooks',
-                file: 'security-focused-settings.json'
-            },
-            {
-                id: 3,
-                name: 'comprehensive',
-                description: 'Comprehensive configuration with all features',
-                file: 'comprehensive-settings.json'
-            }
-        ];
-        
-        this.presets = {
-            'developer': {
-                installationType: 'standard',
-                commandSets: ['development', 'planning'],
-                securityHooks: true,
-                template: 'basic'
-            },
-            'security-focused': {
-                installationType: 'full',
-                commandSets: ['security', 'development'],
-                securityHooks: true,
-                template: 'security-focused'
-            },
-            'minimal': {
-                installationType: 'minimal',
-                commandSets: [],
-                securityHooks: false,
-                template: 'basic'
-            }
-        };
     }
     
     validateEnvironment() {
@@ -131,11 +69,11 @@ class InteractiveSetupWizard {
     }
     
     getInstallationTypes() {
-        return this.installationTypes;
+        return this.config.getInstallationTypes();
     }
     
     selectInstallationType(optionId) {
-        const selected = this.installationTypes.find(t => t.id === optionId);
+        const selected = this.config.getInstallationTypeById(optionId);
         if (selected) {
             return {
                 type: selected.name.toLowerCase().split(' ')[0],
@@ -147,14 +85,11 @@ class InteractiveSetupWizard {
     }
     
     getCommandCategories() {
-        return this.commandCategories;
+        return this.commandSelector.getCommandCategories();
     }
     
     selectCommandSets(categories) {
-        return {
-            selected: categories,
-            commands: categories.flatMap(cat => this.commandCategories[cat] || [])
-        };
+        return this.commandSelector.selectCommandSets(categories);
     }
     
     getSecurityHooks() {
@@ -173,18 +108,17 @@ class InteractiveSetupWizard {
     }
     
     getConfigurationTemplates() {
-        return this.configurationTemplates;
+        return this.config.getConfigurationTemplates();
     }
     
     selectConfigurationTemplate(templateName) {
-        const template = this.configurationTemplates.find(
-            t => t.name === templateName
-        );
+        const templates = this.config.getConfigurationTemplates();
+        const template = templates.find(t => t.name === templateName);
         
         if (template) {
             return {
                 template: template.name,
-                file: template.file,
+                file: template.filename,
                 description: template.description
             };
         }
@@ -208,58 +142,81 @@ class InteractiveSetupWizard {
         };
     }
     
-    saveConfiguration(config) {
-        try {
-            const configDir = path.dirname(this.configFile);
-            if (!fs.existsSync(configDir)) {
-                fs.mkdirSync(configDir, { recursive: true });
-            }
-            
-            const configData = {
-                timestamp: new Date().toISOString(),
-                version: '1.0.0',
-                ...config
-            };
-            
-            fs.writeFileSync(this.configFile, JSON.stringify(configData, null, 2));
-            
-            return {
-                saved: true,
-                file: this.configFile
-            };
-        } catch (error) {
-            return {
-                saved: false,
-                error: error.message
-            };
-        }
+    async runNonInteractiveSetupAsync() {
+        const defaultConfig = {
+            installationType: 'standard',
+            commandSets: ['development', 'planning'],
+            securityHooks: true,
+            selectedHooks: ['credential-protection'],
+            template: 'basic'
+        };
+        
+        await this.saveConfigurationAsync(defaultConfig);
+        
+        return {
+            completed: true,
+            configuration: defaultConfig
+        };
+    }
+    
+    saveConfiguration(configData) {
+        const enhancedConfig = {
+            timestamp: new Date().toISOString(),
+            version: '1.0.0',
+            ...configData
+        };
+        
+        const success = this.config.saveConfiguration(enhancedConfig);
+        return {
+            saved: success,
+            file: success ? this.config.getConfigurationPath() : null,
+            error: success ? null : 'Failed to save configuration'
+        };
+    }
+    
+    async saveConfigurationAsync(configData) {
+        const enhancedConfig = {
+            timestamp: new Date().toISOString(),
+            version: '1.0.0',
+            ...configData
+        };
+        
+        const success = await this.config.saveConfigurationAsync(enhancedConfig);
+        return {
+            saved: success,
+            file: success ? this.config.getConfigurationPath() : null,
+            error: success ? null : 'Failed to save configuration'
+        };
     }
     
     loadConfiguration() {
-        try {
-            if (fs.existsSync(this.configFile)) {
-                const data = JSON.parse(fs.readFileSync(this.configFile, 'utf8'));
-                return {
-                    found: true,
-                    config: data
-                };
-            }
+        const configData = this.config.loadConfiguration();
+        if (configData) {
             return {
-                found: false
-            };
-        } catch (error) {
-            return {
-                found: false,
-                error: error.message
+                found: true,
+                config: configData
             };
         }
+        return {
+            found: false
+        };
+    }
+    
+    async loadConfigurationAsync() {
+        const configData = await this.config.loadConfigurationAsync();
+        if (configData) {
+            return {
+                found: true,
+                config: configData
+            };
+        }
+        return {
+            found: false
+        };
     }
     
     applyPreset(presetName) {
-        if (this.presets[presetName]) {
-            return this.presets[presetName];
-        }
-        return null;
+        return this.commandSelector.applyPreset(presetName);
     }
     
     async runInteractiveSetup() {
@@ -337,7 +294,7 @@ class InteractiveSetupWizard {
             }
             
             // Save configuration
-            this.saveConfiguration(config);
+            await this.saveConfigurationAsync(config);
             
             // Apply selected configuration template (REQ-009 integration)
             if (selectedTemplate) {

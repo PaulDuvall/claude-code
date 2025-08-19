@@ -20,6 +20,10 @@ const ValidationSystemTests = require('./test_validation_system');
 const req007Test = path.join(__dirname, 'test_req_007_interactive_setup_wizard.js');
 const req009Test = path.join(__dirname, 'test_req_009_configuration_template_application.js');
 const req018Test = path.join(__dirname, 'test_req_018_security_hook_installation.js');
+const req020Test = path.join(__dirname, 'test_req_020_installation_failure_recovery.js');
+const req021Test = path.join(__dirname, 'test_req_021_permission_error_handling.js');
+const req022Test = path.join(__dirname, 'test_req_022_dependency_validation.js');
+const req023Test = path.join(__dirname, 'test_req_023_claude_code_compatibility.js');
 
 async function runAllTests() {
     console.log('🧪 Running Comprehensive Test Suite');
@@ -83,6 +87,66 @@ async function runAllTests() {
     } catch (error) {
         console.log('❌ REQ-018 tests FAILED\n');
         results.push({ name: 'REQ-018 Security Hook Installation', status: 'FAILED' });
+        totalFailed++;
+    }
+
+    // Run REQ-020 test
+    console.log('\n📋 Running REQ-020 Installation Failure Recovery Tests');
+    console.log('-'.repeat(50));
+    try {
+        const { execSync } = require('child_process');
+        execSync(`node ${req020Test}`, { stdio: 'inherit', cwd: __dirname });
+        console.log('✅ REQ-020 tests PASSED\n');
+        results.push({ name: 'REQ-020 Installation Failure Recovery', status: 'PASSED' });
+        totalPassed++;
+    } catch (error) {
+        console.log('❌ REQ-020 tests FAILED\n');
+        results.push({ name: 'REQ-020 Installation Failure Recovery', status: 'FAILED' });
+        totalFailed++;
+    }
+
+    // Run REQ-021 test
+    console.log('\n📋 Running REQ-021 Permission Error Handling Tests');
+    console.log('-'.repeat(50));
+    try {
+        const { execSync } = require('child_process');
+        execSync(`node ${req021Test}`, { stdio: 'inherit', cwd: __dirname });
+        console.log('✅ REQ-021 tests PASSED\n');
+        results.push({ name: 'REQ-021 Permission Error Handling', status: 'PASSED' });
+        totalPassed++;
+    } catch (error) {
+        console.log('❌ REQ-021 tests FAILED\n');
+        results.push({ name: 'REQ-021 Permission Error Handling', status: 'FAILED' });
+        totalFailed++;
+    }
+
+    // Run REQ-022 test
+    console.log('\n📋 Running REQ-022 Dependency Validation Tests');
+    console.log('-'.repeat(50));
+    try {
+        const { execSync } = require('child_process');
+        execSync(`node ${req022Test}`, { stdio: 'inherit', cwd: __dirname });
+        console.log('✅ REQ-022 tests PASSED\n');
+        results.push({ name: 'REQ-022 Dependency Validation', status: 'PASSED' });
+        totalPassed++;
+    } catch (error) {
+        console.log('❌ REQ-022 tests FAILED\n');
+        results.push({ name: 'REQ-022 Dependency Validation', status: 'FAILED' });
+        totalFailed++;
+    }
+
+    // Run REQ-023 test
+    console.log('\n📋 Running REQ-023 Claude Code Compatibility Tests');
+    console.log('-'.repeat(50));
+    try {
+        const { execSync } = require('child_process');
+        execSync(`node ${req023Test}`, { stdio: 'inherit', cwd: __dirname });
+        console.log('✅ REQ-023 tests PASSED\n');
+        results.push({ name: 'REQ-023 Claude Code Compatibility', status: 'PASSED' });
+        totalPassed++;
+    } catch (error) {
+        console.log('❌ REQ-023 tests FAILED\n');
+        results.push({ name: 'REQ-023 Claude Code Compatibility', status: 'FAILED' });
         totalFailed++;
     }
 

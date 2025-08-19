@@ -29,6 +29,7 @@
     "test:req007": "node tests/test_req_007_interactive_setup_wizard.js",
     "test:req009": "node tests/test_req_009_configuration_template_application.js",
     "test:req018": "node tests/test_req_018_security_hook_installation.js",
+    "test:req020": "node tests/test_req_020_installation_failure_recovery.js",
     "test:commands": "node tests/test_command_validation.js",
     "test:workflow": "node tests/test_core_workflow_commands.js", 
     "test:security": "node tests/test_security_commands.js",

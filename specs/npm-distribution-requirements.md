@@ -1,7 +1,7 @@
 # Claude Dev Toolkit NPM Distribution Requirements Specification
 
 ## Document Information
-- **Version:** 1.5.0
+- **Version:** 1.6.0
 - **Date:** 2025-08-19
 - **Author:** Paul Duvall
 - **Status:** Draft
@@ -423,6 +423,15 @@ THE SYSTEM SHALL install only active commands by default during production relea
 **Rationale:** Provides stable first-time user experience while preserving access to advanced features for power users
 **Acceptance Criteria:** Default installation includes 13 active commands only, experimental commands require explicit user action
 
+### NPM Registry Publication Requirements
+
+#### REQ-053: NPM Registry Publication
+**Priority:** High
+WHEN the package passes all validation requirements
+THE SYSTEM SHALL publish the package to the public NPM registry with proper version tagging, authentication, and metadata
+**Rationale:** Enables public distribution through standard NPM package management system while ensuring quality and security standards
+**Acceptance Criteria:** Package is successfully published with semantic versioning, proper NPM metadata, and authenticated access controls
+
 ## Traceability Matrix
 
 | Requirement | Business Objective | Test Case | Priority |
@@ -452,6 +461,7 @@ THE SYSTEM SHALL install only active commands by default during production relea
 | REQ-044 | Package Content Verification | TC-023: Content Validation Test | Medium |
 | REQ-045 | Performance Validation | TC-024: Performance Metrics Test | Low |
 | REQ-046 | Production Installation Strategy | TC-025: Installation Strategy Test | High |
+| REQ-053 | NPM Registry Publication | TC-033: NPM Publication Test | High |
 | REQ-038 | Interactive Tutorials | TC-026: Tutorial System Test | Low |
 | REQ-047 | Subagent Installation | TC-027: Subagent Installation Test | Medium |
 | REQ-048 | Subagent Discovery | TC-028: Subagent Listing Test | Medium |
@@ -530,13 +540,14 @@ THE SYSTEM SHALL install only active commands by default during production relea
 ## Feature Priority Classification
 
 ### High Priority Features (MVP - Required for Initial Release)
-- **Requirements:** REQ-001 through REQ-008, REQ-018, REQ-020 through REQ-023, REQ-026 through REQ-029, REQ-033, REQ-040, REQ-041
+- **Requirements:** REQ-001 through REQ-008, REQ-018, REQ-020 through REQ-023, REQ-026 through REQ-029, REQ-033, REQ-040, REQ-041, REQ-053
 - Core package structure and installation
 - Essential error handling and recovery
 - Security requirements and package integrity
 - Cross-platform compatibility
 - Basic CLI functionality
 - Pre-publication testing and validation
+- NPM registry publication process
 
 ### Medium Priority Features (Post-MVP Phase 1)
 - **Requirements:** REQ-009 through REQ-017, REQ-019, REQ-024, REQ-025, REQ-030, REQ-034, REQ-035, REQ-036, REQ-037, REQ-039, REQ-042, REQ-043, REQ-044, REQ-047 through REQ-049, REQ-051, REQ-052
@@ -568,6 +579,7 @@ THE SYSTEM SHALL install only active commands by default during production relea
 | 1.3.0 | 2025-08-19 | Added subagent support requirements (REQ-047 to REQ-052) following EARS format, updated traceability matrix, added Scenario 7 for subagent-enhanced development, classified subagent features by priority | Claude |
 | 1.4.0 | 2025-08-19 | EARS compliance fixes: Added WHEN triggers to REQ-001, REQ-002, REQ-003, REQ-026, REQ-033, REQ-034, REQ-035; Split compound REQ-028 into REQ-028 and REQ-028A; Achieved 89% EARS compliance | Claude |
 | 1.5.0 | 2025-08-19 | Final EARS compliance: Fixed WHERE→WHEN patterns (REQ-018, REQ-047), BEFORE→WHEN patterns (REQ-029, REQ-044), added triggers to REQ-045, REQ-046; Achieved 100% EARS compliance across all 53 requirements | Claude |
+| 1.6.0 | 2025-08-19 | Added REQ-053: NPM Registry Publication requirement covering actual npm publish process with version tagging, authentication, and metadata; Updated traceability matrix and high priority features | Claude |
 
 ---
 
