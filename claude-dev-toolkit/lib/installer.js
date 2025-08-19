@@ -38,8 +38,8 @@ module.exports = {
         
         // Install experimental commands
         if (options.experimental || options.all) {
-            const expSource = path.join(packageDir, 'commands', 'experimental');
-            const expTarget = path.join(claudeDir, 'experimental');
+            const expSource = path.join(packageDir, 'commands', 'experiments');
+            const expTarget = path.join(claudeDir, 'experiments');
             
             if (fs.existsSync(expSource)) {
                 const expFiles = fs.readdirSync(expSource).filter(f => f.endsWith('.md'));

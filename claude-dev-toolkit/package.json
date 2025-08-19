@@ -25,18 +25,31 @@
   },
   "scripts": {
     "postinstall": "node scripts/postinstall.js",
-    "test": "npm run test:unit && npm run test:integration",
-    "test:unit": "jest --testPathPattern=tests/unit",
-    "test:integration": "jest --testPathPattern=tests/integration",
+    "test": "node tests/test_all_suites.js",
+    "test:req007": "node tests/test_req_007_interactive_setup_wizard.js",
+    "test:req009": "node tests/test_req_009_configuration_template_application.js",
+    "test:req018": "node tests/test_req_018_security_hook_installation.js",
+    "test:commands": "node tests/test_command_validation.js",
+    "test:workflow": "node tests/test_core_workflow_commands.js", 
+    "test:security": "node tests/test_security_commands.js",
+    "test:quality": "node tests/test_quality_commands.js",
+    "test:git": "node tests/test_git_commands.js",
+    "test:ux": "node tests/test_user_experience.js",
+    "test:validation": "node tests/test_validation_system.js",
+    "test:install": "scripts/publishing/test-package-install.sh",
+    "publish:local": "scripts/publishing/setup-local-registry.sh",
+    "publish:private": "scripts/publishing/publish-private.sh",
     "lint": "eslint lib/**/*.js bin/**/*.js",
     "validate": "node scripts/validate.js"
   },
   "dependencies": {
-    "commander": "^9.0.0"
+    "commander": "^9.0.0",
+    "inquirer": "^8.2.7",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
-    "jest": "^29.0.0",
-    "eslint": "^8.0.0"
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0"
   },
   "engines": {
     "node": ">=16.0.0"
@@ -47,7 +60,8 @@
     "commands/",
     "templates/",
     "hooks/",
-    "scripts/",
+    "scripts/postinstall.js",
+    "scripts/validate.js",
     "README.md",
     "LICENSE"
   ]

@@ -24,7 +24,7 @@ program
     .action((options) => {
         const claudeDir = path.join(os.homedir(), '.claude', 'commands');
         const activeDir = path.join(claudeDir, 'active');
-        const experimentalDir = path.join(claudeDir, 'experimental');
+        const experimentalDir = path.join(claudeDir, 'experiments');
         
         console.log('📦 Claude Custom Commands\n');
         
@@ -86,7 +86,7 @@ program
     .action(() => {
         const claudeDir = path.join(os.homedir(), '.claude', 'commands');
         const activeDir = path.join(claudeDir, 'active');
-        const experimentalDir = path.join(claudeDir, 'experimental');
+        const experimentalDir = path.join(claudeDir, 'experiments');
         
         console.log('📊 Claude Dev Toolkit Status\n');
         

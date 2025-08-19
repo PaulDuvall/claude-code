@@ -5,69 +5,190 @@ const path = require('path');
 const os = require('os');
 const { execSync } = require('child_process');
 
+// Check for skip flag
+const skipSetup = process.env.CLAUDE_SKIP_SETUP === 'true' || 
+                 process.argv.includes('--skip-setup');
+
 console.log('🚀 Setting up Claude Custom Commands...');
 
-try {
-    // Get Claude Code directory
-    const homeDir = os.homedir();
-    const claudeDir = path.join(homeDir, '.claude');
-    const commandsDir = path.join(claudeDir, 'commands');
-    
-    // Ensure Claude directories exist
-    if (!fs.existsSync(claudeDir)) {
-        fs.mkdirSync(claudeDir, { recursive: true });
-        console.log('✅ Created .claude directory');
-    }
-    
-    if (!fs.existsSync(commandsDir)) {
-        fs.mkdirSync(commandsDir, { recursive: true });
-        console.log('✅ Created .claude/commands directory');
-    }
-    
-    // Get package installation directory
-    const packageDir = __dirname.replace('/scripts', '');
-    const sourceCommandsDir = path.join(packageDir, 'commands');
-    
-    if (fs.existsSync(sourceCommandsDir)) {
-        // Copy commands to Claude directory
-        const copyCommands = (sourceDir, targetDir) => {
-            const items = fs.readdirSync(sourceDir);
-            for (const item of items) {
-                const sourcePath = path.join(sourceDir, item);
-                const targetPath = path.join(targetDir, item);
+async function runSetup() {
+    try {
+        // Get Claude Code directory
+        const homeDir = os.homedir();
+        const claudeDir = path.join(homeDir, '.claude');
+        const commandsDir = path.join(claudeDir, 'commands');
+        const hooksDir = path.join(claudeDir, 'hooks');
+        
+        // Ensure Claude directories exist
+        if (!fs.existsSync(claudeDir)) {
+            fs.mkdirSync(claudeDir, { recursive: true });
+            console.log('✅ Created .claude directory');
+        }
+        
+        if (!fs.existsSync(commandsDir)) {
+            fs.mkdirSync(commandsDir, { recursive: true });
+            console.log('✅ Created .claude/commands directory');
+        }
+        
+        if (!fs.existsSync(hooksDir)) {
+            fs.mkdirSync(hooksDir, { recursive: true });
+            console.log('✅ Created .claude/hooks directory');
+        }
+        
+        // Get package installation directory
+        const packageDir = __dirname.replace('/scripts', '');
+        
+        // Check if we should run interactive setup
+        if (!skipSetup && process.stdin.isTTY) {
+            console.log('\n📋 Starting Interactive Setup Wizard...');
+            console.log('(Use --skip-setup or set CLAUDE_SKIP_SETUP=true to skip)\n');
+            
+            const InteractiveSetupWizard = require('../lib/setup-wizard');
+            const wizard = new InteractiveSetupWizard(claudeDir);
+            
+            // Validate environment first (REQ-006)
+            const envCheck = wizard.validateEnvironment();
+            if (!envCheck.valid) {
+                console.error('❌ Environment validation failed:', envCheck.message);
+                process.exit(1);
+            }
+            
+            // Run interactive setup (REQ-007)
+            const setupResult = await wizard.runInteractiveSetup();
+            
+            if (setupResult.completed) {
+                const config = setupResult.configuration;
                 
-                if (fs.statSync(sourcePath).isDirectory()) {
-                    if (!fs.existsSync(targetPath)) {
-                        fs.mkdirSync(targetPath, { recursive: true });
+                // Install commands based on selection
+                const sourceCommandsDir = path.join(packageDir, 'commands');
+                if (fs.existsSync(sourceCommandsDir)) {
+                    copySelectedCommands(sourceCommandsDir, commandsDir, config);
+                }
+                
+                // Install security hooks if selected
+                if (config.securityHooks) {
+                    const sourceHooksDir = path.join(packageDir, 'hooks');
+                    if (fs.existsSync(sourceHooksDir)) {
+                        copySelectedHooks(sourceHooksDir, hooksDir, config.selectedHooks || []);
                     }
-                    copyCommands(sourcePath, targetPath);
-                } else if (item.endsWith('.md')) {
-                    fs.copyFileSync(sourcePath, targetPath);
+                }
+                
+                // Apply configuration template
+                if (config.template) {
+                    const templateFile = path.join(packageDir, 'templates', `${config.template}-settings.json`);
+                    const targetFile = path.join(claudeDir, 'settings.json');
+                    if (fs.existsSync(templateFile)) {
+                        fs.copyFileSync(templateFile, targetFile);
+                        console.log(`✅ Applied ${config.template} configuration template`);
+                    }
                 }
             }
-        };
-        
-        copyCommands(sourceCommandsDir, commandsDir);
-        console.log('✅ Commands installed to ~/.claude/commands/');
+        } else {
+            // Non-interactive installation - install all commands by default
+            console.log('Running non-interactive installation...');
+            
+            const sourceCommandsDir = path.join(packageDir, 'commands');
+            if (fs.existsSync(sourceCommandsDir)) {
+                copyAllCommands(sourceCommandsDir, commandsDir);
+            }
+        }
         
         // Count installed commands
-        const activeCommands = fs.readdirSync(path.join(commandsDir, 'active')).length;
-        const experimentalCommands = fs.readdirSync(path.join(commandsDir, 'experimental')).length;
+        if (fs.existsSync(path.join(commandsDir, 'active'))) {
+            const activeCommands = fs.readdirSync(path.join(commandsDir, 'active')).filter(f => f.endsWith('.md')).length;
+            const experimentalCommands = fs.existsSync(path.join(commandsDir, 'experiments')) ? 
+                fs.readdirSync(path.join(commandsDir, 'experiments')).filter(f => f.endsWith('.md')).length : 0;
+            
+            console.log(`\n📦 Installed ${activeCommands} active commands`);
+            console.log(`🧪 Installed ${experimentalCommands} experimental commands`);
+        }
         
-        console.log(`📦 Installed ${activeCommands} active commands`);
-        console.log(`🧪 Installed ${experimentalCommands} experimental commands`);
+        console.log('\n🎉 Installation complete!');
+        console.log('\nNext steps:');
+        console.log('1. Run: claude-commands list');
+        console.log('2. Try: claude-commands --help');
+        console.log('3. Configure: claude-commands config');
+        console.log('4. Explore commands in Claude Code using /xhelp\n');
+        
+    } catch (error) {
+        console.error('❌ Installation failed:', error.message);
+        process.exit(1);
     }
-    
-    console.log('');
-    console.log('🎉 Installation complete!');
-    console.log('');
-    console.log('Next steps:');
-    console.log('1. Run: claude-commands list');
-    console.log('2. Try: claude-commands --help');
-    console.log('3. Explore commands in Claude Code using /xhelp');
-    console.log('');
-    
-} catch (error) {
-    console.error('❌ Installation failed:', error.message);
-    process.exit(1);
 }
+
+function copyAllCommands(sourceDir, targetDir) {
+    const items = fs.readdirSync(sourceDir);
+    for (const item of items) {
+        const sourcePath = path.join(sourceDir, item);
+        const targetPath = path.join(targetDir, item);
+        
+        if (fs.statSync(sourcePath).isDirectory()) {
+            if (!fs.existsSync(targetPath)) {
+                fs.mkdirSync(targetPath, { recursive: true });
+            }
+            copyAllCommands(sourcePath, targetPath);
+        } else if (item.endsWith('.md')) {
+            fs.copyFileSync(sourcePath, targetPath);
+        }
+    }
+}
+
+function copySelectedCommands(sourceDir, targetDir, config) {
+    // Based on installation type, copy appropriate commands
+    const installationType = config.installationType || 'standard';
+    
+    if (installationType === 'full' || !config.commandSets) {
+        // Copy all commands
+        copyAllCommands(sourceDir, targetDir);
+    } else {
+        // Copy selected command sets
+        const commandSets = config.commandSets || [];
+        
+        // Always copy active commands for standard installation
+        if (installationType === 'standard' || commandSets.includes('development')) {
+            const activeSource = path.join(sourceDir, 'active');
+            const activeTarget = path.join(targetDir, 'active');
+            if (fs.existsSync(activeSource)) {
+                if (!fs.existsSync(activeTarget)) {
+                    fs.mkdirSync(activeTarget, { recursive: true });
+                }
+                copyAllCommands(activeSource, activeTarget);
+            }
+        }
+        
+        // Copy experimental if selected
+        if (commandSets.includes('experimental') || installationType === 'full') {
+            const expSource = path.join(sourceDir, 'experiments');
+            const expTarget = path.join(targetDir, 'experiments');
+            if (fs.existsSync(expSource)) {
+                if (!fs.existsSync(expTarget)) {
+                    fs.mkdirSync(expTarget, { recursive: true });
+                }
+                copyAllCommands(expSource, expTarget);
+            }
+        }
+    }
+}
+
+function copySelectedHooks(sourceDir, targetDir, selectedHooks) {
+    const items = fs.readdirSync(sourceDir);
+    for (const item of items) {
+        const sourcePath = path.join(sourceDir, item);
+        
+        // Copy hook if it's selected or if no specific selection (copy all)
+        if (selectedHooks.length === 0 || selectedHooks.some(h => item.includes(h))) {
+            const targetPath = path.join(targetDir, item);
+            fs.copyFileSync(sourcePath, targetPath);
+            
+            // Make shell scripts executable
+            if (item.endsWith('.sh')) {
+                fs.chmodSync(targetPath, '755');
+            }
+            
+            console.log(`✅ Installed hook: ${item}`);
+        }
+    }
+}
+
+// Run the setup
+runSetup();
