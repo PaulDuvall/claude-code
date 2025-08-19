@@ -19,7 +19,7 @@ try {
     const packageDir = __dirname.replace('/scripts', '');
     
     // Check required directories
-    const requiredDirs = ['bin', 'lib', 'commands', 'commands/active', 'commands/experimental'];
+    const requiredDirs = ['bin', 'lib', 'commands', 'commands/active', 'commands/experiments'];
     requiredDirs.forEach(dir => {
         const dirPath = path.join(packageDir, dir);
         if (fs.existsSync(dirPath)) {
@@ -62,7 +62,7 @@ try {
     
     // Count commands
     const activeDir = path.join(packageDir, 'commands/active');
-    const experimentalDir = path.join(packageDir, 'commands/experimental');
+    const experimentalDir = path.join(packageDir, 'commands/experiments');
     
     if (fs.existsSync(activeDir)) {
         const activeCount = fs.readdirSync(activeDir).filter(f => f.endsWith('.md')).length;
