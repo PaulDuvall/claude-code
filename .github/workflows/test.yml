@@ -12,8 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      actions: read
-      administration: write
     
     steps:
     - name: Checkout repository
@@ -331,11 +329,11 @@ jobs:
         echo "   • Built-in validation and testing"
         echo "   • Proper file structure creation"
         
-    - name: Auto-update badges and repository description
+    - name: Auto-update badges
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        echo "🏷️ Auto-updating command count badges and repository description..."
+        echo "🏷️ Auto-updating command count badges..."
         ACTIVE=$(ls slash-commands/active/*.md 2>/dev/null | wc -l | tr -d ' ')
         EXPERIMENTAL=$(ls slash-commands/experiments/*.md 2>/dev/null | wc -l | tr -d ' ')
         TOTAL=$((ACTIVE + EXPERIMENTAL))
@@ -349,35 +347,6 @@ jobs:
         
         # Also update the main description text
         sed -i "s/with [0-9]* AI-powered commands/with ${TOTAL} AI-powered commands/g" README.md
-        
-        # Update GitHub repository description
-        REPO_DESCRIPTION="Transform Claude Code into a complete development platform with ${TOTAL} AI-powered commands that automate your entire software development workflow."
-        echo "Updating repository description: $REPO_DESCRIPTION"
-        
-        # Update repository description using GitHub API with proper JSON escaping
-        echo "ℹ️  Attempting to update repository description via GitHub API..."
-        
-        # Escape quotes in description for JSON
-        ESCAPED_DESC=$(echo "$REPO_DESCRIPTION" | sed 's/"/\\"/g')
-        
-        # Make API call with proper error handling
-        HTTP_CODE=$(curl -s -w "%{http_code}" -X PATCH \
-          -H "Authorization: token $GITHUB_TOKEN" \
-          -H "Accept: application/vnd.github.v3+json" \
-          -H "Content-Type: application/json" \
-          "https://api.github.com/repos/${{ github.repository }}" \
-          -d "{\"description\":\"$ESCAPED_DESC\"}" \
-          -o /tmp/repo_update.json)
-        
-        if [ "$HTTP_CODE" = "200" ]; then
-          echo "✅ Repository description updated successfully (HTTP 200)"
-          echo "New description: $REPO_DESCRIPTION"
-        else
-          echo "⚠️ Repository description update failed (HTTP $HTTP_CODE)"
-          echo "Response body:"
-          cat /tmp/repo_update.json
-          echo "ℹ️  Badge updates will continue - description update failed"
-        fi
         
         # Commit if badges changed
         if git diff --quiet README.md; then
