@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      metadata: write
+      actions: read
     
     steps:
     - name: Checkout repository
@@ -353,12 +353,13 @@ jobs:
         REPO_DESCRIPTION="Transform Claude Code into a complete development platform with ${TOTAL} AI-powered commands that automate your entire software development workflow."
         echo "Updating repository description: $REPO_DESCRIPTION"
         
-        # Update repository description (requires metadata: write permission)
-        if gh repo edit --description "$REPO_DESCRIPTION"; then
-          echo "✅ Repository description updated"
+        # Update repository description (may require admin permissions)
+        echo "ℹ️  Attempting to update repository description..."
+        if gh repo edit --description "$REPO_DESCRIPTION" 2>/dev/null; then
+          echo "✅ Repository description updated successfully"
         else
-          echo "⚠️ Failed to update repository description (may need repository admin access)"
-          echo "ℹ️  Badge updates will still continue..."
+          echo "⚠️ Repository description update skipped (requires admin permissions)"
+          echo "ℹ️  Badge updates will continue - description can be updated manually if needed"
         fi
         
         # Commit if badges changed
