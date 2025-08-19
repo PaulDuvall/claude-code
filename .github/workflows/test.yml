@@ -13,6 +13,8 @@ jobs:
     permissions:
       contents: write
       actions: read
+      issues: write
+      repository-projects: write
     
     steps:
     - name: Checkout repository
@@ -353,13 +355,22 @@ jobs:
         REPO_DESCRIPTION="Transform Claude Code into a complete development platform with ${TOTAL} AI-powered commands that automate your entire software development workflow."
         echo "Updating repository description: $REPO_DESCRIPTION"
         
-        # Update repository description (may require admin permissions)
-        echo "ℹ️  Attempting to update repository description..."
-        if gh repo edit --description "$REPO_DESCRIPTION" 2>/dev/null; then
-          echo "✅ Repository description updated successfully"
+        # Update repository description using GitHub API
+        echo "ℹ️  Attempting to update repository description via GitHub API..."
+        if curl -s -X PATCH \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.repository }} \
+          -d "{\"description\":\"$REPO_DESCRIPTION\"}" > /tmp/repo_update.json; then
+          if grep -q '"description"' /tmp/repo_update.json; then
+            echo "✅ Repository description updated successfully via API"
+          else
+            echo "⚠️ API call made but response unclear - checking response:"
+            cat /tmp/repo_update.json
+          fi
         else
-          echo "⚠️ Repository description update skipped (requires admin permissions)"
-          echo "ℹ️  Badge updates will continue - description can be updated manually if needed"
+          echo "⚠️ Repository description update failed via API"
+          echo "ℹ️  Badge updates will continue - description update skipped"
         fi
         
         # Commit if badges changed
