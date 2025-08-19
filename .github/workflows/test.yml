@@ -327,9 +327,11 @@ jobs:
         echo "   • Built-in validation and testing"
         echo "   • Proper file structure creation"
         
-    - name: Auto-update badges
+    - name: Auto-update badges and repository description
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        echo "🏷️ Auto-updating command count badges..."
+        echo "🏷️ Auto-updating command count badges and repository description..."
         ACTIVE=$(ls slash-commands/active/*.md 2>/dev/null | wc -l | tr -d ' ')
         EXPERIMENTAL=$(ls slash-commands/experiments/*.md 2>/dev/null | wc -l | tr -d ' ')
         TOTAL=$((ACTIVE + EXPERIMENTAL))
@@ -341,7 +343,15 @@ jobs:
         sed -i "s/experimental%20commands-[0-9]*/experimental%20commands-${EXPERIMENTAL}/g" README.md
         sed -i "s/total%20commands-[0-9]*/total%20commands-${TOTAL}/g" README.md
         
-        # Commit if changed
+        # Update GitHub repository description
+        REPO_DESCRIPTION="Transform Claude Code into a complete development platform with ${TOTAL} AI-powered commands that automate your entire software development workflow."
+        echo "Updating repository description: $REPO_DESCRIPTION"
+        
+        # GitHub CLI is pre-installed in ubuntu-latest
+        gh repo edit --description "$REPO_DESCRIPTION" || echo "⚠️ Failed to update repository description - continuing with badge updates"
+        echo "✅ Repository description updated"
+        
+        # Commit if badges changed
         if git diff --quiet README.md; then
           echo "✅ Badges already up to date"
         else
