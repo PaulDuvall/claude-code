@@ -37,6 +37,7 @@
     "test:ux": "node tests/test_user_experience.js",
     "test:validation": "node tests/test_validation_system.js",
     "test:install": "scripts/publishing/test-package-install.sh",
+    "test:manual": "scripts/publishing/manual-test-suite.sh",
     "publish:local": "scripts/publishing/setup-local-registry.sh",
     "publish:private": "scripts/publishing/publish-private.sh",
     "lint": "eslint lib/**/*.js bin/**/*.js",
