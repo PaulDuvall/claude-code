@@ -8,7 +8,7 @@
 ![Total Commands](https://img.shields.io/badge/total%20commands-58-brightgreen)
 ![Sub-agents](https://img.shields.io/badge/sub--agents-25-purple)
 
-**Transform Claude Code into a complete development platform** with 58 AI-powered commands that automate your entire software development workflow.
+**Transform Claude Code into a complete development platform** with 58 AI-powered commands that automate your entire software development workflow. Now with improved git identity management!
 
 ## What This Does
 
