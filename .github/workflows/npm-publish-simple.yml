@@ -1,9 +1,12 @@
 name: NPM Publish
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
+    inputs:
+      npm_token:
+        description: 'NPM Token (get from https://www.npmjs.com/settings/tokens)'
+        required: true
+        type: string
 
 permissions:
   id-token: write
@@ -12,7 +15,6 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: vars.AWS_DEPLOYMENT_ROLE != ''
     
     steps:
       - uses: actions/checkout@v4
@@ -22,16 +24,10 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
       
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ vars.AWS_DEPLOYMENT_ROLE }}
-          aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
-      
       - name: Configure NPM
         run: |
-          NPM_TOKEN=$(aws ssm get-parameter --name /npm/token --with-decryption --query Parameter.Value --output text)
-          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-          echo "::add-mask::$NPM_TOKEN"
+          echo "//registry.npmjs.org/:_authToken=${{ inputs.npm_token }}" >> ~/.npmrc
+          echo "::add-mask::${{ inputs.npm_token }}"
       
       - name: Publish
         run: npm publish --access public
