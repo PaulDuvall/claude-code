@@ -4,20 +4,35 @@ Store NPM tokens securely in AWS SSM and use them in GitHub Actions.
 
 ## Setup (one-time)
 
+**Option 1: Fully automated**
 ```bash
-# 1. Run setup script
+# Run the setup script - it does everything!
 ./scripts/setup-npm-ssm.sh
 
-# 2. Set GitHub variables (copy commands from script output)
-gh variable set AWS_ROLE --body 'arn:aws:iam::ACCOUNT:role/github-actions-npm-REPO'
-gh variable set AWS_REGION --body 'us-east-1'
+# The script will:
+# 1. Create AWS OIDC provider and IAM role
+# 2. Set GitHub repository variables 
+# 3. Prompt for your NPM token and store it securely
+```
 
-# 3. Store your NPM token
-aws ssm put-parameter \
-  --name '/npm/token' \
-  --value 'npm_YOUR_TOKEN_HERE' \
-  --type SecureString \
-  --region us-east-1
+**Option 2: With environment variable**
+```bash
+# Set your NPM token as an environment variable
+export NPM_TOKEN="npm_your_token_here"
+
+# Run setup script (won't prompt for token)
+./scripts/setup-npm-ssm.sh
+```
+
+**Option 3: Manual fallback**
+If the script can't set GitHub variables automatically:
+```bash
+# Run setup script first
+./scripts/setup-npm-ssm.sh
+
+# Then manually run the commands it outputs
+gh variable set AWS_ROLE --body 'arn:aws:iam::ACCOUNT:role/...'
+gh variable set AWS_REGION --body 'us-east-1'
 ```
 
 ## How it works
