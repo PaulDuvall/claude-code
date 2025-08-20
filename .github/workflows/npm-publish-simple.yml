@@ -1,0 +1,38 @@
+name: NPM Publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: vars.AWS_ROLE != ''
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+      
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE }}
+          aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+      
+      - name: Configure NPM
+        run: |
+          NPM_TOKEN=$(aws ssm get-parameter --name /npm/token --with-decryption --query Parameter.Value --output text)
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+          echo "::add-mask::$NPM_TOKEN"
+      
+      - name: Publish
+        run: npm publish --access public
+        continue-on-error: true  # Don't fail if package doesn't exist
