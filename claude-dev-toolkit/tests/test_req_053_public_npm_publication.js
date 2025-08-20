@@ -50,12 +50,14 @@ class PublicNpmPublicationTests {
     }
 
     test_automated_public_workflow_exists() {
-        const workflowPath = path.join(__dirname, '../../.github/workflows/publish-public.yml');
-        assert(fs.existsSync(workflowPath), 'GitHub Actions workflow for public publishing must exist');
+        const workflowPath = path.join(__dirname, '../../.github/workflows/npm-publish-simple.yml');
+        assert(fs.existsSync(workflowPath), 'GitHub Actions workflow for NPM publishing must exist');
         
         const content = fs.readFileSync(workflowPath, 'utf8');
         assert(content.includes('npm publish'), 'Workflow must include npm publish step');
         assert(content.includes('registry.npmjs.org'), 'Workflow must target public npm registry');
+        assert(content.includes('workflow_dispatch'), 'Workflow must be manually triggerable');
+        assert(content.includes('npm_token'), 'Workflow must have NPM token input');
     }
 
     test_version_tagging_automation() {
