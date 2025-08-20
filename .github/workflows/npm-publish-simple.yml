@@ -30,5 +30,6 @@ jobs:
           echo "::add-mask::${{ inputs.npm_token }}"
       
       - name: Publish
-        run: npm publish --access public
-        continue-on-error: true  # Don't fail if package doesn't exist
+        run: |
+          cd claude-dev-toolkit
+          npm publish --access public
