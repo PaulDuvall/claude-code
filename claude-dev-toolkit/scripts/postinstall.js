@@ -93,14 +93,10 @@ async function runSetup() {
             }
         }
         
-        // Count installed commands
-        if (fs.existsSync(path.join(commandsDir, 'active'))) {
-            const activeCommands = fs.readdirSync(path.join(commandsDir, 'active')).filter(f => f.endsWith('.md')).length;
-            const experimentalCommands = fs.existsSync(path.join(commandsDir, 'experiments')) ? 
-                fs.readdirSync(path.join(commandsDir, 'experiments')).filter(f => f.endsWith('.md')).length : 0;
-            
-            console.log(`\n📦 Installed ${activeCommands} active commands`);
-            console.log(`🧪 Installed ${experimentalCommands} experimental commands`);
+        // Count installed commands (now in flat structure)
+        if (fs.existsSync(commandsDir)) {
+            const installedCommands = fs.readdirSync(commandsDir).filter(f => f.endsWith('.md')).length;
+            console.log(`\n📦 Installed ${installedCommands} commands`);
         }
         
         console.log('\n🎉 Installation complete!');
@@ -144,27 +140,19 @@ function copySelectedCommands(sourceDir, targetDir, config) {
         // Copy selected command sets
         const commandSets = config.commandSets || [];
         
-        // Always copy active commands for standard installation
+        // Always copy active commands for standard installation (flat structure)
         if (installationType === 'standard' || commandSets.includes('development')) {
             const activeSource = path.join(sourceDir, 'active');
-            const activeTarget = path.join(targetDir, 'active');
             if (fs.existsSync(activeSource)) {
-                if (!fs.existsSync(activeTarget)) {
-                    fs.mkdirSync(activeTarget, { recursive: true });
-                }
-                copyAllCommands(activeSource, activeTarget);
+                copyAllCommands(activeSource, targetDir); // Copy directly to targetDir, no subdirectory
             }
         }
         
-        // Copy experimental if selected
+        // Copy experimental if selected (flat structure to avoid namespace)
         if (commandSets.includes('experimental') || installationType === 'full') {
             const expSource = path.join(sourceDir, 'experiments');
-            const expTarget = path.join(targetDir, 'experiments');
             if (fs.existsSync(expSource)) {
-                if (!fs.existsSync(expTarget)) {
-                    fs.mkdirSync(expTarget, { recursive: true });
-                }
-                copyAllCommands(expSource, expTarget);
+                copyAllCommands(expSource, targetDir); // Copy directly to targetDir, no subdirectory
             }
         }
     }
