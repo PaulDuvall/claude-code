@@ -1,5 +1,5 @@
 {
-  "name": "claude-dev-toolkit",
+  "name": "@paulduvall/claude-dev-toolkit",
   "version": "0.0.1-alpha.1",
   "description": "Custom commands toolkit for Claude Code - streamline your development workflow",
   "author": "Paul Duvall",
@@ -66,5 +66,8 @@
     "scripts/validate.js",
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
