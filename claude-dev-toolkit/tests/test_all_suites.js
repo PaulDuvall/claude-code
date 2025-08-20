@@ -24,6 +24,7 @@ const req020Test = path.join(__dirname, 'test_req_020_installation_failure_recov
 const req021Test = path.join(__dirname, 'test_req_021_permission_error_handling.js');
 const req022Test = path.join(__dirname, 'test_req_022_dependency_validation.js');
 const req023Test = path.join(__dirname, 'test_req_023_claude_code_compatibility.js');
+const req053Test = path.join(__dirname, 'test_req_053_public_npm_publication.js');
 
 async function runAllTests() {
     console.log('🧪 Running Comprehensive Test Suite');
@@ -147,6 +148,21 @@ async function runAllTests() {
     } catch (error) {
         console.log('❌ REQ-023 tests FAILED\n');
         results.push({ name: 'REQ-023 Claude Code Compatibility', status: 'FAILED' });
+        totalFailed++;
+    }
+
+    // Run REQ-053 test
+    console.log('\n📋 Running REQ-053 Public NPM Registry Publication Tests');
+    console.log('-'.repeat(50));
+    try {
+        const { execSync } = require('child_process');
+        execSync(`node ${req053Test}`, { stdio: 'inherit', cwd: __dirname });
+        console.log('✅ REQ-053 tests PASSED\n');
+        results.push({ name: 'REQ-053 Public NPM Registry Publication', status: 'PASSED' });
+        totalPassed++;
+    } catch (error) {
+        console.log('❌ REQ-053 tests FAILED\n');
+        results.push({ name: 'REQ-053 Public NPM Registry Publication', status: 'FAILED' });
         totalFailed++;
     }
 
