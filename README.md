@@ -2,6 +2,7 @@
 
 ![GitHub Actions](https://github.com/PaulDuvall/claude-code/actions/workflows/test.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm version](https://badge.fury.io/js/@paulduvall%2Fclaude-dev-toolkit.svg)](https://www.npmjs.com/package/@paulduvall/claude-dev-toolkit)
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-blue)
 ![Active Commands](https://img.shields.io/badge/active%20commands-13-blue)
 ![Experimental Commands](https://img.shields.io/badge/experimental%20commands-45-orange)
@@ -34,7 +35,7 @@ This repository extends [Claude Code](https://claude.ai/code) with **custom slas
 npm install -g @anthropic-ai/claude-code
 
 # 2. Install Claude Dev Toolkit via NPM
-npm install -g claude-dev-toolkit
+npm install -g @paulduvall/claude-dev-toolkit
 
 # 3. Start using AI-powered development commands immediately
 claude
@@ -212,11 +213,22 @@ Deploy with: `./deploy.sh --experiments`
 ### 📦 **NPM Installation (Recommended)**
 ```bash
 # Global installation - works everywhere
-npm install -g claude-dev-toolkit
+npm install -g @paulduvall/claude-dev-toolkit
 
-# Commands are immediately available in Claude Code
+# Run the setup wizard
+claude-commands
+
+# Or use without installing
+npx @paulduvall/claude-dev-toolkit
+
+# Commands are then available in Claude Code
 claude
 /xhelp    # List all available commands
+```
+
+**Uninstall:**
+```bash
+npm uninstall -g @paulduvall/claude-dev-toolkit
 ```
 
 ### 🚀 **Development Setup (For Contributors)**
