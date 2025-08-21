@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       npm_token:
-        description: 'NPM Token (get from https://www.npmjs.com/settings/tokens)'
-        required: true
+        description: 'NPM Token (optional if stored in SSM - get from https://www.npmjs.com/settings/tokens)'
+        required: false
         type: string
 
 permissions:
@@ -30,25 +30,43 @@ jobs:
           role-to-assume: ${{ vars.AWS_DEPLOYMENT_ROLE }}
           aws-region: us-east-1
       
-      - name: Store NPM token in SSM (Optional)
-        continue-on-error: true
+      - name: Retrieve or Store NPM Token
+        id: npm-token
         run: |
-          if aws ssm put-parameter \
-            --name "/npm/tokens/PaulDuvall-claude-code" \
-            --value "${{ inputs.npm_token }}" \
-            --type "SecureString" \
-            --overwrite \
-            --description "NPM token for publishing @paulduvall/claude-dev-toolkit" 2>/dev/null; then
-            echo "✅ NPM token stored in SSM Parameter Store"
+          # Try to get token from SSM first if no token provided
+          if [ -z "${{ inputs.npm_token }}" ]; then
+            echo "No token provided, checking SSM Parameter Store..."
+            if NPM_TOKEN=$(aws ssm get-parameter --name "/npm/tokens/PaulDuvall-claude-code" --with-decryption --query 'Parameter.Value' --output text 2>/dev/null); then
+              echo "✅ Retrieved NPM token from SSM Parameter Store"
+              echo "token=$NPM_TOKEN" >> $GITHUB_OUTPUT
+              echo "::add-mask::$NPM_TOKEN"
+            else
+              echo "❌ No token provided and no token found in SSM"
+              echo "Please provide an NPM token or ensure one is stored in SSM"
+              exit 1
+            fi
           else
-            echo "⚠️ Could not store token in SSM (insufficient permissions). Continuing with publish..."
-            echo "To enable SSM storage, add ssm:PutParameter permission to your IAM role"
+            echo "Using provided NPM token"
+            echo "token=${{ inputs.npm_token }}" >> $GITHUB_OUTPUT
+            echo "::add-mask::${{ inputs.npm_token }}"
+            
+            # Store/update token in SSM for future use
+            if aws ssm put-parameter \
+              --name "/npm/tokens/PaulDuvall-claude-code" \
+              --value "${{ inputs.npm_token }}" \
+              --type "SecureString" \
+              --overwrite \
+              --description "NPM token for publishing @paulduvall/claude-dev-toolkit" 2>/dev/null; then
+              echo "✅ NPM token stored/updated in SSM Parameter Store"
+            else
+              echo "⚠️ Could not store token in SSM (continuing anyway)"
+            fi
           fi
       
       - name: Configure NPM
         run: |
-          npm config set //registry.npmjs.org/:_authToken=${{ inputs.npm_token }}
-          echo "::add-mask::${{ inputs.npm_token }}"
+          npm config set //registry.npmjs.org/:_authToken=${{ steps.npm-token.outputs.token }}
+          echo "::add-mask::${{ steps.npm-token.outputs.token }}"
           
       - name: Verify NPM Authentication
         run: |
@@ -59,7 +77,7 @@ jobs:
       
       - name: Publish
         env:
-          NODE_AUTH_TOKEN: ${{ inputs.npm_token }}
+          NODE_AUTH_TOKEN: ${{ steps.npm-token.outputs.token }}
         run: |
           cd claude-dev-toolkit
           echo "Publishing @paulduvall/claude-dev-toolkit..."
