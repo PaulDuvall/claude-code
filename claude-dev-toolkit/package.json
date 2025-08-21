@@ -26,6 +26,7 @@
   "scripts": {
     "postinstall": "node scripts/postinstall.js",
     "test": "node scripts/run-all-tests.js",
+    "test:report": "node scripts/generate-test-report.js",
     "test:comprehensive": "node tests/test_all_suites.js",
     "test:req007": "node tests/test_req_007_interactive_setup_wizard.js",
     "test:req009": "node tests/test_req_009_configuration_template_application.js",
