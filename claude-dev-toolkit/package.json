@@ -25,7 +25,8 @@
   },
   "scripts": {
     "postinstall": "node scripts/postinstall.js",
-    "test": "node tests/test_all_suites.js",
+    "test": "node scripts/run-all-tests.js",
+    "test:comprehensive": "node tests/test_all_suites.js",
     "test:req007": "node tests/test_req_007_interactive_setup_wizard.js",
     "test:req009": "node tests/test_req_009_configuration_template_application.js",
     "test:req018": "node tests/test_req_018_security_hook_installation.js",
@@ -37,6 +38,8 @@
     "test:git": "node tests/test_git_commands.js",
     "test:ux": "node tests/test_user_experience.js",
     "test:validation": "node tests/test_validation_system.js",
+    "test:subagents": "node tests/test_subagents_command.js",
+    "test:subagents-async": "node tests/test_subagents_async.js",
     "test:install": "scripts/publishing/test-package-install.sh",
     "test:manual": "scripts/publishing/manual-test-suite.sh",
     "publish:local": "scripts/publishing/setup-local-registry.sh",
@@ -51,7 +54,9 @@
   },
   "devDependencies": {
     "eslint": "^8.0.0",
-    "jest": "^29.0.0"
+    "jest": "^29.0.0",
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
   },
   "engines": {
     "node": ">=16.0.0"
@@ -62,8 +67,10 @@
     "commands/",
     "templates/",
     "hooks/",
+    "subagents/",
     "scripts/postinstall.js",
     "scripts/validate.js",
+    "tsconfig.json",
     "README.md",
     "LICENSE"
   ],

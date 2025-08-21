@@ -7,14 +7,7 @@
 
 const path = require('path');
 
-// Import all test suites
-const CommandValidationTests = require('./test_command_validation');
-const CoreWorkflowCommandsTests = require('./test_core_workflow_commands');
-const SecurityCommandsTests = require('./test_security_commands');
-const QualityCommandsTests = require('./test_quality_commands');
-const GitCommandsTests = require('./test_git_commands');
-const UserExperienceTests = require('./test_user_experience');
-const ValidationSystemTests = require('./test_validation_system');
+const fs = require('fs');
 
 // REQ tests have their own runners
 const req007Test = path.join(__dirname, 'test_req_007_interactive_setup_wizard.js');
@@ -32,15 +25,35 @@ async function runAllTests() {
     console.log(`Running from: ${__dirname}`);
     console.log('='.repeat(60));
 
-    const testSuites = [
-        { name: 'Command Validation', testClass: CommandValidationTests },
-        { name: 'Core Workflow Commands', testClass: CoreWorkflowCommandsTests },
-        { name: 'Security Commands', testClass: SecurityCommandsTests },
-        { name: 'Quality Commands', testClass: QualityCommandsTests },
-        { name: 'Git Commands', testClass: GitCommandsTests },
-        { name: 'User Experience', testClass: UserExperienceTests },
-        { name: 'Validation System', testClass: ValidationSystemTests }
-    ];
+    // Dynamically discover all test files
+    const testFiles = fs.readdirSync(__dirname)
+        .filter(file => file.startsWith('test_') && file.endsWith('.js') && 
+                !file.includes('req_') && file !== 'test_all_suites.js')
+        .sort();
+
+    console.log(`📁 Discovered ${testFiles.length} test suites: ${testFiles.map(f => f.replace('.js', '')).join(', ')}`);
+
+    const testSuites = [];
+    
+    // Load each test suite dynamically
+    for (const testFile of testFiles) {
+        try {
+            const testModule = require(`./${testFile}`);
+            const testName = testFile
+                .replace('test_', '')
+                .replace('.js', '')
+                .replace(/_/g, ' ')
+                .replace(/\b\w/g, l => l.toUpperCase());
+            
+            testSuites.push({ 
+                name: testName, 
+                testClass: testModule,
+                filename: testFile
+            });
+        } catch (error) {
+            console.log(`⚠️  Failed to load test suite ${testFile}: ${error.message}`);
+        }
+    }
 
     let totalPassed = 0;
     let totalFailed = 0;

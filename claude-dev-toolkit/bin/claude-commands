@@ -129,4 +129,14 @@ program
         }
     });
 
+program
+    .command('subagents')
+    .description('Manage AI subagents for Claude Code')
+    .option('-l, --list', 'List available subagents')
+    .option('-i, --install', 'Install subagents to Claude Code')
+    .action((options) => {
+        const subagents = require('../lib/subagents');
+        subagents.handleCommand(options);
+    });
+
 program.parse(process.argv);
