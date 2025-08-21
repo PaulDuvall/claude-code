@@ -30,15 +30,20 @@ jobs:
           role-to-assume: ${{ vars.AWS_DEPLOYMENT_ROLE }}
           aws-region: us-east-1
       
-      - name: Store NPM token in SSM
+      - name: Store NPM token in SSM (Optional)
+        continue-on-error: true
         run: |
-          aws ssm put-parameter \
+          if aws ssm put-parameter \
             --name "/npm/tokens/PaulDuvall-claude-code" \
             --value "${{ inputs.npm_token }}" \
             --type "SecureString" \
             --overwrite \
-            --description "NPM token for publishing @paulduvall/claude-dev-toolkit"
-          echo "✅ NPM token stored in SSM Parameter Store"
+            --description "NPM token for publishing @paulduvall/claude-dev-toolkit" 2>/dev/null; then
+            echo "✅ NPM token stored in SSM Parameter Store"
+          else
+            echo "⚠️ Could not store token in SSM (insufficient permissions). Continuing with publish..."
+            echo "To enable SSM storage, add ssm:PutParameter permission to your IAM role"
+          fi
       
       - name: Configure NPM
         run: |
@@ -50,8 +55,13 @@ jobs:
           cd claude-dev-toolkit
           npm publish --access public
       
-      - name: Verify SSM parameter
+      - name: Verify SSM parameter (Optional)
+        continue-on-error: true
         run: |
           echo "Verifying SSM parameter exists..."
-          aws ssm get-parameter --name "/npm/tokens/PaulDuvall-claude-code" --query 'Parameter.Name' --output text
-          echo "✅ SSM parameter verified"
+          if aws ssm get-parameter --name "/npm/tokens/PaulDuvall-claude-code" --query 'Parameter.Name' --output text 2>/dev/null; then
+            echo "✅ SSM parameter verified"
+          else
+            echo "⚠️ SSM parameter not accessible (insufficient permissions or not created)"
+            echo "To enable SSM access, add ssm:GetParameter permission to your IAM role"
+          fi
