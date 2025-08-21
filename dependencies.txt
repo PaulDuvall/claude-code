@@ -13,7 +13,7 @@ node|Install Node.js from: https://nodejs.org/|true
 npm|Install Node.js from: https://nodejs.org/ (includes npm)|true
 
 # Claude Code (required)
-claude|Install with: npm install -g @anthropic-ai/claude-code|true
+claude|Install with: npm install -g @anthropic/claude-code|true
 
 # Security tools (optional but recommended)
 rg|Install ripgrep with: brew install ripgrep (macOS) or apt-get install ripgrep (Ubuntu)|false

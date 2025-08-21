@@ -86,7 +86,7 @@ jobs:
         echo "  ℹ️  Claude Code setup tests skipped (not available in CI)"
         echo "✅ All CI-compatible integration tests passed"
         
-    - name: Run consolidated test suites
+    - name: Run consolidated test suites and generate report
       run: |
         echo "🧪 Running Consolidated Test Suites (converted from Python to JavaScript)"
         echo "ℹ️  Tests migrated from specs/tests/ to claude-dev-toolkit/tests/ for NPM package consistency"
@@ -100,21 +100,50 @@ jobs:
           echo "Installing NPM dependencies..."
           npm install --silent
           
-          # Run comprehensive test suite
-          echo "▶️  Running comprehensive test suite..."
-          if npm test; then
+          # Make test report generator executable
+          chmod +x scripts/generate-test-report.js
+          
+          # Run comprehensive test suite with report generation
+          echo "▶️  Running comprehensive test suite with report generation..."
+          
+          # Run tests and capture output for report
+          if npm test > test-output.log 2>&1; then
             echo "✅ All consolidated tests passed"
+            TEST_RESULT=0
           else
             echo "❌ Consolidated tests failed"
-            exit 1
+            TEST_RESULT=1
           fi
           
+          # Generate comprehensive test report
+          echo "📊 Generating test report..."
+          node scripts/generate-test-report.js || true
+          
+          # Display test output
+          cat test-output.log
+          
           cd ..
+          
+          # Exit with test result
+          if [ $TEST_RESULT -ne 0 ]; then
+            exit 1
+          fi
         else
           echo "❌ No claude-dev-toolkit test directory found"
           exit 1
         fi
         
+    - name: Upload test reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports
+        path: |
+          claude-dev-toolkit/test-reports/latest-report.html
+          claude-dev-toolkit/test-reports/latest-report.md
+          claude-dev-toolkit/test-reports/latest-report.json
+        retention-days: 30
+
     - name: Run additional NPM package validations
       run: |
         echo "🧪 Running Additional NPM Package Validations"
@@ -130,84 +159,12 @@ jobs:
           echo "Ensuring NPM dependencies..."
           npm install --silent
           
-          # Run all 10 individual test suites for detailed reporting
-          echo "▶️  Running REQ-007 Interactive Setup Wizard tests..."
-          if npm run test:req007; then
-            echo "✅ REQ-007 Interactive Setup Wizard: PASSED"
+          # Run dynamic test discovery - automatically finds and runs all tests
+          echo "▶️  Running Dynamic Test Suite (auto-discovers all tests)..."
+          if npm test; then
+            echo "✅ All Tests: PASSED (via dynamic discovery)"
           else
-            echo "❌ REQ-007 Interactive Setup Wizard: FAILED"
-            exit 1
-          fi
-          
-          echo "▶️  Running REQ-009 Configuration Template Application tests..."
-          if npm run test:req009; then
-            echo "✅ REQ-009 Configuration Template Application: PASSED"
-          else
-            echo "❌ REQ-009 Configuration Template Application: FAILED"
-            exit 1
-          fi
-          
-          echo "▶️  Running REQ-018 Security Hook Installation tests..."
-          if npm run test:req018; then
-            echo "✅ REQ-018 Security Hook Installation: PASSED"
-          else
-            echo "❌ REQ-018 Security Hook Installation: FAILED"
-            exit 1
-          fi
-          
-          echo "▶️  Running Command Validation tests..."
-          if npm run test:commands; then
-            echo "✅ Command Validation: PASSED"
-          else
-            echo "❌ Command Validation: FAILED"
-            exit 1
-          fi
-          
-          echo "▶️  Running Core Workflow Commands tests..."
-          if npm run test:workflow; then
-            echo "✅ Core Workflow Commands: PASSED"
-          else
-            echo "❌ Core Workflow Commands: FAILED"
-            exit 1
-          fi
-          
-          echo "▶️  Running Security Commands tests..."
-          if npm run test:security; then
-            echo "✅ Security Commands: PASSED"
-          else
-            echo "❌ Security Commands: FAILED"
-            exit 1
-          fi
-          
-          echo "▶️  Running Quality Commands tests..."
-          if npm run test:quality; then
-            echo "✅ Quality Commands: PASSED"
-          else
-            echo "❌ Quality Commands: FAILED"
-            exit 1
-          fi
-          
-          echo "▶️  Running Git Commands tests..."
-          if npm run test:git; then
-            echo "✅ Git Commands: PASSED"
-          else
-            echo "❌ Git Commands: FAILED"
-            exit 1
-          fi
-          
-          echo "▶️  Running User Experience tests..."
-          if npm run test:ux; then
-            echo "✅ User Experience: PASSED"
-          else
-            echo "❌ User Experience: FAILED"
-            exit 1
-          fi
-          
-          echo "▶️  Running Validation System tests..."
-          if npm run test:validation; then
-            echo "✅ Validation System: PASSED"
-          else
-            echo "❌ Validation System: FAILED"
+            echo "❌ Dynamic Test Suite: FAILED"
             exit 1
           fi
           
@@ -471,23 +428,23 @@ jobs:
         echo "📊 Test Summary:"
         echo "✅ Debug sub-agent tests (Python)"
         echo "✅ Command validation (JavaScript)"
-        echo "✅ Comprehensive test suite (JavaScript - all 10 suites)"
-        echo "✅ REQ-007 Interactive Setup Wizard"
-        echo "✅ REQ-009 Configuration Template Application"
-        echo "✅ REQ-018 Security Hook Installation"
-        echo "✅ Command Validation"
-        echo "✅ Core Workflow Commands"
-        echo "✅ Security Commands"
-        echo "✅ Quality Commands"
-        echo "✅ Git Commands"
-        echo "✅ User Experience"
-        echo "✅ Validation System"
+        echo "✅ Dynamic test suite (auto-discovers all tests)"
+        echo "✅ REQ tests (requirements validation)"
+        echo "✅ Individual test suites (modular testing)"
+        echo "✅ Comprehensive test suite (integrated testing)"
+        echo "✅ Test report generation (HTML/MD/JSON)"
         echo "✅ UX/Manual Test Suite (user experience validation)"
         echo "✅ Automated badge updates"
         echo "✅ Package validation"
         echo "✅ JSON template validation"
         echo "✅ Repository structure checks"
         echo "✅ Command file structure validation"
+        echo ""
+        echo "📄 Test Reports Generated:"
+        echo "• HTML Report: Available in test-reports artifact"
+        echo "• Markdown Report: Available in test-reports artifact"
+        echo "• JSON Report: Available in test-reports artifact"
+        echo "• GitHub Summary: View in Actions run summary"
         echo ""
         echo "🚀 Repository is ready for deployment!"
         echo "📦 NPM package (claude-dev-toolkit) ready for distribution!"
