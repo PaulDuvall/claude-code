@@ -37,7 +37,17 @@ npm install -g @anthropic-ai/claude-code
 # 2. Install Claude Dev Toolkit via NPM
 npm install -g @paulduvall/claude-dev-toolkit
 
-# 3. Start using AI-powered development commands immediately
+# 3. Deploy commands to Claude Code
+claude-commands install --active    # Install 13 core commands
+# OR
+claude-commands install --all       # Install all 58 commands
+
+# 4. (Optional) Install additional components
+claude-commands install --hooks     # Install security hooks
+claude-commands install --subagents # Install AI subagents
+claude-commands config --template comprehensive  # Apply config template
+
+# 5. Start using AI-powered development commands
 claude
 /xtest          # Run all tests intelligently
 /xquality       # Check and fix code quality issues
@@ -212,22 +222,44 @@ Deploy with: `./deploy.sh --experiments`
 
 ### 📦 **NPM Installation (Recommended)**
 ```bash
-# Global installation - works everywhere
+# Install the toolkit globally
 npm install -g @paulduvall/claude-dev-toolkit
 
-# Run the setup wizard
+# Interactive setup wizard (easiest)
 claude-commands
+# Follow prompts to install commands, hooks, and subagents
 
-# Or use without installing
-npx @paulduvall/claude-dev-toolkit
+# OR Manual installation of specific components
+claude-commands install --active       # Install 13 core commands
+claude-commands install --experimental # Install 44 experimental commands
+claude-commands install --all          # Install all 58 commands
+claude-commands install --hooks        # Install security hooks
+claude-commands install --subagents    # Install AI subagents
 
-# Commands are then available in Claude Code
+# Check installation status
+claude-commands status
+
+# Apply configuration templates
+claude-commands config --template basic          # Basic setup
+claude-commands config --template comprehensive  # Full featured
+claude-commands config --template security       # Security focused
+
+# Commands are now available in Claude Code
 claude
 /xhelp    # List all available commands
 ```
 
+**Quick one-liner without global install:**
+```bash
+npx @paulduvall/claude-dev-toolkit
+```
+
 **Uninstall:**
 ```bash
+# Remove commands from Claude Code
+claude-commands uninstall --all
+
+# Uninstall the package
 npm uninstall -g @paulduvall/claude-dev-toolkit
 ```
 
