@@ -47,19 +47,32 @@ jobs:
       
       - name: Configure NPM
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ inputs.npm_token }}" >> ~/.npmrc
+          npm config set //registry.npmjs.org/:_authToken=${{ inputs.npm_token }}
           echo "::add-mask::${{ inputs.npm_token }}"
           
       - name: Verify NPM Authentication
         run: |
           echo "Verifying NPM authentication..."
-          npm whoami || echo "⚠️ Not authenticated - token may be invalid"
+          npm whoami 2>/dev/null || echo "⚠️ Warning: Could not verify authentication"
+          echo "Registry config:"
+          npm config get registry
       
       - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ inputs.npm_token }}
         run: |
           cd claude-dev-toolkit
           echo "Publishing @paulduvall/claude-dev-toolkit..."
-          npm publish --access public --verbose
+          echo "Current directory: $(pwd)"
+          echo "Package name from package.json:"
+          grep '"name"' package.json
+          npm publish --access public --verbose 2>&1 || {
+            echo "❌ Publish failed. Common causes:"
+            echo "  1. Token doesn't have publish permissions"
+            echo "  2. Package name already exists (try bumping version)"
+            echo "  3. Network/registry issues"
+            exit 1
+          }
       
       - name: Verify SSM parameter (Optional)
         continue-on-error: true
