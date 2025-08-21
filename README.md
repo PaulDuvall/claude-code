@@ -42,12 +42,7 @@ claude-commands install --active    # Install 13 core commands
 # OR
 claude-commands install --all       # Install all 58 commands
 
-# 4. (Optional) Install additional components
-claude-commands install --hooks     # Install security hooks
-claude-commands install --subagents # Install AI subagents
-claude-commands config --template comprehensive  # Apply config template
-
-# 5. Start using AI-powered development commands
+# 4. Start using AI-powered development commands
 claude
 /xtest          # Run all tests intelligently
 /xquality       # Check and fix code quality issues
@@ -225,24 +220,18 @@ Deploy with: `./deploy.sh --experiments`
 # Install the toolkit globally
 npm install -g @paulduvall/claude-dev-toolkit
 
-# Interactive setup wizard (easiest)
-claude-commands
-# Follow prompts to install commands, hooks, and subagents
-
-# OR Manual installation of specific components
+# Install command sets
 claude-commands install --active       # Install 13 core commands
 claude-commands install --experimental # Install 44 experimental commands
 claude-commands install --all          # Install all 58 commands
-claude-commands install --hooks        # Install security hooks
-claude-commands install --subagents    # Install AI subagents
+
+# Check what's available
+claude-commands list                   # List all available commands
+claude-commands list --active          # List only active commands
+claude-commands list --experimental    # List only experimental commands
 
 # Check installation status
 claude-commands status
-
-# Apply configuration templates
-claude-commands config --template basic          # Basic setup
-claude-commands config --template comprehensive  # Full featured
-claude-commands config --template security       # Security focused
 
 # Commands are now available in Claude Code
 claude
@@ -256,10 +245,7 @@ npx @paulduvall/claude-dev-toolkit
 
 **Uninstall:**
 ```bash
-# Remove commands from Claude Code
-claude-commands uninstall --all
-
-# Uninstall the package
+# Uninstall the package (removes everything)
 npm uninstall -g @paulduvall/claude-dev-toolkit
 ```
 
