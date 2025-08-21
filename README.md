@@ -42,7 +42,16 @@ claude-commands install --active    # Install 13 core commands
 # OR
 claude-commands install --all       # Install all 58 commands
 
-# 4. Start using AI-powered development commands
+# 4. (Optional) Configure Claude Code settings
+# For optimal experience, you may want to adjust Claude Code settings
+# Check current settings: cat ~/.claude/settings.json
+# Common configurations:
+#   - Enable/disable specific tools
+#   - Set working directory preferences
+#   - Configure security restrictions
+# See templates/ directory in the GitHub repo for example configurations
+
+# 5. Start using AI-powered development commands
 claude
 /xtest          # Run all tests intelligently
 /xquality       # Check and fix code quality issues
