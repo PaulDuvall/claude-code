@@ -7,10 +7,10 @@
 - **Status:** Draft
 
 ## Overview
-Simple CLI tool to install Claude Code security hooks from the NPM package.
+Simple CLI tool to install Claude Code hooks from the NPM package.
 
 ## Assumptions
-- Security hooks exist in hooks/ directory within the NPM package
+- Hook scripts exist in hooks/ directory within the NPM package
 - User has write access to ~/.claude/ directory
 - Claude Code settings.json exists or can be created
 
@@ -18,7 +18,7 @@ Simple CLI tool to install Claude Code security hooks from the NPM package.
 
 ### REQ-HOOKS-001: List Available Hooks
 **WHEN** the user runs `claude-commands hooks --list`
-**THE SYSTEM SHALL** display available security hooks from hooks/ directory
+**THE SYSTEM SHALL** display available hooks from hooks/ directory
 
 ### REQ-HOOKS-002: Install Hooks
 **WHEN** the user runs `claude-commands hooks --install`
@@ -43,4 +43,4 @@ Simple CLI tool to install Claude Code security hooks from the NPM package.
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.0.0 | 2025-08-21 | Initial specification for hooks installation |
+| 1.0.0 | 2025-08-21 | Initial specification for hooks installation (all hook types) |
