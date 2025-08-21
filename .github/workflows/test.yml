@@ -247,7 +247,7 @@ jobs:
         # Test package can be installed globally (simulate user experience)
         echo "🔧 Testing global installation process..."
         npm pack
-        PACKAGE_FILE=$(ls claude-dev-toolkit-*.tgz)
+        PACKAGE_FILE=$(ls *claude-dev-toolkit-*.tgz)
         echo "  📦 Package created: $PACKAGE_FILE"
         
         # Test global install (without actually installing globally in CI)
