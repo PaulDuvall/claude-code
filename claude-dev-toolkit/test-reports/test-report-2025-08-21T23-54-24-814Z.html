@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Report - 8/21/2025</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; border-bottom: 3px solid #007bff; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0; }
+        .metric { background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; }
+        .metric .value { font-size: 2em; font-weight: bold; color: #007bff; }
+        .metric .label { color: #666; margin-top: 5px; }
+        .passed { color: #28a745; }
+        .failed { color: #dc3545; }
+        .suite { margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff; }
+        .suite.failed { border-left-color: #dc3545; }
+        .suite.passed { border-left-color: #28a745; }
+        .test-list { margin: 10px 0; }
+        .test { padding: 5px 10px; margin: 2px 0; background: white; border-radius: 4px; }
+        .test.passed { border-left: 3px solid #28a745; }
+        .test.failed { border-left: 3px solid #dc3545; }
+        .environment { background: #e9ecef; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .environment code { background: white; padding: 2px 6px; border-radius: 3px; }
+        .progress-bar { height: 30px; background: #e9ecef; border-radius: 15px; overflow: hidden; margin: 20px 0; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #28a745, #20c997); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Test Report</h1>
+        
+        <div class="summary">
+            <div class="metric">
+                <div class="value">608</div>
+                <div class="label">Total Tests</div>
+            </div>
+            <div class="metric">
+                <div class="value passed">608</div>
+                <div class="label">Passed</div>
+            </div>
+            <div class="metric">
+                <div class="value failed">0</div>
+                <div class="label">Failed</div>
+            </div>
+            <div class="metric">
+                <div class="value">100.00%</div>
+                <div class="label">Pass Rate</div>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 100.00%">
+                100.00% Tests Passing
+            </div>
+        </div>
+
+        <div class="environment">
+            <h3>Environment</h3>
+            <p>
+                <strong>Date:</strong> 8/21/2025, 7:54:19 PM<br>
+                <strong>Duration:</strong> 5.76s<br>
+                <strong>Node:</strong> <code>v24.1.0</code><br>
+                <strong>Platform:</strong> <code>darwin</code><br>
+                <strong>Environment:</strong> Local<br>
+            </p>
+        </div>
+
+        <h2>Test Suites</h2>
+        
+            <div class="suite passed">
+                <h3>✅ Dynamic Test Suite</h3>
+                <p>
+                    <strong>Passed:</strong> 593 | 
+                    <strong>Failed:</strong> 0
+                </p>
+                
+            </div>
+        
+            <div class="suite passed">
+                <h3>✅ Package Validation</h3>
+                <p>
+                    <strong>Passed:</strong> 15 | 
+                    <strong>Failed:</strong> 0
+                </p>
+                
+                    <div class="test-list">
+                        
+                            <div class="test passed">
+                                ✅ Directory exists: bin/
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ Directory exists: lib/
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ Directory exists: commands/
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ Directory exists: commands/active/
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ Directory exists: commands/experiments/
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ File exists: package.json
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ File exists: README.md
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ File exists: bin/claude-commands
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ File exists: lib/config.js
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ File exists: lib/installer.js
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ File exists: lib/utils.js
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ Binary is executable (755)
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ Found 13 active commands
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ Found 45 experimental commands
+                            </div>
+                        
+                            <div class="test passed">
+                                ✅ Package validation passed
+                            </div>
+                        
+                    </div>
+                
+            </div>
+        
+    </div>
+</body>
+</html>

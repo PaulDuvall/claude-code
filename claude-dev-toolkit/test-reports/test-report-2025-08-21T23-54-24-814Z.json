@@ -1,0 +1,2472 @@
+{
+  "timestamp": "2025-08-21T23:54:19.055Z",
+  "summary": {
+    "total": 608,
+    "passed": 608,
+    "failed": 0,
+    "skipped": 0,
+    "passRate": "100.00"
+  },
+  "suites": [
+    {
+      "name": "Dynamic Test Suite",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "test_interactive_setup_wizard_exists",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_displays_welcome_message",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_prompts_for_installation_type",
+          "status": "passed"
+        },
+        {
+          "name": "test_installation_type_options_are_presented",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_prompts_for_command_sets",
+          "status": "passed"
+        },
+        {
+          "name": "test_command_set_options_are_categorized",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_prompts_for_security_hooks",
+          "status": "passed"
+        },
+        {
+          "name": "test_security_hooks_options_are_available",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_prompts_for_configuration_template",
+          "status": "passed"
+        },
+        {
+          "name": "test_configuration_template_options_are_available",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_runs_complete_interactive_flow",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_validates_user_input",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_saves_configuration_to_file",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_can_load_existing_configuration",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_provides_installation_summary",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_handles_non_interactive_mode",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_supports_preset_configurations",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_validates_environment_before_setup",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_integrates_with_post_install",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_configuration_options_are_complete",
+          "status": "passed"
+        },
+        {
+          "name": "req 007 interactive setup wizard: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Configuration template application module exists",
+          "status": "passed"
+        },
+        {
+          "name": "Applies basic template",
+          "status": "passed"
+        },
+        {
+          "name": "Applies security-focused template",
+          "status": "passed"
+        },
+        {
+          "name": "Applies comprehensive template",
+          "status": "passed"
+        },
+        {
+          "name": "Updates existing settings file",
+          "status": "passed"
+        },
+        {
+          "name": "Handles invalid template path",
+          "status": "passed"
+        },
+        {
+          "name": "Handles invalid JSON template",
+          "status": "passed"
+        },
+        {
+          "name": "Sets correct file permissions",
+          "status": "passed"
+        },
+        {
+          "name": "Preserves template structure",
+          "status": "passed"
+        },
+        {
+          "name": "Integrates with setup wizard",
+          "status": "passed"
+        },
+        {
+          "name": "Deep merge functionality",
+          "status": "passed"
+        },
+        {
+          "name": "JSONC parsing",
+          "status": "passed"
+        },
+        {
+          "name": "Available templates discovery",
+          "status": "passed"
+        },
+        {
+          "name": "Passed: 13",
+          "status": "passed"
+        },
+        {
+          "name": "req 009 configuration template application: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Security hook installation module exists",
+          "status": "passed"
+        },
+        {
+          "name": "Installs security hooks to correct directory",
+          "status": "passed"
+        },
+        {
+          "name": "Installs file logger hook",
+          "status": "passed"
+        },
+        {
+          "name": "Installs multiple hooks",
+          "status": "passed"
+        },
+        {
+          "name": "Sets correct file permissions",
+          "status": "passed"
+        },
+        {
+          "name": "Validates hook content",
+          "status": "passed"
+        },
+        {
+          "name": "Handles invalid hook names",
+          "status": "passed"
+        },
+        {
+          "name": "Handles missing source directory",
+          "status": "passed"
+        },
+        {
+          "name": "Creates hooks directory if missing",
+          "status": "passed"
+        },
+        {
+          "name": "Integrates with setup wizard",
+          "status": "passed"
+        },
+        {
+          "name": "Available hooks discovery",
+          "status": "passed"
+        },
+        {
+          "name": "Hook validation before installation",
+          "status": "passed"
+        },
+        {
+          "name": "Overwrites existing hooks",
+          "status": "passed"
+        },
+        {
+          "name": "Hook installation logging",
+          "status": "passed"
+        },
+        {
+          "name": "Advanced hook installation options",
+          "status": "passed"
+        },
+        {
+          "name": "Hook removal functionality",
+          "status": "passed"
+        },
+        {
+          "name": "Hook metadata caching",
+          "status": "passed"
+        },
+        {
+          "name": "Installation summary",
+          "status": "passed"
+        },
+        {
+          "name": "Passed: 18",
+          "status": "passed"
+        },
+        {
+          "name": "req 018 security hook installation: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Backup Creation",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Command Installation Rollback",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Settings Configuration Rollback",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Hook Installation Rollback",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Error Message Quality",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Partial Installation Recovery",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Backup Cleanup After Success",
+          "status": "passed"
+        },
+        {
+          "name": "Passed: 7",
+          "status": "passed"
+        },
+        {
+          "name": "req 020 installation failure recovery: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_permission_error_handler_exists",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_detects_file_permission_errors",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_detects_directory_permission_errors",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_file_resolution_guidance",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_directory_resolution_guidance",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_provides_platform_specific_guidance",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_handles_permission_errors_with_context",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_detects_user_vs_system_permission_issues",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_validates_error_message_quality",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_handles_edge_cases",
+          "status": "passed"
+        },
+        {
+          "name": "Passed: 10",
+          "status": "passed"
+        },
+        {
+          "name": "req 021 permission error handling: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_dependency_validator_exists",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_detects_missing_nodejs_dependency",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_validates_individual_dependency",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_platform_specific_installation_instructions",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_checks_multiple_dependencies_simultaneously",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_handles_optional_dependencies",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_validates_version_requirements",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_provides_detailed_error_information",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_installation_commands_for_package_managers",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_validates_system_requirements",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_handles_network_dependencies",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_provides_recovery_suggestions",
+          "status": "passed"
+        },
+        {
+          "name": "Passed: 12",
+          "status": "passed"
+        },
+        {
+          "name": "req 022 dependency validation: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_claude_code_compatibility_exists",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_detects_claude_code_installation_status",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_validates_claude_code_version_compatibility",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_installation_instructions_for_missing_claude_code",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_upgrade_instructions_for_incompatible_versions",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_detects_claude_code_configuration_issues",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_provides_resolution_guidance_for_installation_issues",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_handles_multiple_claude_code_installations",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_validates_claude_code_cli_access_and_permissions",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_integrates_with_existing_error_handling_system",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_provides_system_environment_compatibility_check",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_comprehensive_compatibility_report",
+          "status": "passed"
+        },
+        {
+          "name": "Passed: 12",
+          "status": "passed"
+        },
+        {
+          "name": "req 023 claude code compatibility: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "publish-public.sh script exists",
+          "status": "passed"
+        },
+        {
+          "name": "publish-public.sh has proper structure",
+          "status": "passed"
+        },
+        {
+          "name": "Automated public workflow exists",
+          "status": "passed"
+        },
+        {
+          "name": "Version tagging automation",
+          "status": "passed"
+        },
+        {
+          "name": "Public registry authentication setup",
+          "status": "passed"
+        },
+        {
+          "name": "Package preparation for public registry",
+          "status": "passed"
+        },
+        {
+          "name": "Validation before public publish",
+          "status": "passed"
+        },
+        {
+          "name": "Rollback capability exists",
+          "status": "passed"
+        },
+        {
+          "name": "Publishing documentation exists",
+          "status": "passed"
+        },
+        {
+          "name": "Authentication setup script exists",
+          "status": "passed"
+        },
+        {
+          "name": "req 053 public npm publication: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Command files exist",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "command validation: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Workflow commands existence",
+          "status": "passed"
+        },
+        {
+          "name": "Core commands coverage",
+          "status": "passed"
+        },
+        {
+          "name": "Command file structure",
+          "status": "passed"
+        },
+        {
+          "name": "Command categories coverage",
+          "status": "passed"
+        },
+        {
+          "name": "Command distribution",
+          "status": "passed"
+        },
+        {
+          "name": "core workflow commands: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "xgit.md includes git status verification",
+          "status": "passed"
+        },
+        {
+          "name": "xgit.md supports conventional commit messages",
+          "status": "passed"
+        },
+        {
+          "name": "xgit.md includes push failure handling",
+          "status": "passed"
+        },
+        {
+          "name": "git commands: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "xquality.md includes tool detection",
+          "status": "passed"
+        },
+        {
+          "name": "xquality.md includes missing tool fallbacks",
+          "status": "passed"
+        },
+        {
+          "name": "xquality.md generates structured reports",
+          "status": "passed"
+        },
+        {
+          "name": "quality commands: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "xsecurity.md focuses on defensive security",
+          "status": "passed"
+        },
+        {
+          "name": "xsecurity.md includes vulnerability scanning",
+          "status": "passed"
+        },
+        {
+          "name": "xsecurity.md contains no offensive security patterns",
+          "status": "passed"
+        },
+        {
+          "name": "security commands: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Async get available subagents",
+          "status": "passed"
+        },
+        {
+          "name": "Async get subagent names",
+          "status": "passed"
+        },
+        {
+          "name": "Async check directory structure",
+          "status": "passed"
+        },
+        {
+          "name": "Async ensure Claude directory",
+          "status": "passed"
+        },
+        {
+          "name": "Async installation status",
+          "status": "passed"
+        },
+        {
+          "name": "Async validation",
+          "status": "passed"
+        },
+        {
+          "name": "Manager async methods",
+          "status": "passed"
+        },
+        {
+          "name": "Backward compatibility",
+          "status": "passed"
+        },
+        {
+          "name": "subagents async: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Subagents directory exists",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-SUBAGENTS-003: Show help",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-SUBAGENTS-001: List available subagents",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-SUBAGENTS-004: Handle missing directory",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-SUBAGENTS-002: Install subagents",
+          "status": "passed"
+        },
+        {
+          "name": "subagents command: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "xarchitecture.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xconfig.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xdebug.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xdocs.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xgit.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xpipeline.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xquality.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xrefactor.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xrelease.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xsecurity.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xspec.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xtdd.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xtest.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "Simple user interfaces",
+          "status": "passed"
+        },
+        {
+          "name": "xarchitecture.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xconfig.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xdebug.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xdocs.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xgit.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xpipeline.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xquality.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xrefactor.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xrelease.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xsecurity.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xspec.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xtdd.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xtest.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "Clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xarchitecture.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xconfig.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xdebug.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xdocs.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xgit.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xpipeline.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xquality.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xrefactor.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xrelease.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xsecurity.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xspec.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xtdd.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xtest.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "Minimal configuration requirements",
+          "status": "passed"
+        },
+        {
+          "name": "user experience: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Validation passes for valid commands",
+          "status": "passed"
+        },
+        {
+          "name": "Validation provides clear error messages for invalid commands",
+          "status": "passed"
+        },
+        {
+          "name": "Validation provides clear error messages",
+          "status": "passed"
+        },
+        {
+          "name": "Validation supports CI/CD integration with proper exit codes",
+          "status": "passed"
+        },
+        {
+          "name": "Validation supports CI/CD integration",
+          "status": "passed"
+        },
+        {
+          "name": "validation system: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "test_interactive_setup_wizard_exists",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_displays_welcome_message",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_prompts_for_installation_type",
+          "status": "passed"
+        },
+        {
+          "name": "test_installation_type_options_are_presented",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_prompts_for_command_sets",
+          "status": "passed"
+        },
+        {
+          "name": "test_command_set_options_are_categorized",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_prompts_for_security_hooks",
+          "status": "passed"
+        },
+        {
+          "name": "test_security_hooks_options_are_available",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_prompts_for_configuration_template",
+          "status": "passed"
+        },
+        {
+          "name": "test_configuration_template_options_are_available",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_runs_complete_interactive_flow",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_validates_user_input",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_saves_configuration_to_file",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_can_load_existing_configuration",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_provides_installation_summary",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_handles_non_interactive_mode",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_supports_preset_configurations",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_validates_environment_before_setup",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_integrates_with_post_install",
+          "status": "passed"
+        },
+        {
+          "name": "test_wizard_configuration_options_are_complete",
+          "status": "passed"
+        },
+        {
+          "name": "Configuration template application module exists",
+          "status": "passed"
+        },
+        {
+          "name": "Applies basic template",
+          "status": "passed"
+        },
+        {
+          "name": "Applies security-focused template",
+          "status": "passed"
+        },
+        {
+          "name": "Applies comprehensive template",
+          "status": "passed"
+        },
+        {
+          "name": "Updates existing settings file",
+          "status": "passed"
+        },
+        {
+          "name": "Handles invalid template path",
+          "status": "passed"
+        },
+        {
+          "name": "Handles invalid JSON template",
+          "status": "passed"
+        },
+        {
+          "name": "Sets correct file permissions",
+          "status": "passed"
+        },
+        {
+          "name": "Preserves template structure",
+          "status": "passed"
+        },
+        {
+          "name": "Integrates with setup wizard",
+          "status": "passed"
+        },
+        {
+          "name": "Deep merge functionality",
+          "status": "passed"
+        },
+        {
+          "name": "JSONC parsing",
+          "status": "passed"
+        },
+        {
+          "name": "Available templates discovery",
+          "status": "passed"
+        },
+        {
+          "name": "Passed: 13",
+          "status": "passed"
+        },
+        {
+          "name": "Security hook installation module exists",
+          "status": "passed"
+        },
+        {
+          "name": "Installs security hooks to correct directory",
+          "status": "passed"
+        },
+        {
+          "name": "Installs file logger hook",
+          "status": "passed"
+        },
+        {
+          "name": "Installs multiple hooks",
+          "status": "passed"
+        },
+        {
+          "name": "Sets correct file permissions",
+          "status": "passed"
+        },
+        {
+          "name": "Validates hook content",
+          "status": "passed"
+        },
+        {
+          "name": "Handles invalid hook names",
+          "status": "passed"
+        },
+        {
+          "name": "Handles missing source directory",
+          "status": "passed"
+        },
+        {
+          "name": "Creates hooks directory if missing",
+          "status": "passed"
+        },
+        {
+          "name": "Integrates with setup wizard",
+          "status": "passed"
+        },
+        {
+          "name": "Available hooks discovery",
+          "status": "passed"
+        },
+        {
+          "name": "Hook validation before installation",
+          "status": "passed"
+        },
+        {
+          "name": "Overwrites existing hooks",
+          "status": "passed"
+        },
+        {
+          "name": "Hook installation logging",
+          "status": "passed"
+        },
+        {
+          "name": "Advanced hook installation options",
+          "status": "passed"
+        },
+        {
+          "name": "Hook removal functionality",
+          "status": "passed"
+        },
+        {
+          "name": "Hook metadata caching",
+          "status": "passed"
+        },
+        {
+          "name": "Installation summary",
+          "status": "passed"
+        },
+        {
+          "name": "Passed: 18",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Backup Creation",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Command Installation Rollback",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Settings Configuration Rollback",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Hook Installation Rollback",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Error Message Quality",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Partial Installation Recovery",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: Backup Cleanup After Success",
+          "status": "passed"
+        },
+        {
+          "name": "Passed: 7",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_permission_error_handler_exists",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_detects_file_permission_errors",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_detects_directory_permission_errors",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_file_resolution_guidance",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_directory_resolution_guidance",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_provides_platform_specific_guidance",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_handles_permission_errors_with_context",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_detects_user_vs_system_permission_issues",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_validates_error_message_quality",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_handles_edge_cases",
+          "status": "passed"
+        },
+        {
+          "name": "Passed: 10",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_dependency_validator_exists",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_detects_missing_nodejs_dependency",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_validates_individual_dependency",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_platform_specific_installation_instructions",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_checks_multiple_dependencies_simultaneously",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_handles_optional_dependencies",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_validates_version_requirements",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_provides_detailed_error_information",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_installation_commands_for_package_managers",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_validates_system_requirements",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_handles_network_dependencies",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_provides_recovery_suggestions",
+          "status": "passed"
+        },
+        {
+          "name": "Passed: 12",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_claude_code_compatibility_exists",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_detects_claude_code_installation_status",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_validates_claude_code_version_compatibility",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_installation_instructions_for_missing_claude_code",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_upgrade_instructions_for_incompatible_versions",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_detects_claude_code_configuration_issues",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_provides_resolution_guidance_for_installation_issues",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_handles_multiple_claude_code_installations",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_validates_claude_code_cli_access_and_permissions",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_integrates_with_existing_error_handling_system",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_provides_system_environment_compatibility_check",
+          "status": "passed"
+        },
+        {
+          "name": "PASS: test_generates_comprehensive_compatibility_report",
+          "status": "passed"
+        },
+        {
+          "name": "Passed: 12",
+          "status": "passed"
+        },
+        {
+          "name": "publish-public.sh script exists",
+          "status": "passed"
+        },
+        {
+          "name": "publish-public.sh has proper structure",
+          "status": "passed"
+        },
+        {
+          "name": "Automated public workflow exists",
+          "status": "passed"
+        },
+        {
+          "name": "Version tagging automation",
+          "status": "passed"
+        },
+        {
+          "name": "Public registry authentication setup",
+          "status": "passed"
+        },
+        {
+          "name": "Package preparation for public registry",
+          "status": "passed"
+        },
+        {
+          "name": "Validation before public publish",
+          "status": "passed"
+        },
+        {
+          "name": "Rollback capability exists",
+          "status": "passed"
+        },
+        {
+          "name": "Publishing documentation exists",
+          "status": "passed"
+        },
+        {
+          "name": "Authentication setup script exists",
+          "status": "passed"
+        },
+        {
+          "name": "Command files exist",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Has .md extension",
+          "status": "passed"
+        },
+        {
+          "name": "Follows naming convention",
+          "status": "passed"
+        },
+        {
+          "name": "Valid YAML frontmatter",
+          "status": "passed"
+        },
+        {
+          "name": "Has meaningful description",
+          "status": "passed"
+        },
+        {
+          "name": "Has valid tags array",
+          "status": "passed"
+        },
+        {
+          "name": "Contains executable commands",
+          "status": "passed"
+        },
+        {
+          "name": "Maintains defensive security focus",
+          "status": "passed"
+        },
+        {
+          "name": "Workflow commands existence",
+          "status": "passed"
+        },
+        {
+          "name": "Core commands coverage",
+          "status": "passed"
+        },
+        {
+          "name": "Command file structure",
+          "status": "passed"
+        },
+        {
+          "name": "Command categories coverage",
+          "status": "passed"
+        },
+        {
+          "name": "Command distribution",
+          "status": "passed"
+        },
+        {
+          "name": "xgit.md includes git status verification",
+          "status": "passed"
+        },
+        {
+          "name": "xgit.md supports conventional commit messages",
+          "status": "passed"
+        },
+        {
+          "name": "xgit.md includes push failure handling",
+          "status": "passed"
+        },
+        {
+          "name": "xquality.md includes tool detection",
+          "status": "passed"
+        },
+        {
+          "name": "xquality.md includes missing tool fallbacks",
+          "status": "passed"
+        },
+        {
+          "name": "xquality.md generates structured reports",
+          "status": "passed"
+        },
+        {
+          "name": "xsecurity.md focuses on defensive security",
+          "status": "passed"
+        },
+        {
+          "name": "xsecurity.md includes vulnerability scanning",
+          "status": "passed"
+        },
+        {
+          "name": "xsecurity.md contains no offensive security patterns",
+          "status": "passed"
+        },
+        {
+          "name": "Subagents directory exists",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-SUBAGENTS-003: Show help",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-SUBAGENTS-001: List available subagents",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-SUBAGENTS-004: Handle missing directory",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-SUBAGENTS-002: Install subagents",
+          "status": "passed"
+        },
+        {
+          "name": "xarchitecture.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xconfig.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xdebug.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xdocs.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xgit.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xpipeline.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xquality.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xrefactor.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xrelease.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xsecurity.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xspec.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xtdd.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "xtest.md has simple user interface",
+          "status": "passed"
+        },
+        {
+          "name": "Simple user interfaces",
+          "status": "passed"
+        },
+        {
+          "name": "xarchitecture.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xconfig.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xdebug.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xdocs.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xgit.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xpipeline.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xquality.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xrefactor.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xrelease.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xsecurity.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xspec.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xtdd.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xtest.md has clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "Clear usage instructions",
+          "status": "passed"
+        },
+        {
+          "name": "xarchitecture.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xconfig.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xdebug.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xdocs.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xgit.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xpipeline.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xquality.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xrefactor.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xrelease.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xsecurity.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xspec.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xtdd.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "xtest.md works with minimal configuration",
+          "status": "passed"
+        },
+        {
+          "name": "Minimal configuration requirements",
+          "status": "passed"
+        },
+        {
+          "name": "Validation passes for valid commands",
+          "status": "passed"
+        },
+        {
+          "name": "Validation provides clear error messages for invalid commands",
+          "status": "passed"
+        },
+        {
+          "name": "Validation provides clear error messages",
+          "status": "passed"
+        },
+        {
+          "name": "Validation supports CI/CD integration with proper exit codes",
+          "status": "passed"
+        },
+        {
+          "name": "Validation supports CI/CD integration",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-007 Interactive Setup Wizard: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-009 Configuration Template Application: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-018 Security Hook Installation: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-020 Installation Failure Recovery: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-021 Permission Error Handling: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-022 Dependency Validation: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-023 Claude Code Compatibility: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "REQ-053 Public NPM Registry Publication: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Command Validation: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Core Workflow Commands: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Git Commands: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Quality Commands: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Security Commands: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Subagents Async: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Subagents Command: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "User Experience: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "Validation System: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "all suites: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "req 007 interactive setup wizard: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "req 009 configuration template application: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "req 018 security hook installation: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "req 020 installation failure recovery: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "req 021 permission error handling: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "req 022 dependency validation: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "req 023 claude code compatibility: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "req 053 public npm publication: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "command validation: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "core workflow commands: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "git commands: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "quality commands: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "security commands: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "subagents async: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "subagents command: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "user experience: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "validation system: PASSED",
+          "status": "passed"
+        },
+        {
+          "name": "all suites: PASSED",
+          "status": "passed"
+        }
+      ],
+      "passed": 593,
+      "failed": 0,
+      "duration": 0
+    },
+    {
+      "name": "Package Validation",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "Directory exists: bin/",
+          "status": "passed"
+        },
+        {
+          "name": "Directory exists: lib/",
+          "status": "passed"
+        },
+        {
+          "name": "Directory exists: commands/",
+          "status": "passed"
+        },
+        {
+          "name": "Directory exists: commands/active/",
+          "status": "passed"
+        },
+        {
+          "name": "Directory exists: commands/experiments/",
+          "status": "passed"
+        },
+        {
+          "name": "File exists: package.json",
+          "status": "passed"
+        },
+        {
+          "name": "File exists: README.md",
+          "status": "passed"
+        },
+        {
+          "name": "File exists: bin/claude-commands",
+          "status": "passed"
+        },
+        {
+          "name": "File exists: lib/config.js",
+          "status": "passed"
+        },
+        {
+          "name": "File exists: lib/installer.js",
+          "status": "passed"
+        },
+        {
+          "name": "File exists: lib/utils.js",
+          "status": "passed"
+        },
+        {
+          "name": "Binary is executable (755)",
+          "status": "passed"
+        },
+        {
+          "name": "Found 13 active commands",
+          "status": "passed"
+        },
+        {
+          "name": "Found 45 experimental commands",
+          "status": "passed"
+        },
+        {
+          "name": "Package validation passed",
+          "status": "passed"
+        }
+      ],
+      "passed": 15,
+      "failed": 0,
+      "duration": 0
+    }
+  ],
+  "duration": 5757,
+  "environment": {
+    "node": "v24.1.0",
+    "platform": "darwin",
+    "ci": false,
+    "github_run_id": "local",
+    "github_run_number": "N/A",
+    "github_actor": "local",
+    "github_ref": "local"
+  }
+}

@@ -63,39 +63,54 @@ class TestReportGenerator {
 
         // Parse test results from output
         const lines = output.split('\n');
-        let currentTest = null;
+        let totalTests = 0;
+        let totalPassed = 0;
+        let totalFailed = 0;
 
         for (const line of lines) {
-            // Match test result patterns
-            if (line.includes('✅')) {
+            // Skip lines that are clearly not test results
+            if (line.includes('echo ') || line.includes('Debug:') || line.includes('No claude-dev-toolkit')) {
+                continue;
+            }
+
+            // More precise pattern matching for actual test results
+            // Only count lines that start with emoji and contain actual test names
+            if (/^✅\s+[A-Za-z]/.test(line.trim())) {
                 const testName = line.replace(/✅/g, '').trim();
-                if (testName) {
+                if (testName && !testName.includes('tests PASSED') && !testName.includes('All ')) {
                     suite.tests.push({ name: testName, status: 'passed' });
-                    suite.passed++;
                 }
-            } else if (line.includes('❌')) {
+            } else if (/^❌\s+[A-Za-z]/.test(line.trim())) {
                 const testName = line.replace(/❌/g, '').trim();
-                if (testName) {
+                if (testName && !testName.includes('tests FAILED') && !testName.includes('Failed:')) {
                     suite.tests.push({ name: testName, status: 'failed' });
-                    suite.failed++;
                 }
-            } else if (line.includes('⚠️')) {
+            } else if (/^⚠️\s+[A-Za-z]/.test(line.trim())) {
                 const testName = line.replace(/⚠️/g, '').trim();
                 if (testName) {
                     suite.tests.push({ name: testName, status: 'skipped' });
                 }
             }
 
-            // Extract summary metrics
-            if (line.includes('passed:') || line.includes('Passed:')) {
-                const match = line.match(/(\d+)\s*(passed|Passed)/);
-                if (match) suite.passed = parseInt(match[1]);
+            // Extract summary metrics from final summary lines only
+            if (line.includes('Total Tests:')) {
+                const match = line.match(/Total Tests:\s*(\d+)/);
+                if (match) totalTests = parseInt(match[1]);
             }
-            if (line.includes('failed:') || line.includes('Failed:')) {
-                const match = line.match(/(\d+)\s*(failed|Failed)/);
-                if (match) suite.failed = parseInt(match[1]);
+            if (line.includes('Passed:') && line.includes('Failed:')) {
+                const passedMatch = line.match(/Passed:\s*(\d+)/);
+                const failedMatch = line.match(/Failed:\s*(\d+)/);
+                if (passedMatch) totalPassed = parseInt(passedMatch[1]);
+                if (failedMatch) totalFailed = parseInt(failedMatch[1]);
+            }
+            if (line.includes('Success Rate: 100.0%') || line.includes('ALL TESTS PASSED')) {
+                totalFailed = 0; // Override if we see explicit success
             }
         }
+
+        // Use extracted totals if available, otherwise count individual tests
+        suite.passed = totalPassed > 0 ? totalPassed : suite.tests.filter(t => t.status === 'passed').length;
+        suite.failed = totalFailed > 0 ? totalFailed : suite.tests.filter(t => t.status === 'failed').length;
 
         // Update suite status based on results
         if (suite.failed > 0) {
