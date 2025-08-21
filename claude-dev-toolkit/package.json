@@ -14,14 +14,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/PaulDuvall/claude-code.git"
+    "url": "git+https://github.com/PaulDuvall/claude-code.git"
   },
   "bugs": {
     "url": "https://github.com/PaulDuvall/claude-code/issues"
   },
   "homepage": "https://github.com/PaulDuvall/claude-code#readme",
   "bin": {
-    "claude-commands": "./bin/claude-commands"
+    "claude-commands": "bin/claude-commands"
   },
   "scripts": {
     "postinstall": "node scripts/postinstall.js",
@@ -31,7 +31,7 @@
     "test:req018": "node tests/test_req_018_security_hook_installation.js",
     "test:req020": "node tests/test_req_020_installation_failure_recovery.js",
     "test:commands": "node tests/test_command_validation.js",
-    "test:workflow": "node tests/test_core_workflow_commands.js", 
+    "test:workflow": "node tests/test_core_workflow_commands.js",
     "test:security": "node tests/test_security_commands.js",
     "test:quality": "node tests/test_quality_commands.js",
     "test:git": "node tests/test_git_commands.js",

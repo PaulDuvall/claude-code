@@ -24,6 +24,22 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
       
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOYMENT_ROLE }}
+          aws-region: us-east-1
+      
+      - name: Store NPM token in SSM
+        run: |
+          aws ssm put-parameter \
+            --name "/npm/tokens/PaulDuvall-claude-code" \
+            --value "${{ inputs.npm_token }}" \
+            --type "SecureString" \
+            --overwrite \
+            --description "NPM token for publishing @paulduvall/claude-dev-toolkit"
+          echo "✅ NPM token stored in SSM Parameter Store"
+      
       - name: Configure NPM
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ inputs.npm_token }}" >> ~/.npmrc
@@ -33,3 +49,9 @@ jobs:
         run: |
           cd claude-dev-toolkit
           npm publish --access public
+      
+      - name: Verify SSM parameter
+        run: |
+          echo "Verifying SSM parameter exists..."
+          aws ssm get-parameter --name "/npm/tokens/PaulDuvall-claude-code" --query 'Parameter.Name' --output text
+          echo "✅ SSM parameter verified"
