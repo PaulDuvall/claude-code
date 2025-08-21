@@ -27,7 +27,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_DEPLOYMENT_ROLE }}
+          role-to-assume: ${{ vars.AWS_DEPLOYMENT_ROLE }}
           aws-region: us-east-1
       
       - name: Store NPM token in SSM
