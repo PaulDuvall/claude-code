@@ -106,8 +106,9 @@ jobs:
           # Run comprehensive test suite with report generation
           echo "▶️  Running comprehensive test suite with report generation..."
           
-          # Run tests and capture output for report
-          if npm test > test-output.log 2>&1; then
+          # Run tests and capture actual exit code
+          echo "▶️  Running comprehensive test suite..."
+          if npm test 2>&1 | tee test-output.log; then
             echo "✅ All consolidated tests passed"
             TEST_RESULT=0
           else
@@ -115,18 +116,22 @@ jobs:
             TEST_RESULT=1
           fi
           
-          # Generate comprehensive test report
+          # Generate comprehensive test report (don't let this fail the build)
           echo "📊 Generating test report..."
-          node scripts/generate-test-report.js || true
-          
-          # Display test output
-          cat test-output.log
+          if node scripts/generate-test-report.js 2>/dev/null; then
+            echo "✅ Test report generated successfully"
+          else
+            echo "⚠️ Test report generation had issues, but continuing..."
+          fi
           
           cd ..
           
-          # Exit with test result
+          # Exit with actual test result, not report generation result
           if [ $TEST_RESULT -ne 0 ]; then
+            echo "❌ Tests failed - check output above"
             exit 1
+          else
+            echo "✅ All tests passed"
           fi
         else
           echo "❌ No claude-dev-toolkit test directory found"
