@@ -437,7 +437,7 @@ validate_content_security() {
         'eval\s*\$'
         '`.*`'
         '\$\(.*\)'
-        'exec\s+["\']'
+        'exec\s+["\047]'
     )
     
     local pattern
@@ -451,10 +451,10 @@ validate_content_security() {
     
     # Check for potential credential exposure
     local credential_patterns=(
-        'password\s*[:=]\s*["\']?[^"\'[:space:]]+["\']?'
-        'token\s*[:=]\s*["\']?[^"\'[:space:]]+["\']?'
-        'api[_-]?key\s*[:=]\s*["\']?[^"\'[:space:]]+["\']?'
-        'secret\s*[:=]\s*["\']?[^"\'[:space:]]+["\']?'
+        'password\s*[:=]\s*["\047]?[^"\047[:space:]]+["\047]?'
+        'token\s*[:=]\s*["\047]?[^"\047[:space:]]+["\047]?'
+        'api[_-]?key\s*[:=]\s*["\047]?[^"\047[:space:]]+["\047]?'
+        'secret\s*[:=]\s*["\047]?[^"\047[:space:]]+["\047]?'
     )
     
     for pattern in "${credential_patterns[@]}"; do
@@ -488,7 +488,7 @@ validate_all_subagents() {
         return $EXIT_GENERAL_ERROR
     fi
     
-    while IFS= read -r -d '' file; do
+    find "$directory" -name "*$SUBAGENT_FILE_EXTENSION" -type f 2>/dev/null | while read -r file; do
         ((total_count++))
         local filename=$(basename "$file")
         
@@ -501,7 +501,7 @@ validate_all_subagents() {
             validation_results+=("FAIL: $filename")
             log_debug "Validation failed: $filename"
         fi
-    done < <(find "$directory" -name "*$SUBAGENT_FILE_EXTENSION" -type f -print0 2>/dev/null)
+    done
     
     # Output results
     log_info "Validation Summary:"
@@ -554,7 +554,7 @@ generate_text_validation_report() {
     
     local total=0 passed=0 failed=0
     
-    while IFS= read -r -d '' file; do
+    find "$directory" -name "*$SUBAGENT_FILE_EXTENSION" -type f 2>/dev/null | while read -r file; do
         ((total++))
         local filename=$(basename "$file")
         local name=$(basename "$file" "$SUBAGENT_FILE_EXTENSION")
@@ -572,7 +572,7 @@ generate_text_validation_report() {
             validate_subagent_file "$file" "strict" 2>&1 | sed "s/^/  Error: /"
         fi
         echo ""
-    done < <(find "$directory" -name "*$SUBAGENT_FILE_EXTENSION" -type f -print0 2>/dev/null)
+    done
     
     echo "Summary:"
     echo "  Total: $total"
