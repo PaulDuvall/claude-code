@@ -19,16 +19,59 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Initialize Workflow Report
+        run: |
+          echo "📋 Initializing NPM Publish Report..."
+          mkdir -p workflow-reports
+          
+          # Create report header
+          cat > workflow-reports/npm-publish-report.md << 'EOF'
+          # NPM Publish Workflow Report
+          
+          ## Workflow Information
+          - **Run ID**: ${{ github.run_id }}
+          - **Run Number**: ${{ github.run_number }}
+          - **Actor**: ${{ github.actor }}
+          - **Event**: ${{ github.event_name }}
+          - **Repository**: ${{ github.repository }}
+          - **Branch**: ${{ github.ref_name }}
+          - **Commit SHA**: ${{ github.sha }}
+          - **Timestamp**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          - **Runner OS**: ${{ runner.os }}
+          
+          ## Workflow Steps
+          
+          EOF
+          
+          echo "✅ Report initialized" >> workflow-reports/npm-publish-report.md
+      
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
+      
+      - name: Report Node.js Setup
+        run: |
+          echo "" >> workflow-reports/npm-publish-report.md
+          echo "### 🟢 Node.js Setup" >> workflow-reports/npm-publish-report.md
+          echo "- **Node Version**: $(node --version)" >> workflow-reports/npm-publish-report.md
+          echo "- **NPM Version**: $(npm --version)" >> workflow-reports/npm-publish-report.md
+          echo "- **Registry**: $(npm config get registry)" >> workflow-reports/npm-publish-report.md
+          echo "- **Status**: ✅ Completed successfully" >> workflow-reports/npm-publish-report.md
       
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.AWS_DEPLOYMENT_ROLE }}
           aws-region: us-east-1
+      
+      - name: Report AWS Setup
+        run: |
+          echo "" >> workflow-reports/npm-publish-report.md
+          echo "### 🔑 AWS Credentials Setup" >> workflow-reports/npm-publish-report.md
+          echo "- **AWS Region**: us-east-1" >> workflow-reports/npm-publish-report.md
+          echo "- **Role**: ${{ vars.AWS_DEPLOYMENT_ROLE }}" >> workflow-reports/npm-publish-report.md
+          echo "- **Status**: ✅ AWS credentials configured" >> workflow-reports/npm-publish-report.md
       
       - name: Retrieve or Store NPM Token
         id: npm-token
@@ -63,17 +106,50 @@ jobs:
             fi
           fi
       
+      - name: Report NPM Token Retrieval
+        run: |
+          echo "" >> workflow-reports/npm-publish-report.md
+          echo "### 🔐 NPM Token Management" >> workflow-reports/npm-publish-report.md
+          if [ -z "${{ inputs.npm_token }}" ]; then
+            echo "- **Source**: SSM Parameter Store" >> workflow-reports/npm-publish-report.md
+          else
+            echo "- **Source**: Workflow Input" >> workflow-reports/npm-publish-report.md
+          fi
+          echo "- **Parameter**: /npm/tokens/PaulDuvall-claude-code" >> workflow-reports/npm-publish-report.md
+          echo "- **Status**: ✅ NPM token retrieved successfully" >> workflow-reports/npm-publish-report.md
+      
       - name: Configure NPM
         run: |
           npm config set //registry.npmjs.org/:_authToken=${{ steps.npm-token.outputs.token }}
           echo "::add-mask::${{ steps.npm-token.outputs.token }}"
+      
+      - name: Report NPM Configuration
+        run: |
+          echo "" >> workflow-reports/npm-publish-report.md
+          echo "### ⚙️ NPM Configuration" >> workflow-reports/npm-publish-report.md
+          echo "- **Registry**: https://registry.npmjs.org" >> workflow-reports/npm-publish-report.md
+          echo "- **Auth Token**: [MASKED]" >> workflow-reports/npm-publish-report.md
+          echo "- **Status**: ✅ NPM configured for publishing" >> workflow-reports/npm-publish-report.md
           
       - name: Verify NPM Authentication
         run: |
           echo "Verifying NPM authentication..."
-          npm whoami 2>/dev/null || echo "⚠️ Warning: Could not verify authentication"
+          NPM_USER=$(npm whoami 2>/dev/null || echo "unknown")
           echo "Registry config:"
           npm config get registry
+      
+      - name: Report NPM Authentication
+        run: |
+          echo "" >> workflow-reports/npm-publish-report.md
+          echo "### 🔍 NPM Authentication Verification" >> workflow-reports/npm-publish-report.md
+          NPM_USER=$(npm whoami 2>/dev/null || echo "unknown")
+          if [ "$NPM_USER" != "unknown" ]; then
+            echo "- **Authenticated User**: $NPM_USER" >> workflow-reports/npm-publish-report.md
+            echo "- **Status**: ✅ Authentication verified" >> workflow-reports/npm-publish-report.md
+          else
+            echo "- **Status**: ⚠️ Could not verify authentication" >> workflow-reports/npm-publish-report.md
+          fi
+          echo "- **Registry**: $(npm config get registry)" >> workflow-reports/npm-publish-report.md
       
       - name: Publish
         env:
@@ -84,6 +160,11 @@ jobs:
           echo "Current directory: $(pwd)"
           echo "Package name from package.json:"
           grep '"name"' package.json
+          
+          # Capture package info for reporting
+          PACKAGE_NAME=$(grep '"name"' package.json | sed 's/.*"name":\s*"\([^"]*\)".*/\1/')
+          PACKAGE_VERSION=$(grep '"version"' package.json | sed 's/.*"version":\s*"\([^"]*\)".*/\1/')
+          
           npm publish --access public --verbose 2>&1 || {
             echo "❌ Publish failed. Common causes:"
             echo "  1. Token doesn't have publish permissions"
@@ -91,6 +172,21 @@ jobs:
             echo "  3. Network/registry issues"
             exit 1
           }
+      
+      - name: Report Package Publishing
+        run: |
+          cd claude-dev-toolkit
+          PACKAGE_NAME=$(grep '"name"' package.json | sed 's/.*"name":\s*"\([^"]*\)".*/\1/')
+          PACKAGE_VERSION=$(grep '"version"' package.json | sed 's/.*"version":\s*"\([^"]*\)".*/\1/')
+          
+          echo "" >> ../workflow-reports/npm-publish-report.md
+          echo "### 📦 Package Publishing" >> ../workflow-reports/npm-publish-report.md
+          echo "- **Package Name**: $PACKAGE_NAME" >> ../workflow-reports/npm-publish-report.md
+          echo "- **Version**: $PACKAGE_VERSION" >> ../workflow-reports/npm-publish-report.md
+          echo "- **Access**: public" >> ../workflow-reports/npm-publish-report.md
+          echo "- **Registry**: https://registry.npmjs.org" >> ../workflow-reports/npm-publish-report.md
+          echo "- **Status**: ✅ Package published successfully" >> ../workflow-reports/npm-publish-report.md
+          echo "- **NPM URL**: https://www.npmjs.com/package/$PACKAGE_NAME" >> ../workflow-reports/npm-publish-report.md
       
       - name: Verify SSM parameter (Optional)
         continue-on-error: true
@@ -102,3 +198,33 @@ jobs:
             echo "⚠️ SSM parameter not accessible (insufficient permissions or not created)"
             echo "To enable SSM access, add ssm:GetParameter permission to your IAM role"
           fi
+      
+      - name: Report SSM Verification
+        continue-on-error: true
+        run: |
+          echo "" >> workflow-reports/npm-publish-report.md
+          echo "### 🔒 SSM Parameter Verification" >> workflow-reports/npm-publish-report.md
+          if aws ssm get-parameter --name "/npm/tokens/PaulDuvall-claude-code" --query 'Parameter.Name' --output text 2>/dev/null; then
+            echo "- **Parameter**: /npm/tokens/PaulDuvall-claude-code" >> workflow-reports/npm-publish-report.md
+            echo "- **Status**: ✅ SSM parameter accessible" >> workflow-reports/npm-publish-report.md
+          else
+            echo "- **Parameter**: /npm/tokens/PaulDuvall-claude-code" >> workflow-reports/npm-publish-report.md
+            echo "- **Status**: ⚠️ SSM parameter not accessible" >> workflow-reports/npm-publish-report.md
+          fi
+      
+      - name: Finalize Workflow Report
+        run: |
+          echo "" >> workflow-reports/npm-publish-report.md
+          echo "### 🎉 Workflow Completion" >> workflow-reports/npm-publish-report.md
+          echo "- **Completion Time**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> workflow-reports/npm-publish-report.md
+          echo "- **Overall Status**: ✅ NPM publish workflow completed successfully" >> workflow-reports/npm-publish-report.md
+          echo "" >> workflow-reports/npm-publish-report.md
+          echo "---" >> workflow-reports/npm-publish-report.md
+          echo "*Report generated automatically by GitHub Actions workflow*" >> workflow-reports/npm-publish-report.md
+      
+      - name: Upload Workflow Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-publish-report
+          path: workflow-reports/npm-publish-report.md
+          retention-days: 30
