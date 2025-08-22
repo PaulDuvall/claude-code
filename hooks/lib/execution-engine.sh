@@ -352,16 +352,34 @@ process_execution_results() {
 check_for_blocking_conditions() {
     local output_content="$1"
     
-    # Look for blocking keywords in output
-    local blocking_patterns=(
-        "BLOCK"
-        "SECURITY VIOLATION"
-        "CRITICAL ERROR"
-        "STOP EXECUTION"
-        "ABORT"
+    # First check for positive/safe patterns - these override blocking
+    local safe_patterns=(
+        "Operation appears safe to proceed"
+        "Continue with planned action"
+        "No security violations detected" 
+        "Status: Executed successfully"
+        "safe to proceed"
+        "continue with"
     )
     
     local pattern
+    for pattern in "${safe_patterns[@]}"; do
+        if echo "$output_content" | grep -qi "$pattern"; then
+            log_debug "Safe operation pattern found: $pattern"
+            return $EXIT_GENERAL_ERROR  # No blocking condition - safe to proceed
+        fi
+    done
+    
+    # Look for explicit blocking directives only
+    local blocking_patterns=(
+        "OPERATION MUST BE BLOCKED"
+        "SECURITY VIOLATION DETECTED"
+        "CRITICAL ERROR - STOP"
+        "STOP EXECUTION IMMEDIATELY"
+        "ABORT OPERATION"
+        "BLOCK THIS OPERATION"
+    )
+    
     for pattern in "${blocking_patterns[@]}"; do
         if echo "$output_content" | grep -qi "$pattern"; then
             log_debug "Blocking pattern found: $pattern"
@@ -369,6 +387,8 @@ check_for_blocking_conditions() {
         fi
     done
     
+    # Default: if no explicit safe or blocking patterns, allow operation
+    log_debug "No explicit blocking conditions found, allowing operation"
     return $EXIT_GENERAL_ERROR  # No blocking condition found
 }
 
