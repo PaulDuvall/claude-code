@@ -145,7 +145,7 @@ function getAvailableTemplates(templatesDir) {
                         id: path.basename(file, '.json'),
                         name: file,
                         path: templatePath,
-                        description: data['// Description'] || `${file} template`,
+                        description: getTemplateDescription(file, data),
                         features: Object.keys(data).filter(key => !key.startsWith('//')).length
                     });
                 } catch (error) {
@@ -161,6 +161,184 @@ function getAvailableTemplates(templatesDir) {
     }
 }
 
+/**
+ * Get human-readable description for a template
+ * @param {string} filename - Template filename
+ * @param {Object} data - Parsed template data
+ * @returns {string} - Human-readable description
+ */
+function getTemplateDescription(filename, data) {
+    // Check for explicit description in template
+    if (data['// Description']) {
+        return data['// Description'];
+    }
+    
+    // Generate description based on filename
+    const basename = path.basename(filename, '.json');
+    switch (basename) {
+        case 'basic-settings':
+            return 'Minimal configuration for getting started with Claude Code';
+        case 'comprehensive-settings':
+            return 'Full-featured configuration with all available options';
+        case 'security-focused-settings':
+            return 'Security-enhanced configuration with additional protections';
+        default:
+            return `Configuration template: ${basename}`;
+    }
+}
+
+/**
+ * GREEN PHASE: Config Command CLI Handler
+ * Implements claude-commands config feature requirements
+ */
+class ConfigManager {
+    constructor() {
+        this.templatesDir = path.join(__dirname, '..', 'templates');
+        this.claudeDir = path.join(os.homedir(), '.claude');
+        this.settingsPath = path.join(this.claudeDir, 'settings.json');
+    }
+
+    // REQ-CONFIG-001: List Templates
+    listTemplates() {
+        console.log('📋 Available Configuration Templates:\n');
+        
+        try {
+            if (!fs.existsSync(this.templatesDir)) {
+                console.log('❌ Templates directory not found');
+                return;
+            }
+
+            const templates = getAvailableTemplates(this.templatesDir);
+
+            if (templates.length === 0) {
+                console.log('No configuration templates found');
+                return;
+            }
+
+            templates.forEach(template => {
+                console.log(`  📄 ${template.name}`);
+                console.log(`     ${template.description}`);
+            });
+
+            console.log(`\n💡 Usage: claude-commands config --template <name>`);
+        } catch (error) {
+            console.error('❌ Error listing templates:', error.message);
+        }
+    }
+
+    // REQ-CONFIG-002: Apply Template
+    applyTemplate(templateName) {
+        try {
+            // Validate template exists
+            const templatePath = path.join(this.templatesDir, templateName);
+            if (!fs.existsSync(templatePath)) {
+                this.handleTemplateNotFound(templateName);
+                return false;
+            }
+
+            // Ensure Claude directory exists
+            this.ensureClaudeDirectory();
+
+            // Backup existing settings if present
+            this.backupExistingSettings();
+
+            // Apply template using existing function
+            const success = applyConfigurationTemplate(templatePath, this.settingsPath);
+            
+            if (success) {
+                console.log(`✅ Successfully applied template '${templateName}'`);
+                console.log(`📝 Configuration saved to: ${this.settingsPath}`);
+                return true;
+            } else {
+                console.error(`❌ Failed to apply template '${templateName}'`);
+                return false;
+            }
+        } catch (error) {
+            console.error('❌ Error applying template:', error.message);
+            return false;
+        }
+    }
+
+    // Helper method for template not found error
+    handleTemplateNotFound(templateName) {
+        console.error(`❌ Template '${templateName}' not found.`);
+        this.listTemplates();
+    }
+
+    // Helper method to ensure Claude directory exists
+    ensureClaudeDirectory() {
+        if (!fs.existsSync(this.claudeDir)) {
+            fs.mkdirSync(this.claudeDir, { recursive: true });
+            console.log(`📁 Created directory: ${this.claudeDir}`);
+        }
+    }
+
+    // Helper method to backup existing settings
+    backupExistingSettings() {
+        if (fs.existsSync(this.settingsPath)) {
+            const backupPath = this.createBackup();
+            console.log(`💾 Backed up existing settings to: ${backupPath}`);
+        }
+    }
+
+    // REQ-CONFIG-002: Backup functionality
+    createBackup() {
+        const timestamp = new Date().toISOString()
+            .replace(/[:.]/g, '-')
+            .replace('T', '-')
+            .split('.')[0]; // YYYY-MM-DD-HHMMSS format
+        
+        const backupPath = `${this.settingsPath}.backup.${timestamp}`;
+        fs.copyFileSync(this.settingsPath, backupPath);
+        return backupPath;
+    }
+
+    // REQ-CONFIG-003: Show Help
+    showHelp() {
+        console.log('🔧 Claude Commands Config Tool\n');
+        console.log('Usage:');
+        console.log('  claude-commands config [options]\n');
+        console.log('Options:');
+        console.log('  -l, --list                List available configuration templates');
+        console.log('  -t, --template <name>     Apply configuration template');
+        console.log('  -h, --help                Show this help message\n');
+        console.log('Examples:');
+        console.log('  claude-commands config --list                          # Show available templates');
+        console.log('  claude-commands config --template basic-settings.json  # Apply basic template');
+        console.log('  claude-commands config --help                          # Show this help\n');
+        console.log('Description:');
+        console.log('  Manage Claude Code configuration templates. Templates are applied');
+        console.log('  to ~/.claude/settings.json with automatic backup of existing settings.');
+    }
+
+    // Main command handler
+    handleCommand(options) {
+        // REQ-CONFIG-003: Show help when no options or explicit help
+        if (!options.list && !options.template) {
+            this.showHelp();
+            return;
+        }
+
+        // REQ-CONFIG-001: List templates
+        if (options.list) {
+            this.listTemplates();
+            return;
+        }
+
+        // REQ-CONFIG-002: Apply template
+        if (options.template) {
+            const success = this.applyTemplate(options.template);
+            if (!success) {
+                process.exit(1);
+            }
+            return;
+        }
+    }
+}
+
+// Create config manager instance
+const configManager = new ConfigManager();
+
 module.exports = {
     getConfigPath: () => {
         return path.join(os.homedir(), '.claude', 'commands');
@@ -172,11 +350,16 @@ module.exports = {
         colorOutput: true
     },
 
-    // REQ-009 Implementation
+    // REQ-009 Implementation (existing)
     applyConfigurationTemplate,
     getAvailableTemplates,
     
     // Utility functions (exposed for testing)
     parseJSONC,
-    deepMerge
+    deepMerge,
+    getTemplateDescription,
+
+    // CLI command handler (new)
+    handleCommand: (options) => configManager.handleCommand(options),
+    ConfigManager
 };

@@ -41,6 +41,7 @@
     "test:validation": "node tests/test_validation_system.js",
     "test:subagents": "node tests/test_subagents_command.js",
     "test:subagents-async": "node tests/test_subagents_async.js",
+    "test:config": "node tests/test_config_command.js",
     "test:install": "scripts/publishing/test-package-install.sh",
     "test:manual": "scripts/publishing/manual-test-suite.sh",
     "publish:local": "scripts/publishing/setup-local-registry.sh",

@@ -139,4 +139,14 @@ program
         subagents.handleCommand(options);
     });
 
+program
+    .command('config')
+    .description('Manage Claude Code configuration templates')
+    .option('-l, --list', 'List available configuration templates')
+    .option('-t, --template <name>', 'Apply configuration template')
+    .action((options) => {
+        const config = require('../lib/config');
+        config.handleCommand(options);
+    });
+
 program.parse(process.argv);
