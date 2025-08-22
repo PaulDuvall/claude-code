@@ -107,7 +107,7 @@ claude-commands config --template security
 ## Package Details
 
 - **Package Name:** `@paulduvall/claude-dev-toolkit`
-- **Version:** 0.0.1-alpha.1
+- **Version:** 0.0.1-alpha.2
 - **Registry:** https://registry.npmjs.org
 - **License:** MIT
 - **Author:** Paul Duvall

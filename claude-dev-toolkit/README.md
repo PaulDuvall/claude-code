@@ -271,7 +271,7 @@ npm test
 - ✅ **Subagents Support**: Multi-agent coordination capabilities
 - ✅ **Enhanced Documentation**: Updated installation and usage instructions
 
-### Version 0.0.1-alpha.1
+### Version 0.0.1-alpha.2
 - ✅ **Symlink Consolidation**: Eliminated duplicate directories
 - ✅ **JavaScript Migration**: Complete test suite migration from Python
 - ✅ **Enhanced Templates**: Fixed configuration template issues

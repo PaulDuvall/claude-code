@@ -10,7 +10,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Test variables
-PACKAGE_FILE="claude-dev-toolkit-0.0.1-alpha.1.tgz"
+PACKAGE_FILE="claude-dev-toolkit-0.0.1-alpha.2.tgz"
 TEST_DIR="/tmp/claude-package-test-$$"
 
 # Cleanup function

@@ -320,9 +320,9 @@ class HookInstaller {
      */
     _getPackageVersion() {
         try {
-            return require('../package.json').version || '0.0.1-alpha.1';
+            return require('../package.json').version || '0.0.1-alpha.2';
         } catch (error) {
-            return '0.0.1-alpha.1';
+            return '0.0.1-alpha.2';
         }
     }
 }
