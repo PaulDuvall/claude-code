@@ -28,11 +28,107 @@ jobs:
         chmod +x verify-setup.sh
         chmod +x scripts/testing/test-debug-subagent.py
         chmod +x scripts/deploy-subagents.sh
+        chmod +x hooks/*.sh
+        chmod +x tests/*.sh
         
     - name: Run debug sub-agent tests
       run: |
         echo "🧪 Running Debug Sub-Agent Tests"
         python3 scripts/testing/test-debug-subagent.py || echo "⚠️ Debug tests skipped (Python dependency)"
+        
+    - name: Run hybrid hook architecture tests
+      run: |
+        echo "🔗 Running Hybrid Hook Architecture Tests"
+        echo "Testing lightweight trigger scripts and modular libraries"
+        
+        # Test hook lib modules syntax
+        echo "📋 Testing hook library modules..."
+        for lib in hooks/lib/*.sh; do
+          if [ -f "$lib" ]; then
+            echo "  Checking $(basename "$lib")..."
+            if bash -n "$lib"; then
+              echo "  ✅ $(basename "$lib") syntax valid"
+            else
+              echo "  ❌ $(basename "$lib") syntax error"
+              exit 1
+            fi
+          fi
+        done
+        
+        # Test trigger scripts syntax
+        echo "📋 Testing trigger scripts..."
+        trigger_scripts=("pre-write-security.sh" "pre-commit-quality.sh" "on-error-debug.sh" "subagent-trigger-simple.sh")
+        for script in "${trigger_scripts[@]}"; do
+          if [ -f "hooks/$script" ]; then
+            echo "  Checking $script..."
+            if bash -n "hooks/$script"; then
+              echo "  ✅ $script syntax valid"
+            else
+              echo "  ❌ $script syntax error"
+              exit 1
+            fi
+          else
+            echo "  ❌ $script missing"
+            exit 1
+          fi
+        done
+        
+        # Test trigger script help functionality
+        echo "📋 Testing trigger script help systems..."
+        if hooks/subagent-trigger-simple.sh --help > /dev/null 2>&1; then
+          echo "  ✅ subagent-trigger-simple.sh help works"
+        else
+          echo "  ❌ subagent-trigger-simple.sh help failed"
+          exit 1
+        fi
+        
+        # Test configuration templates exist
+        echo "📋 Testing configuration templates..."
+        config_templates=("hybrid-hook-config.yaml" "subagent-hooks.yaml")
+        for template in "${config_templates[@]}"; do
+          if [ -f "templates/$template" ]; then
+            echo "  ✅ $template exists"
+          else
+            echo "  ❌ $template missing"
+            exit 1
+          fi
+        done
+        
+        # Test documentation exists
+        echo "📋 Testing hybrid architecture documentation..."
+        if [ -f "docs/hybrid-hook-architecture.md" ]; then
+          echo "  ✅ hybrid-hook-architecture.md exists"
+        else
+          echo "  ❌ hybrid-hook-architecture.md missing"
+          exit 1
+        fi
+        
+        echo "✅ Hybrid hook architecture validation completed"
+        
+    - name: Run subagent hook integration tests
+      run: |
+        echo "🔗 Running Subagent Hook Integration Tests"
+        echo "Full integration test suite for event-driven subagent system"
+        
+        # Run the comprehensive integration test suite
+        if [ -f "tests/test_subagent_hook_integration.sh" ]; then
+          echo "▶️  Running comprehensive hook integration tests..."
+          
+          # Set CI environment to avoid interactive prompts
+          export CI=true
+          export CLAUDE_HOOK_TRIGGER="ci_test"
+          
+          # Run the test suite
+          if ./tests/test_subagent_hook_integration.sh; then
+            echo "✅ Subagent hook integration tests: PASSED"
+          else
+            echo "❌ Subagent hook integration tests: FAILED"
+            exit 1
+          fi
+        else
+          echo "❌ Integration test suite not found"
+          exit 1
+        fi
         
     - name: Run command validation
       run: |
@@ -62,7 +158,7 @@ jobs:
         done
         
         # Test directory structure
-        required_dirs=("slash-commands/active" "templates" "specs" "hooks")
+        required_dirs=("slash-commands/active" "templates" "specs" "hooks" "hooks/lib" "tests" "docs")
         for dir in "${required_dirs[@]}"; do
           if [ -d "$dir" ]; then
             echo "  ✅ Directory $dir exists"
@@ -73,7 +169,7 @@ jobs:
         done
         
         # Test that key files exist
-        key_files=("templates/basic-settings.json" "hooks/prevent-credential-exposure.sh" "specs/command-specifications.md")
+        key_files=("templates/basic-settings.json" "hooks/prevent-credential-exposure.sh" "specs/command-specifications.md" "hooks/pre-write-security.sh" "hooks/lib/config-constants.sh" "tests/test_subagent_hook_integration.sh" "docs/hybrid-hook-architecture.md")
         for file in "${key_files[@]}"; do
           if [ -f "$file" ]; then
             echo "  ✅ Key file $file exists"

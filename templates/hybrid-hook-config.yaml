@@ -1,0 +1,133 @@
+# Hybrid Hook Configuration for Claude Code
+# 
+# This configuration demonstrates the hybrid approach: lightweight trigger scripts
+# that delegate complex logic to AI subagents. This approach provides the best
+# balance of immediate response and intelligent analysis.
+#
+# Place relevant sections in your Claude Code settings.json file.
+
+##################################
+# Claude Code Settings.json Configuration
+##################################
+
+# Copy sections below into your ~/.claude/settings.json file:
+
+hooks_configuration:
+  PreToolUse:
+    - matcher: "Edit|Write|MultiEdit"
+      hooks:
+        - command: "~/.claude/hooks/pre-write-security.sh"
+          blocking: true
+          description: "Security analysis via security-auditor subagent"
+          timeout: 10000
+        
+  PostToolUse:
+    - matcher: "Edit|Write|MultiEdit" 
+      hooks:
+        - command: "~/.claude/hooks/file-logger.sh"
+          blocking: false
+          description: "Log file modifications"
+
+  OnError:
+    - hooks:
+        - command: "~/.claude/hooks/on-error-debug.sh"
+          blocking: false
+          description: "Automatic debugging via debug-specialist subagent"
+          
+  custom:
+    pre-commit:
+      command: "~/.claude/hooks/pre-commit-quality.sh"
+      description: "Quality checks via style-enforcer subagent"
+      blocking: true
+      
+    manual-security:
+      command: "~/.claude/hooks/subagent-trigger-simple.sh security-auditor manual"
+      description: "Manual security audit"
+
+##################################
+# Trigger Script to Subagent Mapping
+##################################
+# Reference for which trigger scripts delegate to which subagents:
+
+trigger_mappings:
+  pre-write-security.sh:
+    delegates_to: "security-auditor"
+    purpose: "Scan for security vulnerabilities before file modifications"
+    context_includes: ["tool", "file", "user", "timestamp"]
+    
+  pre-commit-quality.sh:  
+    delegates_to: "style-enforcer"
+    purpose: "Code quality validation before git commits"
+    context_includes: ["staged_files", "git_info", "file_types"]
+    
+  on-error-debug.sh:
+    delegates_to: "debug-specialist" 
+    purpose: "Automatic debugging assistance when errors occur"
+    context_includes: ["error_info", "system_context", "diagnostics"]
+    
+  subagent-trigger-simple.sh:
+    delegates_to: "any (specified as argument)"
+    purpose: "General-purpose lightweight subagent trigger"
+    context_includes: ["subagent", "event", "environment", "project"]
+
+##################################  
+# Available Subagents for Delegation
+##################################
+# These subagents can be invoked by the trigger scripts:
+
+available_subagents:
+  security-auditor:
+    specialization: "Security vulnerability detection and prevention"
+    best_for: ["credential_exposure", "injection_attacks", "access_control"]
+    trigger_events: ["pre_write", "pre_commit", "manual"]
+    
+  style-enforcer:
+    specialization: "Code quality, formatting, and style consistency"  
+    best_for: ["formatting", "imports", "documentation", "best_practices"]
+    trigger_events: ["pre_commit", "post_write", "manual"]
+    
+  debug-specialist:
+    specialization: "Error analysis and troubleshooting"
+    best_for: ["error_analysis", "root_cause", "performance_issues"]
+    trigger_events: ["on_error", "manual"]
+    
+  test-writer:
+    specialization: "Test case generation and validation"
+    best_for: ["test_coverage", "test_generation", "mocking"]
+    trigger_events: ["post_write", "pre_test", "manual"]
+
+##################################
+# Usage Examples  
+##################################
+
+# Manual subagent invocation:
+manual_usage:
+  - "~/.claude/hooks/subagent-trigger-simple.sh security-auditor pre_write"
+  - "~/.claude/hooks/subagent-trigger-simple.sh style-enforcer pre_commit 'Check Python files'"
+  - "~/.claude/hooks/subagent-trigger-simple.sh debug-specialist on_error 'ImportError'"
+
+# Event-driven automatic invocation:
+automatic_usage:
+  - "Edit/Write operations automatically trigger security analysis"  
+  - "Git operations can trigger quality checks"
+  - "Errors automatically engage debugging assistance"
+
+##################################
+# Migration from Complex to Hybrid
+##################################
+
+migration_benefits:
+  before: "253-line complex bash orchestration script"
+  after: "4 lightweight trigger scripts (30-100 lines each)"
+  improvements:
+    - "Simplified maintenance and debugging"
+    - "AI-driven complex logic instead of bash complexity"
+    - "Better error handling and user feedback"
+    - "Modular trigger scripts for specific use cases"
+    - "Preserved shared utilities in hooks/lib/"
+
+# To migrate:
+# 1. Replace complex hooks with appropriate trigger scripts
+# 2. Update Claude Code settings.json with new hook commands  
+# 3. Test triggers with manual invocation
+# 4. Verify subagent delegation works correctly

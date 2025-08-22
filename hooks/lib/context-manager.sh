@@ -17,7 +17,7 @@ source "$SCRIPT_DIR/error-handler.sh"
 
 # Global variables for context management (compatible with older bash versions)
 CONTEXT_FILE=""
-CONTEXT_TIMEOUT="$CONTEXT_TIMEOUT"
+# CONTEXT_TIMEOUT is defined in config-constants.sh as readonly
 CONTEXT_DATA=""
 
 ##################################
@@ -537,8 +537,7 @@ dump_context() {
 initialize_context_manager() {
     log_debug "Context manager module initialized"
     
-    # Set default context timeout
-    CONTEXT_TIMEOUT="${CONTEXT_TIMEOUT:-$DEFAULT_TIMEOUT}"
+    # CONTEXT_TIMEOUT is already set in config-constants.sh as readonly
     
     # Ensure temp directory is available
     if [[ ! -d "/tmp" ]]; then

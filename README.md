@@ -189,38 +189,54 @@ Most users authenticate via browser (no API key needed). See [Claude Code docs](
 - **Multi-Language Support**: Python, JavaScript, Java, Go, and more
 - **Performance Debugging**: Memory leaks, bottlenecks, optimization
 
-### 🔒 Event-Driven Subagent System
-**NEW**: Automated subagent execution based on Claude Code events:
+### 🔒 Hybrid Hook Architecture
+**NEW**: Lightweight trigger scripts that delegate to AI subagents:
 
 ```bash
-# Configure subagents to run automatically on specific events
-claude-commands subagents --configure
+# Automatic security analysis before file changes
+CLAUDE_TOOL="Edit" ./hooks/pre-write-security.sh
+
+# Quality checks before git commits  
+./hooks/pre-commit-quality.sh
+
+# Automatic debugging assistance on errors
+./hooks/on-error-debug.sh "ImportError: No module named 'requests'"
 ```
 
-**Event-Driven Automation:**
-- **Pre-Write Events**: Security scanning before code changes
-- **Pre-Commit Events**: Quality checks before git commits  
-- **Error Events**: Automatic debugging specialist engagement
-- **Custom Events**: Configure any workflow trigger
+**Hybrid Approach Benefits:**
+- **Immediate Response**: Lightweight bash triggers (30-150 lines each)
+- **AI Intelligence**: Complex analysis delegated to specialized subagents
+- **Simplified Maintenance**: Replaced 253-line monolithic script with focused triggers
+- **Clear Delegation**: Structured context passed to appropriate subagents
 
-**Example Hook Configuration:**
-```yaml
-pre_write:
-  - security-auditor    # Scan for vulnerabilities
-  - style-enforcer      # Enforce coding standards
-  
-pre_commit:
-  - security-auditor    # Final security check
-  
-on_error:
-  - debug-specialist    # Auto-engage debugging help
+**Available Trigger Scripts:**
+```bash
+hooks/pre-write-security.sh      # → security-auditor subagent
+hooks/pre-commit-quality.sh      # → style-enforcer subagent  
+hooks/on-error-debug.sh          # → debug-specialist subagent
+hooks/subagent-trigger-simple.sh # → any subagent (flexible)
 ```
 
-**Architecture:**
-- **Modular Design**: 8 specialized modules for maintainability
-- **Security First**: Input validation, credential detection, audit trails
-- **Production Ready**: Timeout handling, error recovery, comprehensive logging
-- **Backward Compatible**: Works with existing Claude Code setups
+**Claude Code Integration:**
+```json
+{
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Edit|Write|MultiEdit",
+      "hooks": [{
+        "command": "~/.claude/hooks/pre-write-security.sh",
+        "blocking": true
+      }]
+    }]
+  }
+}
+```
+
+**Architecture Foundation:**
+- **8 Modular Libraries**: Shared utilities in `hooks/lib/` for consistency
+- **Security First**: Input validation, credential detection, audit trails  
+- **Production Ready**: Error recovery, comprehensive logging, timeout handling
+- **Easy Extension**: Simple patterns for creating domain-specific triggers
 
 ### 📊 Experimental Commands (44 Additional)
 Advanced commands for specialized workflows:
@@ -336,57 +352,81 @@ ls ~/.claude/commands/x*.md  # List installed commands
 - **`slash-commands/active/`** - 13 production-ready commands (deployed by default)
 - **`slash-commands/experiments/`** - 44 experimental/conceptual commands  
 - **`sub-agents/`** - AI specialist subagents with persistent context
-- **`hooks/`** - Event-driven subagent integration system
-  - **`subagent-trigger.sh`** - Main hook script for event-driven execution
-  - **`lib/`** - Modular architecture (8 specialized modules):
+- **`hooks/`** - Hybrid hook architecture with lightweight triggers
+  - **Lightweight Trigger Scripts** (30-150 lines each):
+    - `pre-write-security.sh` - Security analysis → security-auditor subagent
+    - `pre-commit-quality.sh` - Quality checks → style-enforcer subagent
+    - `on-error-debug.sh` - Error analysis → debug-specialist subagent  
+    - `subagent-trigger-simple.sh` - General-purpose subagent trigger
+  - **`lib/`** - Modular foundation (8 specialized modules):
     - `config-constants.sh` - Configuration constants and validation
     - `file-utils.sh` - Secure file operations and path validation  
     - `error-handler.sh` - Standardized error handling and logging
+    - `context-manager.sh` - Context gathering and management
     - `argument-parser.sh` - CLI argument parsing with validation
     - `subagent-discovery.sh` - Subagent discovery and enumeration
     - `subagent-validator.sh` - Comprehensive subagent validation
-    - `context-manager.sh` - Context gathering and management
-    - `execution-engine.sh` - Subagent execution with timeout handling
+    - `execution-engine.sh` - Advanced execution patterns (for complex scenarios)
 - **`templates/`** - Configuration templates for different use cases
   - `subagent-hooks.yaml` - Event mapping configuration template
+  - `hybrid-hook-config.yaml` - Hybrid architecture configuration guide
 - **`tests/`** - Integration test suite for hook system
 - **`specs/`** - Command specifications and validation framework
 - **`docs/`** - Complete documentation including hook integration guide
 
 ## Technical Architecture
 
-### Event-Driven Hook System
-The subagent-hook integration system has been completely refactored from a monolithic script to a modular architecture:
+### Hybrid Hook Architecture
+The hook system has evolved through two major architectural improvements:
 
-**Before Refactoring:**
-- 333-line monolithic script with code smell issues
-- God function antipattern (82-line main function)
-- High cyclomatic complexity (46 conditional statements)
-- Limited error handling and validation
+**Phase 1: Monolithic → Modular (v1.0)**
+- 333-line monolithic script → 8 specialized modules
+- Eliminated god function antipattern and code smells
+- Enhanced CLI, security, and error handling
 
-**After Refactoring:**
-- **8 specialized modules** with single responsibilities
-- **Reduced main function** from 82 to ~50 lines
-- **Enhanced CLI** with `--help`, `--debug`, `--dry-run`, `--timeout` options
-- **Comprehensive security** with input validation and credential detection
-- **Standardized error handling** with proper exit codes and recovery
-- **Backward compatibility** with existing Claude Code configurations
+**Phase 2: Complex → Hybrid (v2.0)**
+- 253-line complex orchestration script → 4 lightweight trigger scripts  
+- Bash complexity → AI-driven intelligence via subagent delegation
+- Heavy orchestration → Simple context gathering and delegation
+
+**Current Hybrid Architecture:**
+- **4 lightweight triggers** (30-150 lines each) replacing complex bash logic
+- **AI delegation** for complex analysis via specialized subagents
+- **Preserved modular foundation** with 8 shared library modules
+- **Immediate response** with intelligent analysis
+- **Simplified maintenance** and easy extensibility
 
 **Key Quality Improvements:**
-- ✅ Eliminated god function and long method code smells  
-- ✅ Added comprehensive input validation and security checks
-- ✅ Implemented proper error handling with standardized logging
-- ✅ Enhanced CLI with argument parsing and validation
-- ✅ Modular design enables independent testing and reuse
-- ✅ Protected against multiple module loading conflicts
+- ✅ **Simplified Architecture**: 253-line complex script → 4 focused triggers (30-150 lines each)
+- ✅ **AI-Driven Logic**: Replaced bash complexity with intelligent subagent delegation  
+- ✅ **Immediate Response**: Lightweight triggers with structured context gathering
+- ✅ **Preserved Foundation**: 8 modular libraries for consistency and reuse
+- ✅ **Enhanced Security**: Comprehensive validation, credential detection, audit trails
+- ✅ **Production Ready**: Error recovery, logging, timeout handling, compatibility
+- ✅ **Easy Extension**: Simple patterns for creating domain-specific triggers
 
 ## Contributing
 
+### Command Development
 1. Create new commands in `slash-commands/active/` or `slash-commands/experiments/`
 2. Validate with `./validate-commands.sh`
 3. Test locally with `./deploy.sh --include yourcommand`
 4. Follow existing patterns and security best practices
-5. **Hook Development**: Extend modular architecture in `hooks/lib/` directory
+
+### Hybrid Hook Development  
+1. **Lightweight Triggers**: Create focused trigger scripts (30-150 lines) following existing patterns
+2. **Use Shared Libraries**: Leverage `hooks/lib/` modules for consistency and security
+3. **AI Delegation**: Structure context and delegate complex logic to appropriate subagents
+4. **Testing**: Support manual testing with environment variables (`CLAUDE_TOOL`, `CLAUDE_FILE`)
+5. **Documentation**: Include usage examples and Claude Code integration patterns
+
+**Example New Trigger**:
+```bash
+# hooks/my-custom-trigger.sh
+source "$(dirname "$0")/lib/config-constants.sh"
+source "$(dirname "$0")/lib/context-manager.sh"
+# Gather context, delegate to subagent, provide clear user guidance
+```
 
 ---
 
