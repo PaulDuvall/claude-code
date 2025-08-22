@@ -1,6 +1,6 @@
 # Claude Dev Toolkit
 
-[![npm version](https://badge.fury.io/js/claude-dev-toolkit.svg)](https://www.npmjs.com/package/claude-dev-toolkit)
+[![npm version](https://badge.fury.io/js/%40paulduvall%2Fclaude-dev-toolkit.svg)](https://www.npmjs.com/package/@paulduvall/claude-dev-toolkit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Test Status](https://img.shields.io/badge/tests-100%25%20passing-brightgreen)
 ![Active Commands](https://img.shields.io/badge/active%20commands-13-blue)
@@ -13,7 +13,7 @@
 
 ```bash
 # Install globally via NPM
-npm install -g claude-dev-toolkit
+npm install -g @paulduvall/claude-dev-toolkit
 
 # Commands are immediately available in Claude Code
 claude
@@ -33,7 +33,7 @@ claude
 
 ### Option 1: Automatic Setup (Recommended)
 ```bash
-npm install -g claude-dev-toolkit
+npm install -g @paulduvall/claude-dev-toolkit
 # Interactive setup wizard runs automatically
 ```
 
@@ -81,6 +81,7 @@ Advanced commands for specialized workflows:
 - **Compliance**: `/xcompliance`, `/xgovernance`, `/xpolicy`
 - **Advanced Security**: `/xred`, `/xrisk`, `/xscan`
 - **Performance**: `/xperformance`, `/xoptimize`
+- **Subagents**: `/xsubagents` - Multi-agent coordination and task delegation
 
 ## 🛠️ CLI Usage
 
@@ -92,29 +93,53 @@ claude-commands install --active       # Install production commands
 claude-commands install --experimental # Install experimental commands
 claude-commands install --all          # Install all commands
 
+# Configuration Management
+claude-commands config --list          # List available templates
+claude-commands config --template <name> # Apply configuration template
+claude-commands config --help          # Show config command help
+
 # In Claude Code
 /xhelp                                 # Show command help
 /xtest                                 # Run intelligent test suite
 /xquality fix                          # Auto-fix code quality issues
 /xsecurity --scan --report            # Comprehensive security scan
 /xgit                                  # Automated git workflow
+/xsubagents --create teamlead          # Create specialized subagent
 ```
 
 ## 🔧 Configuration
+
+### Configuration Management
+
+Use the built-in config command to manage Claude Code settings:
+
+```bash
+# List available configuration templates
+claude-commands config --list
+
+# Apply a specific template
+claude-commands config --template basic-settings.json
+claude-commands config --template security-focused-settings.json  
+claude-commands config --template comprehensive-settings.json
+
+# Show help for config command
+claude-commands config --help
+```
 
 ### Installation Locations
 - **Commands**: `~/.claude/commands/active/` and `~/.claude/commands/experiments/`
 - **Configuration**: `~/.claude/settings.json`
 - **Security Hooks**: `~/.claude/hooks/`
+- **Templates**: Bundled with package installation
 
 ### Configuration Templates
 The package includes three pre-configured templates:
 
 1. **Basic** (`basic-settings.json`): Minimal setup for command functionality
-2. **Security-Focused** (`security-focused-settings.json`): Enhanced security with hooks
+2. **Security-Focused** (`security-focused-settings.json`): Enhanced security with hooks  
 3. **Comprehensive** (`comprehensive-settings.json`): Full feature set with governance
 
-Templates are automatically applied during interactive setup or can be manually copied to `~/.claude/settings.json`.
+Templates are applied via the config command with automatic backup of existing settings.
 
 ## 🧪 Development & Testing
 
@@ -127,6 +152,8 @@ npm test
 npm run test:commands     # Command validation
 npm run test:workflow     # Core workflow tests
 npm run test:security     # Security command tests
+npm run test:config       # Configuration command tests
+npm run test:subagents    # Subagents command tests
 npm run test:req007       # Interactive setup wizard
 npm run test:req009       # Configuration templates
 npm run test:req018       # Security hook installation
@@ -204,6 +231,8 @@ Every command includes built-in help:
 /xtest help         # Show all testing options
 /xquality help      # Show quality check options  
 /xsecurity help     # Show security scanning options
+/xconfig help       # Show configuration options
+/xsubagents help    # Show subagent management options
 ```
 
 ## 🤝 Contributing
@@ -232,6 +261,13 @@ npm test
 - **Security-first development** - only defensive tools allowed
 
 ## 🔄 Recent Updates
+
+### Version 0.0.1-alpha.2
+- ✅ **NPM Scoped Package**: Published as `@paulduvall/claude-dev-toolkit`
+- ✅ **Configuration Command**: Built-in `config` command for template management
+- ✅ **Workflow Reporting**: Comprehensive GitHub Actions reporting
+- ✅ **Subagents Support**: Multi-agent coordination capabilities
+- ✅ **Enhanced Documentation**: Updated installation and usage instructions
 
 ### Version 0.0.1-alpha.1
 - ✅ **Symlink Consolidation**: Eliminated duplicate directories
