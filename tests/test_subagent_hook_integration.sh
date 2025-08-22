@@ -193,7 +193,7 @@ test_context_gathering() {
     
     # Check log for context gathering
     if [[ -f "$LOG_FILE" ]]; then
-        grep -q "Context gathered" "$LOG_FILE"
+        grep -q "Complete context gathering finished" "$LOG_FILE"
     else
         # If log doesn't exist, test passes (hook may not log in test mode)
         return 0

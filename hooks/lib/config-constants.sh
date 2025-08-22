@@ -170,11 +170,11 @@ is_supported_event() {
     
     for supported_event in "${SUPPORTED_EVENTS[@]}"; do
         if [[ "$event" == "$supported_event" ]]; then
-            return $TRUE
+            return 0  # Success - event is supported
         fi
     done
     
-    return $FALSE
+    return 1  # Failure - event is not supported
 }
 
 is_file_modification_tool() {
@@ -183,11 +183,11 @@ is_file_modification_tool() {
     
     for file_tool in "${FILE_MODIFICATION_TOOLS[@]}"; do
         if [[ "$tool" == "$file_tool" ]]; then
-            return $TRUE
+            return 0  # Success - tool is file modification tool
         fi
     done
     
-    return $FALSE
+    return 1  # Failure - tool is not file modification tool
 }
 
 get_timeout_for_event() {
