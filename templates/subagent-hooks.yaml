@@ -1,0 +1,188 @@
+# Claude Code Subagent-Hook Event Mapping Configuration
+# 
+# This file defines which subagents should be automatically invoked
+# during specific Claude Code events. Place this file at:
+# ~/.claude/subagent-hooks.yaml
+#
+# Format:
+#   event_name:
+#     - subagent-name
+#     - another-subagent
+#
+# Available events:
+#   - pre_write: Before any file write/edit operation
+#   - post_write: After successful file write/edit
+#   - pre_commit: Before git commit operations
+#   - post_commit: After successful git commit
+#   - pre_test: Before running tests
+#   - post_test: After test execution
+#   - on_error: When an error occurs
+#   - security_check: Security validation events
+#   - code_review: Code review triggers
+#   - deployment: Deployment-related events
+
+# File modification events
+pre_write:
+  - security-auditor        # Check for security issues before writing
+  - style-enforcer          # Ensure code style compliance
+  - license-compliance-guardian  # Verify license headers
+
+post_write:
+  - documentation-curator   # Update docs after code changes
+  - test-writer            # Generate/update tests for new code
+
+# Git workflow events  
+pre_commit:
+  - trunk-guardian         # Ensure branch policies are followed
+  - security-auditor       # Final security check before commit
+  - contract-tester        # Verify API contracts maintained
+
+post_commit:
+  - audit-trail-verifier   # Log changes for audit trail
+  - change-scoper         # Analyze change impact
+
+# Testing events
+pre_test:
+  - test-writer           # Ensure adequate test coverage
+  - environment-guardian  # Validate test environment
+
+post_test:
+  - performance-guardian  # Analyze performance results
+  - observability-engineer # Check monitoring coverage
+
+on_test_failure:
+  - debug-specialist      # Diagnose test failures
+  - test-writer          # Suggest test fixes
+
+# Build and deployment events
+pre_build:
+  - dependency-steward    # Check dependency versions
+  - sbom-provenance      # Generate software bill of materials
+
+pre_deployment:
+  - deployment-strategist # Plan deployment approach
+  - environment-guardian  # Validate target environment
+  - rollback-first-responder # Prepare rollback plan
+
+post_deployment:
+  - observability-engineer # Verify monitoring active
+  - performance-guardian   # Check performance metrics
+
+# Error handling events
+on_error:
+  - debug-specialist      # Analyze and diagnose errors
+  - rollback-first-responder # Prepare recovery plan
+
+on_security_violation:
+  - security-auditor      # Deep security analysis
+  - audit-trail-verifier  # Document violation
+
+# Code review events
+code_review:
+  - code-review-assistant # Automated review suggestions
+  - requirements-reviewer # Check requirements alignment
+  - api-guardian         # Verify API compatibility
+
+# Continuous improvement events
+daily_analysis:
+  - data-steward         # Data quality check
+  - performance-guardian # Performance trending
+  - dependency-steward   # Dependency updates
+
+weekly_review:
+  - product-owner-proxy  # Business alignment check
+  - workflow-coordinator # Process optimization
+
+# CI/CD pipeline events
+pipeline_failure:
+  - ci-pipeline-curator  # Diagnose pipeline issues
+  - debug-specialist     # Investigate failures
+
+pipeline_success:
+  - continuous-release-orchestrator # Plan next release
+  - audit-trail-verifier # Document successful build
+
+# Custom event examples (add your own)
+custom_security_scan:
+  - security-auditor
+  - license-compliance-guardian
+  - sbom-provenance
+
+custom_performance_check:
+  - performance-guardian
+  - observability-engineer
+  - debug-specialist
+
+# Priority configurations (optional)
+# Define execution order and blocking behavior
+priorities:
+  security-auditor:
+    priority: 1        # Execute first
+    blocking: true     # Block operation if issues found
+  
+  style-enforcer:
+    priority: 2
+    blocking: false    # Non-blocking, just warnings
+  
+  test-writer:
+    priority: 3
+    blocking: false
+  
+  documentation-curator:
+    priority: 4
+    blocking: false
+
+# Subagent configuration overrides (optional)
+# Override default subagent settings for specific events
+overrides:
+  pre_deployment:
+    deployment-strategist:
+      timeout: 300    # 5 minutes for deployment planning
+      tools: "Read, Grep, Glob, Bash"  # Restricted tools
+    
+    environment-guardian:
+      timeout: 120
+      require_approval: true  # Human approval needed
+
+  on_error:
+    debug-specialist:
+      timeout: 600    # 10 minutes for debugging
+      tools: "all"     # Full tool access for debugging
+
+# Event conditions (optional)
+# Define conditions for event triggering
+conditions:
+  pre_write:
+    file_patterns:
+      - "*.py"        # Only Python files
+      - "*.js"        # Only JavaScript files
+      - "*.ts"        # Only TypeScript files
+    
+    exclude_patterns:
+      - "*.test.*"    # Skip test files
+      - "*.spec.*"    # Skip spec files
+      - "__pycache__/*" # Skip cache directories
+
+  code_review:
+    branch_patterns:
+      - "feature/*"   # Feature branches
+      - "hotfix/*"    # Hotfix branches
+    
+    exclude_branches:
+      - "main"        # Skip main branch
+      - "develop"     # Skip develop branch
+
+# Notification settings (optional)
+notifications:
+  on_blocking_event:
+    log_level: "error"
+    alert_user: true
+  
+  on_security_violation:
+    log_level: "critical"
+    alert_user: true
+    notify_webhook: "${SECURITY_WEBHOOK_URL}"
+  
+  on_success:
+    log_level: "info"
+    alert_user: false

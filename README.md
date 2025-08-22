@@ -189,12 +189,38 @@ Most users authenticate via browser (no API key needed). See [Claude Code docs](
 - **Multi-Language Support**: Python, JavaScript, Java, Go, and more
 - **Performance Debugging**: Memory leaks, bottlenecks, optimization
 
-### 🔒 Security Hooks System
-Automated governance and security enforcement:
-- **Real-time Protection**: Prevents credential exposure in AI-generated code
-- **Audit Trails**: Complete logging of all AI actions and decisions  
-- **Policy Enforcement**: Automated compliance checking
-- **Production Ready**: Enterprise-grade security monitoring
+### 🔒 Event-Driven Subagent System
+**NEW**: Automated subagent execution based on Claude Code events:
+
+```bash
+# Configure subagents to run automatically on specific events
+claude-commands subagents --configure
+```
+
+**Event-Driven Automation:**
+- **Pre-Write Events**: Security scanning before code changes
+- **Pre-Commit Events**: Quality checks before git commits  
+- **Error Events**: Automatic debugging specialist engagement
+- **Custom Events**: Configure any workflow trigger
+
+**Example Hook Configuration:**
+```yaml
+pre_write:
+  - security-auditor    # Scan for vulnerabilities
+  - style-enforcer      # Enforce coding standards
+  
+pre_commit:
+  - security-auditor    # Final security check
+  
+on_error:
+  - debug-specialist    # Auto-engage debugging help
+```
+
+**Architecture:**
+- **Modular Design**: 8 specialized modules for maintainability
+- **Security First**: Input validation, credential detection, audit trails
+- **Production Ready**: Timeout handling, error recovery, comprehensive logging
+- **Backward Compatible**: Works with existing Claude Code setups
 
 ### 📊 Experimental Commands (44 Additional)
 Advanced commands for specialized workflows:
@@ -310,9 +336,49 @@ ls ~/.claude/commands/x*.md  # List installed commands
 - **`slash-commands/active/`** - 13 production-ready commands (deployed by default)
 - **`slash-commands/experiments/`** - 44 experimental/conceptual commands  
 - **`sub-agents/`** - AI specialist subagents with persistent context
-- **`hooks/`** - Security hooks for governance and compliance
+- **`hooks/`** - Event-driven subagent integration system
+  - **`subagent-trigger.sh`** - Main hook script for event-driven execution
+  - **`lib/`** - Modular architecture (8 specialized modules):
+    - `config-constants.sh` - Configuration constants and validation
+    - `file-utils.sh` - Secure file operations and path validation  
+    - `error-handler.sh` - Standardized error handling and logging
+    - `argument-parser.sh` - CLI argument parsing with validation
+    - `subagent-discovery.sh` - Subagent discovery and enumeration
+    - `subagent-validator.sh` - Comprehensive subagent validation
+    - `context-manager.sh` - Context gathering and management
+    - `execution-engine.sh` - Subagent execution with timeout handling
 - **`templates/`** - Configuration templates for different use cases
+  - `subagent-hooks.yaml` - Event mapping configuration template
+- **`tests/`** - Integration test suite for hook system
 - **`specs/`** - Command specifications and validation framework
+- **`docs/`** - Complete documentation including hook integration guide
+
+## Technical Architecture
+
+### Event-Driven Hook System
+The subagent-hook integration system has been completely refactored from a monolithic script to a modular architecture:
+
+**Before Refactoring:**
+- 333-line monolithic script with code smell issues
+- God function antipattern (82-line main function)
+- High cyclomatic complexity (46 conditional statements)
+- Limited error handling and validation
+
+**After Refactoring:**
+- **8 specialized modules** with single responsibilities
+- **Reduced main function** from 82 to ~50 lines
+- **Enhanced CLI** with `--help`, `--debug`, `--dry-run`, `--timeout` options
+- **Comprehensive security** with input validation and credential detection
+- **Standardized error handling** with proper exit codes and recovery
+- **Backward compatibility** with existing Claude Code configurations
+
+**Key Quality Improvements:**
+- ✅ Eliminated god function and long method code smells  
+- ✅ Added comprehensive input validation and security checks
+- ✅ Implemented proper error handling with standardized logging
+- ✅ Enhanced CLI with argument parsing and validation
+- ✅ Modular design enables independent testing and reuse
+- ✅ Protected against multiple module loading conflicts
 
 ## Contributing
 
@@ -320,6 +386,7 @@ ls ~/.claude/commands/x*.md  # List installed commands
 2. Validate with `./validate-commands.sh`
 3. Test locally with `./deploy.sh --include yourcommand`
 4. Follow existing patterns and security best practices
+5. **Hook Development**: Extend modular architecture in `hooks/lib/` directory
 
 ---
 

@@ -42,7 +42,7 @@
   "// Performance optimization for comprehensive setup": "",
   "parallelTasksCount": 5,
   
-  "// Comprehensive security hooks": "",
+  "// Comprehensive security hooks with subagent integration": "",
   "hooks": {
     "PreToolUse": [
       {
@@ -65,6 +65,43 @@
             "blocking": false,
             "timeout": 5000
           }
+        ],
+        "// Subagent integration for security events": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh security-auditor pre_write",
+            "blocking": true,
+            "timeout": 10000
+          },
+          {
+            "type": "command", 
+            "command": "~/.claude/hooks/subagent-trigger.sh style-enforcer pre_write",
+            "blocking": false,
+            "timeout": 5000
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(git commit*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh trunk-guardian pre_commit",
+            "blocking": true,
+            "timeout": 10000
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(*test*|*spec*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh test-writer pre_test",
+            "blocking": false,
+            "timeout": 8000
+          }
         ]
       }
     ],
@@ -77,6 +114,47 @@
             "command": "~/.claude/hooks/log-all-operations.sh", 
             "blocking": false,
             "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh documentation-curator post_write",
+            "blocking": false,
+            "timeout": 8000
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(*test*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh performance-guardian post_test",
+            "blocking": false,
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "// Custom error handling hooks with subagents": "",
+    "OnError": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh debug-specialist on_error",
+            "blocking": false,
+            "timeout": 15000
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh rollback-first-responder on_error",
+            "blocking": false,
+            "timeout": 10000
           }
         ]
       }
