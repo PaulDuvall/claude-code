@@ -196,7 +196,7 @@ test_context_gathering() {
     export CLAUDE_SESSION_ID="test-session-123"
     
     # Create a test file to reference
-    echo "test content" > "$TEMP_DIR/test.md"
+    echo "test content" > "$TEST_DIR/test.md"
     
     # Run hook and capture results
     local exit_code
