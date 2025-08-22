@@ -26,15 +26,49 @@ This repository extends [Claude Code](https://claude.ai/code) with **custom slas
 
 **Think of it like VS Code extensions** - but for Claude Code. These commands give Claude deep knowledge of development workflows and tools.
 
+## 🔒 **Security Notice - Please Review Before Use**
+
+**⚠️ IMPORTANT**: This is an open source tool that will execute commands on your system. For your security:
+
+### **Before Installation:**
+1. **🔍 Review the source code** - Examine the files you'll be running:
+   - **Setup scripts**: [`setup.sh`](./setup.sh), [`deploy.sh`](./deploy.sh), [`configure-claude-code.sh`](./configure-claude-code.sh)
+   - **Commands directory**: [`slash-commands/active/`](./slash-commands/active/) - All command implementations
+   - **Hook scripts**: [`hooks/`](./hooks/) - Scripts that integrate with Claude Code events
+   - **NPM package**: [`claude-dev-toolkit/`](./claude-dev-toolkit/) - The published package code
+
+2. **🛡️ Understand what runs**: Commands will:
+   - Execute bash/shell commands on your system
+   - Read and modify files in your projects  
+   - Make git commits and pushes
+   - Install dependencies and tools
+   - Run tests and linting tools
+
+3. **🔐 Verify authenticity**: 
+   - Check the [commit history](https://github.com/PaulDuvall/claude-code/commits/main)
+   - Review [GitHub Actions tests](https://github.com/PaulDuvall/claude-code/actions) 
+   - Examine the [MIT License](./LICENSE)
+
+### **Recommended Security Practices:**
+- Start with individual commands, not bulk installation
+- Test in a disposable/sandbox environment first
+- Review any command with `/x[name] help` before using
+- Monitor what files are created/modified
+- Keep your git history clean for easy rollback
+
+**This tool is provided as-is under MIT License. Use at your own discretion.**
+
 ## Quick Start
 
 ### 🚀 Get Started in 30 Seconds (NPM Installation)
+
+> **Security First**: Review the [Security Notice](#-security-notice---please-review-before-use) above before installation
 
 ```bash
 # 1. Install Claude Code (if you haven't already)
 npm install -g @anthropic-ai/claude-code
 
-# 2. Install Claude Dev Toolkit via NPM
+# 2. Install Claude Dev Toolkit via NPM (review source first!)
 npm install -g @paulduvall/claude-dev-toolkit
 
 # 3. Deploy commands to Claude Code
@@ -63,7 +97,7 @@ claude
 
 ### 🔧 Alternative: Manual Installation (Development)
 
-For contributing or customization:
+For contributing or customization (⚠️ **Review source code first**!):
 
 ```bash
 # Clone and setup this repository
