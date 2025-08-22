@@ -42,14 +42,13 @@ claude-commands install --active    # Install 13 core commands
 # OR
 claude-commands install --all       # Install all 58 commands
 
-# 4. (Optional) Configure Claude Code settings
-# For optimal experience, you may want to adjust Claude Code settings
-# Check current settings: cat ~/.claude/settings.json
-# Common configurations:
-#   - Enable/disable specific tools
-#   - Set working directory preferences
-#   - Configure security restrictions
-# See templates/ directory in the GitHub repo for example configurations
+# 4. Configure Claude Code settings (Recommended)
+claude-commands config --list                        # List available templates
+claude-commands config --template basic-settings.json   # Apply basic config
+# OR
+claude-commands config --template security-focused-settings.json  # Enhanced security
+# OR  
+claude-commands config --template comprehensive-settings.json     # Full features
 
 # 5. Start using AI-powered development commands
 claude
@@ -101,12 +100,17 @@ Once installed, these 13 essential commands work in **any project** on your mach
 - **`/xrelease`** - Release management and deployment automation
 - **`/xconfig`** - Configuration management and environment setup
 
+### 🤖 **Subagents & Coordination**
+- **`/xsubagents`** - Multi-agent coordination and task delegation
+
 ### ℹ️ **Getting Help**
 Every command includes built-in help:
 ```bash
 /xtest help         # Show all testing options
 /xquality help      # Show quality check options
 /xsecurity help     # Show security scanning options
+/xconfig help       # Show configuration options
+/xsubagents help    # Show subagent management options
 ```
 
 ## Real-World Usage Examples
@@ -194,9 +198,12 @@ Automated governance and security enforcement:
 
 ### 📊 Experimental Commands (44 Additional)
 Advanced commands for specialized workflows:
-- Planning & Analytics: `/xplanning`, `/xanalytics`, `/xmetrics`
-- Infrastructure: `/xinfra`, `/xmonitoring`, `/xaws`  
-- Compliance: `/xcompliance`, `/xgovernance`, `/xpolicy`
+- **Planning & Analytics**: `/xplanning`, `/xanalytics`, `/xmetrics`
+- **Infrastructure**: `/xinfra`, `/xmonitoring`, `/xaws`  
+- **Compliance**: `/xcompliance`, `/xgovernance`, `/xpolicy`
+- **Advanced Security**: `/xred`, `/xrisk`, `/xscan`
+- **Performance**: `/xperformance`, `/xoptimize`
+- **Subagents**: `/xsubagents` - Multi-agent coordination and task delegation
 
 Deploy with: `./deploy.sh --experiments`
 
@@ -233,6 +240,11 @@ npm install -g @paulduvall/claude-dev-toolkit
 claude-commands install --active       # Install 13 core commands
 claude-commands install --experimental # Install 44 experimental commands
 claude-commands install --all          # Install all 58 commands
+
+# Configuration management
+claude-commands config --list          # List available templates
+claude-commands config --template <name> # Apply configuration template
+claude-commands config --help          # Show config command help
 
 # Check what's available
 claude-commands list                   # List all available commands
