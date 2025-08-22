@@ -50,7 +50,10 @@ claude-commands config --template security-focused-settings.json  # Enhanced sec
 # OR  
 claude-commands config --template comprehensive-settings.json     # Full features
 
-# 5. Start using AI-powered development commands
+# 5. Install AI subagents (Optional)
+claude-commands subagents --install     # Install 25 specialized AI subagents
+
+# 6. Start using AI-powered development commands
 claude
 /xtest          # Run all tests intelligently
 /xquality       # Check and fix code quality issues
