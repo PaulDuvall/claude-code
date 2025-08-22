@@ -81,7 +81,6 @@ Advanced commands for specialized workflows:
 - **Compliance**: `/xcompliance`, `/xgovernance`, `/xpolicy`
 - **Advanced Security**: `/xred`, `/xrisk`, `/xscan`
 - **Performance**: `/xperformance`, `/xoptimize`
-- **Subagents**: `/xsubagents` - Multi-agent coordination and task delegation
 
 ## 🛠️ CLI Usage
 
@@ -98,13 +97,17 @@ claude-commands config --list          # List available templates
 claude-commands config --template <name> # Apply configuration template
 claude-commands config --help          # Show config command help
 
+# Subagents Management
+claude-commands subagents --list        # List available subagents
+claude-commands subagents --install     # Install subagents to Claude Code
+claude-commands subagents --help        # Show subagents command help
+
 # In Claude Code
 /xhelp                                 # Show command help
 /xtest                                 # Run intelligent test suite
 /xquality fix                          # Auto-fix code quality issues
 /xsecurity --scan --report            # Comprehensive security scan
 /xgit                                  # Automated git workflow
-/xsubagents --create teamlead          # Create specialized subagent
 ```
 
 ## 🔧 Configuration
@@ -153,7 +156,7 @@ npm run test:commands     # Command validation
 npm run test:workflow     # Core workflow tests
 npm run test:security     # Security command tests
 npm run test:config       # Configuration command tests
-npm run test:subagents    # Subagents command tests
+npm run test:subagents    # Subagents CLI command tests
 npm run test:req007       # Interactive setup wizard
 npm run test:req009       # Configuration templates
 npm run test:req018       # Security hook installation
@@ -232,7 +235,6 @@ Every command includes built-in help:
 /xquality help      # Show quality check options  
 /xsecurity help     # Show security scanning options
 /xconfig help       # Show configuration options
-/xsubagents help    # Show subagent management options
 ```
 
 ## 🤝 Contributing

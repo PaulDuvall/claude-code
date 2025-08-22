@@ -100,8 +100,6 @@ Once installed, these 13 essential commands work in **any project** on your mach
 - **`/xrelease`** - Release management and deployment automation
 - **`/xconfig`** - Configuration management and environment setup
 
-### 🤖 **Subagents & Coordination**
-- **`/xsubagents`** - Multi-agent coordination and task delegation
 
 ### ℹ️ **Getting Help**
 Every command includes built-in help:
@@ -110,7 +108,6 @@ Every command includes built-in help:
 /xquality help      # Show quality check options
 /xsecurity help     # Show security scanning options
 /xconfig help       # Show configuration options
-/xsubagents help    # Show subagent management options
 ```
 
 ## Real-World Usage Examples
@@ -203,7 +200,6 @@ Advanced commands for specialized workflows:
 - **Compliance**: `/xcompliance`, `/xgovernance`, `/xpolicy`
 - **Advanced Security**: `/xred`, `/xrisk`, `/xscan`
 - **Performance**: `/xperformance`, `/xoptimize`
-- **Subagents**: `/xsubagents` - Multi-agent coordination and task delegation
 
 Deploy with: `./deploy.sh --experiments`
 
@@ -245,6 +241,11 @@ claude-commands install --all          # Install all 58 commands
 claude-commands config --list          # List available templates
 claude-commands config --template <name> # Apply configuration template
 claude-commands config --help          # Show config command help
+
+# Subagents management
+claude-commands subagents --list        # List available subagents
+claude-commands subagents --install     # Install subagents to Claude Code
+claude-commands subagents --help        # Show subagents command help
 
 # Check what's available
 claude-commands list                   # List all available commands
