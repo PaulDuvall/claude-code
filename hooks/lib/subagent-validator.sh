@@ -399,7 +399,8 @@ validate_tools_field() {
     local tools="$1"
     
     # Tools can be comma-separated or a single word
-    if [[ "$tools" =~ ^[a-zA-Z][a-zA-Z0-9_,-\s]*$ ]]; then
+    # Allow: "Read, Edit, MultiEdit" or "Read,Edit,MultiEdit" or "Read"
+    if [[ "$tools" =~ ^[a-zA-Z][a-zA-Z0-9_]*([[:space:]]*,[[:space:]]*[a-zA-Z][a-zA-Z0-9_]*)*$ ]]; then
         return $EXIT_SUCCESS
     fi
     

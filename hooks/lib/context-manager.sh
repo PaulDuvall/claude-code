@@ -268,8 +268,8 @@ write_context_to_file() {
         fi
     fi
     
-    # Write context data
-    if ! write_context_file "$context_data" "$context_file"; then
+    # Write context data to file
+    if ! echo "$context_data" > "$context_file" 2>/dev/null; then
         log_error "Failed to write context data to file: $context_file"
         return $EXIT_GENERAL_ERROR
     fi
