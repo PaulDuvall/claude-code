@@ -238,6 +238,10 @@ class InstallGuideTester {
       const failedValidations = validationStep.validations.filter(v => v.status === 'failed');
       validationStep.status = failedValidations.length === 0 ? 'passed' : 'failed';
       
+      if (failedValidations.length > 0) {
+        validationStep.error = failedValidations.map(v => v.error || v.name).join('; ');
+      }
+      
     } catch (error) {
       validationStep.status = 'failed';
       validationStep.error = error.message;
