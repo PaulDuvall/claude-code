@@ -79,7 +79,7 @@ npm cache clean --force
 npm install -g @anthropic-ai/claude-code
 
 # Verify installation
-claude-code --version
+claude --version
 ```
 
 ### Step 2: Install Claude Dev Toolkit
