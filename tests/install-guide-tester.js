@@ -496,9 +496,19 @@ class InstallGuideTester {
       cwd: __dirname
     }).trim();
     
+    // Modify command to use dry-run/test mode in CI environments
+    let modifiedCommand = command.raw;
+    if (process.env.CI === 'true' || process.env.NODE_ENV === 'test') {
+      if (modifiedCommand.includes('./setup.sh') && !modifiedCommand.includes('--dry-run')) {
+        // Add --dry-run flag to setup.sh to avoid API key requirement
+        modifiedCommand = modifiedCommand.replace('./setup.sh', './setup.sh --dry-run');
+        console.log(`      🧪 Modified for CI: ${modifiedCommand}`);
+      }
+    }
+    
     console.log(`      📂 Repository root: ${repoRoot}`);
     console.log(`      🏠 Test home: ${this.testHome}`);
-    console.log(`      🔧 Executing in repo: ${command.raw}`);
+    console.log(`      🔧 Executing in repo: ${modifiedCommand}`);
     
     // Execute the script from the repository root but with modified HOME
     const env = {
@@ -506,11 +516,12 @@ class InstallGuideTester {
       HOME: this.testHome,           // Use test home for Claude configs
       TEST_HOME: this.testHome,      // Pass test home as variable
       CI: 'true',                    // Mark as CI environment
-      NODE_ENV: 'test'               // Set test environment
+      NODE_ENV: 'test',              // Set test environment
+      ANTHROPIC_API_KEY: 'sk-ant-test-dummy-key-for-ci-testing' // Dummy key for CI
     };
     
     try {
-      const output = execSync(command.raw, {
+      const output = execSync(modifiedCommand, {
         cwd: repoRoot,               // Execute from repository root
         env: env,                    // Use modified environment
         encoding: 'utf8',            // Get string output
