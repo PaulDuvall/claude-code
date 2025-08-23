@@ -316,16 +316,19 @@ class DocumentationAccuracyValidator {
     // Collect all errors from test results
     const allErrors = [];
     Object.values(testResults).forEach(result => {
-      result.steps.forEach(step => {
-        if (step.status === 'failed' && step.error) {
-          allErrors.push({
-            error: step.error,
-            step: step.name,
-            scenario: result.scenario,
-            platform: result.platform
-          });
-        }
-      });
+      // Ensure result has steps property and it's an array
+      if (result && Array.isArray(result.steps)) {
+        result.steps.forEach(step => {
+          if (step && step.status === 'failed' && step.error) {
+            allErrors.push({
+              error: step.error,
+              step: step.name,
+              scenario: result.scenario,
+              platform: result.platform
+            });
+          }
+        });
+      }
     });
 
     // Analyze error patterns
@@ -357,19 +360,22 @@ class DocumentationAccuracyValidator {
     const results = [];
     
     Object.values(testResults).forEach(result => {
-      result.steps.forEach(step => {
-        if (step.commands) {
-          step.commands.forEach(cmd => {
-            if (cmd.command === command) {
-              results.push({
-                ...cmd,
-                scenario: result.scenario,
-                platform: result.platform
-              });
-            }
-          });
-        }
-      });
+      // Ensure result has steps property and it's an array
+      if (result && Array.isArray(result.steps)) {
+        result.steps.forEach(step => {
+          if (step && Array.isArray(step.commands)) {
+            step.commands.forEach(cmd => {
+              if (cmd && cmd.command === command) {
+                results.push({
+                  ...cmd,
+                  scenario: result.scenario,
+                  platform: result.platform
+                });
+              }
+            });
+          }
+        });
+      }
     });
     
     return results;
@@ -380,13 +386,16 @@ class DocumentationAccuracyValidator {
     const stepName = `[${step.section}] ${step.step}`;
     
     Object.values(testResults).forEach(result => {
-      const matchingStep = result.steps.find(s => s.name === stepName);
-      if (matchingStep) {
-        results.push({
-          ...matchingStep,
-          scenario: result.scenario,
-          platform: result.platform
-        });
+      // Ensure result has steps property and it's an array
+      if (result && Array.isArray(result.steps)) {
+        const matchingStep = result.steps.find(s => s && s.name === stepName);
+        if (matchingStep) {
+          results.push({
+            ...matchingStep,
+            scenario: result.scenario,
+            platform: result.platform
+          });
+        }
       }
     });
     
