@@ -11,24 +11,21 @@ module.exports = {
         
         console.log('🚀 Installing Claude Custom Commands...\n');
         
-        // Ensure directories exist
+        // Ensure main commands directory exists
         ensureDirectory(claudeDir);
-        ensureDirectory(path.join(claudeDir, 'active'));
-        ensureDirectory(path.join(claudeDir, 'experimental'));
         
         let installedCount = 0;
         
-        // Install active commands
+        // Install active commands (directly to commands directory)
         if (options.active || options.all || (!options.active && !options.experimental)) {
             const activeSource = path.join(packageDir, 'commands', 'active');
-            const activeTarget = path.join(claudeDir, 'active');
             
             if (fs.existsSync(activeSource)) {
                 const activeFiles = fs.readdirSync(activeSource).filter(f => f.endsWith('.md'));
                 activeFiles.forEach(file => {
                     fs.copyFileSync(
                         path.join(activeSource, file),
-                        path.join(activeTarget, file)
+                        path.join(claudeDir, file)
                     );
                 });
                 installedCount += activeFiles.length;
@@ -36,17 +33,16 @@ module.exports = {
             }
         }
         
-        // Install experimental commands
+        // Install experimental commands (directly to commands directory)
         if (options.experimental || options.all) {
             const expSource = path.join(packageDir, 'commands', 'experiments');
-            const expTarget = path.join(claudeDir, 'experiments');
             
             if (fs.existsSync(expSource)) {
                 const expFiles = fs.readdirSync(expSource).filter(f => f.endsWith('.md'));
                 expFiles.forEach(file => {
                     fs.copyFileSync(
                         path.join(expSource, file),
-                        path.join(expTarget, file)
+                        path.join(claudeDir, file)
                     );
                 });
                 installedCount += expFiles.length;

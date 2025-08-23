@@ -35,6 +35,7 @@ show_help() {
     echo "Deployment Options:"
     echo "  --source <dir>        Deploy from specific directory (active|experiments|path)"
     echo "  --experiments         Deploy experimental commands from slash-commands/experiments"
+    echo "  --experimental        Alias for --experiments (backwards compatibility)"
     echo "  --all                 Deploy both active and experimental commands"
     echo "  --include <cmd>       Include specific commands (can be used multiple times)"
     echo "  --exclude <cmd>       Exclude specific commands (can be used multiple times)"
@@ -49,6 +50,7 @@ show_help() {
     echo "Examples:"
     echo "  $0                          # Deploy active commands (default)"
     echo "  $0 --experiments            # Deploy experimental commands"
+    echo "  $0 --experimental           # Same as --experiments"
     echo "  $0 --all                    # Deploy both active and experimental"
     echo "  $0 --include xplanning      # Deploy only xplanning command from active"
     echo "  $0 --experiments --include xplanning --include xmetrics  # Deploy specific experimental commands"
@@ -202,7 +204,7 @@ while [[ $# -gt 0 ]]; do
             DRY_RUN=true
             shift
             ;;
-        --experiments)
+        --experiments|--experimental)
             DEPLOY_MODE="experiments"
             shift
             ;;

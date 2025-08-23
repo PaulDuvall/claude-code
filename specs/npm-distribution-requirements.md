@@ -39,7 +39,7 @@ THE SYSTEM SHALL create an npm package named "claude-dev-toolkit" with a standar
 #### REQ-002: Command Organization
 **Priority:** High
 WHEN the package structure is created
-THE SYSTEM SHALL organize custom commands into two directories: commands/active/ containing 13 production commands and commands/experimental/ containing 44 experimental commands
+THE SYSTEM SHALL organize custom commands into two directories: commands/active/ containing 13 production commands and commands/experiments/ containing 44 experimental commands
 **Rationale:** Separates stable commands from experimental features for user choice
 **Acceptance Criteria:** All 57 commands are correctly categorized and accessible
 

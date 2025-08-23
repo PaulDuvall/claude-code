@@ -237,7 +237,7 @@ source ~/.zshrc
 ./deploy.sh
 
 # Or deploy experimental commands (44 additional commands)
-./deploy.sh --experimental
+./deploy.sh --experiments
 
 # Or deploy all commands (active + experimental)
 ./deploy.sh --all
