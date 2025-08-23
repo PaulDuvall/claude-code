@@ -1,0 +1,28 @@
+{
+  "scenario": "fresh-install",
+  "platform": "ubuntu-latest",
+  "nodeVersion": "v20.0.0",
+  "startTime": "2025-08-23T17:00:00.000Z",
+  "endTime": "2025-08-23T17:10:00.000Z",
+  "duration": 600000,
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0
+  },
+  "steps": [
+    {
+      "name": "[Complete Installation Process] Step 1: Install Claude Code",
+      "type": "execution",
+      "status": "passed",
+      "commands": [
+        {
+          "command": "npm install -g @anthropic-ai/claude-code",
+          "type": "install",
+          "status": "passed",
+          "exitCode": 0
+        }
+      ]
+    }
+  ]
+}

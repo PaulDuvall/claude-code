@@ -72,9 +72,33 @@ class DocumentationAccuracyValidator {
       throw new Error(`Test artifacts path not found: ${this.testArtifactsPath}`);
     }
 
-    const artifactDirs = fs.readdirSync(this.testArtifactsPath, { withFileTypes: true })
-      .filter(dirent => dirent.isDirectory())
-      .map(dirent => dirent.name);
+    const items = fs.readdirSync(this.testArtifactsPath, { withFileTypes: true });
+    
+    // First check for direct JSON files (local testing)
+    const directJsonFiles = items
+      .filter(item => item.isFile() && item.name.endsWith('.json'))
+      .map(item => item.name);
+      
+    for (const file of directJsonFiles) {
+      try {
+        const filePath = path.join(this.testArtifactsPath, file);
+        const result = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        
+        // Generate a key for the result
+        const key = result.platform && result.scenario 
+          ? `${result.platform}-${result.scenario}`
+          : `direct-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+          
+        testResults[key] = result;
+      } catch (error) {
+        console.warn(`⚠️  Failed to load direct JSON file ${file}:`, error.message);
+      }
+    }
+
+    // Then check for subdirectories (GitHub Actions artifacts)
+    const artifactDirs = items
+      .filter(item => item.isDirectory())
+      .map(item => item.name);
 
     for (const dir of artifactDirs) {
       try {
