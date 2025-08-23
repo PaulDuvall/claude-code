@@ -84,14 +84,19 @@ class DocumentationAccuracyValidator {
         const filePath = path.join(this.testArtifactsPath, file);
         const result = JSON.parse(fs.readFileSync(filePath, 'utf8'));
         
+        // Ensure required fields exist
+        if (!result.platform) result.platform = 'unknown';
+        if (!result.scenario) result.scenario = 'unknown';
+        if (!result.nodeVersion) result.nodeVersion = 'unknown';
+        if (!Array.isArray(result.steps)) result.steps = [];
+        
         // Generate a key for the result
-        const key = result.platform && result.scenario 
-          ? `${result.platform}-${result.scenario}`
-          : `direct-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-          
+        const key = `${result.platform}-${result.scenario}`;
         testResults[key] = result;
+        
+        console.log(`  ✓ Loaded direct file ${file}: ${key}`);
       } catch (error) {
-        console.warn(`⚠️  Failed to load direct JSON file ${file}:`, error.message);
+        console.warn(`  ⚠️  Failed to load direct JSON file ${file}:`, error.message);
       }
     }
 
@@ -104,21 +109,38 @@ class DocumentationAccuracyValidator {
       try {
         const resultsPath = path.join(this.testArtifactsPath, dir);
         const resultFiles = fs.readdirSync(resultsPath)
-          .filter(file => file.endsWith('.json') && file.includes('report-'));
+          .filter(file => file.endsWith('.json'));
 
         for (const file of resultFiles) {
           const filePath = path.join(resultsPath, file);
           const result = JSON.parse(fs.readFileSync(filePath, 'utf8'));
           
+          // Ensure required fields exist
+          if (!result.platform) result.platform = 'unknown';
+          if (!result.scenario) result.scenario = 'unknown';
+          if (!result.nodeVersion) result.nodeVersion = 'unknown';
+          if (!Array.isArray(result.steps)) result.steps = [];
+          
           const key = `${result.platform}-${result.scenario}`;
           testResults[key] = result;
+          
+          console.log(`  ✓ Loaded ${dir}/${file}: ${key}`);
         }
       } catch (error) {
-        console.warn(`⚠️  Failed to load results from ${dir}:`, error.message);
+        console.warn(`  ⚠️  Failed to load results from ${dir}:`, error.message);
       }
     }
 
     console.log(`📊 Loaded test results from ${Object.keys(testResults).length} test runs`);
+    
+    // Log summary of loaded results
+    if (Object.keys(testResults).length > 0) {
+      console.log('📋 Test results summary:');
+      Object.entries(testResults).forEach(([key, result]) => {
+        console.log(`  - ${key}: ${result.steps?.length || 0} steps, platform=${result.platform}, node=${result.nodeVersion}`);
+      });
+    }
+    
     return testResults;
   }
 
