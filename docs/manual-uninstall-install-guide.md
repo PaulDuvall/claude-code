@@ -55,10 +55,10 @@ rm -rf .claude/hooks/
 
 ```bash
 # Remove installed subagents  
-rm -rf ~/.claude/sub-agents/
+rm -rf ~/.claude/subagents/
 
 # Remove project-specific subagents (if any)
-rm -rf .claude/sub-agents/
+rm -rf .claude/subagents/
 ```
 
 ### Step 5: Clean Configuration Files (Optional)
@@ -97,10 +97,10 @@ rm -rf .claude/hooks/
 
 ```bash
 # Remove installed subagents  
-rm -rf ~/.claude/sub-agents/
+rm -rf ~/.claude/subagents/
 
 # Remove project-specific subagents (if any)
-rm -rf .claude/sub-agents/
+rm -rf .claude/subagents/
 ```
 
 ### Step 4: Clean Configuration Files (Optional)
@@ -373,7 +373,7 @@ git init
 cp -r ~/.claude .claude
 
 # Create directory structure
-mkdir -p .claude/commands .claude/hooks .claude/sub-agents .claude/config
+mkdir -p .claude/commands .claude/hooks .claude/subagents .claude/config
 
 # Commit to version control
 git add .
@@ -472,7 +472,7 @@ chmod -R 755 ~/.claude
 - AI Development Patterns: https://github.com/PaulDuvall/ai-development-patterns
 - Slash Commands Documentation: https://docs.anthropic.com/en/docs/claude-code/slash-commands
 - Hooks Documentation: https://docs.anthropic.com/en/docs/claude-code/hooks
-- Sub-Agents Documentation: https://docs.anthropic.com/en/docs/claude-code/sub-agents
+- Subagents Documentation: https://docs.anthropic.com/en/docs/claude-code/subagents
 
 ## Summary
 
