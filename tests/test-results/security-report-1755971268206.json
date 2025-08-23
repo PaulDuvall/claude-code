@@ -1,0 +1,53 @@
+{
+  "timestamp": "2025-08-23T17:47:48.206Z",
+  "summary": {
+    "totalIssues": 0,
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "issues": [],
+  "rules": [
+    {
+      "name": "unsafe-rm-commands",
+      "description": "Unsafe rm -rf command targeting system directories",
+      "severity": "critical"
+    },
+    {
+      "name": "sudo-usage",
+      "description": "Usage of sudo for npm operations",
+      "severity": "high"
+    },
+    {
+      "name": "npm-unsafe-flags",
+      "description": "Using unsafe npm permissions",
+      "severity": "high"
+    },
+    {
+      "name": "curl-pipe-bash",
+      "description": "Dangerous curl | bash pattern",
+      "severity": "critical"
+    },
+    {
+      "name": "chmod-777",
+      "description": "Overly permissive file permissions (777)",
+      "severity": "high"
+    },
+    {
+      "name": "npm-global-force",
+      "description": "Forced global npm installation",
+      "severity": "medium"
+    },
+    {
+      "name": "unverified-package-source",
+      "description": "Installing from unverified HTTP/FTP sources",
+      "severity": "high"
+    },
+    {
+      "name": "hardcoded-credentials",
+      "description": "Hardcoded credentials in commands",
+      "severity": "critical"
+    }
+  ]
+}
