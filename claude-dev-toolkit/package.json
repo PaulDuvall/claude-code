@@ -43,6 +43,7 @@
     "test:subagents-async": "node tests/test_subagents_async.js",
     "test:config": "node tests/test_config_command.js",
     "test:ux-quick-start": "node tests/test_ux_quick_start_guide.js",
+    "test:npm-completeness": "node tests/test_npm_package_completeness.js",
     "test:install": "scripts/publishing/test-package-install.sh",
     "test:manual": "scripts/publishing/manual-test-suite.sh",
     "publish:local": "scripts/publishing/setup-local-registry.sh",
