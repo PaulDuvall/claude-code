@@ -106,23 +106,38 @@ class DocumentationAccuracyValidator {
       .map(item => item.name);
 
     for (const dir of artifactDirs) {
-      // Skip non-test-result directories
-      if (dir.includes('security') || dir.includes('config') || dir === 'test-suite-config') {
+      // Skip known non-test-result directories
+      if (dir.includes('security') || dir.includes('config') || dir === 'test-suite-config' || 
+          dir === 'comprehensive-test-report') {
         console.log(`  ⏭️  Skipping non-test-result directory: ${dir}`);
         continue;
       }
       
-      // Only process directories that look like test results
-      if (!dir.includes('test-results') && !dir.includes('test-result')) {
-        console.log(`  ⏭️  Skipping directory (not test results): ${dir}`);
-        continue;
+      // Process directories that look like test results
+      // GitHub Actions artifacts are named: test-results-{platform}-{node-version}-{scenario}
+      const isTestResultDir = dir.startsWith('test-results-') || 
+                              dir.includes('test-result') ||
+                              dir.includes('-install') ||  // e.g., fresh-install, reinstall
+                              dir.includes('-upgrade');
+      
+      if (!isTestResultDir) {
+        console.log(`  ℹ️  Processing directory (may contain test results): ${dir}`);
+        // Don't skip - process it and let file validation handle it
+      } else {
+        console.log(`  📂 Processing test results directory: ${dir}`);
       }
       
       try {
         const resultsPath = path.join(this.testArtifactsPath, dir);
-        const resultFiles = fs.readdirSync(resultsPath)
-          .filter(file => file.endsWith('.json'));
+        const allFiles = fs.readdirSync(resultsPath);
+        console.log(`    Files in ${dir}: ${allFiles.join(', ') || '(empty)'}`);
+        
+        const resultFiles = allFiles.filter(file => file.endsWith('.json'));
 
+        if (resultFiles.length === 0) {
+          console.log(`    ⚠️  No JSON files found in ${dir}`);
+        }
+        
         for (const file of resultFiles) {
           // Skip validation reports and other non-test files
           if (file.includes('validation') || file.includes('security') || file === 'test-suite.json') {
@@ -130,8 +145,17 @@ class DocumentationAccuracyValidator {
             continue;
           }
           
+          console.log(`    📄 Processing file: ${file}`);
+          
           const filePath = path.join(resultsPath, file);
-          const result = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+          let result;
+          
+          try {
+            result = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+          } catch (parseError) {
+            console.log(`    ❌ Failed to parse JSON: ${file} - ${parseError.message}`);
+            continue;
+          }
           
           // Validate this is actually a test result
           if (!result || typeof result !== 'object') {
@@ -139,13 +163,17 @@ class DocumentationAccuracyValidator {
             continue;
           }
           
+          // Log what fields we found
+          const fields = Object.keys(result).join(', ');
+          console.log(`    📋 Found fields: ${fields}`);
+          
           // Check if this looks like a test result (has expected structure)
           const isTestResult = 
             ('scenario' in result || 'platform' in result || 'steps' in result) ||
             (result.testSteps || result.summary);
             
           if (!isTestResult) {
-            console.log(`    ⏭️  Skipping non-test-result file: ${file}`);
+            console.log(`    ⏭️  Skipping non-test-result file: ${file} (no test fields found)`);
             continue;
           }
           
