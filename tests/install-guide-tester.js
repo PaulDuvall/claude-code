@@ -163,6 +163,22 @@ class InstallGuideTester {
       } catch (error) {
         console.error(`❌ Failed to execute step: [${step.section}] ${step.step}`, error.message);
         this.results.errors.push(`Step execution failed: ${error.message}`);
+        
+        // Ensure failed step is still recorded in results
+        const failedStepResult = {
+          name: `[${step.section}] ${step.step}`,
+          type: 'execution',
+          status: 'failed',
+          error: error.message,
+          startTime: new Date().toISOString(),
+          endTime: new Date().toISOString(),
+          commands: [],
+          validations: []
+        };
+        this.results.steps.push(failedStepResult);
+        this.results.summary.failed++;
+        executedSteps++;
+        
         // Continue with other steps even if one fails
       }
     }
@@ -226,6 +242,9 @@ class InstallGuideTester {
    */
   async runReport() {
     console.log('📊 Generating test report');
+    
+    // Load progress from previous phases
+    await this.loadResults();
     
     this.results.endTime = new Date().toISOString();
     this.results.duration = new Date(this.results.endTime) - new Date(this.results.startTime);
@@ -714,6 +733,22 @@ class InstallGuideTester {
   async saveResults() {
     const resultsPath = path.join(__dirname, 'test-results', `${this.scenario}-progress.json`);
     fs.writeFileSync(resultsPath, JSON.stringify(this.results, null, 2));
+  }
+
+  async loadResults() {
+    const resultsPath = path.join(__dirname, 'test-results', `${this.scenario}-progress.json`);
+    if (fs.existsSync(resultsPath)) {
+      try {
+        const savedResults = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
+        // Merge saved results with current results, preserving any new data
+        this.results = { ...this.results, ...savedResults };
+        console.log(`📄 Loaded ${this.results.steps?.length || 0} steps from previous execution`);
+      } catch (error) {
+        console.error(`⚠️  Failed to load progress file: ${error.message}`);
+      }
+    } else {
+      console.log(`⚠️  No progress file found at: ${resultsPath}`);
+    }
   }
 
   generateDetailedReport() {
