@@ -418,6 +418,20 @@ class InstallGuideTester {
         return commandResult;
       }
 
+      // Handle repository scripts in repo scenarios - execute from repository root
+      if (this.scenario.startsWith('repo-') && 
+          (normalizedCommand.raw.startsWith('./setup.sh') || 
+           normalizedCommand.raw.startsWith('./verify-setup.sh') ||
+           normalizedCommand.raw.startsWith('./validate-commands.sh') ||
+           normalizedCommand.raw.startsWith('./deploy.sh'))) {
+        console.log(`      🏠 Repository script detected - executing from repo root: ${normalizedCommand.raw}`);
+        await this.executeRepositoryScript(normalizedCommand);
+        commandResult.status = 'passed';
+        commandResult.exitCode = 0;
+        console.log(`      ✅ Repository script succeeded`);
+        return commandResult;
+      }
+
       // Skip repository hook files in npm scenarios
       if (this.scenario.startsWith('npm-') && 
           (normalizedCommand.raw.includes('cp hooks/') || 
@@ -468,6 +482,48 @@ class InstallGuideTester {
 
     commandResult.endTime = new Date().toISOString();
     return commandResult;
+  }
+
+  /**
+   * Execute repository scripts from the repo root with proper environment
+   */
+  async executeRepositoryScript(command) {
+    const { execSync } = require('child_process');
+    
+    // Find the repository root (where the .git directory is)
+    const repoRoot = execSync('git rev-parse --show-toplevel', {
+      encoding: 'utf8',
+      cwd: __dirname
+    }).trim();
+    
+    console.log(`      📂 Repository root: ${repoRoot}`);
+    console.log(`      🏠 Test home: ${this.testHome}`);
+    console.log(`      🔧 Executing in repo: ${command.raw}`);
+    
+    // Execute the script from the repository root but with modified HOME
+    const env = {
+      ...process.env,
+      HOME: this.testHome,           // Use test home for Claude configs
+      TEST_HOME: this.testHome,      // Pass test home as variable
+      CI: 'true',                    // Mark as CI environment
+      NODE_ENV: 'test'               // Set test environment
+    };
+    
+    try {
+      const output = execSync(command.raw, {
+        cwd: repoRoot,               // Execute from repository root
+        env: env,                    // Use modified environment
+        encoding: 'utf8',            // Get string output
+        stdio: 'pipe'                // Capture output
+      });
+      
+      console.log(`      📄 Output: ${output.slice(0, 500)}${output.length > 500 ? '...' : ''}`);
+      return output;
+    } catch (error) {
+      console.log(`      ❌ Script failed with exit code ${error.status}`);
+      console.log(`      📄 Error output: ${error.stdout || error.stderr || error.message}`);
+      throw new Error(`Repository script failed: ${error.message}`);
+    }
   }
 
   /**
