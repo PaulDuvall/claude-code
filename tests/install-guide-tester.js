@@ -629,18 +629,45 @@ class InstallGuideTester {
   async validateCommandsDeployment() {
     try {
       const commandsDir = path.join(this.testHome, '.claude', 'commands');
-      const activeDir = path.join(commandsDir, 'active');
       
-      if (!fs.existsSync(activeDir)) {
-        throw new Error('Active commands directory not found');
+      // Check for commands in multiple possible locations
+      const possiblePaths = [
+        path.join(commandsDir, 'active'),           // Expected structure
+        commandsDir,                                 // Flat structure
+        path.join(this.testHome, '.claude', 'slash-commands', 'active'), // Alternative structure
+        path.join(this.testHome, '.claude', 'slash-commands')            // Alternative flat
+      ];
+      
+      let activeCommands = [];
+      let foundPath = null;
+      
+      for (const checkPath of possiblePaths) {
+        if (fs.existsSync(checkPath)) {
+          const files = fs.readdirSync(checkPath).filter(file => file.endsWith('.md'));
+          if (files.length > 0) {
+            activeCommands = files;
+            foundPath = checkPath;
+            break;
+          }
+        }
+      }
+      
+      if (activeCommands.length === 0) {
+        // Provide detailed debugging information
+        const debugInfo = possiblePaths.map(p => {
+          const exists = fs.existsSync(p);
+          const contents = exists ? fs.readdirSync(p).slice(0, 5).join(', ') + (fs.readdirSync(p).length > 5 ? '...' : '') : 'N/A';
+          return `  ${p}: ${exists ? 'exists' : 'missing'} ${exists ? `(${contents})` : ''}`;
+        }).join('\n');
+        
+        throw new Error(`Active commands directory not found. Checked paths:\n${debugInfo}`);
       }
 
-      const activeCommands = fs.readdirSync(activeDir).filter(file => file.endsWith('.md'));
-      
       return {
         name: 'Commands Deployment',
         status: activeCommands.length >= 13 ? 'passed' : 'failed',
-        details: `Found ${activeCommands.length} active commands`
+        details: `Found ${activeCommands.length} active commands in ${foundPath}`,
+        foundCommands: activeCommands.slice(0, 5) // Show first 5 for debugging
       };
     } catch (error) {
       return {

@@ -143,6 +143,13 @@ jobs:
         else
           npm install -g npm@latest
         fi
+        
+        # Install required Claude Code CLI (tests expect this to be available)
+        npm install -g @anthropic-ai/claude-code
+        
+        # Install Claude Dev Toolkit (tests expect claude-commands to be available)
+        npm install -g @paulduvall/claude-dev-toolkit
+        
         cd tests && npm install
 
     - name: Setup test environment
@@ -156,7 +163,21 @@ jobs:
         echo "Original HOME: $HOME"
         echo "Test HOME: $TEST_HOME"
         
-        # Initialize clean npm environment
+        # Store original npm global prefix before changing HOME
+        ORIGINAL_NPM_PREFIX=$(npm config get prefix)
+        echo "Original npm prefix: $ORIGINAL_NPM_PREFIX"
+        
+        # Verify required CLI tools are available before proceeding
+        echo "Checking required CLI tools..."
+        which claude || echo "⚠️ claude not found in PATH"
+        which claude-commands || echo "⚠️ claude-commands not found in PATH"
+        claude --version || echo "⚠️ claude --version failed"  
+        claude-commands --version || echo "⚠️ claude-commands --version failed"
+        
+        # Add original npm global bin to PATH for all subsequent steps
+        echo "$ORIGINAL_NPM_PREFIX/bin" >> $GITHUB_PATH
+        
+        # Initialize clean npm environment for test isolation
         export HOME="$TEST_HOME"
         npm config set prefix "$TEST_HOME/.npm-global"
         echo "$TEST_HOME/.npm-global/bin" >> $GITHUB_PATH
