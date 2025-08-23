@@ -1,0 +1,683 @@
+{
+  "scenario": "npm-fresh-install",
+  "startTime": "2025-08-23T19:09:00.906Z",
+  "steps": [
+    {
+      "name": "[Method 1: NPM Package Uninstall] Step 1: Uninstall the NPM Package",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:00.908Z"
+    },
+    {
+      "name": "[Method 1: NPM Package Uninstall] Step 2: Remove Custom Commands",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:00.908Z"
+    },
+    {
+      "name": "[Method 1: NPM Package Uninstall] Step 3: Remove Hooks",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:00.908Z"
+    },
+    {
+      "name": "[Method 1: NPM Package Uninstall] Step 4: Remove AI Subagents",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:00.908Z"
+    },
+    {
+      "name": "[Method 1: NPM Package Uninstall] Step 5: Clean Configuration Files (Optional)",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:00.908Z"
+    },
+    {
+      "name": "[Method 2: Repository-Based Uninstall] Step 1: Remove Custom Commands",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:00.908Z"
+    },
+    {
+      "name": "[Method 2: Repository-Based Uninstall] Step 2: Remove Hooks",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:00.908Z"
+    },
+    {
+      "name": "[Method 2: Repository-Based Uninstall] Step 3: Remove AI Subagents",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:00.908Z"
+    },
+    {
+      "name": "[Method 2: Repository-Based Uninstall] Step 4: Clean Configuration Files (Optional)",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:00.908Z"
+    },
+    {
+      "name": "[Method 2: Repository-Based Uninstall] Step 5: Remove Repository (Optional)",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:00.908Z"
+    },
+    {
+      "name": "[Method 1: NPM Package Installation (Recommended)] Step 1: Install Claude Code (if not already installed)",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:00.908Z",
+      "commands": [
+        {
+          "command": "npm install -g @anthropic-ai/claude-code",
+          "type": "install",
+          "startTime": "2025-08-23T19:09:00.908Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:02.009Z"
+        },
+        {
+          "command": "claude --version",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:02.009Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:02.460Z"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T19:09:02.460Z"
+    },
+    {
+      "name": "[Method 1: NPM Package Installation (Recommended)] Step 2: Install Claude Dev Toolkit",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:02.460Z",
+      "commands": [
+        {
+          "command": "npm install -g @paulduvall/claude-dev-toolkit",
+          "type": "install",
+          "startTime": "2025-08-23T19:09:02.460Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.202Z"
+        },
+        {
+          "command": "claude-commands --version",
+          "type": "toolkit",
+          "startTime": "2025-08-23T19:09:05.202Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.232Z"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T19:09:05.232Z"
+    },
+    {
+      "name": "[Method 1: NPM Package Installation (Recommended)] Step 3: Deploy Core Commands",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:05.232Z",
+      "commands": [
+        {
+          "command": "claude-commands install --active",
+          "type": "toolkit",
+          "startTime": "2025-08-23T19:09:05.232Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.264Z"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T19:09:05.264Z"
+    },
+    {
+      "name": "[Method 1: NPM Package Installation (Recommended)] Step 4: Install AI Subagents (Optional)",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:05.264Z",
+      "commands": [
+        {
+          "command": "claude-commands subagents --install",
+          "type": "toolkit",
+          "startTime": "2025-08-23T19:09:05.264Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.299Z"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T19:09:05.299Z"
+    },
+    {
+      "name": "[Method 1: NPM Package Installation (Recommended)] Step 5: Configure Settings",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:05.299Z",
+      "commands": [
+        {
+          "command": "claude-commands config",
+          "type": "toolkit",
+          "startTime": "2025-08-23T19:09:05.299Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.327Z"
+        },
+        {
+          "command": "claude-commands config --template comprehensive-settings.json",
+          "type": "toolkit",
+          "startTime": "2025-08-23T19:09:05.327Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.356Z"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T19:09:05.356Z"
+    },
+    {
+      "name": "[Method 1: NPM Package Installation (Recommended)] Step 6: Install Experimental Commands (Optional)",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:05.356Z",
+      "commands": [],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: claude-commands install --experimental\nnode:fs:3068\n  binding.copyFile(\n          ^\n\nError: ENOENT: no such file or directory, copyfile '/opt/homebrew/lib/node_modules/@paulduvall/claude-dev-toolkit/commands/experiments/xact.md' -> '/Users/paulduvall/.claude/commands/experiments/xact.md'\n    at Object.copyFileSync (node:fs:3068:11)\n    at /opt/homebrew/lib/node_modules/@paulduvall/claude-dev-toolkit/lib/installer.js:47:24\n    at Array.forEach (<anonymous>)\n    at Object.install (/opt/homebrew/lib/node_modules/@paulduvall/claude-dev-toolkit/lib/installer.js:46:26)\n    at Command.<anonymous> (/opt/homebrew/lib/node_modules/@paulduvall/claude-dev-toolkit/bin/claude-commands:80:19)\n    at Command.listener [as _actionHandler] (/opt/homebrew/lib/node_modules/@paulduvall/claude-dev-toolkit/node_modules/commander/lib/command.js:482:17)\n    at /opt/homebrew/lib/node_modules/@paulduvall/claude-dev-toolkit/node_modules/commander/lib/command.js:1283:65\n    at Command._chainOrCall (/opt/homebrew/lib/node_modules/@paulduvall/claude-dev-toolkit/node_modules/commander/lib/command.js:1177:12)\n    at Command._parseCommand (/opt/homebrew/lib/node_modules/@paulduvall/claude-dev-toolkit/node_modules/commander/lib/command.js:1283:27)\n    at /opt/homebrew/lib/node_modules/@paulduvall/claude-dev-toolkit/node_modules/commander/lib/command.js:1081:27 {\n  errno: -2,\n  code: 'ENOENT',\n  syscall: 'copyfile',\n  path: '/opt/homebrew/lib/node_modules/@paulduvall/claude-dev-toolkit/commands/experiments/xact.md',\n  dest: '/Users/paulduvall/.claude/commands/experiments/xact.md'\n}\n\nNode.js v24.1.0\n",
+      "endTime": "2025-08-23T19:09:05.383Z"
+    },
+    {
+      "name": "[Method 2: Repository-Based Installation (Advanced)] Step 1: Clone the Repository",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:05.383Z"
+    },
+    {
+      "name": "[Method 2: Repository-Based Installation (Advanced)] Step 2: Set Environment Variables",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:05.383Z"
+    },
+    {
+      "name": "[Method 2: Repository-Based Installation (Advanced)] Step 3: Run Complete Setup",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:05.383Z"
+    },
+    {
+      "name": "[Method 2: Repository-Based Installation (Advanced)] Step 4: Configure Claude Code",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:05.383Z"
+    },
+    {
+      "name": "[Method 2: Repository-Based Installation (Advanced)] Step 5: Deploy Custom Commands",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:05.383Z"
+    },
+    {
+      "name": "[Method 2: Repository-Based Installation (Advanced)] Step 6: Install AI Subagents",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: npm-fresh-install",
+      "timestamp": "2025-08-23T19:09:05.383Z"
+    },
+    {
+      "name": "[Common Steps (Both Methods)] Create Project Context (CLAUDE.md)",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:05.383Z",
+      "commands": [
+        {
+          "command": "cd /path/to/your/project",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:05.383Z",
+          "status": "skipped",
+          "reason": "Placeholder or example command"
+        },
+        {
+          "command": "cat > CLAUDE.md << 'EOF'",
+          "type": "filesystem",
+          "startTime": "2025-08-23T19:09:05.383Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.388Z"
+        },
+        {
+          "command": "[Describe your project here]",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:05.388Z",
+          "status": "skipped",
+          "reason": "Placeholder or example command"
+        },
+        {
+          "command": "[Define your development principles]",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:05.389Z",
+          "status": "skipped",
+          "reason": "Placeholder or example command"
+        },
+        {
+          "command": "[Specify coding standards and practices]",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:05.389Z",
+          "status": "skipped",
+          "reason": "Placeholder or example command"
+        },
+        {
+          "command": "[Define security requirements]",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:05.389Z",
+          "status": "skipped",
+          "reason": "Placeholder or example command"
+        },
+        {
+          "command": "EOF",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:05.389Z",
+          "status": "skipped",
+          "reason": "Placeholder or example command"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T19:09:05.389Z"
+    },
+    {
+      "name": "[Security Considerations] Set Up Hooks (Optional)",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:05.389Z",
+      "commands": [
+        {
+          "command": "mkdir -p ~/.claude/hooks/",
+          "type": "filesystem",
+          "startTime": "2025-08-23T19:09:05.389Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.392Z"
+        },
+        {
+          "command": "chmod 700 ~/.claude/hooks/",
+          "type": "permissions",
+          "startTime": "2025-08-23T19:09:05.392Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.396Z"
+        },
+        {
+          "command": "echo \"Hooks installation is handled during package installation\"",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:05.396Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.399Z"
+        },
+        {
+          "command": "echo \"Available hooks: file-logger, prevent-credential-exposure\"",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:05.399Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.401Z"
+        },
+        {
+          "command": "mkdir -p ~/.claude/hooks/",
+          "type": "filesystem",
+          "startTime": "2025-08-23T19:09:05.401Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.404Z"
+        },
+        {
+          "command": "chmod 700 ~/.claude/hooks/",
+          "type": "permissions",
+          "startTime": "2025-08-23T19:09:05.404Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.408Z"
+        }
+      ],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: cp hooks/prevent-credential-exposure.sh ~/.claude/hooks/\ncp: hooks/prevent-credential-exposure.sh: No such file or directory\n",
+      "endTime": "2025-08-23T19:09:05.411Z"
+    },
+    {
+      "name": "[Security Considerations] Verify Installation",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:05.411Z",
+      "commands": [
+        {
+          "command": "claude --version",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:05.411Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.847Z"
+        },
+        {
+          "command": "ls ~/.claude/commands/x*.md",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:05.847Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.853Z"
+        },
+        {
+          "command": "claude-commands list",
+          "type": "toolkit",
+          "startTime": "2025-08-23T19:09:05.853Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:05.880Z"
+        },
+        {
+          "command": "claude --version",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:05.880Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:06.295Z"
+        },
+        {
+          "command": "ls ~/.claude/commands/x*.md",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.295Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:06.301Z"
+        },
+        {
+          "command": "./verify-setup.sh --verbose",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.301Z",
+          "status": "skipped",
+          "reason": "Repository script not available in npm installation"
+        },
+        {
+          "command": "./validate-commands.sh",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.301Z",
+          "status": "skipped",
+          "reason": "Repository script not available in npm installation"
+        },
+        {
+          "command": "./setup.sh --setup-type basic",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.301Z",
+          "status": "skipped",
+          "reason": "Repository script not available in npm installation"
+        },
+        {
+          "command": "./setup.sh --setup-type security",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.301Z",
+          "status": "skipped",
+          "reason": "Repository script not available in npm installation"
+        },
+        {
+          "command": "./setup.sh --setup-type comprehensive",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.301Z",
+          "status": "skipped",
+          "reason": "Repository script not available in npm installation"
+        },
+        {
+          "command": "./setup.sh --force",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.301Z",
+          "status": "skipped",
+          "reason": "Repository script not available in npm installation"
+        },
+        {
+          "command": "./setup.sh --skip-configure --skip-hooks",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.301Z",
+          "status": "skipped",
+          "reason": "Repository script not available in npm installation"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T19:09:06.301Z"
+    },
+    {
+      "name": "[Version Control Best Practices] Backup Your Customizations",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:06.301Z",
+      "commands": [
+        {
+          "command": "mkdir ~/my-claude-customizations",
+          "type": "filesystem",
+          "startTime": "2025-08-23T19:09:06.301Z",
+          "status": "failed",
+          "error": "Command failed: mkdir ~/my-claude-customizations\nmkdir: /Users/paulduvall/my-claude-customizations: File exists\n",
+          "exitCode": 1,
+          "endTime": "2025-08-23T19:09:06.304Z"
+        }
+      ],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: mkdir ~/my-claude-customizations",
+      "endTime": "2025-08-23T19:09:06.304Z"
+    },
+    {
+      "name": "[Version Control Best Practices] Create Backup Script",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:06.304Z",
+      "commands": [
+        {
+          "command": "cat > backup-claude.sh << 'EOF'",
+          "type": "filesystem",
+          "startTime": "2025-08-23T19:09:06.304Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:06.309Z"
+        },
+        {
+          "command": "cp -r ~/.claude/* .claude/",
+          "type": "filesystem",
+          "startTime": "2025-08-23T19:09:06.309Z",
+          "status": "failed",
+          "error": "Command failed: cp -r ~/.claude/* .claude/\ncp: .claude/commands and /Users/paulduvall/.claude/commands are identical (not copied).\ncp: .claude/hooks and /Users/paulduvall/.claude/hooks are identical (not copied).\ncp: .claude/ide and /Users/paulduvall/.claude/ide are identical (not copied).\ncp: .claude/logs and /Users/paulduvall/.claude/logs are identical (not copied).\ncp: .claude/plugins and /Users/paulduvall/.claude/plugins are identical (not copied).\ncp: .claude/projects and /Users/paulduvall/.claude/projects are identical (not copied).\ncp: .claude/settings.json and /Users/paulduvall/.claude/settings.json are identical (not copied).\ncp: .claude/settings.json.backup.2025-08-22-00-02-42-852Z and /Users/paulduvall/.claude/settings.json.backup.2025-08-22-00-02-42-852Z are identical (not copied).\ncp: .claude/settings.json.backup.2025-08-23-19-09-05-351Z and /Users/paulduvall/.claude/settings.json.backup.2025-08-23-19-09-05-351Z are identical (not copied).\ncp: .claude/shell-snapshots and /Users/paulduvall/.claude/shell-snapshots are identical (not copied).\ncp: .claude/statsig and /Users/paulduvall/.claude/statsig are identical (not copied).\ncp: .claude/subagents and /Users/paulduvall/.claude/subagents are identical (not copied).\ncp: .claude/todos and /Users/paulduvall/.claude/todos are identical (not copied).\n",
+          "exitCode": 1,
+          "endTime": "2025-08-23T19:09:06.312Z"
+        }
+      ],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: cp -r ~/.claude/* .claude/",
+      "endTime": "2025-08-23T19:09:06.312Z"
+    },
+    {
+      "name": "[Using Custom Commands] Core Development Commands",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:06.312Z",
+      "commands": [
+        {
+          "command": "/xtest        # Run tests with coverage",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.312Z",
+          "status": "skipped",
+          "reason": "Claude Code UI command - not executable in shell"
+        },
+        {
+          "command": "/xquality     # Check code quality with linting",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.312Z",
+          "status": "skipped",
+          "reason": "Claude Code UI command - not executable in shell"
+        },
+        {
+          "command": "/xsecurity    # Scan for vulnerabilities",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.312Z",
+          "status": "skipped",
+          "reason": "Claude Code UI command - not executable in shell"
+        },
+        {
+          "command": "/xgit         # Automated commit workflow",
+          "type": "git",
+          "startTime": "2025-08-23T19:09:06.312Z",
+          "status": "skipped",
+          "reason": "Claude Code UI command - not executable in shell"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T19:09:06.312Z"
+    },
+    {
+      "name": "[Using Custom Commands] Advanced Commands",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:06.312Z",
+      "commands": [
+        {
+          "command": "/xpipeline    # CI/CD pipeline management",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.312Z",
+          "status": "skipped",
+          "reason": "Claude Code UI command - not executable in shell"
+        },
+        {
+          "command": "/xrelease     # Release management",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.312Z",
+          "status": "skipped",
+          "reason": "Claude Code UI command - not executable in shell"
+        },
+        {
+          "command": "/xconfig      # Configuration management",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.312Z",
+          "status": "skipped",
+          "reason": "Claude Code UI command - not executable in shell"
+        },
+        {
+          "command": "/xarchitecture # System architecture design",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.312Z",
+          "status": "skipped",
+          "reason": "Claude Code UI command - not executable in shell"
+        },
+        {
+          "command": "/xrefactor    # Interactive code refactoring",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.312Z",
+          "status": "skipped",
+          "reason": "Claude Code UI command - not executable in shell"
+        },
+        {
+          "command": "/xdebug       # Advanced debugging assistance",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.312Z",
+          "status": "skipped",
+          "reason": "Claude Code UI command - not executable in shell"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T19:09:06.312Z"
+    },
+    {
+      "name": "[Troubleshooting] Commands Not Appearing in Claude Code",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:06.312Z",
+      "commands": [
+        {
+          "command": "pkill -f claude-code",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.312Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:06.329Z"
+        },
+        {
+          "command": "ls -la ~/.claude/commands/",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.329Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:06.335Z"
+        },
+        {
+          "command": "./validate-commands.sh",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.335Z",
+          "status": "skipped",
+          "reason": "Repository script not available in npm installation"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T19:09:06.335Z"
+    },
+    {
+      "name": "[Troubleshooting] Permission Issues",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:06.335Z",
+      "commands": [
+        {
+          "command": "chmod -R 755 ~/.claude",
+          "type": "permissions",
+          "startTime": "2025-08-23T19:09:06.335Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T19:09:06.348Z"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T19:09:06.348Z"
+    },
+    {
+      "name": "[Troubleshooting] Installation Issues",
+      "type": "execution",
+      "startTime": "2025-08-23T19:09:06.348Z",
+      "commands": [
+        {
+          "command": "./setup.sh --force",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.348Z",
+          "status": "skipped",
+          "reason": "Repository script not available in npm installation"
+        },
+        {
+          "command": "./verify-setup.sh --verbose",
+          "type": "general",
+          "startTime": "2025-08-23T19:09:06.348Z",
+          "status": "skipped",
+          "reason": "Repository script not available in npm installation"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T19:09:06.348Z"
+    }
+  ],
+  "summary": {
+    "passed": 12,
+    "failed": 4,
+    "skipped": 16
+  },
+  "platform": "darwin",
+  "nodeVersion": "v24.1.0",
+  "errors": [],
+  "endTime": "2025-08-23T19:09:13.060Z",
+  "duration": 12154
+}

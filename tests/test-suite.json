@@ -1,10 +1,11 @@
 {
   "metadata": {
     "generatedFrom": "../docs/manual-uninstall-install-guide.md",
-    "generatedAt": "2025-08-23T18:56:24.714Z",
-    "totalSteps": 26,
+    "generatedAt": "2025-08-23T19:08:40.944Z",
+    "totalSteps": 32,
     "sections": [
-      "Complete Uninstall Process",
+      "Method 1: NPM Package Uninstall",
+      "Method 2: Repository-Based Uninstall",
       "Method 1: NPM Package Installation (Recommended)",
       "Method 2: Repository-Based Installation (Advanced)",
       "Common Steps (Both Methods)",
@@ -16,7 +17,130 @@
   },
   "testSteps": [
     {
-      "section": "Complete Uninstall Process",
+      "section": "Method 1: NPM Package Uninstall",
+      "step": "Step 1: Uninstall the NPM Package",
+      "description": "",
+      "commands": [
+        {
+          "raw": "npm uninstall -g @paulduvall/claude-dev-toolkit",
+          "type": "uninstall",
+          "dangerous": false,
+          "requiresConfirmation": true,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "npm list -g @paulduvall/claude-dev-toolkit",
+          "type": "verification",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        }
+      ],
+      "validations": [
+        {
+          "type": "output",
+          "expected": "(empty)",
+          "command": "npm list -g @paulduvall/claude-dev-toolkit"
+        }
+      ],
+      "lineNumber": 21
+    },
+    {
+      "section": "Method 1: NPM Package Uninstall",
+      "step": "Step 2: Remove Custom Commands",
+      "description": "",
+      "commands": [
+        {
+          "raw": "rm -rf ~/.claude/commands/",
+          "type": "cleanup",
+          "dangerous": true,
+          "requiresConfirmation": true,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "rm -rf .claude/commands/",
+          "type": "cleanup",
+          "dangerous": true,
+          "requiresConfirmation": true,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        }
+      ],
+      "validations": [],
+      "lineNumber": 32
+    },
+    {
+      "section": "Method 1: NPM Package Uninstall",
+      "step": "Step 3: Remove Hooks",
+      "description": "",
+      "commands": [
+        {
+          "raw": "rm -rf ~/.claude/hooks/",
+          "type": "cleanup",
+          "dangerous": true,
+          "requiresConfirmation": true,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "rm -rf .claude/hooks/",
+          "type": "cleanup",
+          "dangerous": true,
+          "requiresConfirmation": true,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        }
+      ],
+      "validations": [],
+      "lineNumber": 43
+    },
+    {
+      "section": "Method 1: NPM Package Uninstall",
+      "step": "Step 4: Remove AI Subagents",
+      "description": "",
+      "commands": [
+        {
+          "raw": "rm -rf ~/.claude/sub-agents/",
+          "type": "cleanup",
+          "dangerous": true,
+          "requiresConfirmation": true,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "rm -rf .claude/sub-agents/",
+          "type": "cleanup",
+          "dangerous": true,
+          "requiresConfirmation": true,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        }
+      ],
+      "validations": [],
+      "lineNumber": 54
+    },
+    {
+      "section": "Method 1: NPM Package Uninstall",
+      "step": "Step 5: Clean Configuration Files (Optional)",
+      "description": "**Note**: If you installed via repository method, you only need to clean up the deployed files:\n",
+      "commands": [
+        {
+          "raw": "rm -rf ~/.claude/config/",
+          "type": "cleanup",
+          "dangerous": true,
+          "requiresConfirmation": true,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        }
+      ],
+      "validations": [],
+      "lineNumber": 64
+    },
+    {
+      "section": "Method 2: Repository-Based Uninstall",
       "step": "Step 1: Remove Custom Commands",
       "description": "",
       "commands": [
@@ -38,10 +162,10 @@
         }
       ],
       "validations": [],
-      "lineNumber": 17
+      "lineNumber": 76
     },
     {
-      "section": "Complete Uninstall Process",
+      "section": "Method 2: Repository-Based Uninstall",
       "step": "Step 2: Remove Hooks",
       "description": "",
       "commands": [
@@ -63,10 +187,10 @@
         }
       ],
       "validations": [],
-      "lineNumber": 28
+      "lineNumber": 86
     },
     {
-      "section": "Complete Uninstall Process",
+      "section": "Method 2: Repository-Based Uninstall",
       "step": "Step 3: Remove AI Subagents",
       "description": "",
       "commands": [
@@ -88,12 +212,12 @@
         }
       ],
       "validations": [],
-      "lineNumber": 39
+      "lineNumber": 96
     },
     {
-      "section": "Complete Uninstall Process",
+      "section": "Method 2: Repository-Based Uninstall",
       "step": "Step 4: Clean Configuration Files (Optional)",
-      "description": "**Choose your preferred installation method:**\n",
+      "description": "",
       "commands": [
         {
           "raw": "rm -rf ~/.claude/config/",
@@ -105,7 +229,24 @@
         }
       ],
       "validations": [],
-      "lineNumber": 49
+      "lineNumber": 106
+    },
+    {
+      "section": "Method 2: Repository-Based Uninstall",
+      "step": "Step 5: Remove Repository (Optional)",
+      "description": "**Choose your preferred installation method:**\n",
+      "commands": [
+        {
+          "raw": "rm -rf ~/claude-code",
+          "type": "cleanup",
+          "dangerous": true,
+          "requiresConfirmation": true,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        }
+      ],
+      "validations": [],
+      "lineNumber": 114
     },
     {
       "section": "Method 1: NPM Package Installation (Recommended)",
@@ -130,7 +271,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 63
+      "lineNumber": 128
     },
     {
       "section": "Method 1: NPM Package Installation (Recommended)",
@@ -155,7 +296,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 73
+      "lineNumber": 138
     },
     {
       "section": "Method 1: NPM Package Installation (Recommended)",
@@ -172,7 +313,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 83
+      "lineNumber": 148
     },
     {
       "section": "Method 1: NPM Package Installation (Recommended)",
@@ -189,7 +330,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 95
+      "lineNumber": 160
     },
     {
       "section": "Method 1: NPM Package Installation (Recommended)",
@@ -205,7 +346,7 @@
           "timeout": 10000
         },
         {
-          "raw": "claude-commands config --template comprehensive",
+          "raw": "claude-commands config --template comprehensive-settings.json",
           "type": "toolkit",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -214,7 +355,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 107
+      "lineNumber": 172
     },
     {
       "section": "Method 1: NPM Package Installation (Recommended)",
@@ -222,7 +363,7 @@
       "description": "",
       "commands": [
         {
-          "raw": "claude-commands install --experiments",
+          "raw": "claude-commands install --experimental",
           "type": "toolkit",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -239,7 +380,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 117
+      "lineNumber": 182
     },
     {
       "section": "Method 2: Repository-Based Installation (Advanced)",
@@ -264,7 +405,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 129
+      "lineNumber": 194
     },
     {
       "section": "Method 2: Repository-Based Installation (Advanced)",
@@ -297,7 +438,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 137
+      "lineNumber": 202
     },
     {
       "section": "Method 2: Repository-Based Installation (Advanced)",
@@ -322,7 +463,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 148
+      "lineNumber": 213
     },
     {
       "section": "Method 2: Repository-Based Installation (Advanced)",
@@ -339,7 +480,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 160
+      "lineNumber": 225
     },
     {
       "section": "Method 2: Repository-Based Installation (Advanced)",
@@ -372,7 +513,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 167
+      "lineNumber": 232
     },
     {
       "section": "Method 2: Repository-Based Installation (Advanced)",
@@ -389,7 +530,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 180
+      "lineNumber": 245
     },
     {
       "section": "Common Steps (Both Methods)",
@@ -454,7 +595,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 189
+      "lineNumber": 254
     },
     {
       "section": "Security Considerations",
@@ -462,16 +603,32 @@
       "description": "**For NPM Package Installation:**\n**For Repository-Based Installation:**\n",
       "commands": [
         {
-          "raw": "claude-commands hooks --install file-logger",
-          "type": "toolkit",
+          "raw": "mkdir -p ~/.claude/hooks/",
+          "type": "filesystem",
           "dangerous": false,
           "requiresConfirmation": false,
           "expectedExitCode": 0,
           "timeout": 10000
         },
         {
-          "raw": "claude-commands hooks --install prevent-credential-exposure",
-          "type": "toolkit",
+          "raw": "chmod 700 ~/.claude/hooks/",
+          "type": "permissions",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "echo \"Hooks installation is handled during package installation\"",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "echo \"Available hooks: file-logger, prevent-credential-exposure\"",
+          "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
           "expectedExitCode": 0,
@@ -527,7 +684,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 215
+      "lineNumber": 280
     },
     {
       "section": "Security Considerations",
@@ -632,7 +789,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 241
+      "lineNumber": 309
     },
     {
       "section": "Version Control Best Practices",
@@ -713,7 +870,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 295
+      "lineNumber": 363
     },
     {
       "section": "Version Control Best Practices",
@@ -778,7 +935,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 318
+      "lineNumber": 386
     },
     {
       "section": "Using Custom Commands",
@@ -819,7 +976,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 337
+      "lineNumber": 405
     },
     {
       "section": "Using Custom Commands",
@@ -876,7 +1033,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 346
+      "lineNumber": 414
     },
     {
       "section": "Troubleshooting",
@@ -909,7 +1066,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 359
+      "lineNumber": 427
     },
     {
       "section": "Troubleshooting",
@@ -926,12 +1083,12 @@
         }
       ],
       "validations": [],
-      "lineNumber": 372
+      "lineNumber": 440
     },
     {
       "section": "Troubleshooting",
       "step": "Installation Issues",
-      "description": "1. **Repository-Based**: This toolkit is installed from the Git repository, not an npm package\n2. **Customization Storage**: All customizations stored in `~/.claude/` (machine-wide) or `.claude/` (project-specific)\n3. **Version Control**: Always backup your `.claude/` directory to prevent loss\n4. **CLAUDE.md**: Project context file essential for consistent behavior\n5. **Command Prefix**: All custom commands use \"x\" prefix (e.g., `/xtest`, `/xgit`)\n6. **Script-Based**: Installation uses shell scripts (`./setup.sh`, `./deploy.sh`, etc.)\n- Repository: https://github.com/PaulDuvall/claude-code\n- Claude Code Documentation: https://docs.anthropic.com/en/docs/claude-code/\n- AI Development Patterns: https://github.com/PaulDuvall/ai-development-patterns\n- Slash Commands Documentation: https://docs.anthropic.com/en/docs/claude-code/slash-commands\n- Hooks Documentation: https://docs.anthropic.com/en/docs/claude-code/hooks\n- Sub-Agents Documentation: https://docs.anthropic.com/en/docs/claude-code/sub-agents\nThis repository transforms Claude Code into a comprehensive development platform that:\n- Automates repetitive tasks through 57 custom slash commands\n- Enforces security and quality standards through hooks\n- Provides intelligent assistance through AI subagents\n- Maintains project context through CLAUDE.md\n- Uses repository-based installation via shell scripts\n- Supports backup and version control for persistence\n**Key Installation Command**: `./setup.sh` (after cloning the repository)\n",
+      "description": "1. **Dual Installation Methods**: Available both as npm package (`@paulduvall/claude-dev-toolkit`) and repository-based installation\n2. **Customization Storage**: All customizations stored in `~/.claude/` (machine-wide) or `.claude/` (project-specific)\n3. **Version Control**: Always backup your `.claude/` directory to prevent loss\n4. **CLAUDE.md**: Project context file essential for consistent behavior\n5. **Command Prefix**: All custom commands use \"x\" prefix (e.g., `/xtest`, `/xgit`)\n6. **NPM Package**: Use `claude-commands` CLI after installing npm package\n7. **Repository-Based**: Use shell scripts (`./setup.sh`, `./deploy.sh`, etc.) after cloning repository\n- Repository: https://github.com/PaulDuvall/claude-code\n- Claude Code Documentation: https://docs.anthropic.com/en/docs/claude-code/\n- AI Development Patterns: https://github.com/PaulDuvall/ai-development-patterns\n- Slash Commands Documentation: https://docs.anthropic.com/en/docs/claude-code/slash-commands\n- Hooks Documentation: https://docs.anthropic.com/en/docs/claude-code/hooks\n- Sub-Agents Documentation: https://docs.anthropic.com/en/docs/claude-code/sub-agents\nThis toolkit transforms Claude Code into a comprehensive development platform that:\n- Automates repetitive tasks through 57 custom slash commands\n- Enforces security and quality standards through hooks\n- Provides intelligent assistance through AI subagents\n- Maintains project context through CLAUDE.md\n- Supports dual installation methods (npm package and repository-based)\n- Supports backup and version control for persistence\n**Key Installation Commands**:\n- **NPM Package**: `npm install -g @paulduvall/claude-dev-toolkit`\n- **Repository-Based**: `./setup.sh` (after cloning the repository)\n",
       "commands": [
         {
           "raw": "./setup.sh --force",
@@ -951,7 +1108,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 379
+      "lineNumber": 447
     }
   ],
   "testMatrix": {
