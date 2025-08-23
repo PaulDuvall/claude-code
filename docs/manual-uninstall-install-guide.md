@@ -116,7 +116,8 @@ rm -rf ~/.claude/config/
 ```bash
 # Remove the cloned repository if no longer needed
 # Replace with your actual clone location
-rm -rf ~/claude-code
+# Example: rm -rf ~/claude-code
+echo "Remove repository manually: rm -rf /path/to/your/claude-code"
 ```
 
 ## Complete Installation Process

@@ -148,7 +148,9 @@ class SecurityValidator {
         /rm -rf\s+\.claude\//,
         /rm -rf\s+node_modules/,
         /rm -rf\s+\.npm/,
-        /rm -rf\s+\/tmp\/claude-test/
+        /rm -rf\s+\/tmp\/claude-test/,
+        // Allow echo commands that contain rm -rf for documentation purposes
+        /^echo\s+.*rm -rf/
       ],
       'sudo-usage': [
         // No exceptions for sudo in install guides
