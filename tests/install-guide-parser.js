@@ -106,7 +106,11 @@ class InstallGuideParser {
 
     // Filter steps that have executable commands
     this.testSteps = this.testSteps.filter(step => 
-      step.commands.length > 0 || step.section.includes('Uninstall') || step.section.includes('Installation')
+      step.commands.length > 0 || 
+      step.section.includes('Uninstall') || 
+      step.section.includes('Installation') ||
+      step.section.includes('Complete Uninstall Process') ||
+      step.section.includes('Complete Installation Process')
     );
   }
 
@@ -183,6 +187,9 @@ class InstallGuideParser {
    * Generate test suite configuration
    */
   generateTestSuite() {
+    // Parse the documentation first
+    this.parse();
+    
     return {
       metadata: {
         generatedFrom: this.guidePath,
@@ -235,22 +242,22 @@ if (require.main === module) {
     const parser = new InstallGuideParser(guidePath);
     const testSuite = parser.generateTestSuite();
     
-    console.log('📋 Parsed Install Guide Test Suite\n');
-    console.log(`📊 Metadata:`);
-    console.log(`   Generated from: ${testSuite.metadata.generatedFrom}`);
-    console.log(`   Total steps: ${testSuite.metadata.totalSteps}`);
-    console.log(`   Sections: ${testSuite.metadata.sections.join(', ')}\n`);
-    
-    console.log('🔧 Test Steps:');
-    testSuite.testSteps.forEach((step, index) => {
-      console.log(`   ${index + 1}. [${step.section}] ${step.step}`);
-      console.log(`      Commands: ${step.commands.length}`);
-      console.log(`      Validations: ${step.validations.length}`);
-    });
-    
     // Output JSON for GitHub Actions
     if (process.argv.includes('--json')) {
-      console.log('\n' + JSON.stringify(testSuite, null, 2));
+      console.log(JSON.stringify(testSuite, null, 2));
+    } else {
+      console.log('📋 Parsed Install Guide Test Suite\n');
+      console.log(`📊 Metadata:`);
+      console.log(`   Generated from: ${testSuite.metadata.generatedFrom}`);
+      console.log(`   Total steps: ${testSuite.metadata.totalSteps}`);
+      console.log(`   Sections: ${testSuite.metadata.sections.join(', ')}\n`);
+      
+      console.log('🔧 Test Steps:');
+      testSuite.testSteps.forEach((step, index) => {
+        console.log(`   ${index + 1}. [${step.section}] ${step.step}`);
+        console.log(`      Commands: ${step.commands.length}`);
+        console.log(`      Validations: ${step.validations.length}`);
+      });
     }
   } catch (error) {
     console.error('❌ Error parsing guide:', error.message);
