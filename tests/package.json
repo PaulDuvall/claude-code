@@ -1,0 +1,35 @@
+{
+  "name": "claude-dev-toolkit-tests",
+  "version": "1.0.0",
+  "description": "Automated tests for Claude Dev Toolkit installation guide",
+  "private": true,
+  "scripts": {
+    "test": "npm run test:fresh-install && npm run test:reinstall",
+    "test:fresh-install": "node install-guide-tester.js --scenario=fresh-install --phase=all",
+    "test:reinstall": "node install-guide-tester.js --scenario=reinstall --phase=all", 
+    "test:upgrade": "node install-guide-tester.js --scenario=upgrade --phase=all",
+    "parse-docs": "node install-guide-parser.js ../docs/manual-uninstall-install-guide.md",
+    "validate-security": "node security-validator.js ../docs/manual-uninstall-install-guide.md",
+    "generate-report": "node generate-comprehensive-report.js",
+    "validate-docs": "node validate-documentation-accuracy.js"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^9.4.1",
+    "marked": "^4.3.0"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "claude-code",
+    "testing",
+    "automation",
+    "install-guide"
+  ],
+  "author": "Paul Duvall",
+  "license": "MIT"
+}
