@@ -52,7 +52,7 @@ class PackageCompletenessTest {
         }
     }
 
-    async runTests() {
+    runAllTests() {
         this.log('🚀 Starting NPM Package Completeness Tests');
 
         // Test 1: Verify npm pack includes all expected files
@@ -197,14 +197,8 @@ class PackageCompletenessTest {
 // Run tests if called directly
 if (require.main === module) {
     const tester = new PackageCompletenessTest();
-    tester.runTests()
-        .then(success => {
-            process.exit(success ? 0 : 1);
-        })
-        .catch(error => {
-            console.error('Test execution failed:', error);
-            process.exit(1);
-        });
+    const success = tester.runAllTests();
+    process.exit(success ? 0 : 1);
 }
 
 module.exports = PackageCompletenessTest;
