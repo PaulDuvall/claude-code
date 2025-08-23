@@ -1,0 +1,377 @@
+{
+  "scenario": "fresh-install",
+  "startTime": "2025-08-23T18:37:37.923Z",
+  "steps": [
+    {
+      "name": "[Complete Uninstall Process] Step 1: Uninstall the npm Package",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: fresh-install",
+      "timestamp": "2025-08-23T18:37:37.925Z"
+    },
+    {
+      "name": "[Complete Uninstall Process] Step 2: Remove Custom Commands",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: fresh-install",
+      "timestamp": "2025-08-23T18:37:37.925Z"
+    },
+    {
+      "name": "[Complete Uninstall Process] Step 3: Remove Hooks",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: fresh-install",
+      "timestamp": "2025-08-23T18:37:37.925Z"
+    },
+    {
+      "name": "[Complete Uninstall Process] Step 4: Remove AI Subagents",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: fresh-install",
+      "timestamp": "2025-08-23T18:37:37.925Z"
+    },
+    {
+      "name": "[Complete Uninstall Process] Step 5: Clean Configuration Files",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: fresh-install",
+      "timestamp": "2025-08-23T18:37:37.925Z"
+    },
+    {
+      "name": "[Complete Uninstall Process] Step 6: Clear npm Cache (Optional)",
+      "type": "skipped",
+      "status": "skipped",
+      "reason": "Skipped for scenario: fresh-install",
+      "timestamp": "2025-08-23T18:37:37.925Z"
+    },
+    {
+      "name": "[Complete Installation Process] Step 1: Install Claude Code (if not already installed)",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:37.925Z",
+      "commands": [
+        {
+          "command": "npm install -g @anthropic-ai/claude-code",
+          "type": "install",
+          "startTime": "2025-08-23T18:37:37.925Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:43.010Z"
+        },
+        {
+          "command": "claude --version",
+          "type": "general",
+          "startTime": "2025-08-23T18:37:43.010Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:43.439Z"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T18:37:43.439Z"
+    },
+    {
+      "name": "[Complete Installation Process] Step 2: Install Claude Dev Toolkit",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:43.439Z",
+      "commands": [
+        {
+          "command": "npm install -g @paulduvall/claude-dev-toolkit",
+          "type": "install",
+          "startTime": "2025-08-23T18:37:43.439Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:46.501Z"
+        }
+      ],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: claude-commands --version\n/bin/sh: claude-commands: command not found\n",
+      "endTime": "2025-08-23T18:37:46.505Z"
+    },
+    {
+      "name": "[Complete Installation Process] Step 3: Deploy Core Commands",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:46.505Z",
+      "commands": [],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: claude-commands install --active\n/bin/sh: claude-commands: command not found\n",
+      "endTime": "2025-08-23T18:37:46.509Z"
+    },
+    {
+      "name": "[Complete Installation Process] Step 4: Install AI Subagents (Optional but Recommended)",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:46.509Z",
+      "commands": [],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: claude-commands subagents --install\n/bin/sh: claude-commands: command not found\n",
+      "endTime": "2025-08-23T18:37:46.512Z"
+    },
+    {
+      "name": "[Complete Installation Process] Step 5: Configure Settings",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:46.512Z",
+      "commands": [],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: claude-commands config\n/bin/sh: claude-commands: command not found\n",
+      "endTime": "2025-08-23T18:37:46.514Z"
+    },
+    {
+      "name": "[Complete Installation Process] Step 6: Install Experimental Commands (Optional)",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:46.515Z",
+      "commands": [],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: claude-commands install --experiments\n/bin/sh: claude-commands: command not found\n",
+      "endTime": "2025-08-23T18:37:46.517Z"
+    },
+    {
+      "name": "[Complete Installation Process] Step 7: Create Project Context (CLAUDE.md)",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:46.517Z",
+      "commands": [],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: cd /path/to/your/project\n/bin/sh: line 0: cd: /path/to/your/project: No such file or directory\n",
+      "endTime": "2025-08-23T18:37:46.520Z"
+    },
+    {
+      "name": "[Security Considerations] Step 8: Set Up Hooks (Optional)",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:46.520Z",
+      "commands": [],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: claude-commands hooks --install file-logger\n/bin/sh: claude-commands: command not found\n",
+      "endTime": "2025-08-23T18:37:46.523Z"
+    },
+    {
+      "name": "[Security Considerations] Step 9: Verify Installation",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:46.523Z",
+      "commands": [],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: claude-commands list\n/bin/sh: claude-commands: command not found\n",
+      "endTime": "2025-08-23T18:37:46.525Z"
+    },
+    {
+      "name": "[Version Control Best Practices] Step 1: Initialize Version Control for Customizations",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:46.525Z",
+      "commands": [
+        {
+          "command": "mkdir ~/my-claude-customizations",
+          "type": "filesystem",
+          "startTime": "2025-08-23T18:37:46.525Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:46.529Z"
+        },
+        {
+          "command": "cd ~/my-claude-customizations",
+          "type": "general",
+          "startTime": "2025-08-23T18:37:46.529Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:46.532Z"
+        },
+        {
+          "command": "git init",
+          "type": "git",
+          "startTime": "2025-08-23T18:37:46.532Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:46.551Z"
+        },
+        {
+          "command": "cp -r ~/.claude .claude",
+          "type": "filesystem",
+          "startTime": "2025-08-23T18:37:46.551Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:46.783Z"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T18:37:46.783Z"
+    },
+    {
+      "name": "[Version Control Best Practices] Step 2: Create Directory Structure",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:46.783Z",
+      "commands": [
+        {
+          "command": "mkdir -p .claude/commands",
+          "type": "filesystem",
+          "startTime": "2025-08-23T18:37:46.783Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:46.787Z"
+        },
+        {
+          "command": "mkdir -p .claude/hooks",
+          "type": "filesystem",
+          "startTime": "2025-08-23T18:37:46.787Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:46.792Z"
+        },
+        {
+          "command": "mkdir -p .claude/subagents",
+          "type": "filesystem",
+          "startTime": "2025-08-23T18:37:46.792Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:46.795Z"
+        },
+        {
+          "command": "mkdir -p .claude/config",
+          "type": "filesystem",
+          "startTime": "2025-08-23T18:37:46.796Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:46.799Z"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T18:37:46.799Z"
+    },
+    {
+      "name": "[Version Control Best Practices] Step 3: Add to Version Control",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:46.799Z",
+      "commands": [],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: git add .\nwarning: could not open directory 'Music/Music/': Operation not permitted\nwarning: could not open directory 'Pictures/Photos Library.photoslibrary/': Operation not permitted\nwarning: could not open directory 'Desktop/': Operation not permitted\nwarning: could not open directory 'Library/Application Support/MobileSync/': Operation not permitted\nwarning: could not open directory 'Library/Application Support/CallHistoryTransactions/': Operation not permitted\nwarning: could not open directory 'Library/Application Support/CloudDocs/': Operation not permitted\nwarning: could not open directory 'Library/Application Support/com.apple.sharedfilelist/': Operation not permitted\nwarning: could not open directory 'Library/Application Support/Knowledge/': Operation not permitted\nwarning: could not open directory 'Library/Application Support/com.apple.TCC/': Operation not permitted\nwarning: could not open directory 'Library/Application Support/FileProvider/': Operation not permitted\nwarning: could not open directory 'Library/Application Support/AddressBook/': Operation not permitted\nwarning: could not open directory 'Library/Application Support/FaceTime/': Operation not permitted\nwarning: could not open directory 'Library/Application Support/DifferentialPrivacy/': Operation not permitted\nwarning: could not open directory 'Library/Application Support/com.apple.avfoundation/Frecents/': Operation not permitted\nwarning: could not open directory 'Library/Application Support/CallHistoryDB/': Operation not permitted\nwarning: could not open directory 'Library/Assistant/SiriVocabulary/': Operation not permitted\nwarning: could not open directory 'Library/Daemon Containers/': Operation not permitted\nwarning: could not open directory 'Library/Autosave Information/': Operation not permitted\nwarning: could not open directory 'Library/IdentityServices/': Operation not permitted\nwarning: could not open directory 'Library/Messages/': Operation not permitted\nwarning: could not open directory 'Library/HomeKit/': Operation not permitted\nwarning: could not open directory 'Library/Sharing/': Operation not permitted\nwarning: could not open directory 'Library/com.apple.aiml.instrumentation/': Operation not permitted\nwarning: could not open directory 'Library/Mail/': Operation not permitted\nwarning: could not open directory 'Library/Trial/': Operation not permitted\nwarning: could not open directory 'Library/AppleMediaServices/': Operation not permitted\nwarning: could not open directory 'Library/DuetExpertCenter/': Operation not permitted\nwarning: could not open directory 'Library/Accounts/': Operation not permitted\nwarning: could not open directory 'Library/Safari/': Operation not permitted\nwarning: could not open directory 'Library/Biome/': Operation not permitted\nwarning: could not open directory 'Library/IntelligencePlatform/': Operation not permitted\nwarning: could not open directory 'Library/Shortcuts/': Operation not permitted\nwarning: could not open directory 'Library/Mobile Documents/': Operation not permitted\nwarning: could not open directory 'Library/Suggestions/': Operation not permitted\nwarning: could not open directory 'Library/Weather/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.stocks-news/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.photolibraryd.private/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/UBF8T346G9.com.microsoft.oneauth/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.feedback/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.siri.inference/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.swtransparency/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/HKE973VLUW.com.duckduckgo.mobile.ios.app-configuration/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.ArchiveUtility.PKSignedContainer/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.accessibility.voicebanking/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.siri.referenceResolution/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.stocks/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.usernoted/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.VoiceMemos.shared/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/.SiriTodayViewExtension/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.secure-control-center-preferences/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.chronod/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/com.apple.MailPersonaStorage/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/2BUA8C4S2C.com.agilebits/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/2BUA8C4S2C.com.1password/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.private.translation/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.appstoreagent/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.portrait.BackgroundReplacement/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.amsondevicestoraged/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.SiriTTS/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/HKE973VLUW.com.duckduckgo.macos.browser.app-configuration/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.notes.import/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.calendar/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.newsd/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.siri.userfeedbacklearning/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.gamecenter/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.tips/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.tv.sharedcontainer/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/HKE973VLUW.com.ddg.ipc/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/G7HH3F8CAK.com.getdropbox.dropbox.sync/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.spotlight/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/HKE973VLUW.com.duckduckgo.mobile.ios.subscription/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.studentd/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.ManagedSettings/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.sharingd/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/74J34U3R6X.com.apple.iWork/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.printtool/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.news/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/UBF8T346G9.ms/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.scopedbookmarkagent/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.tvappservices.container/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.weather/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/com.apple.systempreferences.cache/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.feedbacklogger/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.siri.remembers/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.notes/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/com.apple.stickersd.group/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.screencapture/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/243LU875E5.groups.com.apple.podcasts/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/com.dropbox.client.crashpad/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.UserNotifications/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.tipsnext/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/com.apple.messages/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/HKE973VLUW.com.duckduckgo.macos.browser.appstore.dbp/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/SY64MV22J9.com.raycast.macos.shared/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.Safari.SandboxBroker/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.transparency/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.reminders/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.VoiceOver/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.amazon.Lassen/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/HKE973VLUW.com.duckduckgo.macos.browser.dbp/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.mail/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/com.apple.bird/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.DeviceActivity/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.replayd/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/com.apple.Home.group/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.iCloudDrive/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/HKE973VLUW.com.duckduckgo.macos.browser.network-protection.system-extension/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.is.workflow.my.app/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.energykit/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/com.apple.PreviewLegacySignaturesConversion/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/HKE973VLUW.com.duckduckgo.macos.browser.subscription/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.replicatord/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.Photos.PhotosFileProvider/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/HKE973VLUW.com.ddg.ipc.a/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/UBF8T346G9.com.microsoft.teams/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.AppleSpell/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.mlhost/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.FamilyControls/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.Maps/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.PegasusConfiguration/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/HKE973VLUW.com.duckduckgo.macos.browser.network-protection/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.is.workflow.shortcuts/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/group.com.apple.shortcuts/': Operation not permitted\nwarning: could not open directory 'Library/Group Containers/com.apple.MessagesLegacyTransferArchive/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.CloudPhotosConfiguration/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.PressAndHold/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.languageassetd/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.iCal/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.siri.SiriPrivateLearningAnalytics.SiriUserSegmentation/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.QuickTimePlayerX/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.VoiceMemos/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.mlhost.TelemetryWorker/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.ax.KonaTTSSupport.KonaSynthesizer/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.CoreDevice.remotepairingd/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.archiveutility/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.FaceTime/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.LinkPresentation.LinkSnapshotGeneratorService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.ScreenTimeAgent/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.LighthouseBitacoraFramework.BitacoraWorker/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Home.HomeEnergyWidgets/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.amazon.Lassen/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.ScreenTimeViewService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.mobiletimer-framework.MobileTimerIntents/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.speech.MacinTalkFramework.WardaSynthesizer.x86-64/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.weather.widget/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.calculator/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.photos.ImageConversionService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.systempreferences.SpotlightIndexExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.calendar.CalendarIntentsExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.siri.ODDIPoirotMetricsExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.iWork.Numbers/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.quicklook.QuickLookUIService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.getdropbox.dropbox.alternatenotificationservice/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.CloudSubscriptionFeatures.CSFFollowUpExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.poirot.MessagesAnalyticsWorker/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.iCal.CalendarWidgetExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.contacts.donation-agent/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.photolibraryd/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.siri.media-indexer/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.speech.MacinTalkFramework.WardaSynthesizer.arm64/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.sharing.ShareSheetUI/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.lighthouse.SiriTurnRestatementExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.StorageManagement.MessagesHelper/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.ExtensionsSettings.LegacyPluginEnablementExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.BKAgentService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.tips.Widget/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.mediastream.mstreamd/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.news.tag/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.LookupViewService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.InternalFiltersXPC/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.tonelibraryd/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Maps/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.PeopleMessageService.LegacyMessageService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Notes.SpotlightIndexExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.AMPDeviceDiscoveryAgent/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.systempreferences.AppleIDSettings/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.microsoft.teams2.respawn/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.SafariPlatformSupport.Helper/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.GamePolicyMenuExtraService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.aiml.mlpt.FedStats.MLHostPluginClassB/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.podcasts.MacPodcastsStorageExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Safari.BrowserDataImportingService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Home/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Safari/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Keyboard-Settings.extension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.wallpaper.agent/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.IOUIAgent/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.podcasts.SpotlightIndexExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.CloudDocsDaemon.StorageManagement/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.lighthouse.SAExtensionOrchestrator/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.PeopleMessageService.AskToBuy/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.iMovieApp/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Safari.CacheDeleteExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.reminders.WidgetExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.lighthouse.BiomeSELFIngestor/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.getdropbox.dropbox.garcon/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.AskToMessagesHost.AskToMessagesExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.wallpaper.extension.video/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.aiml.RepackagingWorker/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.AMPArtworkAgent/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.FollowUpSettings.FollowUpSettingsExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.iBooksX.DiskSpaceEfficiency/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.messages.StorageManagementExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.clock.WorldClockWidget/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.reminders.macOSIntentsExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.findmy.FindMyWidgetPeople/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.PeopleViewService.PeopleWidget-macOS/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.reminders.spotlightindexextension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.news.widget/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.ScreenTimeWidgetApplication.ScreenTimeWidgetExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.STMExtension.OtherUsers/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.ExtensionsSettings.DefaultExtensionEnablement/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.PeopleViewService.SelectPerson-iOS/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/2BUA8C4S2C.com.1password.browser-helper/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.AutoFillPanelService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.SiriMetrics.SiriTurnRestatementExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.speech.MacinTalkFramework.MacinTalkAUSP/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.photoanalysisd/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.amp.devicesui/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Photos.PhotosReliveWidget/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.iWork.Pages/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.notificationcenterui/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.MediaExtensions-Settings/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.CloudDocs.MobileDocumentsFileProvider/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.ScreenSaver.Ventura/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.lighthouse.IFTranscriptSELFIngestor/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.microsoft.teams2.notificationcenter/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.TV.TVStorageExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Sound-Settings.SoundIntents/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.aiml.mlpt.FedStats.MLHostPlugin/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.findmy.FindMyWidgetIntentsPeople/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.FaceTime.FaceTimeNotificationExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.SystemExtensions-Settings.extension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.mail/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.1password.1password-launcher/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.StoreKit.UIService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.iBooks.iBooksSpotlightExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.AMSUIPaymentViewService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.DataDetectorsLocalSources/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Photos/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.FamilyControlsAgent/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.siri.metrics.ExperimentationExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.MobileSMS/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.PlatformSSOToken/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.SafariFoundation.CredentialProviderExtensionHelper/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.CalendarWeatherKitService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Music.MusicCacheExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.StorageManagement.CloudStorageHelper/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.findmy.FindMyWidgetIntentsItems/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.LoginUserService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.AppStore/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.news.widgetintents/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Siri/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.AppleMediaServicesUI.UtilityExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.VoiceMemos.VoiceMemosSettingsWidget/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Notes/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.shortcuts.ShortcutsWidget/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.siri.metrics.AssetMetricsExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.mail.SpotlightIndexExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.STMExtension.Trash/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.MediaMLPluginApp.MediaMLExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Batteries.BatteriesAvocadoWidgetExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.MailCacheDelete/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.STMExtension.iOSFiles/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.STMExtension.Applications/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.mlhost.CloudWorker/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.siri.metrics.DevicePropertiesExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.microsoft.teams2/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.ManagedSettings.ManagedSettingsMacOSExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Dictionary/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.siri.GMSSELFIngestor/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.TextEdit/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.CryptoTokenKit.pivtoken/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.windowmanager.ShowDesktopEducation/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.fskit.msdos/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Music.MusicStorageExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Desktop-Settings.extension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Photos.StorageManagementExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.siri.SiriSuggestionsLightHousePlugin/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.geod/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.news/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.TV.TVCacheExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.speech.SpeechSynthesisServerXPC/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.CaptiveNetworkAssistant/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.duckduckgo.mobile.ios.vpn.agent/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.iCloudDriveCore.telemetry-disk-checker/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.facetime.NotificationViewBridgeService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.share.AirDrop.send/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.DifferentialPrivacy.TelemetryAggregator/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.DataDetectorsViewService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.aiml.mlpt.FedStats.MLHostPluginClassA/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.STMExtension.Mail/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.texttospeech.SiriAUSP/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.STMExtension.Developer/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.routined/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.findmy.FindMyWidgetItems/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Screen-Time-Settings.extension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.SiriUI.SiriUISetupXPC/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.corerecents.recentsd/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.STMExtension.GarageBand/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.stocks.widget/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.ScreenTimeWidgetApplication.ScreenTimeWidgetIntentsExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Notes.WidgetExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.systempreferences.GeneralSettings/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Safari.SafariWidgetExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.messages.AssistantExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.LinkedNotesUIService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Preview/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.podcasts/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.UsageTrackingAgent/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Home.HomeWidget.Interactive/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.duckduckgo.mobile.ios/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.CoreRoutine.helperservice/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.videoapps.OOPProResRawService/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.siri.metrics.MetricsExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.CryptoTokenKit.ctkcard.ctkcardtoken/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.stocks/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.lighthouse.IFTelemetrySELFIngestor/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.siri.ODDI.MetricsExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.lighthouse.PnROnDeviceWorker/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Safari.SafariLinkExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Safari.WebApp/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.quicklook.ui.helper/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.CMViewSrvc/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.siri.ODDIMetricsExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.AuthKitUI.AKFollowUpServerUIExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.AvatarUI.AvatarPickerMemojiPicker/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Notes.IntentsExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.ax.MauiTTSSupport.MauiAUSP/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.weather.WeatherIntents/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.AirPlayUIAgent/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.1password.browser-support/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.AquaAppearanceHelper/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.raycast.macos.RaycastAppIntents/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.AddressBook/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.fskit.ModuleEnablement/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.lighthouse.BiomeLibraryEventUploader/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.voicebankingd/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.systempreferences/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.CloudDocs.iCloudDriveFileProvider/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.displaycalibrator/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.parsec.SafariAssistantWorker/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.podcasts.widget/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.mediaanalysisd/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.OSDUIHelper/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.ScreenContinuity/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.CalendarWidget.IntentsExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.MobileSMS.MessagesActionExtension/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.DeskCam/Data/': Operation not permitted\nwarning: could not open directory 'Library/Containers/com.apple.Family/Data/': Operation not permitted\nwarning: could not open directory 'Library/ContainerManager/': Operation not permitted\nwarning: could not open directory 'Library/PersonalizationPortrait/': Operation not permitted\nwarning: could not open directory 'Library/Photos/': Operation not permitted\nwarning: could not open directory 'Library/Metadata/CoreSpotlight/': Operation not permitted\nwarning: could not open directory 'Library/Metadata/com.apple.IntelligentSuggestions/': Operation not permitted\nwarning: could not open directory 'Library/Cookies/': Operation not permitted\nwarning: could not open directory 'Library/CoreFollowUp/': Operation not permitted\nwarning: could not open directory 'Library/StatusKit/': Operation not permitted\nwarning: could not open directory 'Library/DoNotDisturb/': Operation not permitted\nwarning: could not open directory 'Library/Caches/com.apple.Music/': Operation not permitted\nwarning: could not open directory 'Library/Caches/com.apple.HomeKit/': Operation not permitted\nwarning: could not open directory 'Library/Caches/CloudKit/': Operation not permitted\nwarning: could not open directory 'Library/Caches/com.apple.Safari/': Operation not permitted\nwarning: could not open directory 'Library/Caches/com.apple.containermanagerd/': Operation not permitted\nwarning: could not open directory 'Library/Caches/FamilyCircle/': Operation not permitted\nwarning: could not open directory 'Library/Caches/com.apple.homed/': Operation not permitted\nwarning: could not open directory 'Library/Caches/com.apple.TV/': Operation not permitted\nwarning: could not open directory 'Library/Caches/com.apple.ap.adprivacyd/': Operation not permitted\nwarning: could not open directory 'Movies/TV/': Operation not permitted\nwarning: could not open directory '.Trash/': Operation not permitted\nwarning: could not open directory 'Documents/': Operation not permitted\nwarning: adding embedded git repository: .cache/act/actions-setup-node@v4\nhint: You've added another git repository inside your current repository.\nhint: Clones of the outer repository will not contain the contents of\nhint: the embedded repository and will not know how to obtain it.\nhint: If you meant to add a submodule, use:\nhint: \nhint: \tgit submodule add <url> .cache/act/actions-setup-node@v4\nhint: \nhint: If you added this path by mistake, you can remove it from the\nhint: index with:\nhint: \nhint: \tgit rm --cached .cache/act/actions-setup-node@v4\nhint: \nhint: See \"git help submodule\" for more information.\nwarning: adding embedded git repository: .cache/act/actions-setup-python@v4\nwarning: adding embedded git repository: .cache/act/aws-actions-configure-aws-credentials@v4\n",
+      "endTime": "2025-08-23T18:37:56.802Z"
+    },
+    {
+      "name": "[Version Control Best Practices] Step 4: Create Backup Script",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:56.802Z",
+      "commands": [
+        {
+          "command": "cat > backup-claude.sh << 'EOF'",
+          "type": "filesystem",
+          "startTime": "2025-08-23T18:37:56.802Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:56.809Z"
+        }
+      ],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: cp -r ~/.claude/* .claude/\ncp: .claude/commands and /Users/paulduvall/.claude/commands are identical (not copied).\ncp: .claude/config and /Users/paulduvall/.claude/config are identical (not copied).\ncp: .claude/hooks and /Users/paulduvall/.claude/hooks are identical (not copied).\ncp: .claude/ide and /Users/paulduvall/.claude/ide are identical (not copied).\ncp: .claude/logs and /Users/paulduvall/.claude/logs are identical (not copied).\ncp: .claude/plugins and /Users/paulduvall/.claude/plugins are identical (not copied).\ncp: .claude/projects and /Users/paulduvall/.claude/projects are identical (not copied).\ncp: .claude/settings.json and /Users/paulduvall/.claude/settings.json are identical (not copied).\ncp: .claude/settings.json.backup.2025-08-22-00-02-42-852Z and /Users/paulduvall/.claude/settings.json.backup.2025-08-22-00-02-42-852Z are identical (not copied).\ncp: .claude/shell-snapshots and /Users/paulduvall/.claude/shell-snapshots are identical (not copied).\ncp: .claude/statsig and /Users/paulduvall/.claude/statsig are identical (not copied).\ncp: .claude/todos and /Users/paulduvall/.claude/todos are identical (not copied).\n",
+      "endTime": "2025-08-23T18:37:56.814Z"
+    },
+    {
+      "name": "[Using Custom Commands] Daily Development Workflow",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:56.814Z",
+      "commands": [],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: /xtest       # Run tests with coverage\n/bin/sh: /xtest: No such file or directory\n",
+      "endTime": "2025-08-23T18:37:56.817Z"
+    },
+    {
+      "name": "[Using Custom Commands] CI/CD Integration",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:56.817Z",
+      "commands": [],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: /xpipeline --deploy staging  # Deploy pipeline\n/bin/sh: /xpipeline: No such file or directory\n",
+      "endTime": "2025-08-23T18:37:56.820Z"
+    },
+    {
+      "name": "[Using Custom Commands] Architecture and Design",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:56.820Z",
+      "commands": [],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: /xarchitecture  # System architecture design\n/bin/sh: /xarchitecture: No such file or directory\n",
+      "endTime": "2025-08-23T18:37:56.823Z"
+    },
+    {
+      "name": "[Troubleshooting] Commands Not Appearing in Claude Code",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:56.823Z",
+      "commands": [
+        {
+          "command": "pkill -f claude-code",
+          "type": "general",
+          "startTime": "2025-08-23T18:37:56.823Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:56.840Z"
+        }
+      ],
+      "validations": [],
+      "status": "failed",
+      "error": "Command failed: claude-code\n/bin/sh: claude-code: command not found\n",
+      "endTime": "2025-08-23T18:37:56.844Z"
+    },
+    {
+      "name": "[Troubleshooting] Permission Issues",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:56.844Z",
+      "commands": [
+        {
+          "command": "chmod -R 755 ~/.claude",
+          "type": "permissions",
+          "startTime": "2025-08-23T18:37:56.844Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:56.861Z"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T18:37:56.861Z"
+    },
+    {
+      "name": "[Troubleshooting] NPM Installation Failures",
+      "type": "execution",
+      "startTime": "2025-08-23T18:37:56.861Z",
+      "commands": [
+        {
+          "command": "npm cache clean --force",
+          "type": "general",
+          "startTime": "2025-08-23T18:37:56.861Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:37:57.141Z"
+        },
+        {
+          "command": "npm install -g @paulduvall/claude-dev-toolkit --registry https://registry.npmjs.org/",
+          "type": "install",
+          "startTime": "2025-08-23T18:37:57.141Z",
+          "status": "passed",
+          "exitCode": 0,
+          "endTime": "2025-08-23T18:38:00.271Z"
+        }
+      ],
+      "validations": [],
+      "status": "passed",
+      "endTime": "2025-08-23T18:38:00.271Z"
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 14,
+    "skipped": 6
+  },
+  "platform": "darwin",
+  "nodeVersion": "v24.1.0",
+  "errors": []
+}

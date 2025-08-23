@@ -34,14 +34,44 @@ class InstallGuideTester {
   async loadTestSuite() {
     try {
       const suitePath = path.join(__dirname, 'test-suite.json');
+      console.log(`📂 Looking for test suite at: ${suitePath}`);
+      
+      // Check if file exists
+      if (!fs.existsSync(suitePath)) {
+        throw new Error(`Test suite file not found at ${suitePath}`);
+      }
+      
       const suiteData = fs.readFileSync(suitePath, 'utf8');
+      console.log(`📄 Test suite file size: ${suiteData.length} characters`);
+      
       this.testSuite = JSON.parse(suiteData);
+      
+      // Validate the test suite structure
+      if (!this.testSuite.testSteps || !Array.isArray(this.testSuite.testSteps)) {
+        throw new Error('Test suite missing testSteps array');
+      }
       
       console.log(`📋 Loaded test suite with ${this.testSuite.testSteps.length} steps`);
       console.log(`🎯 Running scenario: ${this.scenario}`);
+      
+      // Show first few steps for debugging
+      if (this.testSuite.testSteps.length > 0) {
+        console.log('📝 First test step:', this.testSuite.testSteps[0].step || 'Unknown step');
+        console.log('📝 First test section:', this.testSuite.testSteps[0].section || 'Unknown section');
+      }
+      
       return true;
     } catch (error) {
       console.error('❌ Failed to load test suite:', error.message);
+      
+      // List available files for debugging
+      try {
+        const files = fs.readdirSync(__dirname);
+        console.log('📁 Available files in tests directory:', files.join(', '));
+      } catch (listError) {
+        console.error('❌ Could not list directory:', listError.message);
+      }
+      
       return false;
     }
   }
@@ -98,20 +128,40 @@ class InstallGuideTester {
    */
   async runExecute() {
     if (!this.testSuite) {
-      await this.loadTestSuite();
+      const loaded = await this.loadTestSuite();
+      if (!loaded) {
+        console.error('❌ Cannot execute steps without test suite');
+        this.results.errors.push('Failed to load test suite configuration');
+        await this.saveResults();
+        return;
+      }
     }
 
     console.log(`🚀 Executing install guide steps for ${this.scenario}`);
+    console.log(`📊 Total steps to process: ${this.testSuite.testSteps.length}`);
+
+    let executedSteps = 0;
+    let skippedSteps = 0;
 
     for (const step of this.testSuite.testSteps) {
       if (this.shouldSkipStep(step)) {
+        console.log(`⏭️  Skipping step: [${step.section}] ${step.step}`);
         await this.skipStep(step);
+        skippedSteps++;
         continue;
       }
 
-      await this.executeStep(step);
+      try {
+        await this.executeStep(step);
+        executedSteps++;
+      } catch (error) {
+        console.error(`❌ Failed to execute step: [${step.section}] ${step.step}`, error.message);
+        this.results.errors.push(`Step execution failed: ${error.message}`);
+        // Continue with other steps even if one fails
+      }
     }
 
+    console.log(`📈 Execution summary: ${executedSteps} executed, ${skippedSteps} skipped`);
     await this.saveResults();
   }
 
@@ -217,6 +267,16 @@ class InstallGuideTester {
   async executeStep(step) {
     console.log(`\n🔄 Executing: [${step.section}] ${step.step}`);
     
+    // Debug: Show commands to be executed
+    if (step.commands && step.commands.length > 0) {
+      console.log(`   📝 Commands: ${step.commands.length}`);
+      step.commands.forEach((cmd, i) => {
+        console.log(`      ${i + 1}. ${cmd.raw || cmd.command || cmd}`);
+      });
+    } else {
+      console.log('   ⚠️  No commands found in step');
+    }
+    
     const stepResult = {
       name: `[${step.section}] ${step.step}`,
       type: 'execution',
@@ -227,30 +287,35 @@ class InstallGuideTester {
 
     try {
       // Execute all commands in the step
-      for (const command of step.commands) {
-        const commandResult = await this.executeCommand(command);
-        stepResult.commands.push(commandResult);
-        
-        if (commandResult.status === 'failed' && !command.allowFailure) {
-          throw new Error(`Command failed: ${command.raw}`);
+      if (step.commands && Array.isArray(step.commands)) {
+        for (const command of step.commands) {
+          const commandResult = await this.executeCommand(command);
+          stepResult.commands.push(commandResult);
+          
+          if (commandResult.status === 'failed' && !command.allowFailure) {
+            throw new Error(`Command failed: ${command.raw}`);
+          }
         }
       }
 
-      // Run validations
-      for (const validation of step.validations) {
-        const validationResult = await this.runValidation(validation);
-        stepResult.validations.push(validationResult);
+      // Run validations if they exist
+      if (step.validations && Array.isArray(step.validations)) {
+        for (const validation of step.validations) {
+          const validationResult = await this.runValidation(validation);
+          stepResult.validations.push(validationResult);
+        }
       }
 
       stepResult.status = 'passed';
       this.results.summary.passed++;
+      console.log(`   ✅ Step completed successfully`);
       
     } catch (error) {
       stepResult.status = 'failed';
       stepResult.error = error.message;
       this.results.summary.failed++;
       
-      console.error(`❌ Step failed: ${error.message}`);
+      console.error(`   ❌ Step failed: ${error.message}`);
     }
 
     stepResult.endTime = new Date().toISOString();
@@ -261,34 +326,49 @@ class InstallGuideTester {
    * Execute a single command
    */
   async executeCommand(command) {
+    // Normalize command object (handle different formats from parser)
+    const normalizedCommand = {
+      raw: command.raw || command.command || command,
+      type: command.type || 'general',
+      allowFailure: command.allowFailure || false,
+      dangerous: command.dangerous || false
+    };
+    
     const commandResult = {
-      command: command.raw,
-      type: command.type,
+      command: normalizedCommand.raw,
+      type: normalizedCommand.type,
       startTime: new Date().toISOString()
     };
 
     try {
-      console.log(`   Running: ${command.raw}`);
+      console.log(`      🔧 Executing: ${normalizedCommand.raw}`);
+      console.log(`      📋 Type: ${normalizedCommand.type}`);
 
       // Handle special command types
-      if (command.type === 'cleanup' && command.dangerous) {
-        await this.executeDangerousCommand(command);
-      } else if (command.type === 'install' || command.type === 'uninstall') {
-        await this.executeNpmCommand(command);
+      if (normalizedCommand.type === 'cleanup' && normalizedCommand.dangerous) {
+        await this.executeDangerousCommand(normalizedCommand);
+      } else if (normalizedCommand.type === 'install' || normalizedCommand.type === 'uninstall') {
+        await this.executeNpmCommand(normalizedCommand);
       } else {
-        await this.executeGeneralCommand(command);
+        await this.executeGeneralCommand(normalizedCommand);
       }
 
       commandResult.status = 'passed';
       commandResult.exitCode = 0;
+      console.log(`      ✅ Command succeeded`);
+
 
     } catch (error) {
       commandResult.status = 'failed';
       commandResult.error = error.message;
       commandResult.exitCode = error.code || 1;
       
-      if (!command.allowFailure) {
+      console.log(`      ❌ Command failed: ${error.message}`);
+      
+      if (!normalizedCommand.allowFailure) {
         throw error;
+      } else {
+        console.log(`      ⚠️  Command failure allowed, continuing...`);
       }
     }
 
