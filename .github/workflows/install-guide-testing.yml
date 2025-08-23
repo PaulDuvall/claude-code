@@ -126,7 +126,12 @@ jobs:
 
     - name: Install test dependencies
       run: |
-        npm install -g npm@latest
+        # Install compatible npm version based on Node.js version
+        if [[ "${{ matrix.node-version }}" == "18.x" ]]; then
+          npm install -g npm@10
+        else
+          npm install -g npm@latest
+        fi
         cd tests && npm install
 
     - name: Setup test environment
