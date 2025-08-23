@@ -17,7 +17,7 @@ module.exports = {
         let installedCount = 0;
         
         // Install active commands (directly to commands directory)
-        if (options.active || options.all || (!options.active && !options.experimental)) {
+        if (options.active || options.all || (!options.active && !options.experiments)) {
             const activeSource = path.join(packageDir, 'commands', 'active');
             
             if (fs.existsSync(activeSource)) {
@@ -34,7 +34,7 @@ module.exports = {
         }
         
         // Install experimental commands (directly to commands directory)
-        if (options.experimental || options.all) {
+        if (options.experiments || options.all) {
             const expSource = path.join(packageDir, 'commands', 'experiments');
             
             if (fs.existsSync(expSource)) {

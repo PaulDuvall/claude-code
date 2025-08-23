@@ -363,7 +363,7 @@
       "description": "",
       "commands": [
         {
-          "raw": "claude-commands install --experimental",
+          "raw": "claude-commands install --experiments",
           "type": "toolkit",
           "dangerous": false,
           "requiresConfirmation": false,

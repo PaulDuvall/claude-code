@@ -119,7 +119,7 @@ THE SYSTEM SHALL verify all installed commands are properly formatted and loadab
 
 #### REQ-013: Selective Installation
 **Priority:** Medium
-WHEN the user runs "claude-commands install --active" or "claude-commands install --experimental"
+WHEN the user runs "claude-commands install --active" or "claude-commands install --experiments"
 THE SYSTEM SHALL install only the specified command set
 **Rationale:** Allows users to customize their installation scope
 **Acceptance Criteria:** Only selected commands are installed, preserving existing configuration
@@ -419,7 +419,7 @@ THE SYSTEM SHALL validate that package installation completes within performance
 #### REQ-046: Production Installation Strategy
 **Priority:** High
 WHEN production installation is performed
-THE SYSTEM SHALL install only active commands by default during production releases, with experimental commands available through explicit opt-in installation via "claude-commands install --experimental"
+THE SYSTEM SHALL install only active commands by default during production releases, with experimental commands available through explicit opt-in installation via "claude-commands install --experiments"
 **Rationale:** Provides stable first-time user experience while preserving access to advanced features for power users
 **Acceptance Criteria:** Default installation includes 13 active commands only, experimental commands require explicit user action
 
@@ -510,7 +510,7 @@ THE SYSTEM SHALL publish the package to the public NPM registry with proper vers
 
 ### Scenario 5: Dry-Run Installation Preview
 **Given:** A cautious user wanting to preview changes
-**When:** They run `claude-commands install --experimental --dry-run`
+**When:** They run `claude-commands install --experiments --dry-run`
 **Then:**
 - They see a detailed list of what would be installed
 - No actual changes are made to their system

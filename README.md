@@ -313,7 +313,7 @@ npm install -g @paulduvall/claude-dev-toolkit
 
 # Install command sets
 claude-commands install --active       # Install 13 core commands
-claude-commands install --experimental # Install 44 experimental commands
+claude-commands install --experiments # Install 44 experimental commands
 claude-commands install --all          # Install all 58 commands
 
 # Configuration management

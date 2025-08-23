@@ -41,7 +41,7 @@ npm install -g @paulduvall/claude-dev-toolkit
 ```bash
 # Install specific command sets
 claude-commands install --active        # Install 13 production commands
-claude-commands install --experimental  # Install 45 experimental commands  
+claude-commands install --experiments  # Install 45 experimental commands  
 claude-commands install --all           # Install all 58 commands
 ```
 
@@ -89,7 +89,7 @@ Advanced commands for specialized workflows:
 claude-commands list                    # List all available commands
 claude-commands status                  # Show installation status
 claude-commands install --active       # Install production commands
-claude-commands install --experimental # Install experimental commands
+claude-commands install --experiments # Install experimental commands
 claude-commands install --all          # Install all commands
 
 # Configuration Management
@@ -203,7 +203,7 @@ claude-commands install --active       # Reinstall commands
 chmod 755 ~/.claude/commands/*.md      # Fix permissions
 
 # Missing experimental commands?
-claude-commands install --experimental # Install experimental set
+claude-commands install --experiments # Install experimental set
 
 # Test failures?
 npm test                               # Run full test suite

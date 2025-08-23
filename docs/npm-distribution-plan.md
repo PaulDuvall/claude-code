@@ -117,7 +117,7 @@ The package will provide these global commands after installation:
 # Installation commands
 claude-commands install              # Interactive installation wizard
 claude-commands install --active    # Install 13 core commands only
-claude-commands install --experimental  # Install experimental commands only
+claude-commands install --experiments  # Install experimental commands only
 claude-commands install --all       # Install all 57 commands
 claude-commands install --security  # Install with security hooks
 
@@ -188,7 +188,7 @@ Users can modify their installation after initial setup:
 
 ```bash
 # Add experimental commands later
-claude-commands install --experimental
+claude-commands install --experiments
 
 # Switch to comprehensive configuration
 claude-commands config --template comprehensive

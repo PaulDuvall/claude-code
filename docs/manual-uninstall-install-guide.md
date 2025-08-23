@@ -184,7 +184,7 @@ claude-commands config --template comprehensive-settings.json
 
 ```bash
 # Install experimental commands (44 additional commands)
-claude-commands install --experimental
+claude-commands install --experiments
 
 # Or install all commands (active + experimental)
 claude-commands install --all

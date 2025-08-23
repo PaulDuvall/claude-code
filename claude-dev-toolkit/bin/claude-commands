@@ -20,7 +20,7 @@ program
     .command('list')
     .description('List all available commands')
     .option('-a, --active', 'Show only active commands')
-    .option('-e, --experimental', 'Show only experimental commands')
+    .option('-e, --experiments', 'Show only experimental commands')
     .action((options) => {
         const claudeDir = path.join(os.homedir(), '.claude', 'commands');
         
@@ -50,7 +50,7 @@ program
     .command('install')
     .description('Install command sets')
     .option('--active', 'Install active commands only')
-    .option('--experimental', 'Install experimental commands')
+    .option('--experiments', 'Install experimental commands')
     .option('--all', 'Install all commands')
     .action((options) => {
         const installer = require('../lib/installer');
