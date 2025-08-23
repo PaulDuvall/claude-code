@@ -14,9 +14,12 @@ on:
         type: choice
         options:
         - all
-        - fresh-install
-        - reinstall
-        - upgrade
+        - npm-fresh-install
+        - npm-reinstall
+        - npm-upgrade
+        - repo-fresh-install  
+        - repo-reinstall
+        - repo-upgrade
       platforms:
         description: 'Platforms to test on (JSON array)'
         required: true
@@ -89,17 +92,25 @@ jobs:
         platform: ${{ fromJson(inputs.platforms || '["ubuntu-latest", "macos-latest"]') }}
         node-version: ['18.x', '20.x']
         scenario: 
-          - fresh-install
-          - reinstall
+          - npm-fresh-install
+          - npm-reinstall  
+          - repo-fresh-install
+          - repo-reinstall
         include:
           - platform: ubuntu-latest
             node-version: '20.x'
-            scenario: upgrade
+            scenario: npm-upgrade
+          - platform: ubuntu-latest
+            node-version: '20.x'
+            scenario: repo-upgrade
         exclude:
           # Skip some combinations to reduce CI load
           - platform: macos-latest
             node-version: '18.x'
-            scenario: reinstall
+            scenario: npm-reinstall
+          - platform: macos-latest  
+            node-version: '18.x'
+            scenario: repo-reinstall
 
     runs-on: ${{ matrix.platform }}
     timeout-minutes: 30

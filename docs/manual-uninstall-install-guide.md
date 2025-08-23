@@ -1,29 +1,20 @@
-# Manual Uninstall and Install Guide for Claude Dev Toolkit
+# Manual Uninstall and Install Guide for Claude Code Custom Commands
 
 ## Background
 
-This guide provides manual steps for uninstalling and installing the Claude Dev Toolkit (`@paulduvall/claude-dev-toolkit`) via npm. The toolkit provides a comprehensive collection of custom slash commands, hooks, and AI subagents for Claude Code that automate software development workflows.
+This guide provides manual steps for uninstalling and installing the Claude Code Custom Commands repository. The toolkit provides a comprehensive collection of custom slash commands, hooks, and AI subagents for Claude Code that automate software development workflows.
 
 ## Prerequisites
 
+- Claude Code installed: `npm install -g @anthropic-ai/claude-code`
 - Node.js and npm installed on your system
 - Terminal/command line access
-- (Optional) Git for cloning the repository
+- Git for cloning the repository
+- ANTHROPIC_API_KEY environment variable set
 
 ## Complete Uninstall Process
 
-### Step 1: Uninstall the npm Package
-
-```bash
-# Uninstall the Claude Dev Toolkit globally
-npm uninstall -g @paulduvall/claude-dev-toolkit
-
-# Verify removal
-npm list -g @paulduvall/claude-dev-toolkit
-# Should show: (empty)
-```
-
-### Step 2: Remove Custom Commands
+### Step 1: Remove Custom Commands
 
 ```bash
 # Remove machine-wide custom commands
@@ -34,7 +25,7 @@ rm -rf ~/.claude/commands/
 rm -rf .claude/commands/
 ```
 
-### Step 3: Remove Hooks
+### Step 2: Remove Hooks
 
 ```bash
 # Remove machine-wide hooks
@@ -45,32 +36,29 @@ rm -rf ~/.claude/hooks/
 rm -rf .claude/hooks/
 ```
 
-### Step 4: Remove AI Subagents
+### Step 3: Remove AI Subagents
 
 ```bash
-# Remove installed subagents
-rm -rf ~/.claude/subagents/
+# Remove installed subagents  
+rm -rf ~/.claude/sub-agents/
 
 # Remove project-specific subagents (if any)
-rm -rf .claude/subagents/
+rm -rf .claude/sub-agents/
 ```
 
-### Step 5: Clean Configuration Files
+### Step 4: Clean Configuration Files (Optional)
 
 ```bash
 # Remove Claude Code configuration (optional - this removes ALL Claude Code settings)
-# Be cautious with this step
+# Be cautious with this step - only do this if you want to completely reset Claude Code
 rm -rf ~/.claude/config/
 ```
 
-### Step 6: Clear npm Cache (Optional)
-
-```bash
-# Clear npm cache to ensure clean installation
-npm cache clean --force
-```
-
 ## Complete Installation Process
+
+**Choose your preferred installation method:**
+
+## Method 1: NPM Package Installation (Recommended)
 
 ### Step 1: Install Claude Code (if not already installed)
 
@@ -99,22 +87,12 @@ claude-commands --version
 claude-commands install --active
 
 # This deploys 13 core commands:
-# - xarchitecture (Architecture design and analysis)
-# - xconfig (Configuration management)
-# - xdebug (Advanced debugging)
-# - xdocs (Documentation generation)
-# - xgit (Automated Git workflow)
-# - xpipeline (CI/CD pipeline management)
-# - xquality (Code quality analysis)
-# - xrefactor (Code refactoring automation)
-# - xrelease (Release management)
-# - xsecurity (Security scanning and analysis)
-# - xspec (Specification generation)
-# - xtdd (Test-driven development)
-# - xtest (Testing automation)
+# - xarchitecture, xconfig, xdebug, xdocs, xgit
+# - xpipeline, xquality, xrefactor, xrelease
+# - xsecurity, xspec, xtdd, xtest
 ```
 
-### Step 4: Install AI Subagents (Optional but Recommended)
+### Step 4: Install AI Subagents (Optional)
 
 ```bash
 # Install AI subagents for enhanced functionality
@@ -124,7 +102,6 @@ claude-commands subagents --install
 # - Security analysis
 # - Code review
 # - Architectural guidance
-# - Persistent context management
 ```
 
 ### Step 5: Configure Settings
@@ -133,22 +110,83 @@ claude-commands subagents --install
 # View current configuration
 claude-commands config
 
-# Apply a specific configuration template (optional)
-# Options: basic, comprehensive, security-focused
+# Apply a configuration template (optional)
 claude-commands config --template comprehensive
 ```
 
 ### Step 6: Install Experimental Commands (Optional)
 
 ```bash
-# If you want to try experimental commands (44 additional commands)
+# Install experimental commands (44 additional commands)
 claude-commands install --experiments
 
 # Or install all commands (active + experimental)
 claude-commands install --all
 ```
 
-### Step 7: Create Project Context (CLAUDE.md)
+## Method 2: Repository-Based Installation (Advanced)
+
+### Step 1: Clone the Repository
+
+```bash
+# Clone the claude-code repository
+git clone https://github.com/PaulDuvall/claude-code.git
+cd claude-code
+```
+
+### Step 2: Set Environment Variables
+
+```bash
+# Set your Anthropic API key
+export ANTHROPIC_API_KEY='sk-ant-your-api-key-here'
+
+# Add to your shell profile for persistence
+echo 'export ANTHROPIC_API_KEY="sk-ant-your-api-key-here"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+### Step 3: Run Complete Setup
+
+```bash
+# Run the complete setup script (installs everything)
+./setup.sh
+
+# Or preview what it will do first
+./setup.sh --dry-run
+```
+
+**Alternative: Manual Repository Installation Steps**
+
+### Step 4: Configure Claude Code
+
+```bash
+# Configure Claude Code with optimal settings
+./configure-claude-code.sh
+```
+
+### Step 5: Deploy Custom Commands
+
+```bash
+# Deploy active/production-ready commands (13 core commands)
+./deploy.sh
+
+# Or deploy experimental commands (44 additional commands)
+./deploy.sh --experiments
+
+# Or deploy all commands (active + experimental)
+./deploy.sh --all
+```
+
+### Step 6: Install AI Subagents
+
+```bash
+# Install AI subagents for enhanced functionality
+./deploy-subagents.sh
+```
+
+## Common Steps (Both Methods)
+
+### Create Project Context (CLAUDE.md)
 
 Create a `CLAUDE.md` file in your project root to provide Claude with project-specific context:
 
@@ -174,99 +212,113 @@ cat > CLAUDE.md << 'EOF'
 EOF
 ```
 
-### Step 8: Set Up Hooks (Optional)
+### Set Up Hooks (Optional)
 
-Install security and logging hooks:
-
+**For NPM Package Installation:**
 ```bash
 # Install file logger hook
 claude-commands hooks --install file-logger
 
-# Install credential exposure prevention hook
+# Install credential exposure prevention hook  
 claude-commands hooks --install prevent-credential-exposure
 ```
 
-### Step 9: Verify Installation
-
+**For Repository-Based Installation:**
 ```bash
-# Test that commands are available in Claude Code
-# Open Claude Code and try:
-# /xhelp - List available commands
-# /xtest --help - Get help for a specific command
+# Create hooks directory
+mkdir -p ~/.claude/hooks/
+chmod 700 ~/.claude/hooks/
 
-# Verify deployment from command line
-claude-commands list
+# Copy security hooks from the repository
+cp hooks/prevent-credential-exposure.sh ~/.claude/hooks/
+chmod +x ~/.claude/hooks/prevent-credential-exposure.sh
 
-# Run verification script (if cloned from repository)
-# ./verify-setup.sh --verbose
+# Copy other hooks if desired
+cp hooks/*.sh ~/.claude/hooks/
+chmod +x ~/.claude/hooks/*.sh
 ```
 
-## Alternative: Installation from Repository
+### Verify Installation
 
-For advanced users or custom modifications:
-
+**For NPM Package Installation:**
 ```bash
-# Clone the repository
-git clone https://github.com/PaulDuvall/claude-code.git
-cd claude-code
+# Test that commands are available in Claude Code
+claude --version
 
-# Run the one-command setup script
-./setup.sh
+# Check custom commands are deployed  
+ls ~/.claude/commands/x*.md
 
-# Or manually deploy commands
-./deploy.sh           # Deploy active commands
-./deploy.sh --experiments  # Deploy experimental commands
-./deploy.sh --all     # Deploy all commands
+# List installed commands
+claude-commands list
+```
+
+**For Repository-Based Installation:**
+```bash
+# Test that commands are available in Claude Code
+claude --version
+
+# Check custom commands are deployed
+ls ~/.claude/commands/x*.md
+
+# Run verification script
+./verify-setup.sh --verbose
 
 # Validate commands
 ./validate-commands.sh
+```
 
-# Verify setup
-./verify-setup.sh --verbose
+## Setup Types
+
+The `./setup.sh` script supports different setup types:
+
+```bash
+# Basic setup (default) - core commands only
+./setup.sh --setup-type basic
+
+# Security setup - includes security hooks  
+./setup.sh --setup-type security
+
+# Comprehensive setup - all features enabled
+./setup.sh --setup-type comprehensive
+
+# Force non-interactive installation
+./setup.sh --force
+
+# Skip specific components
+./setup.sh --skip-configure --skip-hooks
 ```
 
 ## Version Control Best Practices
 
 To prevent losing customizations (as described in the original post):
 
-### Step 1: Initialize Version Control for Customizations
+### Backup Your Customizations
 
 ```bash
-# Create a dedicated repository for your Claude customizations
+# Create backup repository
 mkdir ~/my-claude-customizations
 cd ~/my-claude-customizations
 git init
 
-# Copy your Claude configuration
+# Copy current configuration
 cp -r ~/.claude .claude
-```
 
-### Step 2: Create Directory Structure
+# Create directory structure
+mkdir -p .claude/commands .claude/hooks .claude/sub-agents .claude/config
 
-```bash
-# Create organized structure
-mkdir -p .claude/commands
-mkdir -p .claude/hooks
-mkdir -p .claude/subagents
-mkdir -p .claude/config
-```
-
-### Step 3: Add to Version Control
-
-```bash
-# Add all customizations
+# Commit to version control
 git add .
 git commit -m "Initial Claude Code customization backup"
 
-# Push to remote repository (GitHub, GitLab, etc.)
-git remote add origin <your-repository-url>
+# Add remote and push
+git remote add origin YOUR_REPOSITORY_URL
 git push -u origin main
 ```
 
-### Step 4: Create Backup Script
+### Create Backup Script
 
 ```bash
-# Create a backup script
+# Create automated backup script
 cat > backup-claude.sh << 'EOF'
 #!/bin/bash
 cp -r ~/.claude/* .claude/
@@ -282,29 +334,24 @@ chmod +x backup-claude.sh
 
 Once installed, use the commands in Claude Code:
 
-### Daily Development Workflow
+### Core Development Commands
 
 ```bash
-/xtest       # Run tests with coverage
-/xquality    # Check code quality with linting
-/xsecurity   # Scan for vulnerabilities
-/xgit        # Automated commit workflow
+/xtest        # Run tests with coverage
+/xquality     # Check code quality with linting  
+/xsecurity    # Scan for vulnerabilities
+/xgit         # Automated commit workflow
 ```
 
-### CI/CD Integration
+### Advanced Commands
 
 ```bash
-/xpipeline --deploy staging  # Deploy pipeline
-/xrelease                    # Release management
-/xconfig                     # Configuration management
-```
-
-### Architecture and Design
-
-```bash
-/xarchitecture  # System architecture design
-/xrefactor      # Interactive code refactoring
-/xdebug         # Advanced debugging assistance
+/xpipeline    # CI/CD pipeline management
+/xrelease     # Release management  
+/xconfig      # Configuration management
+/xarchitecture # System architecture design
+/xrefactor    # Interactive code refactoring
+/xdebug       # Advanced debugging assistance
 ```
 
 ## Troubleshooting
@@ -312,15 +359,14 @@ Once installed, use the commands in Claude Code:
 ### Commands Not Appearing in Claude Code
 
 ```bash
-# Restart Claude Code
+# Restart Claude Code process
 pkill -f claude-code
-claude-code
 
-# Verify command installation location
+# Verify command installation
 ls -la ~/.claude/commands/
 
-# Check for syntax errors in custom commands
-claude-commands validate
+# Check for syntax errors
+./validate-commands.sh
 ```
 
 ### Permission Issues
@@ -330,23 +376,24 @@ claude-commands validate
 chmod -R 755 ~/.claude
 ```
 
-### NPM Installation Failures
+### Installation Issues
 
 ```bash
-# Clear npm cache
-npm cache clean --force
+# Re-run setup script
+./setup.sh --force
 
-# Try with different registry
-npm install -g @paulduvall/claude-dev-toolkit --registry https://registry.npmjs.org/
+# Run diagnostics
+./verify-setup.sh --verbose
 ```
 
 ## Important Notes
 
-1. **Customization Persistence**: All customizations are stored in `~/.claude/` (machine-wide) or `.claude/` (project-specific)
-2. **Version Control**: Always version control your `.claude/` directory to prevent loss
-3. **CLAUDE.md**: This file provides project context and is essential for consistent behavior
-4. **Command Prefix**: All custom commands use the "x" prefix (e.g., `/xtest`, `/xgit`)
-5. **Portability**: Commands are portable across projects, machines, and teams when properly version controlled
+1. **Repository-Based**: This toolkit is installed from the Git repository, not an npm package
+2. **Customization Storage**: All customizations stored in `~/.claude/` (machine-wide) or `.claude/` (project-specific)  
+3. **Version Control**: Always backup your `.claude/` directory to prevent loss
+4. **CLAUDE.md**: Project context file essential for consistent behavior
+5. **Command Prefix**: All custom commands use "x" prefix (e.g., `/xtest`, `/xgit`)
+6. **Script-Based**: Installation uses shell scripts (`./setup.sh`, `./deploy.sh`, etc.)
 
 ## Additional Resources
 
@@ -359,11 +406,12 @@ npm install -g @paulduvall/claude-dev-toolkit --registry https://registry.npmjs.
 
 ## Summary
 
-This toolkit transforms Claude Code into a comprehensive development platform that:
-- Automates repetitive tasks through custom slash commands
-- Enforces security and quality standards through hooks
+This repository transforms Claude Code into a comprehensive development platform that:
+- Automates repetitive tasks through 57 custom slash commands
+- Enforces security and quality standards through hooks  
 - Provides intelligent assistance through AI subagents
 - Maintains project context through CLAUDE.md
-- Survives project switches and machine changes through version control
+- Uses repository-based installation via shell scripts
+- Supports backup and version control for persistence
 
-Remember: "Customization lets you focus on architecture and problem-solving, but only if it survives. Start small, build systematically, version control everything."
+**Key Installation Command**: `./setup.sh` (after cloning the repository)

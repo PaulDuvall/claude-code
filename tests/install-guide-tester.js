@@ -97,12 +97,18 @@ class InstallGuideTester {
       // Scenario-specific setup
       switch (this.scenario) {
         case 'fresh-install':
+        case 'npm-fresh-install':
+        case 'repo-fresh-install':
           await this.setupFreshInstall();
           break;
         case 'reinstall':
+        case 'npm-reinstall':
+        case 'repo-reinstall':
           await this.setupReinstall();
           break;
         case 'upgrade':
+        case 'npm-upgrade':
+        case 'repo-upgrade':
           await this.setupUpgrade();
           break;
       }
@@ -610,14 +616,39 @@ class InstallGuideTester {
    * Check if step should be skipped for current scenario
    */
   shouldSkipStep(step) {
-    // Skip uninstall steps for fresh-install scenario
-    if (this.scenario === 'fresh-install' && step.section.includes('Uninstall')) {
+    // Skip uninstall steps for fresh-install scenarios
+    if (this.scenario.includes('fresh-install') && step.section.includes('Uninstall')) {
       return true;
     }
 
     // Skip install steps for uninstall-only tests
     if (this.scenario === 'uninstall-only' && step.section.includes('Installation')) {
       return true;
+    }
+
+    // Skip repository steps for npm scenarios
+    if (this.scenario.startsWith('npm-')) {
+      if (step.section.includes('Repository-Based') ||
+          step.step.includes('./setup.sh') ||
+          step.step.includes('./deploy.sh') ||
+          step.step.includes('./configure-claude-code.sh') ||
+          step.step.includes('./deploy-subagents.sh') ||
+          step.step.includes('./verify-setup.sh') ||
+          step.step.includes('./validate-commands.sh')) {
+        return true;
+      }
+    }
+
+    // Skip npm steps for repository scenarios  
+    if (this.scenario.startsWith('repo-')) {
+      if (step.section.includes('NPM Package') ||
+          (step.commands && step.commands.some(cmd => 
+            cmd.raw.includes('claude-commands') || 
+            cmd.raw.includes('npm install -g @paulduvall/claude-dev-toolkit'))) ||
+          step.step.includes('Install Claude Dev Toolkit') ||
+          step.step.includes('claude-commands')) {
+        return true;
+      }
     }
 
     return false;

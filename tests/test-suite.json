@@ -1,11 +1,13 @@
 {
   "metadata": {
     "generatedFrom": "../docs/manual-uninstall-install-guide.md",
-    "generatedAt": "2025-08-23T18:37:32.800Z",
-    "totalSteps": 25,
+    "generatedAt": "2025-08-23T18:49:51.767Z",
+    "totalSteps": 26,
     "sections": [
       "Complete Uninstall Process",
-      "Complete Installation Process",
+      "Method 1: NPM Package Installation (Recommended)",
+      "Method 2: Repository-Based Installation (Advanced)",
+      "Common Steps (Both Methods)",
       "Security Considerations",
       "Version Control Best Practices",
       "Using Custom Commands",
@@ -15,38 +17,7 @@
   "testSteps": [
     {
       "section": "Complete Uninstall Process",
-      "step": "Step 1: Uninstall the npm Package",
-      "description": "",
-      "commands": [
-        {
-          "raw": "npm uninstall -g @paulduvall/claude-dev-toolkit",
-          "type": "uninstall",
-          "dangerous": false,
-          "requiresConfirmation": true,
-          "expectedExitCode": 0,
-          "timeout": 10000
-        },
-        {
-          "raw": "npm list -g @paulduvall/claude-dev-toolkit",
-          "type": "verification",
-          "dangerous": false,
-          "requiresConfirmation": false,
-          "expectedExitCode": 0,
-          "timeout": 10000
-        }
-      ],
-      "validations": [
-        {
-          "type": "output",
-          "expected": "(empty)",
-          "command": "npm list -g @paulduvall/claude-dev-toolkit"
-        }
-      ],
-      "lineNumber": 15
-    },
-    {
-      "section": "Complete Uninstall Process",
-      "step": "Step 2: Remove Custom Commands",
+      "step": "Step 1: Remove Custom Commands",
       "description": "",
       "commands": [
         {
@@ -67,11 +38,11 @@
         }
       ],
       "validations": [],
-      "lineNumber": 26
+      "lineNumber": 17
     },
     {
       "section": "Complete Uninstall Process",
-      "step": "Step 3: Remove Hooks",
+      "step": "Step 2: Remove Hooks",
       "description": "",
       "commands": [
         {
@@ -92,15 +63,15 @@
         }
       ],
       "validations": [],
-      "lineNumber": 37
+      "lineNumber": 28
     },
     {
       "section": "Complete Uninstall Process",
-      "step": "Step 4: Remove AI Subagents",
+      "step": "Step 3: Remove AI Subagents",
       "description": "",
       "commands": [
         {
-          "raw": "rm -rf ~/.claude/subagents/",
+          "raw": "rm -rf ~/.claude/sub-agents/",
           "type": "cleanup",
           "dangerous": true,
           "requiresConfirmation": true,
@@ -108,7 +79,7 @@
           "timeout": 10000
         },
         {
-          "raw": "rm -rf .claude/subagents/",
+          "raw": "rm -rf .claude/sub-agents/",
           "type": "cleanup",
           "dangerous": true,
           "requiresConfirmation": true,
@@ -117,12 +88,12 @@
         }
       ],
       "validations": [],
-      "lineNumber": 48
+      "lineNumber": 39
     },
     {
       "section": "Complete Uninstall Process",
-      "step": "Step 5: Clean Configuration Files",
-      "description": "",
+      "step": "Step 4: Clean Configuration Files (Optional)",
+      "description": "**Choose your preferred installation method:**\n",
       "commands": [
         {
           "raw": "rm -rf ~/.claude/config/",
@@ -134,27 +105,10 @@
         }
       ],
       "validations": [],
-      "lineNumber": 58
+      "lineNumber": 49
     },
     {
-      "section": "Complete Uninstall Process",
-      "step": "Step 6: Clear npm Cache (Optional)",
-      "description": "",
-      "commands": [
-        {
-          "raw": "npm cache clean --force",
-          "type": "general",
-          "dangerous": true,
-          "requiresConfirmation": true,
-          "expectedExitCode": 0,
-          "timeout": 30000
-        }
-      ],
-      "validations": [],
-      "lineNumber": 66
-    },
-    {
-      "section": "Complete Installation Process",
+      "section": "Method 1: NPM Package Installation (Recommended)",
       "step": "Step 1: Install Claude Code (if not already installed)",
       "description": "",
       "commands": [
@@ -176,10 +130,10 @@
         }
       ],
       "validations": [],
-      "lineNumber": 75
+      "lineNumber": 63
     },
     {
-      "section": "Complete Installation Process",
+      "section": "Method 1: NPM Package Installation (Recommended)",
       "step": "Step 2: Install Claude Dev Toolkit",
       "description": "",
       "commands": [
@@ -201,10 +155,10 @@
         }
       ],
       "validations": [],
-      "lineNumber": 85
+      "lineNumber": 73
     },
     {
-      "section": "Complete Installation Process",
+      "section": "Method 1: NPM Package Installation (Recommended)",
       "step": "Step 3: Deploy Core Commands",
       "description": "",
       "commands": [
@@ -218,11 +172,11 @@
         }
       ],
       "validations": [],
-      "lineNumber": 95
+      "lineNumber": 83
     },
     {
-      "section": "Complete Installation Process",
-      "step": "Step 4: Install AI Subagents (Optional but Recommended)",
+      "section": "Method 1: NPM Package Installation (Recommended)",
+      "step": "Step 4: Install AI Subagents (Optional)",
       "description": "",
       "commands": [
         {
@@ -235,10 +189,10 @@
         }
       ],
       "validations": [],
-      "lineNumber": 117
+      "lineNumber": 95
     },
     {
-      "section": "Complete Installation Process",
+      "section": "Method 1: NPM Package Installation (Recommended)",
       "step": "Step 5: Configure Settings",
       "description": "",
       "commands": [
@@ -260,10 +214,10 @@
         }
       ],
       "validations": [],
-      "lineNumber": 130
+      "lineNumber": 107
     },
     {
-      "section": "Complete Installation Process",
+      "section": "Method 1: NPM Package Installation (Recommended)",
       "step": "Step 6: Install Experimental Commands (Optional)",
       "description": "",
       "commands": [
@@ -285,11 +239,161 @@
         }
       ],
       "validations": [],
-      "lineNumber": 141
+      "lineNumber": 117
     },
     {
-      "section": "Complete Installation Process",
-      "step": "Step 7: Create Project Context (CLAUDE.md)",
+      "section": "Method 2: Repository-Based Installation (Advanced)",
+      "step": "Step 1: Clone the Repository",
+      "description": "",
+      "commands": [
+        {
+          "raw": "git clone https://github.com/PaulDuvall/claude-code.git",
+          "type": "git",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 60000
+        },
+        {
+          "raw": "cd claude-code",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        }
+      ],
+      "validations": [],
+      "lineNumber": 129
+    },
+    {
+      "section": "Method 2: Repository-Based Installation (Advanced)",
+      "step": "Step 2: Set Environment Variables",
+      "description": "",
+      "commands": [
+        {
+          "raw": "export ANTHROPIC_API_KEY='sk-ant-your-api-key-here'",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "echo 'export ANTHROPIC_API_KEY=\"sk-ant-your-api-key-here\"' >> ~/.zshrc",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "source ~/.zshrc",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        }
+      ],
+      "validations": [],
+      "lineNumber": 137
+    },
+    {
+      "section": "Method 2: Repository-Based Installation (Advanced)",
+      "step": "Step 3: Run Complete Setup",
+      "description": "**Alternative: Manual Repository Installation Steps**\n",
+      "commands": [
+        {
+          "raw": "./setup.sh",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "./setup.sh --dry-run",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        }
+      ],
+      "validations": [],
+      "lineNumber": 148
+    },
+    {
+      "section": "Method 2: Repository-Based Installation (Advanced)",
+      "step": "Step 4: Configure Claude Code",
+      "description": "",
+      "commands": [
+        {
+          "raw": "./configure-claude-code.sh",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        }
+      ],
+      "validations": [],
+      "lineNumber": 160
+    },
+    {
+      "section": "Method 2: Repository-Based Installation (Advanced)",
+      "step": "Step 5: Deploy Custom Commands",
+      "description": "",
+      "commands": [
+        {
+          "raw": "./deploy.sh",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "./deploy.sh --experiments",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "./deploy.sh --all",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        }
+      ],
+      "validations": [],
+      "lineNumber": 167
+    },
+    {
+      "section": "Method 2: Repository-Based Installation (Advanced)",
+      "step": "Step 6: Install AI Subagents",
+      "description": "",
+      "commands": [
+        {
+          "raw": "./deploy-subagents.sh",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        }
+      ],
+      "validations": [],
+      "lineNumber": 180
+    },
+    {
+      "section": "Common Steps (Both Methods)",
+      "step": "Create Project Context (CLAUDE.md)",
       "description": "Create a `CLAUDE.md` file in your project root to provide Claude with project-specific context:\n",
       "commands": [
         {
@@ -350,12 +454,12 @@
         }
       ],
       "validations": [],
-      "lineNumber": 151
+      "lineNumber": 189
     },
     {
       "section": "Security Considerations",
-      "step": "Step 8: Set Up Hooks (Optional)",
-      "description": "Install security and logging hooks:\n",
+      "step": "Set Up Hooks (Optional)",
+      "description": "**For NPM Package Installation:**\n**For Repository-Based Installation:**\n",
       "commands": [
         {
           "raw": "claude-commands hooks --install file-logger",
@@ -372,16 +476,80 @@
           "requiresConfirmation": false,
           "expectedExitCode": 0,
           "timeout": 10000
+        },
+        {
+          "raw": "mkdir -p ~/.claude/hooks/",
+          "type": "filesystem",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "chmod 700 ~/.claude/hooks/",
+          "type": "permissions",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "cp hooks/prevent-credential-exposure.sh ~/.claude/hooks/",
+          "type": "filesystem",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "chmod +x ~/.claude/hooks/prevent-credential-exposure.sh",
+          "type": "permissions",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "cp hooks/*.sh ~/.claude/hooks/",
+          "type": "filesystem",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "chmod +x ~/.claude/hooks/*.sh",
+          "type": "permissions",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
         }
       ],
       "validations": [],
-      "lineNumber": 177
+      "lineNumber": 215
     },
     {
       "section": "Security Considerations",
-      "step": "Step 9: Verify Installation",
-      "description": "For advanced users or custom modifications:\nTo prevent losing customizations (as described in the original post):\n",
+      "step": "Verify Installation",
+      "description": "**For NPM Package Installation:**\n**For Repository-Based Installation:**\nThe `./setup.sh` script supports different setup types:\nTo prevent losing customizations (as described in the original post):\n",
       "commands": [
+        {
+          "raw": "claude --version",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "ls ~/.claude/commands/x*.md",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
         {
           "raw": "claude-commands list",
           "type": "toolkit",
@@ -391,15 +559,7 @@
           "timeout": 10000
         },
         {
-          "raw": "git clone https://github.com/PaulDuvall/claude-code.git",
-          "type": "git",
-          "dangerous": false,
-          "requiresConfirmation": false,
-          "expectedExitCode": 0,
-          "timeout": 60000
-        },
-        {
-          "raw": "cd claude-code",
+          "raw": "claude --version",
           "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -407,7 +567,7 @@
           "timeout": 10000
         },
         {
-          "raw": "./setup.sh",
+          "raw": "ls ~/.claude/commands/x*.md",
           "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -415,23 +575,7 @@
           "timeout": 10000
         },
         {
-          "raw": "./deploy.sh           # Deploy active commands",
-          "type": "general",
-          "dangerous": false,
-          "requiresConfirmation": false,
-          "expectedExitCode": 0,
-          "timeout": 10000
-        },
-        {
-          "raw": "./deploy.sh --experiments  # Deploy experimental commands",
-          "type": "general",
-          "dangerous": false,
-          "requiresConfirmation": false,
-          "expectedExitCode": 0,
-          "timeout": 10000
-        },
-        {
-          "raw": "./deploy.sh --all     # Deploy all commands",
+          "raw": "./verify-setup.sh --verbose",
           "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -447,7 +591,39 @@
           "timeout": 10000
         },
         {
-          "raw": "./verify-setup.sh --verbose",
+          "raw": "./setup.sh --setup-type basic",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "./setup.sh --setup-type security",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "./setup.sh --setup-type comprehensive",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "./setup.sh --force",
+          "type": "general",
+          "dangerous": true,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "./setup.sh --skip-configure --skip-hooks",
           "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -456,11 +632,11 @@
         }
       ],
       "validations": [],
-      "lineNumber": 189
+      "lineNumber": 241
     },
     {
       "section": "Version Control Best Practices",
-      "step": "Step 1: Initialize Version Control for Customizations",
+      "step": "Backup Your Customizations",
       "description": "",
       "commands": [
         {
@@ -494,57 +670,15 @@
           "requiresConfirmation": false,
           "expectedExitCode": 0,
           "timeout": 10000
-        }
-      ],
-      "validations": [],
-      "lineNumber": 232
-    },
-    {
-      "section": "Version Control Best Practices",
-      "step": "Step 2: Create Directory Structure",
-      "description": "",
-      "commands": [
+        },
         {
-          "raw": "mkdir -p .claude/commands",
+          "raw": "mkdir -p .claude/commands .claude/hooks .claude/sub-agents .claude/config",
           "type": "filesystem",
           "dangerous": false,
           "requiresConfirmation": false,
           "expectedExitCode": 0,
           "timeout": 10000
         },
-        {
-          "raw": "mkdir -p .claude/hooks",
-          "type": "filesystem",
-          "dangerous": false,
-          "requiresConfirmation": false,
-          "expectedExitCode": 0,
-          "timeout": 10000
-        },
-        {
-          "raw": "mkdir -p .claude/subagents",
-          "type": "filesystem",
-          "dangerous": false,
-          "requiresConfirmation": false,
-          "expectedExitCode": 0,
-          "timeout": 10000
-        },
-        {
-          "raw": "mkdir -p .claude/config",
-          "type": "filesystem",
-          "dangerous": false,
-          "requiresConfirmation": false,
-          "expectedExitCode": 0,
-          "timeout": 10000
-        }
-      ],
-      "validations": [],
-      "lineNumber": 244
-    },
-    {
-      "section": "Version Control Best Practices",
-      "step": "Step 3: Add to Version Control",
-      "description": "",
-      "commands": [
         {
           "raw": "git add .",
           "type": "git",
@@ -562,7 +696,7 @@
           "timeout": 10000
         },
         {
-          "raw": "git remote add origin <your-repository-url>",
+          "raw": "git remote add origin YOUR_REPOSITORY_URL",
           "type": "git",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -579,11 +713,11 @@
         }
       ],
       "validations": [],
-      "lineNumber": 254
+      "lineNumber": 295
     },
     {
       "section": "Version Control Best Practices",
-      "step": "Step 4: Create Backup Script",
+      "step": "Create Backup Script",
       "description": "Once installed, use the commands in Claude Code:\n",
       "commands": [
         {
@@ -644,15 +778,15 @@
         }
       ],
       "validations": [],
-      "lineNumber": 266
+      "lineNumber": 318
     },
     {
       "section": "Using Custom Commands",
-      "step": "Daily Development Workflow",
+      "step": "Core Development Commands",
       "description": "",
       "commands": [
         {
-          "raw": "/xtest       # Run tests with coverage",
+          "raw": "/xtest        # Run tests with coverage",
           "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -660,7 +794,7 @@
           "timeout": 10000
         },
         {
-          "raw": "/xquality    # Check code quality with linting",
+          "raw": "/xquality     # Check code quality with linting",
           "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -668,7 +802,7 @@
           "timeout": 10000
         },
         {
-          "raw": "/xsecurity   # Scan for vulnerabilities",
+          "raw": "/xsecurity    # Scan for vulnerabilities",
           "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -676,7 +810,7 @@
           "timeout": 10000
         },
         {
-          "raw": "/xgit        # Automated commit workflow",
+          "raw": "/xgit         # Automated commit workflow",
           "type": "git",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -685,15 +819,15 @@
         }
       ],
       "validations": [],
-      "lineNumber": 285
+      "lineNumber": 337
     },
     {
       "section": "Using Custom Commands",
-      "step": "CI/CD Integration",
+      "step": "Advanced Commands",
       "description": "",
       "commands": [
         {
-          "raw": "/xpipeline --deploy staging  # Deploy pipeline",
+          "raw": "/xpipeline    # CI/CD pipeline management",
           "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -701,7 +835,7 @@
           "timeout": 10000
         },
         {
-          "raw": "/xrelease                    # Release management",
+          "raw": "/xrelease     # Release management",
           "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -709,7 +843,31 @@
           "timeout": 10000
         },
         {
-          "raw": "/xconfig                     # Configuration management",
+          "raw": "/xconfig      # Configuration management",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "/xarchitecture # System architecture design",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "/xrefactor    # Interactive code refactoring",
+          "type": "general",
+          "dangerous": false,
+          "requiresConfirmation": false,
+          "expectedExitCode": 0,
+          "timeout": 10000
+        },
+        {
+          "raw": "/xdebug       # Advanced debugging assistance",
           "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -718,40 +876,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 294
-    },
-    {
-      "section": "Using Custom Commands",
-      "step": "Architecture and Design",
-      "description": "",
-      "commands": [
-        {
-          "raw": "/xarchitecture  # System architecture design",
-          "type": "general",
-          "dangerous": false,
-          "requiresConfirmation": false,
-          "expectedExitCode": 0,
-          "timeout": 10000
-        },
-        {
-          "raw": "/xrefactor      # Interactive code refactoring",
-          "type": "general",
-          "dangerous": false,
-          "requiresConfirmation": false,
-          "expectedExitCode": 0,
-          "timeout": 10000
-        },
-        {
-          "raw": "/xdebug         # Advanced debugging assistance",
-          "type": "general",
-          "dangerous": false,
-          "requiresConfirmation": false,
-          "expectedExitCode": 0,
-          "timeout": 10000
-        }
-      ],
-      "validations": [],
-      "lineNumber": 302
+      "lineNumber": 346
     },
     {
       "section": "Troubleshooting",
@@ -767,14 +892,6 @@
           "timeout": 10000
         },
         {
-          "raw": "claude-code",
-          "type": "general",
-          "dangerous": false,
-          "requiresConfirmation": false,
-          "expectedExitCode": 0,
-          "timeout": 10000
-        },
-        {
           "raw": "ls -la ~/.claude/commands/",
           "type": "general",
           "dangerous": false,
@@ -783,8 +900,8 @@
           "timeout": 10000
         },
         {
-          "raw": "claude-commands validate",
-          "type": "toolkit",
+          "raw": "./validate-commands.sh",
+          "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
           "expectedExitCode": 0,
@@ -792,7 +909,7 @@
         }
       ],
       "validations": [],
-      "lineNumber": 312
+      "lineNumber": 359
     },
     {
       "section": "Troubleshooting",
@@ -809,32 +926,32 @@
         }
       ],
       "validations": [],
-      "lineNumber": 326
+      "lineNumber": 372
     },
     {
       "section": "Troubleshooting",
-      "step": "NPM Installation Failures",
-      "description": "1. **Customization Persistence**: All customizations are stored in `~/.claude/` (machine-wide) or `.claude/` (project-specific)\n2. **Version Control**: Always version control your `.claude/` directory to prevent loss\n3. **CLAUDE.md**: This file provides project context and is essential for consistent behavior\n4. **Command Prefix**: All custom commands use the \"x\" prefix (e.g., `/xtest`, `/xgit`)\n5. **Portability**: Commands are portable across projects, machines, and teams when properly version controlled\n- Repository: https://github.com/PaulDuvall/claude-code\n- Claude Code Documentation: https://docs.anthropic.com/en/docs/claude-code/\n- AI Development Patterns: https://github.com/PaulDuvall/ai-development-patterns\n- Slash Commands Documentation: https://docs.anthropic.com/en/docs/claude-code/slash-commands\n- Hooks Documentation: https://docs.anthropic.com/en/docs/claude-code/hooks\n- Sub-Agents Documentation: https://docs.anthropic.com/en/docs/claude-code/sub-agents\nThis toolkit transforms Claude Code into a comprehensive development platform that:\n- Automates repetitive tasks through custom slash commands\n- Enforces security and quality standards through hooks\n- Provides intelligent assistance through AI subagents\n- Maintains project context through CLAUDE.md\n- Survives project switches and machine changes through version control\nRemember: \"Customization lets you focus on architecture and problem-solving, but only if it survives. Start small, build systematically, version control everything.\"\n",
+      "step": "Installation Issues",
+      "description": "1. **Repository-Based**: This toolkit is installed from the Git repository, not an npm package\n2. **Customization Storage**: All customizations stored in `~/.claude/` (machine-wide) or `.claude/` (project-specific)\n3. **Version Control**: Always backup your `.claude/` directory to prevent loss\n4. **CLAUDE.md**: Project context file essential for consistent behavior\n5. **Command Prefix**: All custom commands use \"x\" prefix (e.g., `/xtest`, `/xgit`)\n6. **Script-Based**: Installation uses shell scripts (`./setup.sh`, `./deploy.sh`, etc.)\n- Repository: https://github.com/PaulDuvall/claude-code\n- Claude Code Documentation: https://docs.anthropic.com/en/docs/claude-code/\n- AI Development Patterns: https://github.com/PaulDuvall/ai-development-patterns\n- Slash Commands Documentation: https://docs.anthropic.com/en/docs/claude-code/slash-commands\n- Hooks Documentation: https://docs.anthropic.com/en/docs/claude-code/hooks\n- Sub-Agents Documentation: https://docs.anthropic.com/en/docs/claude-code/sub-agents\nThis repository transforms Claude Code into a comprehensive development platform that:\n- Automates repetitive tasks through 57 custom slash commands\n- Enforces security and quality standards through hooks\n- Provides intelligent assistance through AI subagents\n- Maintains project context through CLAUDE.md\n- Uses repository-based installation via shell scripts\n- Supports backup and version control for persistence\n**Key Installation Command**: `./setup.sh` (after cloning the repository)\n",
       "commands": [
         {
-          "raw": "npm cache clean --force",
+          "raw": "./setup.sh --force",
           "type": "general",
           "dangerous": true,
-          "requiresConfirmation": true,
+          "requiresConfirmation": false,
           "expectedExitCode": 0,
-          "timeout": 30000
+          "timeout": 10000
         },
         {
-          "raw": "npm install -g @paulduvall/claude-dev-toolkit --registry https://registry.npmjs.org/",
-          "type": "install",
+          "raw": "./verify-setup.sh --verbose",
+          "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
           "expectedExitCode": 0,
-          "timeout": 120000
+          "timeout": 10000
         }
       ],
       "validations": [],
-      "lineNumber": 333
+      "lineNumber": 379
     }
   ],
   "testMatrix": {
