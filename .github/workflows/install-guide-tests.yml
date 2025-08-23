@@ -1,0 +1,298 @@
+name: Install Guide Documentation Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/manual-uninstall-install-guide.md'
+      - 'tests/**'
+      - 'slash-commands/**'
+      - 'lib/**'
+      - 'setup.sh'
+      - 'deploy.sh'
+      - 'package.json'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'docs/manual-uninstall-install-guide.md'
+      - 'tests/**'
+      - 'slash-commands/**'
+      - 'lib/**'
+      - 'setup.sh'
+      - 'deploy.sh'
+      - 'package.json'
+  workflow_dispatch:
+    inputs:
+      test_scenario:
+        description: 'Test scenario to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - fresh-install
+        - reinstall
+        - upgrade
+      platforms:
+        description: 'Platforms to test on'
+        required: true
+        default: 'ubuntu-latest,macos-latest'
+        type: string
+
+jobs:
+  parse-documentation:
+    name: Parse Install Guide Documentation
+    runs-on: ubuntu-latest
+    outputs:
+      test-matrix: ${{ steps.parse.outputs.test-matrix }}
+      has-changes: ${{ steps.changes.outputs.docs }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Check for documentation changes
+      uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          docs:
+            - 'docs/manual-uninstall-install-guide.md'
+          tests:
+            - 'tests/**'
+          commands:
+            - 'slash-commands/**'
+            - 'lib/**'
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+
+    - name: Parse documentation and generate test matrix
+      id: parse
+      run: |
+        cd tests
+        node install-guide-parser.js ../docs/manual-uninstall-install-guide.md --json > test-suite.json
+        
+        # Generate dynamic test matrix based on documentation
+        echo "test-matrix<<EOF" >> $GITHUB_OUTPUT
+        cat test-suite.json | jq -c '.testMatrix' >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+        
+        # Output summary
+        echo "📋 Generated test matrix from documentation"
+        cat test-suite.json | jq '.metadata'
+
+    - name: Upload test suite configuration
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-suite-config
+        path: tests/test-suite.json
+        retention-days: 7
+
+  install-guide-tests:
+    name: Test Install Guide - ${{ matrix.scenario }} on ${{ matrix.platform }}
+    needs: parse-documentation
+    if: needs.parse-documentation.outputs.has-changes == 'true' || github.event_name == 'workflow_dispatch'
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: ${{ fromJson(inputs.platforms && split(inputs.platforms, ',') || '["ubuntu-latest", "macos-latest"]') }}
+        node-version: ['18.x', '20.x']
+        scenario: 
+          - fresh-install
+          - reinstall
+        include:
+          - platform: ubuntu-latest
+            node-version: '20.x'
+            scenario: upgrade
+        exclude:
+          # Skip some combinations to reduce CI load
+          - platform: macos-latest
+            node-version: '18.x'
+            scenario: reinstall
+
+    runs-on: ${{ matrix.platform }}
+    timeout-minutes: 30
+
+    env:
+      TEST_SCENARIO: ${{ matrix.scenario }}
+      NODE_ENV: test
+      CI: true
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Download test suite configuration
+      uses: actions/download-artifact@v3
+      with:
+        name: test-suite-config
+        path: tests/
+
+    - name: Install test dependencies
+      run: |
+        npm install -g npm@latest
+        cd tests && npm install
+
+    - name: Setup test environment
+      run: |
+        # Create clean test environment
+        export TEST_HOME="/tmp/claude-test-${{ matrix.scenario }}-$$"
+        mkdir -p "$TEST_HOME"
+        
+        # Override HOME for isolation
+        echo "TEST_HOME=$TEST_HOME" >> $GITHUB_ENV
+        echo "Original HOME: $HOME"
+        echo "Test HOME: $TEST_HOME"
+        
+        # Initialize clean npm environment
+        export HOME="$TEST_HOME"
+        npm config set prefix "$TEST_HOME/.npm-global"
+        echo "$TEST_HOME/.npm-global/bin" >> $GITHUB_PATH
+
+    - name: Run pre-test setup for ${{ matrix.scenario }}
+      run: |
+        cd tests
+        node install-guide-tester.js --scenario=${{ matrix.scenario }} --phase=pre-setup
+      env:
+        HOME: ${{ env.TEST_HOME }}
+
+    - name: Execute install guide test steps
+      run: |
+        cd tests
+        node install-guide-tester.js --scenario=${{ matrix.scenario }} --phase=execute
+      env:
+        HOME: ${{ env.TEST_HOME }}
+
+    - name: Validate installation results
+      run: |
+        cd tests
+        node install-guide-tester.js --scenario=${{ matrix.scenario }} --phase=validate
+      env:
+        HOME: ${{ env.TEST_HOME }}
+
+    - name: Generate test report
+      if: always()
+      run: |
+        cd tests
+        node install-guide-tester.js --scenario=${{ matrix.scenario }} --phase=report
+      env:
+        HOME: ${{ env.TEST_HOME }}
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results-${{ matrix.platform }}-${{ matrix.node-version }}-${{ matrix.scenario }}
+        path: |
+          tests/test-results/
+          tests/logs/
+        retention-days: 7
+
+    - name: Cleanup test environment
+      if: always()
+      run: |
+        # Cleanup test environment
+        if [ -d "${{ env.TEST_HOME }}" ]; then
+          rm -rf "${{ env.TEST_HOME }}"
+        fi
+
+  validate-documentation-sync:
+    name: Validate Documentation Sync
+    needs: [parse-documentation, install-guide-tests]
+    if: always()
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+
+    - name: Download all test results
+      uses: actions/download-artifact@v3
+      with:
+        path: test-artifacts/
+
+    - name: Validate documentation accuracy
+      run: |
+        cd tests
+        node validate-documentation-accuracy.js ../test-artifacts/
+
+    - name: Generate comprehensive report
+      run: |
+        cd tests
+        node generate-comprehensive-report.js ../test-artifacts/ > comprehensive-report.md
+
+    - name: Comment PR with test results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const report = fs.readFileSync('tests/comprehensive-report.md', 'utf8');
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `## 📋 Install Guide Documentation Test Results\n\n${report}`
+          });
+
+    - name: Upload comprehensive report
+      uses: actions/upload-artifact@v3
+      with:
+        name: comprehensive-test-report
+        path: tests/comprehensive-report.md
+        retention-days: 30
+
+  security-validation:
+    name: Security Validation
+    runs-on: ubuntu-latest
+    if: needs.parse-documentation.outputs.has-changes == 'true'
+    needs: parse-documentation
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+
+    - name: Validate security of parsed commands
+      run: |
+        cd tests
+        node security-validator.js ../docs/manual-uninstall-install-guide.md
+
+    - name: Check for credential exposure risks
+      run: |
+        cd tests
+        node credential-exposure-checker.js ../docs/manual-uninstall-install-guide.md
+
+    - name: Generate security report
+      run: |
+        cd tests
+        node generate-security-report.js > security-report.md
+
+    - name: Upload security report
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-validation-report
+        path: tests/security-report.md
+        retention-days: 30
