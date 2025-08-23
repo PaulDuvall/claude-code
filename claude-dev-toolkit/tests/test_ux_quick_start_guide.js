@@ -112,7 +112,7 @@ class QuickStartGuideUXTests {
     test_step3_deploy_commands() {
         console.log('  📋 Step 3: Testing command deployment...');
         
-        // Test --active flag
+        // Test --active flag (commands now install directly to commands directory)
         try {
             const activeOutput = execSync(`node "${this.binPath}" install --active`, {
                 encoding: 'utf8',
@@ -120,9 +120,9 @@ class QuickStartGuideUXTests {
                 env: { ...process.env, HOME: this.testHomeDir }
             });
             
-            // Verify commands were installed
-            const commandsDir = path.join(this.testClaudeDir, 'commands', 'active');
-            assert(fs.existsSync(commandsDir), 'Active commands directory should be created');
+            // Verify commands were installed (directly to commands directory, not subdirectories)
+            const commandsDir = path.join(this.testClaudeDir, 'commands');
+            assert(fs.existsSync(commandsDir), 'Commands directory should be created');
             
             const installedCommands = fs.readdirSync(commandsDir).filter(f => f.endsWith('.md'));
             assert(installedCommands.length >= 13, 'Should install at least 13 active commands');
@@ -130,23 +130,7 @@ class QuickStartGuideUXTests {
             console.log(`  ✅ Installed ${installedCommands.length} active commands`);
             
         } catch (error) {
-            // Test --all flag as fallback
-            const allOutput = execSync(`node "${this.binPath}" install --all`, {
-                encoding: 'utf8',
-                stdio: 'pipe',
-                env: { ...process.env, HOME: this.testHomeDir }
-            });
-            
-            const activeDir = path.join(this.testClaudeDir, 'commands', 'active');
-            const expDir = path.join(this.testClaudeDir, 'commands', 'experiments');
-            
-            assert(fs.existsSync(activeDir), 'Active commands should be installed');
-            assert(fs.existsSync(expDir), 'Experimental commands should be installed');
-            
-            const activeCount = fs.readdirSync(activeDir).filter(f => f.endsWith('.md')).length;
-            const expCount = fs.readdirSync(expDir).filter(f => f.endsWith('.md')).length;
-            
-            console.log(`  ✅ Installed ${activeCount} active + ${expCount} experimental commands`);
+            throw new Error('Active commands should be installed: ' + error.message);
         }
     }
 
@@ -240,7 +224,7 @@ class QuickStartGuideUXTests {
             env: { ...process.env, HOME: this.testHomeDir }
         });
         
-        const commandsDir = path.join(this.testClaudeDir, 'commands', 'active');
+        const commandsDir = path.join(this.testClaudeDir, 'commands');
         assert(fs.existsSync(commandsDir), 'Commands directory should exist');
         
         // Check for key commands mentioned in quick start
@@ -311,7 +295,7 @@ class QuickStartGuideUXTests {
         
         // Step 6: Verify everything is ready
         console.log('  6️⃣ Verifying setup...');
-        const commandsDir = path.join(this.testClaudeDir, 'commands', 'active');
+        const commandsDir = path.join(this.testClaudeDir, 'commands');
         const settingsPath = path.join(this.testClaudeDir, 'settings.json');
         
         assert(fs.existsSync(commandsDir), 'Commands should be installed');
