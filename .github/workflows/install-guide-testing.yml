@@ -3,24 +3,8 @@ name: Install Guide Testing
 on:
   push:
     branches: [ main, develop ]
-    paths:
-      - 'docs/manual-uninstall-install-guide.md'
-      - 'tests/**'
-      - 'slash-commands/**'
-      - 'lib/**'
-      - 'setup.sh'
-      - 'deploy.sh'
-      - 'package.json'
   pull_request:
     branches: [ main ]
-    paths:
-      - 'docs/manual-uninstall-install-guide.md'
-      - 'tests/**'
-      - 'slash-commands/**'
-      - 'lib/**'
-      - 'setup.sh'
-      - 'deploy.sh'
-      - 'package.json'
   workflow_dispatch:
     inputs:
       test_scenario:
