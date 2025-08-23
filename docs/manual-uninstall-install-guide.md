@@ -137,11 +137,11 @@ cd claude-code
 ### Step 2: Set Environment Variables
 
 ```bash
-# Set your Anthropic API key
-export ANTHROPIC_API_KEY='sk-ant-your-api-key-here'
+# Set your Anthropic API key (replace with your actual key)
+export ANTHROPIC_API_KEY=$YOUR_ACTUAL_API_KEY
 
-# Add to your shell profile for persistence
-echo 'export ANTHROPIC_API_KEY="sk-ant-your-api-key-here"' >> ~/.zshrc
+# Add to your shell profile for persistence  
+echo "export ANTHROPIC_API_KEY=\$YOUR_ACTUAL_API_KEY" >> ~/.zshrc
 source ~/.zshrc
 ```
 

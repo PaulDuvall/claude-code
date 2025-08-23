@@ -1,7 +1,7 @@
 {
   "metadata": {
     "generatedFrom": "../docs/manual-uninstall-install-guide.md",
-    "generatedAt": "2025-08-23T18:49:51.767Z",
+    "generatedAt": "2025-08-23T18:56:24.714Z",
     "totalSteps": 26,
     "sections": [
       "Complete Uninstall Process",
@@ -272,7 +272,7 @@
       "description": "",
       "commands": [
         {
-          "raw": "export ANTHROPIC_API_KEY='sk-ant-your-api-key-here'",
+          "raw": "export ANTHROPIC_API_KEY=$YOUR_ACTUAL_API_KEY",
           "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
@@ -280,7 +280,7 @@
           "timeout": 10000
         },
         {
-          "raw": "echo 'export ANTHROPIC_API_KEY=\"sk-ant-your-api-key-here\"' >> ~/.zshrc",
+          "raw": "echo \"export ANTHROPIC_API_KEY=\\$YOUR_ACTUAL_API_KEY\" >> ~/.zshrc",
           "type": "general",
           "dangerous": false,
           "requiresConfirmation": false,
