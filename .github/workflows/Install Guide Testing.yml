@@ -34,9 +34,9 @@ on:
         - reinstall
         - upgrade
       platforms:
-        description: 'Platforms to test on'
+        description: 'Platforms to test on (JSON array)'
         required: true
-        default: 'ubuntu-latest,macos-latest'
+        default: '["ubuntu-latest", "macos-latest"]'
         type: string
 
 jobs:
@@ -101,7 +101,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: ${{ fromJson(inputs.platforms && split(inputs.platforms, ',') || '["ubuntu-latest", "macos-latest"]') }}
+        platform: ${{ fromJson(inputs.platforms || '["ubuntu-latest", "macos-latest"]') }}
         node-version: ['18.x', '20.x']
         scenario: 
           - fresh-install
