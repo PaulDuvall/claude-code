@@ -128,9 +128,25 @@ class DocumentationAccuracyValidator {
       }
       
       try {
-        const resultsPath = path.join(this.testArtifactsPath, dir);
-        const allFiles = fs.readdirSync(resultsPath);
-        console.log(`    Files in ${dir}: ${allFiles.join(', ') || '(empty)'}`);
+        const basePath = path.join(this.testArtifactsPath, dir);
+        let resultsPath = basePath;
+        let allFiles = fs.readdirSync(resultsPath);
+        console.log(`    Files/dirs in ${dir}: ${allFiles.join(', ') || '(empty)'}`);
+        
+        // Check if there's a nested test-results subdirectory (GitHub Actions artifact structure)
+        if (allFiles.includes('test-results') && fs.statSync(path.join(resultsPath, 'test-results')).isDirectory()) {
+          console.log(`    📁 Found nested test-results directory, looking inside...`);
+          resultsPath = path.join(resultsPath, 'test-results');
+          allFiles = fs.readdirSync(resultsPath);
+          console.log(`    Files in nested directory: ${allFiles.join(', ') || '(empty)'}`);
+        }
+        
+        // Also check for logs directory which might contain results
+        const logsCheckPath = path.join(basePath, 'logs');
+        if (fs.existsSync(logsCheckPath) && fs.statSync(logsCheckPath).isDirectory()) {
+          const logFiles = fs.readdirSync(logsCheckPath);
+          console.log(`    📁 Also found logs directory with: ${logFiles.join(', ') || '(empty)'}`);
+        }
         
         const resultFiles = allFiles.filter(file => file.endsWith('.json'));
 
