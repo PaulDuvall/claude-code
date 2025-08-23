@@ -89,7 +89,7 @@ async function runSetup() {
             
             const sourceCommandsDir = path.join(packageDir, 'commands');
             if (fs.existsSync(sourceCommandsDir)) {
-                copyAllCommands(sourceCommandsDir, commandsDir);
+                copyCommandsFlat(sourceCommandsDir, commandsDir);
             }
         }
         
@@ -116,14 +116,13 @@ function copyAllCommands(sourceDir, targetDir) {
     const items = fs.readdirSync(sourceDir);
     for (const item of items) {
         const sourcePath = path.join(sourceDir, item);
-        const targetPath = path.join(targetDir, item);
         
         if (fs.statSync(sourcePath).isDirectory()) {
-            if (!fs.existsSync(targetPath)) {
-                fs.mkdirSync(targetPath, { recursive: true });
-            }
-            copyAllCommands(sourcePath, targetPath);
+            // For subdirectories, copy their contents directly to targetDir (flat structure)
+            copyAllCommands(sourcePath, targetDir);
         } else if (item.endsWith('.md')) {
+            // Copy .md files directly to target directory
+            const targetPath = path.join(targetDir, item);
             fs.copyFileSync(sourcePath, targetPath);
         }
     }
@@ -134,8 +133,8 @@ function copySelectedCommands(sourceDir, targetDir, config) {
     const installationType = config.installationType || 'standard';
     
     if (installationType === 'full' || !config.commandSets) {
-        // Copy all commands
-        copyAllCommands(sourceDir, targetDir);
+        // Copy all commands in flat structure
+        copyCommandsFlat(sourceDir, targetDir);
     } else {
         // Copy selected command sets
         const commandSets = config.commandSets || [];
@@ -144,7 +143,7 @@ function copySelectedCommands(sourceDir, targetDir, config) {
         if (installationType === 'standard' || commandSets.includes('development')) {
             const activeSource = path.join(sourceDir, 'active');
             if (fs.existsSync(activeSource)) {
-                copyAllCommands(activeSource, targetDir); // Copy directly to targetDir, no subdirectory
+                copyCommandsFlat(activeSource, targetDir);
             }
         }
         
@@ -152,8 +151,27 @@ function copySelectedCommands(sourceDir, targetDir, config) {
         if (commandSets.includes('experimental') || installationType === 'full') {
             const expSource = path.join(sourceDir, 'experiments');
             if (fs.existsSync(expSource)) {
-                copyAllCommands(expSource, targetDir); // Copy directly to targetDir, no subdirectory
+                copyCommandsFlat(expSource, targetDir);
             }
+        }
+    }
+}
+
+function copyCommandsFlat(sourceDir, targetDir) {
+    // Copy all .md files from sourceDir and subdirectories directly to targetDir (flat structure)
+    if (!fs.existsSync(sourceDir)) return;
+    
+    const items = fs.readdirSync(sourceDir);
+    for (const item of items) {
+        const sourcePath = path.join(sourceDir, item);
+        
+        if (fs.statSync(sourcePath).isDirectory()) {
+            // Recursively copy from subdirectories but maintain flat structure
+            copyCommandsFlat(sourcePath, targetDir);
+        } else if (item.endsWith('.md')) {
+            const targetPath = path.join(targetDir, item);
+            fs.copyFileSync(sourcePath, targetPath);
+            console.log(`✅ Installed command: ${item}`);
         }
     }
 }
