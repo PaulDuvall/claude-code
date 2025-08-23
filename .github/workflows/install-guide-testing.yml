@@ -1,4 +1,4 @@
-name: Install Guide Documentation Tests
+name: Install Guide Testing
 
 on:
   push:
