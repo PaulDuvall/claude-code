@@ -10,6 +10,12 @@ echo "🔍 Discovering test files in tests directory..."
 # Find all test files (*.js files with test/spec/validator/tester/validate in name)
 TEST_FILES=$(find . -maxdepth 1 -name "*.js" -type f | grep -E "(test|spec|validator|tester|validate)" | sort)
 
+# Add customization guide parser test
+if [ -f "./customization-guide-parser.js" ]; then
+    echo "🔍 Found customization guide parser, adding to test suite"
+    TEST_FILES="$TEST_FILES ./customization-guide-parser.js"
+fi
+
 if [ -z "$TEST_FILES" ]; then
   echo "⚠️ No test files found matching pattern"
   exit 0
