@@ -30,8 +30,8 @@ claude-commands install --active # Install core commands
 claude-commands subagents --install
 
 # 5. Configure settings (Optional)
-claude-commands config  # View current configuration
-claude-commands config --template comprehensive  # Apply comprehensive template
+claude-commands config --list  # View available templates
+claude-commands config --template <template-name>  # Apply your preferred template
 # Learn more: https://docs.anthropic.com/en/docs/claude-code/settings
 ```
 
