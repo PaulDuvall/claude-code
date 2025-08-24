@@ -100,17 +100,6 @@ Some of my customizations were inspired by my patterns at https://github.com/Pau
 
 I never want to lose my customizations again. That's why everything lives in version control now—portable across projects, machines, and teams. When you build your system, remember: customization lets you focus on architecture and problem-solving, but only if it survives. Start small, build systematically, version control everything.
 
-### Testing Command Validation
-
-To demonstrate how our automated testing catches command failures, here's a command section that should fail:
-
-```bash
-# This command will intentionally fail for testing purposes
-npm install -g @nonexistent-package/that-will-fail
-```
-
-This section is designed to trigger test failures so we can validate our continuous integration pipeline properly catches documentation errors.
-
 ## Dive Deeper
 
 For advanced techniques and more detailed examples of commands, configuration, and hooks, see my post: [Claude Code Advanced Tips: Using Commands, Configuration, and Hooks](https://www.paulmduvall.com/claude-code-advanced-tips-using-commands-configuration-and-hooks/).
