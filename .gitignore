@@ -347,4 +347,5 @@ ehthumbs.db
 Thumbs.db
 
 # Custom project ignores
-# Add any project-specific files to ignore heretest-results/
+# Add any project-specific files to ignore here
+test-results/
