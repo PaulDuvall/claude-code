@@ -161,6 +161,12 @@ class CustomizationGuideTester {
 
     console.log(`📈 Execution summary: ${executedSteps} executed, ${skippedSteps} skipped`);
     await this.saveResults();
+    
+    // Exit with failure code if any commands failed
+    if (this.results.summary.failed > 0) {
+      console.error(`❌ ${this.results.summary.failed} steps failed`);
+      process.exit(1);
+    }
   }
 
   /**
