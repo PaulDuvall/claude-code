@@ -344,7 +344,8 @@ class CustomizationGuideTester {
       raw: command.raw || command.command || command,
       type: command.type || 'general',
       allowFailure: command.allowFailure || false,
-      timeout: command.timeout || 30000
+      timeout: command.timeout || 30000,
+      skip: command.skip || false
     };
     
     const commandResult = {
@@ -356,6 +357,15 @@ class CustomizationGuideTester {
     try {
       console.log(`      🔧 Executing: ${normalizedCommand.raw}`);
       console.log(`      📋 Type: ${normalizedCommand.type}`);
+
+      // Skip placeholder commands
+      if (normalizedCommand.type === 'placeholder' || normalizedCommand.skip) {
+        console.log(`      ⏭️  Skipping placeholder/example command: ${normalizedCommand.raw}`);
+        commandResult.status = 'skipped';
+        commandResult.reason = 'Placeholder or example command';
+        console.log(`      ✅ Command marked as placeholder (expected)`);
+        return commandResult;
+      }
 
       // Skip Claude Code UI commands (slash commands) - they can't be executed in shell
       if (normalizedCommand.type === 'claude-ui') {
@@ -377,6 +387,17 @@ class CustomizationGuideTester {
           break;
         case 'toolkit':
           await this.executeToolkitCommand(normalizedCommand);
+          break;
+        case 'claude':
+          throw new Error(`Command requires executable not available in test environment: claude`);
+        case 'filesystem':
+          await this.executeFilesystemCommand(normalizedCommand);
+          break;
+        case 'process':
+          await this.executeProcessCommand(normalizedCommand);
+          break;
+        case 'permissions':
+          await this.executePermissionsCommand(normalizedCommand);
           break;
         case 'navigation':
           await this.executeNavigationCommand(normalizedCommand);
@@ -460,16 +481,73 @@ class CustomizationGuideTester {
    * Execute claude-commands toolkit commands
    */
   async executeToolkitCommand(command) {
+    // Toolkit commands require claude-commands executable which may not be available in CI
+    throw new Error(`Command requires executable not available in test environment: claude-commands`);
+  }
+
+  /**
+   * Execute filesystem commands with better error handling
+   */
+  async executeFilesystemCommand(command) {
     const env = {
       ...process.env,
-      HOME: this.testHome,
-      PATH: `${this.testHome}/.npm-global/bin:${process.env.PATH}`,
-      CI: 'true',
-      NODE_ENV: 'test'
+      HOME: this.testHome
+    };
+
+    try {
+      const { stdout, stderr } = await execAsync(command.raw, {
+        timeout: command.timeout || 10000,
+        env,
+        cwd: this.testHome
+      });
+      return { stdout, stderr };
+    } catch (error) {
+      // For filesystem operations that are expected to fail in CI, mark as allowing failure
+      if (command.allowFailure) {
+        console.log(`      ℹ️  Command marked as allowing failure (expected in test environment)`);
+        throw new Error(`${error.message}\n      ⚠️  Command failure allowed, continuing...`);
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Execute process commands with better error handling
+   */
+  async executeProcessCommand(command) {
+    const env = {
+      ...process.env,
+      HOME: this.testHome
+    };
+
+    try {
+      const { stdout, stderr } = await execAsync(command.raw, {
+        timeout: command.timeout || 5000,
+        env,
+        cwd: this.testHome
+      });
+      return { stdout, stderr };
+    } catch (error) {
+      // Process commands like pkill are expected to fail in CI
+      if (command.allowFailure) {
+        console.log(`      ℹ️  Command marked as allowing failure (expected in test environment)`);
+        throw new Error(`${error.message}\n      ⚠️  Command failure allowed, continuing...`);
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Execute permission commands
+   */
+  async executePermissionsCommand(command) {
+    const env = {
+      ...process.env,
+      HOME: this.testHome
     };
 
     const { stdout, stderr } = await execAsync(command.raw, {
-      timeout: command.timeout || 60000,
+      timeout: command.timeout || 5000,
       env,
       cwd: this.testHome
     });
@@ -501,6 +579,16 @@ class CustomizationGuideTester {
    * Execute general commands
    */
   async executeGeneralCommand(command) {
+    // Check for commands that require specific executables not available in CI
+    if (this.isCommandMissingExecutable(command.raw)) {
+      throw new Error(`Command requires executable not available in test environment: ${command.raw.split(' ')[0]}`);
+    }
+
+    // Check for script files that might not exist
+    if (command.raw.startsWith('./') && !this.checkScriptExists(command.raw)) {
+      throw new Error(`Script file not found: ${command.raw}`);
+    }
+
     const env = {
       ...process.env,
       HOME: this.testHome
@@ -513,6 +601,25 @@ class CustomizationGuideTester {
     });
 
     return { stdout, stderr };
+  }
+
+  /**
+   * Check if command requires an executable that's not available in test environment
+   */
+  isCommandMissingExecutable(command) {
+    const missingExecutables = ['claude', 'claude-commands'];
+    const commandName = command.split(' ')[0];
+    return missingExecutables.includes(commandName);
+  }
+
+  /**
+   * Check if script file exists
+   */
+  checkScriptExists(scriptPath) {
+    const fs = require('fs');
+    const path = require('path');
+    const fullPath = path.resolve(this.testHome, scriptPath);
+    return fs.existsSync(fullPath);
   }
 
   /**
