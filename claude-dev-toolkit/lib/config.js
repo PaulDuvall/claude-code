@@ -229,8 +229,14 @@ class ConfigManager {
     // REQ-CONFIG-002: Apply Template
     applyTemplate(templateName) {
         try {
-            // Validate template exists
-            const templatePath = path.join(this.templatesDir, templateName);
+            // Resolve template name to full filename
+            const resolvedTemplate = this.resolveTemplateName(templateName);
+            if (!resolvedTemplate) {
+                this.handleTemplateNotFound(templateName);
+                return false;
+            }
+
+            const templatePath = path.join(this.templatesDir, resolvedTemplate);
             if (!fs.existsSync(templatePath)) {
                 this.handleTemplateNotFound(templateName);
                 return false;
@@ -246,7 +252,7 @@ class ConfigManager {
             const success = applyConfigurationTemplate(templatePath, this.settingsPath);
             
             if (success) {
-                console.log(`✅ Successfully applied template '${templateName}'`);
+                console.log(`✅ Successfully applied template '${templateName}' (${resolvedTemplate})`);
                 console.log(`📝 Configuration saved to: ${this.settingsPath}`);
                 return true;
             } else {
@@ -257,6 +263,41 @@ class ConfigManager {
             console.error('❌ Error applying template:', error.message);
             return false;
         }
+    }
+
+    // Helper method to resolve template names (supports short names)
+    resolveTemplateName(templateName) {
+        // Return as-is if it already has .json extension
+        if (templateName.endsWith('.json')) {
+            return templateName;
+        }
+
+        // Map short names to full filenames
+        const templateMap = {
+            'basic': 'basic-settings.json',
+            'comprehensive': 'comprehensive-settings.json',
+            'security-focused': 'security-focused-settings.json',
+            'security': 'security-focused-settings.json'
+        };
+
+        // Check if it's a known short name
+        if (templateMap[templateName]) {
+            return templateMap[templateName];
+        }
+
+        // Try adding .json extension
+        const withExtension = `${templateName}.json`;
+        if (fs.existsSync(path.join(this.templatesDir, withExtension))) {
+            return withExtension;
+        }
+
+        // Try adding -settings.json extension
+        const withSettingsExtension = `${templateName}-settings.json`;
+        if (fs.existsSync(path.join(this.templatesDir, withSettingsExtension))) {
+            return withSettingsExtension;
+        }
+
+        return null;
     }
 
     // Helper method for template not found error
@@ -303,9 +344,10 @@ class ConfigManager {
         console.log('  -t, --template <name>     Apply configuration template');
         console.log('  -h, --help                Show this help message\n');
         console.log('Examples:');
-        console.log('  claude-commands config --list                          # Show available templates');
-        console.log('  claude-commands config --template basic-settings.json  # Apply basic template');
-        console.log('  claude-commands config --help                          # Show this help\n');
+        console.log('  claude-commands config --list                    # Show available templates');
+        console.log('  claude-commands config --template comprehensive  # Apply comprehensive template');
+        console.log('  claude-commands config --template basic          # Apply basic template');
+        console.log('  claude-commands config --help                    # Show this help\n');
         console.log('Description:');
         console.log('  Manage Claude Code configuration templates. Templates are applied');
         console.log('  to ~/.claude/settings.json with automatic backup of existing settings.');
