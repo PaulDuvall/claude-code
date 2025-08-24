@@ -58,16 +58,14 @@
       },
       {
         "matcher": "Bash",
+        "// Subagent integration for security events": "",
         "hooks": [
           {
             "type": "command", 
             "command": "~/.claude/hooks/audit-bash-commands.sh",
             "blocking": false,
             "timeout": 5000
-          }
-        ],
-        "// Subagent integration for security events": "",
-        "hooks": [
+          },
           {
             "type": "command",
             "command": "~/.claude/hooks/subagent-trigger.sh security-auditor pre_write",
@@ -134,25 +132,6 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/subagent-trigger.sh performance-guardian post_test",
-            "blocking": false,
-            "timeout": 10000
-          }
-        ]
-      }
-    ],
-    "// Custom error handling hooks with subagents": "",
-    "OnError": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/subagent-trigger.sh debug-specialist on_error",
-            "blocking": false,
-            "timeout": 15000
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/subagent-trigger.sh rollback-first-responder on_error",
             "blocking": false,
             "timeout": 10000
           }
