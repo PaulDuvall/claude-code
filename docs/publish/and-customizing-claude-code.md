@@ -14,7 +14,7 @@ So I rebuilt everything—but this time with a system designed to survive projec
 
 What I learned: customization needs to be portable across projects, machines, and teams.
 
-First, the practical bit. The easiest way to get started is with the npm-based installation. If you want to see the full collection of examples and patterns, visit https://github.com/PaulDuvall/claude-code:
+The toolkit is distributed as an NPM package, making installation straightforward and consistent across all platforms. If you want to see the full collection of examples and patterns, visit https://github.com/PaulDuvall/claude-code:
 
 ```bash
 # 1. Install Claude Code (if you haven't already)
@@ -31,17 +31,20 @@ claude-commands subagents --install
 
 # 5. Configure settings (Optional)
 claude-commands config  # View current configuration
+claude-commands config --template comprehensive  # Apply comprehensive template
 # Learn more: https://docs.anthropic.com/en/docs/claude-code/settings
 ```
 
-The toolkit handles deployment automatically, preventing the fragmentation that caused my original loss. For advanced configuration, you can still access the repository directly:
+The toolkit handles deployment automatically, preventing the fragmentation that caused my original loss. The NPM package contains all commands, templates, and configuration files you need.
+
+For those interested in exploring the source code or contributing:
 
 ```bash
+# Optional: View source code and contribute
 git clone https://github.com/PaulDuvall/claude-code.git
-cd claude-code
 ```
 
-This separation between initial setup and ongoing deployment means you can safely experiment with new commands without breaking your existing workflow.
+The NPM package is completely self-contained, so you can install, configure, and customize Claude Code without needing the repository.
 
 Real persistence comes from `CLAUDE.md` - Claude Code's reference guide for your project. This file is what makes customization truly portable. When I lost my commands, I also lost all the context about why they existed and how to use them. The [CLAUDE.md](https://www.anthropic.com/engineering/claude-code-best-practices) structure captures core philosophy, command categories, and development guidelines.  
 
