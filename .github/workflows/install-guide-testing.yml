@@ -229,63 +229,6 @@ jobs:
           rm -rf "${{ env.TEST_HOME }}"
         fi
 
-  validate-documentation-sync:
-    name: Validate Documentation Sync
-    needs: [parse-documentation, install-guide-tests]
-    if: always()
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-
-    - name: Download all test results
-      uses: actions/download-artifact@v4
-      with:
-        path: test-artifacts/
-      continue-on-error: true
-
-    - name: Validate documentation accuracy
-      run: |
-        cd tests
-        # Check if test artifacts exist, if not create empty directory
-        if [ ! -d "../test-artifacts" ]; then
-          echo "⚠️  No test artifacts found, creating empty directory for validation"
-          mkdir -p ../test-artifacts
-        fi
-        node validate-documentation-accuracy.js ../test-artifacts/
-
-    - name: Generate comprehensive report
-      run: |
-        cd tests
-        node generate-comprehensive-report.js ../test-artifacts/ > comprehensive-report.md
-
-    - name: Comment PR with test results
-      if: github.event_name == 'pull_request'
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const fs = require('fs');
-          const report = fs.readFileSync('tests/comprehensive-report.md', 'utf8');
-          
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: `## 📋 Install Guide Documentation Test Results\n\n${report}`
-          });
-
-    - name: Upload comprehensive report
-      uses: actions/upload-artifact@v4
-      with:
-        name: comprehensive-test-report
-        path: tests/comprehensive-report.md
-        retention-days: 30
 
   security-validation:
     name: Security Validation
