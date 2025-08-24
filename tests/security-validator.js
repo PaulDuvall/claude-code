@@ -305,15 +305,13 @@ class SecurityValidator {
 
 // CLI usage
 if (require.main === module) {
-  const guidePath = process.argv[2];
+  const guidePath = process.argv[2] || path.join(__dirname, '../docs/manual-uninstall-install-guide.md');
   
-  if (!guidePath) {
-    console.error('Usage: node security-validator.js <path-to-install-guide.md>');
-    process.exit(1);
-  }
-
   if (!fs.existsSync(guidePath)) {
     console.error(`Error: Install guide not found at ${guidePath}`);
+    if (!process.argv[2]) {
+      console.error('Usage: node security-validator.js <path-to-install-guide.md>');
+    }
     process.exit(1);
   }
 

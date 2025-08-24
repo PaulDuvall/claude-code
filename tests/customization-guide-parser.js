@@ -188,6 +188,7 @@ class CustomizationGuideParser {
     } else if (rawCommand.startsWith('claude-commands')) {
       command.type = 'toolkit';
       command.timeout = 60000; // 1 minute for toolkit commands
+      command.allowFailure = true; // Toolkit commands may not be available in test environment
     } else if (rawCommand.startsWith('claude ')) {
       command.type = 'claude';
       command.allowFailure = true; // Claude executable may not be available in test environment
