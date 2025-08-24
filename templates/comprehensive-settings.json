@@ -1,48 +1,41 @@
 {
   "// Comprehensive Claude Code settings.json template": "Copy to ~/.claude/settings.json",
-  "// Full comprehensive setup with hooks, governance, and monitoring": "",
+  "// Based on official Claude Code documentation": "https://docs.anthropic.com/en/docs/claude-code/settings",
+  "// Includes all advanced features and hook events": "",
   
-  "allowedTools": [
-    "Edit",
-    "Bash",
-    "Read",
-    "Write",
-    "MultiEdit",
-    "Glob",
-    "Grep",
-    "LS",
-    "Task",
-    "WebFetch",
-    "WebSearch",
-    "NotebookEdit",
-    "BashOutput",
-    "KillBash"
-  ],
-  
-  "// Comprehensive tools configuration": "",
-  "tools": {
-    "bash": {
-      "defaultTimeout": 300000,
-      "maxParallelCommands": 3
-    },
-    "edit": {
-      "autoBackup": true,
-      "validateChanges": true
-    },
-    "web": {
-      "allowedDomains": ["github.com", "docs.anthropic.com", "stackoverflow.com"],
-      "timeout": 30000
-    }
+  "// Comprehensive tool permissions": "",
+  "permissions": {
+    "allow": [
+      "Edit(*)",
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "MultiEdit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "LS(*)",
+      "Task(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "NotebookEdit(*)",
+      "BashOutput(*)",
+      "KillBash(*)"
+    ],
+    "ask": [
+      "Bash(sudo *)",
+      "Bash(rm -rf *)",
+      "Edit(/etc/*)",
+      "Read(~/.ssh/*)"
+    ],
+    "deny": [
+      "Bash(*production*)",
+      "Bash(*admin*)",
+      "Read(/etc/shadow)",
+      "Edit(/etc/passwd)"
+    ]
   },
   
-  "// Trust and onboarding settings": "",
-  "hasTrustDialogAccepted": true,
-  "hasCompletedProjectOnboarding": true,
-  
-  "// Performance optimization for comprehensive setup": "",
-  "parallelTasksCount": 5,
-  
-  "// Comprehensive security hooks with subagent integration": "",
+  "// Comprehensive hooks covering all supported events": "",
   "hooks": {
     "PreToolUse": [
       {
@@ -50,55 +43,20 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/prevent-credential-exposure.sh",
-            "blocking": true,
-            "timeout": 10000
+            "command": "~/.claude/hooks/prevent-credential-exposure.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/backup-before-edit.sh"
           }
         ]
       },
       {
         "matcher": "Bash",
-        "// Subagent integration for security events": "",
-        "hooks": [
-          {
-            "type": "command", 
-            "command": "~/.claude/hooks/audit-bash-commands.sh",
-            "blocking": false,
-            "timeout": 5000
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/subagent-trigger.sh security-auditor pre_write",
-            "blocking": true,
-            "timeout": 10000
-          },
-          {
-            "type": "command", 
-            "command": "~/.claude/hooks/subagent-trigger.sh style-enforcer pre_write",
-            "blocking": false,
-            "timeout": 5000
-          }
-        ]
-      },
-      {
-        "matcher": "Bash(git commit*)",
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/subagent-trigger.sh trunk-guardian pre_commit",
-            "blocking": true,
-            "timeout": 10000
-          }
-        ]
-      },
-      {
-        "matcher": "Bash(*test*|*spec*)",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/subagent-trigger.sh test-writer pre_test",
-            "blocking": false,
-            "timeout": 8000
+            "command": "~/.claude/hooks/audit-bash-commands.sh"
           }
         ]
       }
@@ -109,9 +67,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/log-all-operations.sh", 
-            "blocking": false,
-            "timeout": 3000
+            "command": "~/.claude/hooks/log-all-operations.sh"
           }
         ]
       },
@@ -120,66 +76,122 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/subagent-trigger.sh documentation-curator post_write",
-            "blocking": false,
-            "timeout": 8000
+            "command": "~/.claude/hooks/validate-changes.sh"
           }
         ]
-      },
+      }
+    ],
+    "Notification": [
       {
-        "matcher": "Bash(*test*)",
+        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/subagent-trigger.sh performance-guardian post_test",
-            "blocking": false,
-            "timeout": 10000
+            "command": "~/.claude/hooks/handle-notifications.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/prompt-analysis.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/cleanup-on-stop.sh"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-cleanup.sh"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/session-cleanup.sh"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-compact-backup.sh"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/session-init.sh"
           }
         ]
       }
     ]
   },
   
-  "// Comprehensive environment variables": "",
+  "// Standard Claude Code environment variables": "",
   "env": {
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "true",
-    "BASH_DEFAULT_TIMEOUT_MS": "300000",
-    "MCP_TIMEOUT": "60000",
-    "SECURITY_WEBHOOK_URL": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
-    "CLAUDE_SECURITY_OVERRIDE": "false",
+    "ANTHROPIC_API_KEY": "your-api-key-here",
+    "DISABLE_TELEMETRY": "1",
     "ANTHROPIC_LOG": "info",
-    "CLAUDE_CODE_ENABLE_TELEMETRY": "0"
+    "CLAUDE_PROJECT_DIR": "."
   },
   
-  "// Comprehensive permissions": "",
-  "permissions": {
-    "allow": [
-      "Bash(npm run *)",
-      "Bash(python -m *)",
-      "Bash(git *)",
-      "Bash(docker *)",
-      "Bash(kubectl *)",
-      "Bash(terraform *)",
-      "Edit(*)",
-      "Read(*)",
-      "Write(*)",
-      "MultiEdit(*)"
-    ],
-    "deny": [
-      "Bash(curl *://*/admin*)",
-      "Bash(wget *://*/admin*)",
-      "Bash(ssh *prod*)",
-      "Bash(sudo *)",
-      "Bash(rm -rf *)",
-      "Bash(*production*)"
-    ]
-  },
+  "// Advanced Claude Code configuration": "",
+  "includeCoAuthoredBy": true,
+  "cleanupPeriodDays": 30,
+  "model": "claude-3-5-sonnet-20241022",
   
-  "// MCP servers for comprehensive features": "",
-  "mcpServers": {
-    "puppeteer": {
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "--init", "-e", "DOCKER_CONTAINER=true", "mcp/puppeteer"]
-    }
+  "// MCP server configuration": "",
+  "enableAllProjectMcpServers": false,
+  "enabledMcpjsonServers": [
+    "approved-server-1",
+    "approved-server-2"
+  ],
+  "disabledMcpjsonServers": [
+    "blocked-server-1"
+  ],
+  
+  "// Optional: Custom API key helper script": "",
+  "apiKeyHelper": "~/.claude/scripts/get-api-key.sh",
+  
+  "// Optional: Force specific login method": "",
+  "forceLoginMethod": "api-key",
+  
+  "// Optional: Custom status line configuration": "",
+  "statusLine": {
+    "enabled": true,
+    "format": "Claude Code - Project: {project} | Model: {model} | Tools: {tools_count}"
   }
 }

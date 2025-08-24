@@ -1,23 +1,42 @@
 {
   "// Security-focused Claude Code settings.json template": "Copy to ~/.claude/settings.json",
-  "// Includes security hooks and enhanced governance": "",
+  "// Based on official Claude Code documentation": "https://docs.anthropic.com/en/docs/claude-code/settings",
+  "// Includes comprehensive security controls and governance": "",
   
-  "allowedTools": [
-    "Edit",
-    "Bash",
-    "Read",
-    "Write",
-    "MultiEdit"
-  ],
+  "// Restrictive tool permissions for security": "",
+  "permissions": {
+    "allow": [
+      "Read(*)",
+      "Edit(*.md)",
+      "Edit(*.txt)",
+      "Edit(*.json)",
+      "Edit(*.yml)",
+      "Edit(*.yaml)",
+      "Bash(git *)",
+      "Bash(npm run *)",
+      "Bash(python -m *)",
+      "Bash(node *)",
+      "MultiEdit(*)"
+    ],
+    "deny": [
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(ssh *)",
+      "Bash(sudo *)",
+      "Bash(rm -rf *)",
+      "Bash(*production*)",
+      "Bash(*admin*)",
+      "Edit(/etc/*)",
+      "Edit(/root/*)",
+      "Edit(~/.ssh/*)",
+      "Read(/etc/passwd)",
+      "Read(/etc/shadow)",
+      "Read(~/.aws/*)",
+      "Read(~/.ssh/id_*)"
+    ]
+  },
   
-  "// Trust and onboarding settings": "",
-  "hasTrustDialogAccepted": true,
-  "hasCompletedProjectOnboarding": true,
-  
-  "// Performance optimization": "",
-  "parallelTasksCount": 3,
-  
-  "// Security hooks configuration": "",
+  "// Comprehensive security hooks": "",
   "hooks": {
     "PreToolUse": [
       {
@@ -25,38 +44,65 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/prevent-credential-exposure.sh",
-            "blocking": true,
-            "timeout": 10000
+            "command": "~/.claude/hooks/prevent-credential-exposure.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/audit-bash-commands.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/log-all-operations.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command", 
+            "command": "~/.claude/hooks/prompt-security-scan.sh"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/security-session-init.sh"
           }
         ]
       }
     ]
   },
   
-  "// Security-focused environment variables": "",
+  "// Standard Claude Code environment variables": "",
   "env": {
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "true",
-    "BASH_DEFAULT_TIMEOUT_MS": "120000",
-    "SECURITY_WEBHOOK_URL": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
-    "CLAUDE_SECURITY_OVERRIDE": "false"
+    "DISABLE_TELEMETRY": "1",
+    "ANTHROPIC_LOG": "error"
   },
   
-  "// Restrictive permissions for security": "",
-  "permissions": {
-    "allow": [
-      "Bash(npm run *)",
-      "Bash(python -m *)",
-      "Bash(git *)",
-      "Edit(*)",
-      "Read(*)",
-      "Write(*)"
-    ],
-    "deny": [
-      "Bash(curl *)",
-      "Bash(wget *)",
-      "Bash(ssh *)",
-      "Bash(sudo *)"
-    ]
-  }
+  "// Security-focused settings": "",
+  "includeCoAuthoredBy": false,
+  "cleanupPeriodDays": 7,
+  
+  "// Disable auto-approval of MCP servers for security": "",
+  "enableAllProjectMcpServers": false
 }

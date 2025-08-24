@@ -287,9 +287,11 @@ echo '{
   }
 }' > .claude/settings.json
 
-# Personal overrides (gitignored)
+# Personal overrides (gitignored) 
 echo '{
-  "allowedTools": ["Bash", "Edit", "Read"]
+  "permissions": {
+    "allow": ["Bash(*)", "Edit(*)", "Read(*)"]
+  }
 }' > .claude/settings.local.json
 
 # Project-specific command

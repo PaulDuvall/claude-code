@@ -1,0 +1,185 @@
+{
+  "// Comprehensive Claude Code settings.json template": "Copy to ~/.claude/settings.json",
+  "// Full comprehensive setup with hooks, governance, and monitoring": "",
+  
+  "allowedTools": [
+    "Edit",
+    "Bash",
+    "Read",
+    "Write",
+    "MultiEdit",
+    "Glob",
+    "Grep",
+    "LS",
+    "Task",
+    "WebFetch",
+    "WebSearch",
+    "NotebookEdit",
+    "BashOutput",
+    "KillBash"
+  ],
+  
+  "// Comprehensive tools configuration": "",
+  "tools": {
+    "bash": {
+      "defaultTimeout": 300000,
+      "maxParallelCommands": 3
+    },
+    "edit": {
+      "autoBackup": true,
+      "validateChanges": true
+    },
+    "web": {
+      "allowedDomains": ["github.com", "docs.anthropic.com", "stackoverflow.com"],
+      "timeout": 30000
+    }
+  },
+  
+  "// Trust and onboarding settings": "",
+  "hasTrustDialogAccepted": true,
+  "hasCompletedProjectOnboarding": true,
+  
+  "// Performance optimization for comprehensive setup": "",
+  "parallelTasksCount": 5,
+  
+  "// Comprehensive security hooks with subagent integration": "",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/prevent-credential-exposure.sh",
+            "blocking": true,
+            "timeout": 10000
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "// Subagent integration for security events": "",
+        "hooks": [
+          {
+            "type": "command", 
+            "command": "~/.claude/hooks/audit-bash-commands.sh",
+            "blocking": false,
+            "timeout": 5000
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh security-auditor pre_write",
+            "blocking": true,
+            "timeout": 10000
+          },
+          {
+            "type": "command", 
+            "command": "~/.claude/hooks/subagent-trigger.sh style-enforcer pre_write",
+            "blocking": false,
+            "timeout": 5000
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(git commit*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh trunk-guardian pre_commit",
+            "blocking": true,
+            "timeout": 10000
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(*test*|*spec*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh test-writer pre_test",
+            "blocking": false,
+            "timeout": 8000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/log-all-operations.sh", 
+            "blocking": false,
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh documentation-curator post_write",
+            "blocking": false,
+            "timeout": 8000
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(*test*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh performance-guardian post_test",
+            "blocking": false,
+            "timeout": 10000
+          }
+        ]
+      }
+    ]
+  },
+  
+  "// Comprehensive environment variables": "",
+  "env": {
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "true",
+    "BASH_DEFAULT_TIMEOUT_MS": "300000",
+    "MCP_TIMEOUT": "60000",
+    "SECURITY_WEBHOOK_URL": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
+    "CLAUDE_SECURITY_OVERRIDE": "false",
+    "ANTHROPIC_LOG": "info",
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "0"
+  },
+  
+  "// Comprehensive permissions": "",
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(python -m *)",
+      "Bash(git *)",
+      "Bash(docker *)",
+      "Bash(kubectl *)",
+      "Bash(terraform *)",
+      "Edit(*)",
+      "Read(*)",
+      "Write(*)",
+      "MultiEdit(*)"
+    ],
+    "deny": [
+      "Bash(curl *://*/admin*)",
+      "Bash(wget *://*/admin*)",
+      "Bash(ssh *prod*)",
+      "Bash(sudo *)",
+      "Bash(rm -rf *)",
+      "Bash(*production*)"
+    ]
+  },
+  
+  "// MCP servers for comprehensive features": "",
+  "mcpServers": {
+    "puppeteer": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "--init", "-e", "DOCKER_CONTAINER=true", "mcp/puppeteer"]
+    }
+  }
+}
