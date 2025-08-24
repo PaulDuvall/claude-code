@@ -230,6 +230,39 @@ jobs:
         fi
 
 
+  automated-testing:
+    name: Automated Testing Suite
+    runs-on: ubuntu-latest
+    # Run automated tests on every push
+    if: always()
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+
+    - name: Install test dependencies
+      run: |
+        cd tests && npm install
+
+    - name: Discover and run all test files
+      run: |
+        cd tests
+        chmod +x run-all-tests.sh
+        ./run-all-tests.sh
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: automated-test-results
+        path: tests/test-results/
+        retention-days: 30
+
   security-validation:
     name: Security Validation
     runs-on: ubuntu-latest
