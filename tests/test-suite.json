@@ -1,7 +1,7 @@
 {
   "metadata": {
     "generatedFrom": "../docs/manual-uninstall-install-guide.md",
-    "generatedAt": "2025-08-24T21:59:00.729Z",
+    "generatedAt": "2025-08-24T22:05:47.772Z",
     "totalSteps": 23,
     "sections": [
       "Complete Uninstall Process",
@@ -294,11 +294,12 @@
       "commands": [
         {
           "raw": "cd /path/to/your/project",
-          "type": "general",
+          "type": "placeholder",
           "dangerous": false,
           "requiresConfirmation": false,
           "expectedExitCode": 0,
-          "timeout": 10000
+          "timeout": 1000,
+          "skip": true
         },
         {
           "raw": "cat > CLAUDE.md << 'EOF'",
@@ -310,43 +311,48 @@
         },
         {
           "raw": "[Describe your project here]",
-          "type": "general",
+          "type": "placeholder",
           "dangerous": false,
           "requiresConfirmation": false,
           "expectedExitCode": 0,
-          "timeout": 10000
+          "timeout": 1000,
+          "skip": true
         },
         {
           "raw": "[Define your development principles]",
-          "type": "general",
+          "type": "placeholder",
           "dangerous": false,
           "requiresConfirmation": false,
           "expectedExitCode": 0,
-          "timeout": 10000
+          "timeout": 1000,
+          "skip": true
         },
         {
           "raw": "[Specify coding standards and practices]",
-          "type": "general",
+          "type": "placeholder",
           "dangerous": false,
           "requiresConfirmation": false,
           "expectedExitCode": 0,
-          "timeout": 10000
+          "timeout": 1000,
+          "skip": true
         },
         {
           "raw": "[Define security requirements]",
-          "type": "general",
+          "type": "placeholder",
           "dangerous": false,
           "requiresConfirmation": false,
           "expectedExitCode": 0,
-          "timeout": 10000
+          "timeout": 1000,
+          "skip": true
         },
         {
           "raw": "EOF",
-          "type": "general",
+          "type": "placeholder",
           "dangerous": false,
           "requiresConfirmation": false,
           "expectedExitCode": 0,
-          "timeout": 10000
+          "timeout": 1000,
+          "skip": true
         }
       ],
       "validations": [],
@@ -489,11 +495,12 @@
         },
         {
           "raw": "git remote add origin YOUR_REPOSITORY_URL",
-          "type": "git",
+          "type": "placeholder",
           "dangerous": false,
           "requiresConfirmation": false,
           "expectedExitCode": 0,
-          "timeout": 10000
+          "timeout": 1000,
+          "skip": true
         },
         {
           "raw": "git push -u origin main",
@@ -554,11 +561,12 @@
         },
         {
           "raw": "EOF",
-          "type": "general",
+          "type": "placeholder",
           "dangerous": false,
           "requiresConfirmation": false,
           "expectedExitCode": 0,
-          "timeout": 10000
+          "timeout": 1000,
+          "skip": true
         },
         {
           "raw": "chmod +x backup-claude.sh",

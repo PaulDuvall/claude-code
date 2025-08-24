@@ -126,6 +126,19 @@ class InstallGuideParser {
     // Handle multi-line commands (ending with \)
     const raw = line.trim();
     
+    // Skip placeholder commands  
+    if (this.isPlaceholderCommand(raw)) {
+      return {
+        raw: raw,
+        type: 'placeholder',
+        dangerous: false,
+        requiresConfirmation: false,
+        expectedExitCode: 0,
+        timeout: 1000,
+        skip: true
+      };
+    }
+    
     return {
       raw: raw,
       type: this.categorizeCommand(raw),
@@ -134,6 +147,24 @@ class InstallGuideParser {
       expectedExitCode: 0,
       timeout: this.getCommandTimeout(raw)
     };
+  }
+
+  /**
+   * Check if command is a placeholder/example that shouldn't be executed
+   */
+  isPlaceholderCommand(command) {
+    const placeholderPatterns = [
+      /cd \/path\/to\/your\/project/,
+      /\[Describe your project here\]/,
+      /\[Define your development principles\]/,
+      /\[Specify coding standards and practices\]/,
+      /\[Define security requirements\]/,
+      /EOF$/,
+      /YOUR_REPOSITORY_URL/,
+      /\$YOUR_ACTUAL_API_KEY/
+    ];
+
+    return placeholderPatterns.some(pattern => pattern.test(command));
   }
 
   /**
