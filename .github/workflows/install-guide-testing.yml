@@ -255,6 +255,12 @@ jobs:
         chmod +x run-all-tests.sh
         ./run-all-tests.sh
 
+    - name: Test customization guide parser
+      run: |
+        cd tests
+        node customization-guide-parser.js ../docs/publish/and-customizing-claude-code.md
+        echo "✅ Customization guide parser test passed"
+
     - name: Upload test results
       if: always()
       uses: actions/upload-artifact@v4
@@ -291,3 +297,110 @@ jobs:
         name: security-validation-report
         path: tests/test-results/
         retention-days: 30
+
+  customization-guide-tests:
+    name: Customization Guide Testing
+    runs-on: ubuntu-latest
+    needs: parse-documentation
+    # Run customization guide tests on every push
+    if: always()
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario: ['customization-setup', 'advanced-workflow']
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+
+    - name: Install test dependencies
+      run: |
+        # Install required CLI tools
+        npm install -g @anthropic-ai/claude-code
+        npm install -g @paulduvall/claude-dev-toolkit
+        
+        cd tests && npm install
+
+    - name: Setup customization test environment
+      run: |
+        # Create clean test environment
+        export TEST_HOME="/tmp/claude-customization-test-${{ matrix.scenario }}-$$"
+        mkdir -p "$TEST_HOME"
+        
+        echo "TEST_HOME=$TEST_HOME" >> $GITHUB_ENV
+        echo "Test HOME: $TEST_HOME"
+        
+        # Store original npm global prefix
+        ORIGINAL_NPM_PREFIX=$(npm config get prefix)
+        echo "$ORIGINAL_NPM_PREFIX/bin" >> $GITHUB_PATH
+        
+        # Initialize clean npm environment
+        export HOME="$TEST_HOME"
+        npm config set prefix "$TEST_HOME/.npm-global"
+        echo "$TEST_HOME/.npm-global/bin" >> $GITHUB_PATH
+
+    - name: Parse customization guide
+      run: |
+        cd tests
+        node customization-guide-parser.js ../docs/publish/and-customizing-claude-code.md --json > customization-test-suite.json
+        
+        echo "📋 Generated customization test suite"
+        cat customization-test-suite.json | jq '.metadata'
+
+    - name: Run pre-setup for ${{ matrix.scenario }}
+      run: |
+        cd tests
+        node customization-guide-tester.js --scenario=${{ matrix.scenario }} --phase=pre-setup
+      env:
+        HOME: /tmp/claude-customization-test-${{ matrix.scenario }}
+        TEST_HOME: /tmp/claude-customization-test-${{ matrix.scenario }}
+
+    - name: Execute customization guide steps
+      run: |
+        cd tests
+        node customization-guide-tester.js --scenario=${{ matrix.scenario }} --phase=execute
+      env:
+        HOME: /tmp/claude-customization-test-${{ matrix.scenario }}
+        TEST_HOME: /tmp/claude-customization-test-${{ matrix.scenario }}
+
+    - name: Validate customization results
+      run: |
+        cd tests
+        node customization-guide-tester.js --scenario=${{ matrix.scenario }} --phase=validate
+      env:
+        HOME: /tmp/claude-customization-test-${{ matrix.scenario }}
+        TEST_HOME: /tmp/claude-customization-test-${{ matrix.scenario }}
+
+    - name: Generate customization test report
+      if: always()
+      run: |
+        cd tests
+        node customization-guide-tester.js --scenario=${{ matrix.scenario }} --phase=report
+      env:
+        HOME: /tmp/claude-customization-test-${{ matrix.scenario }}
+        TEST_HOME: /tmp/claude-customization-test-${{ matrix.scenario }}
+
+    - name: Upload customization test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: customization-test-results-${{ matrix.scenario }}
+        path: |
+          tests/test-results/customization-*
+          tests/customization-test-suite.json
+        retention-days: 7
+
+    - name: Cleanup customization test environment
+      if: always()
+      run: |
+        TEST_DIR="/tmp/claude-customization-test-${{ matrix.scenario }}"
+        if [ -d "$TEST_DIR" ]; then
+          rm -rf "$TEST_DIR"
+          echo "✅ Cleaned up test directory: $TEST_DIR"
+        fi
