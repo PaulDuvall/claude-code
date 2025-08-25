@@ -24,8 +24,6 @@ jobs:
         
     - name: Make scripts executable
       run: |
-        chmod +x validate-commands.sh
-        chmod +x verify-setup.sh
         chmod +x scripts/testing/test-debug-subagent.py
         chmod +x scripts/deploy-subagents.sh
         chmod +x hooks/*.sh
@@ -132,13 +130,16 @@ jobs:
         
     - name: Run command validation
       run: |
-        echo "🔍 Running Command Validation"
-        ./validate-commands.sh
+        echo "🔍 Running Command Validation (via NPM package)"
+        cd claude-dev-toolkit
+        npm install --silent
+        npm run validate
         
-    - name: Run command validation with settings check
+    - name: Run command validation with comprehensive tests
       run: |
-        echo "🔍 Running Command Validation with Settings"
-        ./validate-commands.sh --check-settings
+        echo "🔍 Running Command Validation with Comprehensive Tests"
+        cd claude-dev-toolkit
+        npm test
         
     - name: Run command validation with integration tests (CI mode)
       run: |
@@ -146,16 +147,16 @@ jobs:
         # Run integration tests but skip Claude Code specific checks
         echo "Running repository structure validation..."
         
-        # Test that required scripts exist and are executable
-        scripts=("setup.sh" "deploy.sh" "configure-claude-code.sh" "verify-setup.sh")
-        for script in "${scripts[@]}"; do
-          if [ -f "$script" ] && [ -x "$script" ]; then
-            echo "  ✅ $script exists and is executable"
-          else
-            echo "  ❌ $script missing or not executable"
-            exit 1
-          fi
-        done
+        # Test that NPM package provides required functionality
+        echo "  ✅ NPM package replaces shell scripts"
+        cd claude-dev-toolkit
+        if [ -f "bin/claude-commands" ] && [ -x "bin/claude-commands" ]; then
+          echo "  ✅ claude-commands CLI exists and is executable"
+        else
+          echo "  ❌ claude-commands CLI missing or not executable"
+          exit 1
+        fi
+        cd ..
         
         # Test directory structure
         required_dirs=("slash-commands/active" "templates" "specs" "hooks" "hooks/lib" "tests" "docs")
@@ -450,8 +451,8 @@ jobs:
       run: |
         echo "🔍 Checking Repository Structure"
         
-        # Check required directories
-        required_dirs=("slash-commands/active" "templates" "specs" "hooks" "lib")
+        # Check required directories (lib/ removed in Phase 3)
+        required_dirs=("slash-commands/active" "templates" "specs" "hooks" "claude-dev-toolkit")
         for dir in "${required_dirs[@]}"; do
           if [ -d "$dir" ]; then
             echo "✅ Directory $dir exists"
