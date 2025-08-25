@@ -174,8 +174,8 @@ npm run lint             # Code linting
 - **Configuration Tests**: Template and setup validation
 
 ### Architecture
-- **Symlink Consolidation**: Single source of truth with root directory
-- **JavaScript-Based**: Migrated from Python for better Node.js integration
+- **Self-Contained Package**: No dependencies on repository cloning
+- **JavaScript-Based**: Native Node.js integration with comprehensive testing
 - **Modular Design**: Separate installer, config, and validation modules
 - **Cross-Platform**: Works on macOS, Linux, and Windows
 
@@ -212,13 +212,13 @@ npm run validate                       # Validate package
 
 ### Validation Commands
 ```bash
-# Repository validation (from main repo)
-./validate-commands.sh                 # JavaScript-based validation
-./verify-setup.sh                     # Complete setup verification
-
 # Package validation
 npm run validate                       # Package structure validation
 npm test                              # Comprehensive test suite
+
+# CLI validation
+claude-commands verify                 # Complete setup verification
+claude-commands list                   # Check installed commands
 ```
 
 ## 📚 Documentation
@@ -252,8 +252,8 @@ npm test
 ```
 
 ### Adding Commands
-1. Create command files in root `slash-commands/active/` or `slash-commands/experiments/`
-2. Commands automatically sync to NPM package via symlinks
+1. Create command files in repository `slash-commands/active/` or `slash-commands/experiments/`
+2. Commands are included in NPM package through build process
 3. Validate with `npm run test:commands`
 4. Follow existing patterns and security guidelines
 

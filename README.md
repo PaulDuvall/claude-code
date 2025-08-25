@@ -32,10 +32,9 @@ This repository extends [Claude Code](https://claude.ai/code) with **custom slas
 
 ### **Before Installation:**
 1. **🔍 Review the source code** - Examine the files you'll be running:
-   - **Setup scripts**: [`setup.sh`](./setup.sh), [`deploy.sh`](./deploy.sh), [`configure-claude-code.sh`](./configure-claude-code.sh)
+   - **NPM package source**: [`claude-dev-toolkit/`](./claude-dev-toolkit/) - The published package code
    - **Commands directory**: [`slash-commands/active/`](./slash-commands/active/) - All command implementations
    - **Hook scripts**: [`hooks/`](./hooks/) - Scripts that integrate with Claude Code events
-   - **NPM package**: [`claude-dev-toolkit/`](./claude-dev-toolkit/) - The published package code
 
 2. **🛡️ Understand what runs**: Commands will:
    - Execute bash/shell commands on your system
@@ -95,19 +94,20 @@ claude
 /xgit           # Automated git workflow with smart commits
 ```
 
-### 🔧 Alternative: Manual Installation (Development)
+### 🔧 Development and Customization
 
-For contributing or customization (⚠️ **Review source code first**!):
+For contributing or accessing experimental features (⚠️ **Review source code first**!):
 
 ```bash
-# Clone and setup this repository
-git clone https://github.com/PaulDuvall/claude-code.git
-cd claude-code
-./setup.sh
+# Install development version with experimental commands
+npm install -g @paulduvall/claude-dev-toolkit
 
-# Access debug specialist and experimental commands
-@debug-specialist # Access AI debugging specialist
-./deploy.sh --experiments # Enable 44 experimental commands
+# Install experimental commands (45 additional commands)
+claude-commands install --experiments    # Experimental features
+claude-commands install --all            # All 58 commands
+
+# Access AI subagents for specialized tasks
+claude-commands subagents --install      # 26 specialized AI assistants
 ```
 
 **That's it!** You now have 13 powerful AI development commands + intelligent subagents available in any project.
