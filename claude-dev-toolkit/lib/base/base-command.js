@@ -5,16 +5,24 @@
 
 const ClaudePathConfig = require('../utils/claude-path-config');
 const FileSystemUtils = require('../utils/file-system-utils');
+const LoggerService = require('../services/logger-service');
 
 class BaseCommand {
-    constructor(config = null) {
+    constructor(config = null, logger = null) {
         this.config = config || new ClaudePathConfig();
+        this.logger = logger || new LoggerService();
         this.startTime = null;
         this.metrics = {
             filesProcessed: 0,
             operationsPerformed: 0,
             errorsEncountered: 0
         };
+        
+        // Set logger context for this command
+        this.logger.setContext({ 
+            command: this.constructor.name,
+            timestamp: new Date().toISOString()
+        });
     }
 
     /**

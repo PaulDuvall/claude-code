@@ -22,7 +22,7 @@ class BackupRestoreCommand extends BaseCommand {
      * Create a backup of the entire .claude directory
      */
     async backup(name = null) {
-        console.log('📦 Creating backup of Claude Code configuration...\n');
+        this.logger.step('Creating backup of Claude Code configuration', { backupName: name });
 
         try {
             const result = await this.backupService.create(name);
@@ -30,14 +30,18 @@ class BackupRestoreCommand extends BaseCommand {
             // Try to compress the backup
             const compressed = await this.compressBackup(result.path);
             
-            console.log(`\n🎉 Backup '${result.name}' created successfully`);
-            console.log(`   Files: ${result.totalFiles}`);
-            console.log(`   Size: ${FileSystemUtils.formatSize(result.totalSize)}`);
+            this.logger.complete(`Backup '${result.name}' created successfully`, {
+                files: result.totalFiles,
+                size: FileSystemUtils.formatSize(result.totalSize),
+                compressed: !!compressed
+            });
             
             if (compressed) {
-                console.log(`📦 Backup compressed and stored at: ${compressed.path}`);
+                this.logger.info(`Backup compressed and stored at: ${compressed.path}`, { 
+                    compressionRatio: compressed.size / result.totalSize 
+                });
             } else {
-                console.log(`📁 Backup stored at: ${result.path}`);
+                this.logger.info(`Backup stored at: ${result.path}`);
             }
             
             return {
@@ -83,26 +87,31 @@ class BackupRestoreCommand extends BaseCommand {
      * Restore from a backup
      */
     async restore(backupName) {
-        console.log(`🔄 Restoring from backup: ${backupName}\n`);
+        this.logger.step(`Restoring from backup: ${backupName}`, { backupName });
 
         try {
             // Create undo backup first
-            console.log('💾 Creating undo backup...');
+            this.logger.info('Creating undo backup for safety');
             const undoBackup = await this.backup('undo-before-restore');
             
             if (!undoBackup.success) {
-                console.warn('⚠️  Could not create undo backup, continuing anyway...');
+                this.logger.warn('Could not create undo backup, continuing anyway', { 
+                    risk: 'restore cannot be undone' 
+                });
             }
 
             // Perform restore using service
             const result = await this.restoreService.restore(backupName);
 
-            console.log(`\n🎉 Restore completed successfully`);
-            console.log(`   Restored ${result.restoredCount} items`);
+            this.logger.complete(`Restore completed successfully`, {
+                restoredCount: result.restoredCount,
+                hasUndo: undoBackup.success
+            });
             
             if (undoBackup.success) {
-                console.log(`\n💡 To undo this restore, run:`);
-                console.log(`   claude-commands restore ${undoBackup.name}`);
+                this.logger.info(`To undo this restore, run: claude-commands restore ${undoBackup.name}`, {
+                    undoCommand: `claude-commands restore ${undoBackup.name}`
+                });
             }
 
             return {

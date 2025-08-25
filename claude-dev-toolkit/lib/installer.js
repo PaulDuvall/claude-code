@@ -15,7 +15,7 @@ class CommandInstaller extends BaseCommand {
      * Main install method with enhanced options
      */
     async install(options = {}) {
-        console.log('🚀 Installing Claude Custom Commands...\n');
+        this.logger.step('Installing Claude Custom Commands', { options });
         
         const startTime = Date.now();
 
@@ -33,9 +33,9 @@ class CommandInstaller extends BaseCommand {
 
             // Create backup if requested
             if (options.backup) {
-                console.log('📦 Creating backup before installation...');
+                this.logger.step('Creating backup before installation');
                 const backupResult = await this.backupService.create(`pre-install-${Date.now()}`);
-                console.log(`   Backup created: ${backupResult.name}\n`);
+                this.logger.success(`Backup created: ${backupResult.name}`);
             }
 
             // Install commands using service
@@ -44,28 +44,41 @@ class CommandInstaller extends BaseCommand {
             // Report results
             const duration = ((Date.now() - startTime) / 1000).toFixed(2);
             
+            const installContext = {
+                activeCommands: result.results.active,
+                experimentalCommands: result.results.experimental,
+                skippedCommands: result.skippedCount,
+                totalInstalled: result.installedCount,
+                duration: parseFloat(duration)
+            };
+
             if (result.results.active > 0) {
-                console.log(`✅ Installed ${result.results.active} active commands`);
+                this.logger.success(`Installed ${result.results.active} active commands`);
             }
             if (result.results.experimental > 0) {
-                console.log(`✅ Installed ${result.results.experimental} experimental commands`);
+                this.logger.success(`Installed ${result.results.experimental} experimental commands`);
             }
             if (result.skippedCount > 0) {
-                console.log(`⚠️  Skipped ${result.skippedCount} commands due to errors`);
+                this.logger.warn(`Skipped ${result.skippedCount} commands due to errors`);
             }
 
-            console.log(`\n🎉 Installation complete! ${result.installedCount} commands installed.`);
-            console.log(`⏱️  Time taken: ${duration}s`);
+            this.logger.complete(`Installation complete! ${result.installedCount} commands installed`, installContext);
             
             // Performance check
             if (parseFloat(duration) > 30) {
-                console.log('⚠️  Installation took longer than expected (>30s)');
+                this.logger.warn('Installation took longer than expected (>30s)', { 
+                    actualDuration: duration,
+                    expectedMaxDuration: 30 
+                });
             }
 
-            console.log('\nNext steps:');
-            console.log('• Verify: claude-commands verify');
-            console.log('• List: claude-commands list');
-            console.log('• Use in Claude Code: /xhelp');
+            this.logger.info('Next steps:', {
+                nextSteps: [
+                    'Verify: claude-commands verify',
+                    'List: claude-commands list', 
+                    'Use in Claude Code: /xhelp'
+                ]
+            });
             
             return { 
                 success: true, 
@@ -85,28 +98,35 @@ class CommandInstaller extends BaseCommand {
      * Dry run mode - show what would be installed
      */
     async dryRun(options) {
-        console.log('🔍 DRY RUN MODE - No changes will be made\n');
+        this.logger.info('DRY RUN MODE - No changes will be made', { options });
 
         const preview = this.installerService.getDryRunPreview(options);
         
-        console.log('📋 Would install the following commands:');
-        console.log(`   Destination: ${preview.destination}\n`);
+        this.logger.info('Would install the following commands:', {
+            destination: preview.destination,
+            totalCommands: preview.total
+        });
 
         if (preview.byType.active.length > 0) {
-            console.log(`📦 Active Commands (${preview.byType.active.length}):`);
-            preview.byType.active.forEach(cmd => console.log(`   • ${cmd.file}`));
+            this.logger.info(`Active Commands (${preview.byType.active.length}):`, {
+                activeCommands: preview.byType.active.map(cmd => cmd.file)
+            });
         }
 
         if (preview.byType.experimental.length > 0) {
-            console.log(`\n🧪 Experimental Commands (${preview.byType.experimental.length}):`);
-            preview.byType.experimental.forEach(cmd => console.log(`   • ${cmd.file}`));
+            this.logger.info(`Experimental Commands (${preview.byType.experimental.length}):`, {
+                experimentalCommands: preview.byType.experimental.map(cmd => cmd.file)
+            });
         }
 
         if (options.backup) {
-            console.log('\n📦 Would create backup before installation');
+            this.logger.info('Would create backup before installation');
         }
 
-        console.log(`\n📊 Total commands to install: ${preview.total}`);
+        this.logger.success(`Total commands to install: ${preview.total}`, {
+            summary: preview.byType,
+            dryRun: true
+        });
         
         return {
             success: true,
