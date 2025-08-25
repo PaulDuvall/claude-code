@@ -252,9 +252,13 @@ class CustomizationGuideTester {
     // Generate detailed report
     const report = this.generateDetailedReport();
     
+    // Ensure test-results directory exists
+    const testResultsDir = path.join(__dirname, 'test-results');
+    await this.ensureDirectory(testResultsDir);
+    
     // Save reports
-    const reportPath = path.join(__dirname, 'test-results', `customization-report-${this.scenario}-${Date.now()}.json`);
-    const markdownPath = path.join(__dirname, 'test-results', `customization-report-${this.scenario}-${Date.now()}.md`);
+    const reportPath = path.join(testResultsDir, `customization-report-${this.scenario}-${Date.now()}.json`);
+    const markdownPath = path.join(testResultsDir, `customization-report-${this.scenario}-${Date.now()}.md`);
     
     fs.writeFileSync(reportPath, JSON.stringify(this.results, null, 2));
     fs.writeFileSync(markdownPath, report);
@@ -797,7 +801,11 @@ class CustomizationGuideTester {
   }
 
   async saveResults() {
-    const resultsPath = path.join(__dirname, 'test-results', `customization-${this.scenario}-progress.json`);
+    // Ensure test-results directory exists
+    const testResultsDir = path.join(__dirname, 'test-results');
+    await this.ensureDirectory(testResultsDir);
+    
+    const resultsPath = path.join(testResultsDir, `customization-${this.scenario}-progress.json`);
     fs.writeFileSync(resultsPath, JSON.stringify(this.results, null, 2));
   }
 
