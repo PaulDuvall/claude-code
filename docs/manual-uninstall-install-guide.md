@@ -11,59 +11,17 @@ This guide provides manual steps for uninstalling and installing the Claude Code
 - Terminal/command line access
 - ANTHROPIC_API_KEY environment variable set
 
-## Complete Uninstall Process
+## Uninstall
 
-### NPM Package Uninstall
-
-### Step 1: Uninstall the NPM Package
+To remove Claude Code Custom Commands:
 
 ```bash
-# Uninstall the Claude Dev Toolkit globally
 npm uninstall -g @paulduvall/claude-dev-toolkit
-
-# Verify removal
-npm list -g @paulduvall/claude-dev-toolkit
-# Should show: (empty)
 ```
 
-### Step 2: Remove Custom Commands
-
+**Optional cleanup** (if you want to remove all configuration):
 ```bash
-# Remove machine-wide custom commands
-rm -rf ~/.claude/commands/
-
-# Remove project-specific commands (if any)
-# Navigate to your project directory first
-rm -rf .claude/commands/
-```
-
-### Step 3: Remove Hooks
-
-```bash
-# Remove machine-wide hooks
-rm -rf ~/.claude/hooks/
-
-# Remove project-specific hooks (if any)
-# Navigate to your project directory first
-rm -rf .claude/hooks/
-```
-
-### Step 4: Remove AI Subagents
-
-```bash
-# Remove installed subagents  
-rm -rf ~/.claude/subagents/
-
-# Remove project-specific subagents (if any)
-rm -rf .claude/subagents/
-```
-
-### Step 5: Clean Configuration Files (Optional)
-
-```bash
-# Remove Claude Code configuration (optional - this removes ALL Claude Code settings)
-# Be cautious with this step - only do this if you want to completely reset Claude Code
-rm -rf ~/.claude/config/
+rm -rf ~/.claude/commands ~/.claude/hooks ~/.claude/subagents
 ```
 
 ## Complete Installation Process
