@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
 /**
- * Phase 1 Requirements Validation Test
- * Validates that Phase 1 implementation meets all requirements from npm-consolidation-implementation-plan.md
+ * NPM Consolidation Validation Test
+ * Validates that NPM consolidation implementation meets all requirements
  */
 
 const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-class Phase1RequirementsValidator {
+class NpmConsolidationValidator {
     constructor() {
         this.cliPath = path.join(__dirname, '..', 'bin', 'claude-commands');
         this.results = {
-            phase1Requirements: {
+            consolidationRequirements: {
                 cliEntryPoint: false,
                 commandRouter: false,
                 crossPlatformPaths: false,
@@ -40,8 +40,8 @@ class Phase1RequirementsValidator {
      * Validate all Phase 1 requirements
      */
     async validate() {
-        console.log('🎯 Phase 1 Requirements Validation');
-        console.log('📋 Based on: npm-consolidation-implementation-plan.md\n');
+        console.log('🎯 NPM Consolidation Requirements Validation');
+        console.log('📋 Validating NPM consolidation implementation\n');
 
         // Test Core CLI Infrastructure Requirements
         this.validateCliEntryPoint();
@@ -63,7 +63,7 @@ class Phase1RequirementsValidator {
         // Generate final report
         this.generateValidationReport();
 
-        return this.isPhase1Complete();
+        return this.isConsolidationComplete();
     }
 
     /**
@@ -80,7 +80,7 @@ class Phase1RequirementsValidator {
             });
             
             if (output.match(/\d+\.\d+\.\d+/)) {
-                this.results.phase1Requirements.cliEntryPoint = true;
+                this.results.consolidationRequirements.cliEntryPoint = true;
                 this.results.technicalRequirements.globalAvailability = true;
                 this.results.technicalRequirements.versionInfo = true;
                 console.log('   ✅ CLI entry point with global availability: IMPLEMENTED');
@@ -107,7 +107,7 @@ class Phase1RequirementsValidator {
             );
             
             if (hasCommands) {
-                this.results.phase1Requirements.commandRouter = true;
+                this.results.consolidationRequirements.commandRouter = true;
                 this.results.technicalRequirements.helpSystem = true;
                 console.log('   ✅ Command router and help system: IMPLEMENTED');
             } else {
@@ -132,7 +132,7 @@ class Phase1RequirementsValidator {
             
             // Check if it properly handles home directory and .claude paths
             if (statusOutput.includes('.claude')) {
-                this.results.phase1Requirements.crossPlatformPaths = true;
+                this.results.consolidationRequirements.crossPlatformPaths = true;
                 console.log('   ✅ Cross-platform path handling: IMPLEMENTED');
             } else {
                 console.log('   ❌ Cross-platform path handling: No evidence of proper path handling');
@@ -159,7 +159,7 @@ class Phase1RequirementsValidator {
         } catch (error) {
             const errorOutput = error.stderr || error.stdout || '';
             if (errorOutput.includes('unknown command') || errorOutput.includes('error')) {
-                this.results.phase1Requirements.errorManagement = true;
+                this.results.consolidationRequirements.errorManagement = true;
                 console.log('   ✅ Error management and logging: IMPLEMENTED');
             } else {
                 console.log('   ❌ Error management: Poor error messages');
@@ -185,7 +185,7 @@ class Phase1RequirementsValidator {
             ].every(option => helpOutput.includes(option));
             
             if (hasRequiredOptions) {
-                this.results.phase1Requirements.setupCommand = true;
+                this.results.consolidationRequirements.setupCommand = true;
                 this.results.featureParity.replacesSetupSh = true;
                 console.log('   ✅ setup command (replaces setup.sh): IMPLEMENTED');
                 
@@ -223,7 +223,7 @@ class Phase1RequirementsValidator {
             );
             
             if (hasRequiredOptions) {
-                this.results.phase1Requirements.verifyCommand = true;
+                this.results.consolidationRequirements.verifyCommand = true;
                 this.results.featureParity.replacesVerifySetupSh = true;
                 console.log('   ✅ verify command (replaces verify-setup.sh): IMPLEMENTED');
                 
@@ -259,7 +259,7 @@ class Phase1RequirementsValidator {
             const hasTemplateSupport = helpOutput.includes('--template') || helpOutput.includes('-t');
             
             if (hasTemplateSupport) {
-                this.results.phase1Requirements.enhancedConfigure = true;
+                this.results.consolidationRequirements.enhancedConfigure = true;
                 this.results.featureParity.replacesConfigureSh = true;
                 console.log('   ✅ enhanced configure command: IMPLEMENTED');
             } else {
@@ -321,10 +321,17 @@ class Phase1RequirementsValidator {
     }
 
     /**
+     * Run all tests (compatibility method for comprehensive test runner)
+     */
+    runAllTests() {
+        return this.validate();
+    }
+
+    /**
      * Check if Phase 1 is complete
      */
-    isPhase1Complete() {
-        const req = this.results.phase1Requirements;
+    isConsolidationComplete() {
+        const req = this.results.consolidationRequirements;
         return Object.values(req).every(implemented => implemented);
     }
 
@@ -332,10 +339,10 @@ class Phase1RequirementsValidator {
      * Generate validation report
      */
     generateValidationReport() {
-        console.log('\n📊 Phase 1 Requirements Validation Report');
+        console.log('\n📊 NPM Consolidation Validation Report');
         console.log('=' .repeat(50));
         
-        const req = this.results.phase1Requirements;
+        const req = this.results.consolidationRequirements;
         const tech = this.results.technicalRequirements;
         const parity = this.results.featureParity;
         
@@ -361,20 +368,20 @@ class Phase1RequirementsValidator {
         console.log(`   ${parity.replacesVerifySetupSh ? '✅' : '❌'} Replaces verify-setup.sh`);
         console.log(`   ${parity.replacesConfigureSh ? '✅' : '❌'} Replaces configure-claude-code.sh`);
         
-        const isComplete = this.isPhase1Complete();
+        const isComplete = this.isConsolidationComplete();
         
         if (isComplete) {
-            console.log('\n🎉 PHASE 1: COMPLETE ✅');
+            console.log('\n🎉 NPM CONSOLIDATION: COMPLETE ✅');
             console.log('━'.repeat(50));
-            console.log('✨ All Phase 1 requirements successfully implemented!');
+            console.log('✨ All NPM consolidation requirements successfully implemented!');
             console.log('🚀 NPM package now has 100% feature parity with repository scripts');
-            console.log('📋 Ready to proceed to Phase 2: Command Implementation');
+            console.log('📋 NPM package now fully replaces repository scripts');
             console.log('🎯 Next: Enhanced command functionality and repository cleanup');
         } else {
-            console.log('\n⚠️  PHASE 1: INCOMPLETE ❌');
+            console.log('\n⚠️  NPM CONSOLIDATION: INCOMPLETE ❌');
             console.log('━'.repeat(50));
             console.log('🔧 Some requirements still need implementation');
-            console.log('📋 Complete missing requirements before proceeding to Phase 2');
+            console.log('📋 Complete missing requirements for full consolidation');
         }
         
         return isComplete;
@@ -383,7 +390,7 @@ class Phase1RequirementsValidator {
 
 // Run validation if called directly
 if (require.main === module) {
-    const validator = new Phase1RequirementsValidator();
+    const validator = new NpmConsolidationValidator();
     validator.validate().then(isComplete => {
         process.exit(isComplete ? 0 : 1);
     }).catch(error => {
@@ -392,4 +399,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { Phase1RequirementsValidator };
+module.exports = NpmConsolidationValidator;

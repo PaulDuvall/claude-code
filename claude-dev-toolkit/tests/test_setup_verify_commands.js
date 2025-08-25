@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Phase 1 Critical Commands Tests - TDD for setup and verify commands
- * Tests the missing commands needed to achieve 100% feature parity with repository scripts
+ * Setup and Verify Commands Tests
+ * Tests the critical setup and verify commands that replace repository scripts
  */
 
 const { execSync, spawn } = require('child_process');
@@ -10,7 +10,7 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
-class Phase1CriticalCommandsTests {
+class SetupVerifyCommandsTests {
     constructor() {
         this.results = [];
         this.cliPath = path.join(__dirname, '..', 'bin', 'claude-commands');
@@ -234,7 +234,13 @@ class Phase1CriticalCommandsTests {
                                                   output.includes('status');
                         return { checksInstallation, output: output.substring(0, 300) };
                     } catch (error) {
-                        return { checksInstallation: false, error: error.message };
+                        // verify command may exit non-zero when reporting issues - this is correct behavior
+                        const output = (error.stdout || '') + (error.stderr || '');
+                        const checksInstallation = output.includes('Claude') || 
+                                                  output.includes('commands') ||
+                                                  output.includes('installation') ||
+                                                  output.includes('status');
+                        return { checksInstallation, output: output.substring(0, 300) };
                     }
                 },
                 expected: (result) => result.checksInstallation
@@ -253,7 +259,12 @@ class Phase1CriticalCommandsTests {
                                               output.includes('check');
                         return { hasHealthReport, output: output.substring(0, 400) };
                     } catch (error) {
-                        return { hasHealthReport: false, error: error.message };
+                        // verify command may exit non-zero when reporting issues - this is correct behavior
+                        const output = (error.stdout || '') + (error.stderr || '');
+                        const hasHealthReport = output.includes('Health Check Report') || 
+                                              output.includes('Status') ||
+                                              output.includes('check');
+                        return { hasHealthReport, output: output.substring(0, 400) };
                     }
                 },
                 expected: (result) => result.hasHealthReport
@@ -445,7 +456,7 @@ class Phase1CriticalCommandsTests {
      * Run all critical command tests
      */
     runAllTests() {
-        console.log('🚀 Running Phase 1 Critical Commands Tests...\n');
+        console.log('🚀 Running Setup & Verify Commands Tests...\n');
         
         this.setupTestEnvironment();
         
@@ -455,7 +466,7 @@ class Phase1CriticalCommandsTests {
             this.testEnhancedConfigureCommand();
             this.testFeatureParity();
             
-            this.generateReport();
+            return this.generateReport();
         } finally {
             this.cleanupTestEnvironment();
         }
@@ -465,7 +476,7 @@ class Phase1CriticalCommandsTests {
      * Generate comprehensive test report
      */
     generateReport() {
-        console.log('\n📊 Phase 1 Critical Commands Test Results');
+        console.log('\n📊 Setup & Verify Commands Test Results');
         console.log('=' .repeat(55));
         
         let totalPassed = 0;
@@ -500,9 +511,9 @@ class Phase1CriticalCommandsTests {
         console.log(`   Success Rate: ${Math.round((totalPassed / totalTests) * 100)}%`);
         
         if (totalFailed > 0) {
-            console.log('\n❌ IMPLEMENTATION REQUIRED:');
-            console.log('   Missing commands need to be implemented to achieve Phase 1 goals');
-            console.log('   This is expected - tests are designed to fail until implementation is complete');
+            console.log('\n❌ COMMANDS NEED FIXES:');
+            console.log('   Some command functionality needs to be improved');
+            console.log('   Review the failing tests above for specific issues');
         } else {
             console.log('\n✅ PHASE 1 COMPLETE:');
             console.log('   All critical commands implemented with required functionality');
@@ -515,8 +526,8 @@ class Phase1CriticalCommandsTests {
 
 // Run tests if called directly
 if (require.main === module) {
-    const tests = new Phase1CriticalCommandsTests();
+    const tests = new SetupVerifyCommandsTests();
     tests.runAllTests();
 }
 
-module.exports = { Phase1CriticalCommandsTests };
+module.exports = SetupVerifyCommandsTests;
