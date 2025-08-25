@@ -115,4 +115,50 @@ program
         config.handleCommand(options);
     });
 
+program
+    .command('setup')
+    .description('Setup the Claude Dev Toolkit with custom commands and configuration')
+    .option('--type <template>', 'Configuration template to apply (basic, comprehensive, security-focused)')
+    .option('--commands <set>', 'Command set to install (active, experiments, all, none)')
+    .option('--skip-configure', 'Skip configuration step')
+    .option('--skip-hooks', 'Skip hooks installation')
+    .option('--force', 'Overwrite existing installation')
+    .option('--dry-run', 'Preview actions without executing')
+    .action(async (options) => {
+        const SetupCommand = require('../lib/setup-command');
+        const setupCmd = new SetupCommand();
+        try {
+            const result = await setupCmd.execute(options);
+            if (!result.success && !result.dryRun) {
+                process.exit(1);
+            }
+        } catch (error) {
+            console.error(`Setup failed: ${error.message}`);
+            process.exit(1);
+        }
+    });
+
+program
+    .command('verify')
+    .description('Verify the Claude Dev Toolkit installation status and health')
+    .option('--verbose', 'Show detailed verification information')
+    .option('--fix', 'Attempt to fix detected issues automatically')
+    .action(async (options) => {
+        const VerifyCommand = require('../lib/verify-command');
+        const verifyCmd = new VerifyCommand();
+        try {
+            const result = await verifyCmd.execute(options);
+            // Set exit code based on health status
+            if (result.overall === 'critical') {
+                process.exit(2);
+            } else if (result.overall === 'warning') {
+                process.exit(1);
+            }
+            // Exit 0 for healthy
+        } catch (error) {
+            console.error(`Verification failed: ${error.message}`);
+            process.exit(2);
+        }
+    });
+
 program.parse(process.argv);
