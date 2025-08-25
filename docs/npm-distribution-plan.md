@@ -54,7 +54,7 @@ claude-dev-toolkit/
 {
   "name": "claude-dev-toolkit",
   "version": "1.0.0",
-  "description": "57 AI-powered custom commands for Claude Code - Transform your development workflow",
+  "description": "58 AI-powered custom commands for Claude Code - Transform your development workflow",
   "main": "lib/index.js",
   "bin": {
     "claude-commands": "bin/claude-commands"
@@ -118,7 +118,7 @@ The package will provide these global commands after installation:
 claude-commands install              # Interactive installation wizard
 claude-commands install --active    # Install 13 core commands only
 claude-commands install --experiments  # Install experimental commands only
-claude-commands install --all       # Install all 57 commands
+claude-commands install --all       # Install all 58 commands
 claude-commands install --security  # Install with security hooks
 
 # Management commands

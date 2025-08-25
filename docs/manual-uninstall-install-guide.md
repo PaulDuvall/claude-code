@@ -261,7 +261,7 @@ claude-commands install --active
 ## Summary
 
 This toolkit transforms Claude Code into a comprehensive development platform that:
-- Automates repetitive tasks through 57 custom slash commands
+- Automates repetitive tasks through 58 custom slash commands
 - Enforces security and quality standards through hooks  
 - Provides intelligent assistance through AI subagents
 - Maintains project context through CLAUDE.md

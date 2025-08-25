@@ -147,7 +147,7 @@ Share this with users:
 ```markdown
 ## Install Claude Dev Toolkit
 
-Enhance your Claude Code experience with 57 custom commands:
+Enhance your Claude Code experience with 58 custom commands:
 
 \`\`\`bash
 npm install -g @paulduvall/claude-dev-toolkit

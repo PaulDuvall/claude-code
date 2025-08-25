@@ -84,7 +84,7 @@ claude-commands config --template security-focused-settings.json  # Enhanced sec
 claude-commands config --template comprehensive-settings.json     # Full features
 
 # 5. Install AI subagents (Optional)
-claude-commands subagents --install     # Install 25 specialized AI subagents
+claude-commands subagents --install     # Install 26 specialized AI subagents
 
 # 6. Start using AI-powered development commands
 claude
@@ -385,7 +385,7 @@ ls ~/.claude/commands/x*.md  # List installed commands
 
 - **`slash-commands/active/`** - 13 production-ready commands (deployed by default)
 - **`slash-commands/experiments/`** - 44 experimental/conceptual commands  
-- **`sub-agents/`** - AI specialist subagents with persistent context
+- **`subagents/`** - AI specialist subagents with persistent context
 - **`hooks/`** - Hybrid hook architecture with lightweight triggers
   - **Lightweight Trigger Scripts** (30-150 lines each):
     - `pre-write-security.sh` - Security analysis → security-auditor subagent

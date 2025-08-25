@@ -264,7 +264,7 @@ npm test
 
 ## 🔄 Recent Updates
 
-### Version 0.0.1-alpha.2
+### Version 0.0.1-alpha.7
 - ✅ **NPM Scoped Package**: Published as `@paulduvall/claude-dev-toolkit`
 - ✅ **Configuration Command**: Built-in `config` command for template management
 - ✅ **Workflow Reporting**: Comprehensive GitHub Actions reporting
