@@ -88,7 +88,7 @@ Hooks are shell scripts that intercept Claude Code's operations. They trigger on
 - Machine-wide: `~/.claude/hooks/`
 - Project-specific: `.claude/hooks/`
 
-The toolkit includes [hooks](https://docs.anthropic.com/en/docs/claude-code/hooks) and [subagents](https://docs.anthropic.com/en/docs/claude-code/sub-agents) that work together. Hooks intercept operations while subagents provide AI-powered analysis and decision-making. This combination creates a powerful workflow where deterministic controls (hooks) trigger intelligent responses (subagents) that don't rely on AI remembering to check for issues—they enforce it every time.
+The toolkit includes [hooks](https://docs.anthropic.com/en/docs/claude-code/hooks) and [subagents](https://docs.anthropic.com/en/docs/claude-code/subagents) that work together. Hooks intercept operations while subagents provide AI-powered analysis and decision-making. This combination creates a powerful workflow where deterministic controls (hooks) trigger intelligent responses (subagents) that don't rely on AI remembering to check for issues—they enforce it every time.
 
 ## Start Building
 
@@ -96,7 +96,7 @@ The toolkit includes [hooks](https://docs.anthropic.com/en/docs/claude-code/hook
 2. Deploy commands with `claude-commands install --active`
 3. Create `CLAUDE.md` with project context
 4. Build custom commands in `.claude/commands/`
-5. Install [Subagents](https://docs.anthropic.com/en/docs/claude-code/sub-agents) for persistent context: `claude-commands subagents --install`
+5. Install [Subagents](https://docs.anthropic.com/en/docs/claude-code/subagents) for persistent context: `claude-commands subagents --install`
 6. Version control everything
 
 Some of my customizations were inspired by my patterns at https://github.com/PaulDuvall/ai-development-patterns. 
