@@ -264,6 +264,13 @@ npm test
 
 ## 🔄 Recent Updates
 
+### Version 0.0.1-alpha.8
+- ✅ **Documentation Consistency**: Fixed command counts (58) and subagent counts (26)
+- ✅ **Test Infrastructure**: Enhanced test-results directory handling
+- ✅ **Repository Cleanup**: Removed outdated documentation and test artifacts
+- ✅ **Validation Logic**: Improved scenario-aware test validation
+- ✅ **Version Alignment**: Synchronized all version references
+
 ### Version 0.0.1-alpha.7
 - ✅ **NPM Scoped Package**: Published as `@paulduvall/claude-dev-toolkit`
 - ✅ **Configuration Command**: Built-in `config` command for template management

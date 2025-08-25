@@ -49,7 +49,9 @@
     "publish:local": "scripts/publishing/setup-local-registry.sh",
     "publish:private": "scripts/publishing/publish-private.sh",
     "lint": "eslint lib/**/*.js bin/**/*.js",
-    "validate": "node scripts/validate.js"
+    "validate": "node scripts/validate.js",
+    "version": "echo 'Remember to update README.md with new version details!'",
+    "prepublishOnly": "npm test && npm run validate"
   },
   "dependencies": {
     "commander": "^9.0.0",
