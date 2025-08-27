@@ -141,16 +141,16 @@ jobs:
           fi
         done
         
-        # Test documentation exists
-        echo "📋 Testing hybrid architecture documentation..."
-        if [ -f "docs/hybrid-hook-architecture.md" ]; then
-          echo "  ✅ hybrid-hook-architecture.md exists"
+        # Test documentation exists  
+        echo "📋 Testing toolkit integration documentation..."
+        if [ -f "claude-dev-toolkit/README.md" ]; then
+          echo "  ✅ claude-dev-toolkit README exists"
         else
-          echo "  ❌ hybrid-hook-architecture.md missing"
+          echo "  ❌ claude-dev-toolkit README missing"
           exit 1
         fi
         
-        echo "✅ Hybrid hook architecture validation completed"
+        echo "✅ Toolkit integration validation completed"
         
     - name: Run subagent hook integration tests
       run: |
@@ -233,7 +233,7 @@ jobs:
         done
         
         # Test that key files exist
-        key_files=("templates/basic-settings.json" "hooks/prevent-credential-exposure.sh" "specs/command-specifications.md" "hooks/pre-write-security.sh" "hooks/lib/config-constants.sh" "tests/test_subagent_hook_integration.sh" "docs/hybrid-hook-architecture.md")
+        key_files=("templates/basic-settings.json" "hooks/prevent-credential-exposure.sh" "specs/command-specifications.md" "hooks/pre-write-security.sh" "hooks/lib/config-constants.sh" "tests/test_subagent_hook_integration.sh" "claude-dev-toolkit/README.md")
         for file in "${key_files[@]}"; do
           if [ -f "$file" ]; then
             echo "  ✅ Key file $file exists"
