@@ -41,12 +41,25 @@ function runTestCategory(categoryName, testFiles, description) {
         
         try {
             console.log(`\n▶️  Running ${testName}...`);
-            execSync(`node "${testPath}"`, { stdio: 'inherit', cwd: testsDir });
+            const output = execSync(`node "${testPath}"`, { 
+                stdio: 'pipe',
+                encoding: 'utf8',
+                cwd: testsDir 
+            });
+            
+            // Show the test output
+            console.log(output);
+            
+            // If execSync didn't throw, the test passed (exit code 0)
             console.log(`✅ ${testName}: PASSED`);
             passed++;
             results.push({ name: testName, status: 'PASSED' });
+            
         } catch (error) {
-            console.log(`❌ ${testName}: FAILED`);
+            console.log(`❌ ${testName}: FAILED (Exit Code: ${error.status})`);
+            // Show error output if available
+            if (error.stdout) console.log(error.stdout.toString());
+            if (error.stderr) console.log(error.stderr.toString());
             failed++;
             results.push({ name: testName, status: 'FAILED' });
         }
