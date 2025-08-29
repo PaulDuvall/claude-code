@@ -49,6 +49,7 @@ claude-commands install --all           # Install all 58 commands
 ```bash
 claude-commands list                     # See all available commands
 claude-commands status                   # Check installation status
+claude-commands oidc --help             # Configure GitHub Actions OIDC with AWS
 ```
 
 ## 📋 Available Commands
@@ -96,6 +97,11 @@ claude-commands install --all          # Install all commands
 claude-commands config --list          # List available templates
 claude-commands config --template <name> # Apply configuration template
 claude-commands config --help          # Show config command help
+
+# OIDC Configuration (NEW)
+claude-commands oidc --help            # Show OIDC configuration options
+claude-commands oidc --dry-run         # Preview OIDC setup actions
+claude-commands oidc --region us-west-2 --stack-name my-oidc # Configure AWS OIDC
 
 # Subagents Management
 claude-commands subagents --list        # List available subagents
@@ -263,6 +269,13 @@ npm test
 - **Security-first development** - only defensive tools allowed
 
 ## 🔄 Recent Updates
+
+### Version 0.0.1-alpha.9
+- ✅ **NEW: OIDC Command**: GitHub Actions to AWS OIDC integration (`claude-commands oidc`)
+- ✅ **TDD Implementation**: Phase 1 foundation with comprehensive test coverage (14/14 tests)
+- ✅ **CLI Integration**: Full command-line interface with help, dry-run, and configuration options
+- ✅ **Error Framework**: Enhanced error handling with context-aware recovery suggestions
+- ✅ **Dependency Validation**: AWS CLI, Git, and GitHub CLI availability checking
 
 ### Version 0.0.1-alpha.8
 - ✅ **Documentation Consistency**: Fixed command counts (58) and subagent counts (26)

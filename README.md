@@ -75,7 +75,12 @@ claude-commands install --active    # Install 13 core commands
 # OR
 claude-commands install --all       # Install all 58 commands
 
-# 4. Configure Claude Code settings (Recommended)
+# 4. Configure OIDC for GitHub Actions to AWS (NEW!)
+claude-commands oidc --help         # Show OIDC configuration options
+claude-commands oidc --dry-run      # Preview OIDC setup actions
+claude-commands oidc --region us-west-2 --stack-name my-oidc  # Configure AWS OIDC
+
+# 5. Configure Claude Code settings (Recommended)
 claude-commands config --list                        # List available templates
 claude-commands config --template basic-settings.json   # Apply basic config
 # OR
@@ -83,10 +88,10 @@ claude-commands config --template security-focused-settings.json  # Enhanced sec
 # OR  
 claude-commands config --template comprehensive-settings.json     # Full features
 
-# 5. Install AI subagents (Optional)
+# 6. Install AI subagents (Optional)
 claude-commands subagents --install     # Install 26 specialized AI subagents
 
-# 6. Start using AI-powered development commands
+# 7. Start using AI-powered development commands
 claude
 /xtest          # Run all tests intelligently
 /xquality       # Check and fix code quality issues

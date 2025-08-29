@@ -38,7 +38,13 @@ This document outlines a Test-Driven Development (TDD) approach for implementing
    - Add validation through validation-utils.js
    - Support essential flags: --help, --dry-run, --verbose
 
-**Phase 1 Rationale**: Without these foundations, you cannot test any OIDC functionality. Command structure enables testing, dependency validation prevents runtime failures, error handling provides debugging capability.
+5. **REQ-DOC-001**: Documentation Updates
+   - Update claude-dev-toolkit/README.md with OIDC command usage
+   - Update main README.md with OIDC command examples
+   - Include CLI help examples and configuration options
+   - Document version changes in release notes
+
+**Phase 1 Rationale**: Without these foundations, you cannot test any OIDC functionality. Command structure enables testing, dependency validation prevents runtime failures, error handling provides debugging capability. Documentation ensures users understand the new functionality.
 
 ### Phase 2: Core Detection System
 **Goal**: Enable auto-detection of project context
