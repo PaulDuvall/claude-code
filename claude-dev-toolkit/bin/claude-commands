@@ -232,13 +232,35 @@ program
 
 program
     .command('oidc')
-    .description('Configure GitHub Actions OIDC integration with AWS')
+    .description(`Configure GitHub Actions OIDC (OpenID Connect) integration with AWS
+
+    🎯 WHAT IT DOES:
+    • Creates GitHub OIDC identity provider in AWS
+    • Sets up IAM role with trust policy for GitHub Actions
+    • Configures repository variables for secure AWS access
+    • Enables passwordless authentication from GitHub to AWS
+
+    📋 PREREQUISITES (REQUIRED):
+    • AWS CLI installed and configured (aws configure)
+    • GitHub CLI authenticated (gh auth login) 
+    • Git repository with GitHub remote origin
+    • AWS account with IAM permissions
+
+    ⚙️  WHAT IT CREATES:
+    • AWS OIDC Identity Provider for GitHub
+    • IAM Role for GitHub Actions (with trust policy)
+    • IAM policies for AWS resource access
+    • GitHub repository variables (AWS_DEPLOYMENT_ROLE, AWS_REGION)
+
+    🚀 BASIC USAGE:
+    • claude-commands oidc                    # Auto-detect settings
+    • claude-commands oidc --dry-run          # Preview without changes
+    • claude-commands oidc --region us-west-2 # Specify AWS region`)
     .option('--region <region>', 'AWS region for OIDC setup', 'us-east-1')
-    .option('--stack-name <name>', 'CloudFormation stack name', 'github-oidc-stack')
     .option('--role-name <name>', 'IAM role name for GitHub Actions', 'GitHubActionsRole')
-    .option('--repository-path <path>', 'Path to repository for OIDC setup', process.cwd())
-    .option('--dry-run', 'Preview actions without making changes')
-    .option('--verbose', 'Show detailed output')
+    .option('--repository-path <path>', 'Path to repository for OIDC setup (auto-detected)', process.cwd())
+    .option('--dry-run', 'Preview actions without making changes (SAFE to run)')
+    .option('--verbose', 'Show detailed output during execution')
     .action(async (options) => {
         const OidcCommand = require('../lib/oidc-command');
         const oidcCmd = new OidcCommand();
