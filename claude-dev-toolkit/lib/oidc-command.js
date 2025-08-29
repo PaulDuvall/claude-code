@@ -292,14 +292,23 @@ Run 'claude-commands oidc --help' for complete setup requirements.`;
         const { dryRun = false } = options;
 
         if (dryRun) {
-            return this.showDryRun(options);
+            this.showDryRun(options);
+            return { 
+                message: '✅ Dry run completed successfully',
+                dryRun: true 
+            };
         }
 
-        // Minimal implementation for current phase
-        this.showProgress('Initializing OIDC command...', options);
+        // Show progress to user
+        this.showProgress('🚀 Initializing OIDC command...', options);
+        
+        // For now, this is a minimal implementation placeholder
+        console.log('📋 OIDC Setup Status: Command structure implemented');
+        console.log('⚠️  Full OIDC implementation is in development');
+        console.log('💡 Use --dry-run to preview planned functionality');
         
         return { 
-            message: 'OIDC command executed successfully' 
+            message: '✅ OIDC command executed successfully (minimal implementation)' 
         };
     }
 

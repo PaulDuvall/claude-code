@@ -1,12 +1,5 @@
 # Claude Dev Toolkit
 
-[![npm version](https://badge.fury.io/js/%40paulduvall%2Fclaude-dev-toolkit.svg)](https://www.npmjs.com/package/@paulduvall/claude-dev-toolkit)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Test Status](https://img.shields.io/badge/tests-100%25%20passing-brightgreen)
-![Active Commands](https://img.shields.io/badge/active%20commands-13-blue)
-![Experimental Commands](https://img.shields.io/badge/experimental%20commands-45-orange)
-![Total Commands](https://img.shields.io/badge/total%20commands-58-brightgreen)
-
 **Transform Claude Code into a complete development platform** with 58 AI-powered custom commands that automate your entire software development workflow.
 
 ## 🚀 Quick Installation

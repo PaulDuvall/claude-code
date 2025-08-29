@@ -266,11 +266,24 @@ program
         const oidcCmd = new OidcCommand();
         try {
             const result = await oidcCmd.execute(options);
-            if (!result.success && !result.dryRun) {
+            if (result.success) {
+                if (result.message) {
+                    console.log(result.message);
+                }
+                if (options.verbose && result.duration) {
+                    console.log(`✅ Completed in ${result.duration}ms`);
+                }
+            } else {
+                console.error(`❌ OIDC setup failed: ${result.error || 'Unknown error'}`);
+                if (result.enhancedError && result.enhancedError.suggestions) {
+                    result.enhancedError.suggestions.forEach(suggestion => {
+                        console.log(suggestion);
+                    });
+                }
                 process.exit(1);
             }
         } catch (error) {
-            console.error(`OIDC setup failed: ${error.message}`);
+            console.error(`❌ OIDC setup failed: ${error.message}`);
             process.exit(1);
         }
     });
