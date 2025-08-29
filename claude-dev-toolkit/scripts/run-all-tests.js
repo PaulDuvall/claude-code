@@ -15,13 +15,13 @@ function discoverTests() {
     console.log('🔍 Discovering test files...\n');
     
     const testFiles = fs.readdirSync(testsDir)
-        .filter(file => file.startsWith('test_') && file.endsWith('.js'))
+        .filter(file => file.startsWith('test_') && file.endsWith('.js') && file !== 'test_all_suites.js')
         .sort();
     
     const categories = {
         req: testFiles.filter(f => f.includes('req_')),
-        suites: testFiles.filter(f => !f.includes('req_') && f !== 'test_all_suites.js'),
-        main: testFiles.filter(f => f === 'test_all_suites.js')
+        suites: testFiles.filter(f => !f.includes('req_')),
+        main: []  // Exclude comprehensive test suite to avoid conflicts
     };
     
     return categories;
