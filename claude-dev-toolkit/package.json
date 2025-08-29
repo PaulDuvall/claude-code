@@ -51,7 +51,7 @@
     "lint": "eslint lib/**/*.js bin/**/*.js",
     "validate": "node scripts/validate.js",
     "version": "echo 'Remember to update README.md with new version details!'",
-    "prepublishOnly": "npm test && npm run validate"
+    "prepublishOnly": "npm ci && npm test && npm run validate"
   },
   "dependencies": {
     "commander": "^9.0.0",
