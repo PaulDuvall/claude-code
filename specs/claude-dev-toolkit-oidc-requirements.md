@@ -2,15 +2,15 @@
 
 ## Document Information
 - **Version:** 1.0.0
-- **Date:** 2025-08-27
+- **Date:** 2025-08-29
 - **Component:** claude-dev-toolkit OIDC Command Integration
 - **Status:** Draft
-- **Purpose:** Enhance existing xoidc experimental command with comprehensive GitHub Actions OIDC setup
+- **Purpose:** Create new OIDC command with comprehensive GitHub Actions OIDC setup for AWS integration
 - **EARS Format:** This specification follows the Easy Approach to Requirements Syntax (EARS)
 
 ## Overview
 
-THE SYSTEM SHALL enhance the existing experimental xoidc command in claude-dev-toolkit to provide comprehensive GitHub Actions OIDC configuration with AWS through the toolkit's CLI framework.
+THE SYSTEM SHALL create a new OIDC command in claude-dev-toolkit to provide comprehensive GitHub Actions OIDC configuration with AWS through the toolkit's CLI framework.
 
 ## Glossary
 - **OIDC**: OpenID Connect - Authentication protocol for GitHub Actions to AWS
@@ -22,11 +22,11 @@ THE SYSTEM SHALL enhance the existing experimental xoidc command in claude-dev-t
 
 ## Dependencies and Integration Points
 
-### Existing Integration
-- **Current Command**: `/Users/paulduvall/Code/claude-code/claude-dev-toolkit/commands/experiments/xoidc.md`
+### Integration Points
 - **CLI Framework**: Leverages existing `lib/base/base-command.js` and `lib/command-selector.js`
 - **Validation System**: Integrates with `lib/validation-utils.js` and `lib/dependency-validator.js`
-- **Hook System**: Utilizes security hooks from `hooks/pre-write-security.sh`
+- **Hook System**: Utilizes security hooks from `hooks/pre-write-security.sh` and `hooks/lib/`
+- **Error Handling**: Uses `lib/error-handler-utils.js` framework
 
 ### Dependencies
 - **Required Tools**: AWS CLI, GitHub CLI (validated via `lib/dependency-validator.js`)
@@ -37,29 +37,18 @@ THE SYSTEM SHALL enhance the existing experimental xoidc command in claude-dev-t
 
 ### Core Command Requirements
 
-#### REQ-CMD-001: Enhanced OIDC Command Execution
+#### REQ-CMD-001: OIDC Command Execution
 **Priority:** High  
 **WHEN** user runs `claude-dev-toolkit oidc [options]`  
 **THE SYSTEM SHALL** execute comprehensive GitHub OIDC setup using the toolkit's CLI framework
 
-**Rationale:** Upgrade experimental command to production-ready functionality  
+**Rationale:** Provide production-ready OIDC functionality for GitHub Actions to AWS integration  
 **Acceptance Criteria:** 
 - Command executes via toolkit CLI
 - All operations use Node.js child_process through base-command.js
 - Integrates with existing error handling and logging
 
-#### REQ-CMD-002: Backward Compatibility  
-**Priority:** High  
-**WHEN** migrating from experimental xoidc command  
-**THE SYSTEM SHALL** maintain all existing functionality while adding new features
-
-**Rationale:** Preserve existing user workflows  
-**Acceptance Criteria:** 
-- All current xoidc.md parameters work
-- New features are additive only
-- Migration path documented
-
-#### REQ-CMD-003: Repository Variable Configuration
+#### REQ-CMD-002: Repository Variable Configuration
 **Priority:** High  
 **WHEN** configuring GitHub repository  
 **THE SYSTEM SHALL** set AWS_DEPLOYMENT_ROLE and AWS_REGION as repository variables using gh CLI
@@ -93,8 +82,13 @@ claude-dev-toolkit oidc [options]
   --region <region>       AWS region (default: from AWS config or us-east-1)
   --template <name>       Policy template (minimal|standard|full|custom)
   --policy-file <path>    Custom policy JSON file
+  --policy-dir <path>     Directory containing policy JSON files to merge
   --policy-url <url>      Policy from HTTPS URL
   --add-service <service> Add AWS service permissions (repeatable)
+  --branch <branch>       Restrict access to specific branch
+  --tag <tag>            Restrict access to specific tag
+  --deployment-method <method> Deployment method (cli|cloudformation)
+  --rollback             Remove existing OIDC configuration
   --dry-run              Preview changes without execution
   --verbose              Detailed output
   --quiet                Minimal output  
@@ -171,6 +165,32 @@ claude-dev-toolkit oidc [options]
 - Permission merging with base template
 - Multiple services supported via repeated option
 
+#### REQ-POLICY-005: Policy Directory Support
+**Priority:** Medium  
+**WHEN** --policy-dir option provided  
+**THE SYSTEM SHALL** load and merge multiple policy files from a dedicated directory
+
+**Rationale:** Support modular policy management for complex deployments  
+**Acceptance Criteria:**
+- Reads all JSON files from specified directory (non-recursive)
+- Validates each policy file independently
+- Merges policies into single comprehensive policy
+- Excludes example files (ending with -example.json)
+- Clear error reporting for invalid policy files
+
+#### REQ-POLICY-006: Trust Policy Scoping
+**Priority:** High  
+**WHEN** --branch or --tag options provided  
+**THE SYSTEM SHALL** create trust policies scoped to specific branches or tags
+
+**Rationale:** Enhanced security through branch-specific access control  
+**Acceptance Criteria:**
+- Support --branch flag for branch-specific access
+- Support --tag flag for tag-specific access
+- Generate StringEquals conditions in trust policy
+- Validate branch/tag name formats
+- Default to repository-wide access if not specified
+
 ### Auto-Detection Requirements
 
 #### REQ-DETECT-001: Git Repository Detection
@@ -206,6 +226,18 @@ claude-dev-toolkit oidc [options]
 - Detects existing role with same name
 - Updates existing resources rather than failing
 - Reports what resources already exist
+
+#### REQ-DETECT-004: CloudFormation Stack Detection
+**Priority:** Medium  
+**WHEN** using CloudFormation deployment mode  
+**THE SYSTEM SHALL** detect existing CloudFormation stacks for OIDC resources
+
+**Rationale:** Support infrastructure-as-code deployment patterns  
+**Acceptance Criteria:**
+- Check for existing stacks with standard naming convention
+- Support stack updates rather than recreation
+- Detect drift between stack and actual resources
+- Handle stack rollback scenarios
 
 ### Security Hook Integration Requirements
 
@@ -263,6 +295,34 @@ claude-dev-toolkit oidc [options]
 - No credential values logged or displayed
 - Specific error messages for auth failures
 
+### Deployment Requirements
+
+#### REQ-DEPLOY-001: CloudFormation Deployment Option
+**Priority:** Medium  
+**WHEN** --deployment-method cloudformation option provided  
+**THE SYSTEM SHALL** deploy OIDC configuration using CloudFormation stacks
+
+**Rationale:** Support infrastructure-as-code best practices  
+**Acceptance Criteria:**
+- Generate CloudFormation templates for OIDC provider and IAM roles
+- Support stack lifecycle management (create/update/delete)
+- Use consistent stack naming convention
+- Handle stack dependencies and rollback scenarios
+- Integration with existing CloudFormation workflows
+
+#### REQ-DEPLOY-002: Rollback Capability
+**Priority:** Medium  
+**WHEN** --rollback option provided  
+**THE SYSTEM SHALL** remove previously created OIDC resources
+
+**Rationale:** Allow cleanup of OIDC configurations  
+**Acceptance Criteria:**
+- Track created resources in local state or tags
+- Remove IAM roles, policies, and OIDC providers
+- Remove GitHub repository variables
+- Confirm deletion before proceeding
+- Handle partial rollback scenarios gracefully
+
 ### Error Handling Requirements
 
 #### REQ-ERR-001: Toolkit Error Framework Integration
@@ -316,9 +376,9 @@ claude-dev-toolkit oidc [options]
 **Rationale:** User feedback for long-running operations  
 **Acceptance Criteria:**
 - Clear visual progress indicators
-- Estimated time remaining for long operations
 - Ability to run in quiet mode
 - Verbose mode shows detailed command output
+- Progress indication for operations over 5 seconds
 
 #### REQ-OUT-002: Comprehensive Success Report
 **Priority:** High  
@@ -339,17 +399,22 @@ claude-dev-toolkit oidc [options]
 - Links to GitHub Actions OIDC documentation
 
 #### REQ-OUT-003: Dry-run Mode Output
-**Priority:** Medium  
+**Priority:** High  
 **WHEN** --dry-run option used  
 **THE SYSTEM SHALL** display all operations that would be performed without making changes
 
-**Rationale:** Preview changes safely  
+**Rationale:** Preview changes safely and allow validation before execution  
 **Acceptance Criteria:**
 - Shows AWS CLI commands that would execute
 - Shows GitHub CLI commands that would execute  
-- Displays generated IAM policies
+- Displays generated IAM policies in full
+- Shows merged policy content when using --policy-dir
 - Indicates existing vs new resources
+- Lists all AWS resources that would be created/updated
+- Shows GitHub repository variables that would be set
+- Provides clear summary of all planned operations
 - No actual AWS or GitHub changes made
+- Returns appropriate exit code for validation results
 
 ### Validation and Testing Requirements
 
@@ -409,10 +474,10 @@ claude-dev-toolkit oidc [options]
 
 **Rationale:** Run efficiently on development machines  
 **Acceptance Criteria:**
-- Memory usage under 100MB
 - No persistent background processes
 - Clean up temporary files
 - Efficient API call patterns
+- Minimal memory footprint during execution
 
 ### Maintainability Requirements
 
@@ -459,41 +524,17 @@ claude-dev-toolkit oidc [options]
 - Error scenarios and solutions covered
 - Links to external documentation
 
-#### REQ-DOC-002: API Documentation
-**Priority:** Medium  
-**THE SYSTEM SHALL** include JSDoc comments for all public functions and classes
+#### REQ-DOC-002: Inline Code Documentation
+**Priority:** Low  
+**THE SYSTEM SHALL** include clear comments for complex functions and integration points
 
-**Rationale:** Developer reference and maintainability  
+**Rationale:** Code maintainability and developer reference  
 **Acceptance Criteria:**
-- All public methods documented
-- Parameter and return types specified
-- Usage examples in complex functions
+- Complex functions have explanatory comments
 - Integration points clearly documented
+- Configuration options documented in code
+- Security-related code clearly commented
 
-### Migration Requirements
-
-#### REQ-MIG-001: Experimental to Active Migration Path
-**Priority:** High  
-**THE SYSTEM SHALL** provide clear migration from experimental xoidc to enhanced production command
-
-**Rationale:** Smooth transition for existing users  
-**Acceptance Criteria:**
-- Migration documentation provided
-- Compatibility mode during transition
-- Clear timeline for deprecation
-- User communication plan
-
-#### REQ-MIG-002: Configuration Migration
-**Priority:** Medium  
-**IF** users have existing OIDC configurations  
-**THE SYSTEM SHALL** detect and migrate existing setups where possible
-
-**Rationale:** Minimize user setup work  
-**Acceptance Criteria:**
-- Detect existing IAM roles and OIDC providers
-- Preserve existing configurations
-- Update rather than recreate resources
-- Clear indication of what was migrated
 
 ## Security Requirements
 
@@ -566,6 +607,15 @@ claude-dev-toolkit oidc --policy-file ./deploy-policy.json
 
 # Use organizational policy URL
 claude-dev-toolkit oidc --policy-url https://company.example/policies/github-deploy.json
+
+# Use modular policy directory
+claude-dev-toolkit oidc --policy-dir ./policies/
+
+# Branch-specific OIDC configuration
+claude-dev-toolkit oidc --branch main --template minimal
+
+# CloudFormation deployment with rollback capability
+claude-dev-toolkit oidc --deployment-method cloudformation --rollback
 
 # Preview changes without executing
 claude-dev-toolkit oidc --dry-run --verbose
@@ -653,23 +703,41 @@ claude-dev-toolkit oidc --quiet --template standard
 | Requirement ID | Component | Test File | Priority | EARS Pattern |
 |---------------|-----------|-----------|----------|--------------|
 | REQ-CMD-001 | CLI Integration | test_oidc_command.js | High | Event-Driven |
-| REQ-CMD-002 | Compatibility | test_oidc_migration.js | High | State-Driven |  
+| REQ-CMD-002 | Repository Variables | test_oidc_github.js | High | Event-Driven |
 | REQ-CLI-001 | Command Structure | test_oidc_cli.js | High | Ubiquitous |
-| REQ-POLICY-001 | Templates | test_oidc_policies.js | High | Ubiquitous |
-| REQ-DETECT-001 | Auto-detection | test_oidc_detection.js | High | Event-Driven |
+| REQ-CLI-002 | Argument Processing | test_oidc_cli.js | High | Ubiquitous |
+| REQ-CLI-003 | Zero Config Mode | test_oidc_cli.js | High | Event-Driven |
+| REQ-POLICY-001 | Policy Templates | test_oidc_policies.js | High | Ubiquitous |
+| REQ-POLICY-002 | Policy File Support | test_oidc_policies.js | High | Event-Driven |
+| REQ-POLICY-003 | Policy URL Support | test_oidc_policies.js | Medium | Event-Driven |
+| REQ-POLICY-004 | Service Addition | test_oidc_policies.js | Medium | Event-Driven |
+| REQ-POLICY-005 | Policy Directory | test_oidc_policies.js | Medium | Event-Driven |
+| REQ-POLICY-006 | Trust Policy Scoping | test_oidc_security.js | High | Event-Driven |
+| REQ-DETECT-001 | Git Detection | test_oidc_detection.js | High | Event-Driven |
+| REQ-DETECT-002 | AWS Config Detection | test_oidc_detection.js | Medium | Event-Driven |
+| REQ-DETECT-003 | Resource Detection | test_oidc_detection.js | High | Event-Driven |
+| REQ-DETECT-004 | CloudFormation Detection | test_oidc_cloudformation.js | Medium | Event-Driven |
+| REQ-DEPLOY-001 | CloudFormation Deployment | test_oidc_cloudformation.js | Medium | Event-Driven |
+| REQ-DEPLOY-002 | Rollback Capability | test_oidc_rollback.js | Medium | Event-Driven |
 | REQ-HOOK-001 | Security Hooks | test_oidc_security.js | High | Event-Driven |
-| REQ-ERR-001 | Error Handling | test_oidc_errors.js | High | Unwanted |
+| REQ-HOOK-002 | Post-execution Logging | test_oidc_hooks.js | Medium | Event-Driven |
+| REQ-ERR-001 | Error Framework | test_oidc_errors.js | High | Unwanted |
+| REQ-ERR-002 | Partial Failure Recovery | test_oidc_errors.js | High | Unwanted |
+| REQ-ERR-003 | Permission Errors | test_oidc_errors.js | High | Unwanted |
 | REQ-OUT-001 | Progress Display | test_oidc_output.js | Medium | State-Driven |
+| REQ-OUT-002 | Success Report | test_oidc_output.js | High | Event-Driven |
+| REQ-OUT-003 | Dry-run Output | test_oidc_output.js | High | Event-Driven |
 | REQ-SEC-001 | Credential Security | test_oidc_security.js | Critical | Ubiquitous |
-| REQ-TEST-001 | Test Integration | test_oidc_*.js | High | Ubiquitous |
+| REQ-SEC-002 | Least Privilege | test_oidc_security.js | High | Ubiquitous |
+| REQ-SEC-003 | Secure Communication | test_oidc_security.js | High | Event-Driven |
 
 ## Implementation Phases
 
-### Phase 1: Core Command Enhancement (Week 1-2)
-- Migrate experimental xoidc to enhanced command structure
+### Phase 1: Core Command Implementation (Week 1-2)
 - Implement basic CLI integration with toolkit framework
 - Add auto-detection capabilities
 - Basic policy templates
+- Core OIDC provider and IAM role creation
 
 ### Phase 2: Advanced Features (Week 3-4)  
 - Policy URL support and validation
@@ -680,18 +748,18 @@ claude-dev-toolkit oidc --quiet --template standard
 ### Phase 3: Testing and Documentation (Week 5-6)
 - Complete test suite implementation
 - Documentation and help system
-- Migration tools and guides
 - Performance optimization
+- User acceptance testing
 
 ### Phase 4: Production Release (Week 7-8)
-- Move from experiments to active commands
 - Final validation and security review
-- User acceptance testing  
 - Release preparation and deployment
+- NPM package publication
+- Documentation finalization
 
 ## Change Log
-- **v1.0.0** (2025-08-27): Initial comprehensive specification for claude-dev-toolkit integration
+- **v1.0.0** (2025-08-29): Initial comprehensive specification for claude-dev-toolkit OIDC command
 
 ---
 
-This specification defines the enhancement of the experimental xoidc command into a comprehensive GitHub Actions OIDC setup tool integrated with the claude-dev-toolkit architecture, providing robust automation while maintaining security and following toolkit development patterns.
+This specification defines the creation of a new OIDC command for comprehensive GitHub Actions OIDC setup integrated with the claude-dev-toolkit architecture, providing robust automation while maintaining security and following toolkit development patterns.
