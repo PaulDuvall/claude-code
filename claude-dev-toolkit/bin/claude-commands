@@ -231,6 +231,29 @@ program
     });
 
 program
+    .command('oidc')
+    .description('Configure GitHub Actions OIDC integration with AWS')
+    .option('--region <region>', 'AWS region for OIDC setup', 'us-east-1')
+    .option('--stack-name <name>', 'CloudFormation stack name', 'github-oidc-stack')
+    .option('--role-name <name>', 'IAM role name for GitHub Actions', 'GitHubActionsRole')
+    .option('--repository-path <path>', 'Path to repository for OIDC setup', process.cwd())
+    .option('--dry-run', 'Preview actions without making changes')
+    .option('--verbose', 'Show detailed output')
+    .action(async (options) => {
+        const OidcCommand = require('../lib/oidc-command');
+        const oidcCmd = new OidcCommand();
+        try {
+            const result = await oidcCmd.execute(options);
+            if (!result.success && !result.dryRun) {
+                process.exit(1);
+            }
+        } catch (error) {
+            console.error(`OIDC setup failed: ${error.message}`);
+            process.exit(1);
+        }
+    });
+
+program
     .command('update')
     .description('Check for package updates')
     .action(async () => {
