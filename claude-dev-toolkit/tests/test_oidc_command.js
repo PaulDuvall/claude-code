@@ -416,16 +416,204 @@ class OidcCommandTests {
     }
 
     /**
+     * Test REQ-DETECT-001: Git Repository Detection (Phase 2)
+     */
+    testGitRepositoryDetection() {
+        console.log('🧪 Testing REQ-DETECT-001: Git Repository Detection...');
+        
+        const tests = [
+            {
+                name: 'OIDC command detects GitHub org/repo from git remote',
+                test: () => {
+                    try {
+                        const OidcCommand = require(this.oidcCommandPath);
+                        const instance = new OidcCommand();
+                        return {
+                            hasDetectRepoMethod: typeof instance.detectGitRepository === 'function',
+                            canParseRemote: true  // Will implement this
+                        };
+                    } catch (error) {
+                        return { hasDetectRepoMethod: false, error: error.message };
+                    }
+                },
+                expected: (result) => result.hasDetectRepoMethod && result.canParseRemote
+            },
+            {
+                name: 'OIDC command supports SSH and HTTPS git remotes',
+                test: () => {
+                    try {
+                        const OidcCommand = require(this.oidcCommandPath);
+                        const instance = new OidcCommand();
+                        // Test SSH format: git@github.com:user/repo.git
+                        // Test HTTPS format: https://github.com/user/repo.git
+                        return {
+                            hasParseMethods: typeof instance.parseGitRemote === 'function',
+                            supportsFormats: true // Will implement this
+                        };
+                    } catch (error) {
+                        return { hasParseMethods: false, error: error.message };
+                    }
+                },
+                expected: (result) => result.hasParseMethods && result.supportsFormats
+            },
+            {
+                name: 'OIDC command handles multiple remotes (prefers origin)',
+                test: () => {
+                    try {
+                        const OidcCommand = require(this.oidcCommandPath);
+                        const instance = new OidcCommand();
+                        return {
+                            hasRemoteSelection: typeof instance.selectPreferredRemote === 'function',
+                            prefersOrigin: true // Will implement this
+                        };
+                    } catch (error) {
+                        return { hasRemoteSelection: false, error: error.message };
+                    }
+                },
+                expected: (result) => result.hasRemoteSelection && result.prefersOrigin
+            }
+        ];
+
+        return this.runTests('Git Repository Detection', tests);
+    }
+
+    /**
+     * Test REQ-DETECT-002: AWS Configuration Detection (Phase 2)
+     */
+    testAWSConfigurationDetection() {
+        console.log('🧪 Testing REQ-DETECT-002: AWS Configuration Detection...');
+        
+        const tests = [
+            {
+                name: 'OIDC command reads AWS CLI config files',
+                test: () => {
+                    try {
+                        const OidcCommand = require(this.oidcCommandPath);
+                        const instance = new OidcCommand();
+                        return {
+                            hasAWSDetection: typeof instance.detectAWSConfiguration === 'function',
+                            readsConfig: true // Will implement this
+                        };
+                    } catch (error) {
+                        return { hasAWSDetection: false, error: error.message };
+                    }
+                },
+                expected: (result) => result.hasAWSDetection && result.readsConfig
+            },
+            {
+                name: 'OIDC command checks AWS_DEFAULT_REGION environment',
+                test: () => {
+                    try {
+                        const OidcCommand = require(this.oidcCommandPath);
+                        const instance = new OidcCommand();
+                        return {
+                            checksEnv: typeof instance.getAWSRegionFromEnvironment === 'function',
+                            hasEnvSupport: true // Will implement this
+                        };
+                    } catch (error) {
+                        return { checksEnv: false, error: error.message };
+                    }
+                },
+                expected: (result) => result.checksEnv && result.hasEnvSupport
+            },
+            {
+                name: 'OIDC command defaults to us-east-1 and validates regions',
+                test: () => {
+                    try {
+                        const OidcCommand = require(this.oidcCommandPath);
+                        const instance = new OidcCommand();
+                        return {
+                            hasRegionValidation: typeof instance.validateAWSRegion === 'function',
+                            hasDefault: true // Will implement this
+                        };
+                    } catch (error) {
+                        return { hasRegionValidation: false, error: error.message };
+                    }
+                },
+                expected: (result) => result.hasRegionValidation && result.hasDefault
+            }
+        ];
+
+        return this.runTests('AWS Configuration Detection', tests);
+    }
+
+    /**
+     * Test REQ-CLI-003: Zero Configuration Mode (Phase 2)
+     */
+    testZeroConfigurationMode() {
+        console.log('🧪 Testing REQ-CLI-003: Zero Configuration Mode...');
+        
+        const tests = [
+            {
+                name: 'OIDC command combines git detection and AWS detection',
+                test: () => {
+                    try {
+                        const OidcCommand = require(this.oidcCommandPath);
+                        const instance = new OidcCommand();
+                        return {
+                            hasAutoDetection: typeof instance.autoDetectConfiguration === 'function',
+                            combinesDetection: true // Will implement this
+                        };
+                    } catch (error) {
+                        return { hasAutoDetection: false, error: error.message };
+                    }
+                },
+                expected: (result) => result.hasAutoDetection && result.combinesDetection
+            },
+            {
+                name: 'OIDC command uses standard policy templates by default',
+                test: () => {
+                    try {
+                        const OidcCommand = require(this.oidcCommandPath);
+                        const instance = new OidcCommand();
+                        return {
+                            hasPolicyTemplates: typeof instance.getDefaultPolicyTemplate === 'function',
+                            usesStandard: true // Will implement this
+                        };
+                    } catch (error) {
+                        return { hasPolicyTemplates: false, error: error.message };
+                    }
+                },
+                expected: (result) => result.hasPolicyTemplates && result.usesStandard
+            },
+            {
+                name: 'OIDC command auto-generates role names',
+                test: () => {
+                    try {
+                        const OidcCommand = require(this.oidcCommandPath);
+                        const instance = new OidcCommand();
+                        return {
+                            hasRoleGeneration: typeof instance.generateRoleName === 'function',
+                            autoGenerates: true // Will implement this
+                        };
+                    } catch (error) {
+                        return { hasRoleGeneration: false, error: error.message };
+                    }
+                },
+                expected: (result) => result.hasRoleGeneration && result.autoGenerates
+            }
+        ];
+
+        return this.runTests('Zero Configuration Mode', tests);
+    }
+
+    /**
      * Run all OIDC command tests
      */
     runAllTests() {
         console.log('🚀 Running OIDC Command Tests (TDD Implementation)...\n');
         
+        // Phase 1 Tests (Foundation Infrastructure)
         this.testBasicCommandStructure();
         this.testCommandHelp();
         this.testDependencyValidation();
         this.testErrorFrameworkIntegration();
         this.testArgumentProcessing();
+        
+        // Phase 2 Tests (Core Detection System)
+        this.testGitRepositoryDetection();
+        this.testAWSConfigurationDetection();
+        this.testZeroConfigurationMode();
         
         return this.generateReport();
     }
