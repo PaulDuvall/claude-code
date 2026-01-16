@@ -5,11 +5,11 @@
 [![npm version](https://badge.fury.io/js/@paulduvall%2Fclaude-dev-toolkit.svg)](https://www.npmjs.com/package/@paulduvall/claude-dev-toolkit)
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-blue)
 ![Active Commands](https://img.shields.io/badge/active%20commands-13-blue)
-![Experimental Commands](https://img.shields.io/badge/experimental%20commands-45-orange)
-![Total Commands](https://img.shields.io/badge/total%20commands-58-brightgreen)
+![Experimental Commands](https://img.shields.io/badge/experimental%20commands-46-orange)
+![Total Commands](https://img.shields.io/badge/total%20commands-59-brightgreen)
 ![Sub-agents](https://img.shields.io/badge/sub--agents-26-purple)
 
-**Transform Claude Code into a complete development platform** with 58 AI-powered commands that automate your entire software development workflow. Now with improved git identity management!
+**Transform Claude Code into a complete development platform** with 59 AI-powered commands that automate your entire software development workflow. Now with improved git identity management!
 
 ## What This Does
 
@@ -55,6 +55,45 @@ This repository extends [Claude Code](https://claude.ai/code) with **custom slas
 - Monitor what files are created/modified
 - Keep your git history clean for easy rollback
 
+### **🐳 Devcontainer for Safe Autonomous Execution**
+
+Want to run Claude with `--dangerously-skip-permissions` safely? Use Anthropic's official devcontainer approach:
+
+```bash
+# Set up devcontainer with network firewall and security isolation
+./setup-devcontainer.sh
+
+# Or use the slash command
+/xdevcontainer
+
+# Start container and run Claude with full autonomy (safe inside container)
+devcontainer up --workspace-folder .
+devcontainer exec --workspace-folder . claude --dangerously-skip-permissions
+```
+
+**Security features included:**
+- **Network firewall**: Only allows api.anthropic.com, github.com, npmjs.org, pypi.org
+- **Dropped capabilities**: `--cap-drop=ALL` prevents privileged operations
+- **No privilege escalation**: `--security-opt=no-new-privileges`
+- **Isolated filesystem**: No host mounts by default
+
+**Setup options:**
+```bash
+./setup-devcontainer.sh --help              # Show all options
+./setup-devcontainer.sh --dry-run           # Preview without creating files
+./setup-devcontainer.sh --minimal           # Minimal tooling (Node, Git only)
+./setup-devcontainer.sh --strict            # CI mode - fail if prerequisites missing
+./setup-devcontainer.sh --allow-domain X    # Add custom domain to firewall allowlist
+```
+
+**Enterprise support:**
+```bash
+# Add private registries via environment variable
+DEVCONTAINER_EXTRA_DOMAINS="npm.company.com,registry.internal" ./setup-devcontainer.sh
+```
+
+See our [Devcontainer Guide](./docs/devcontainer-guide.md) for complete documentation, or [Anthropic's official docs](https://docs.anthropic.com/en/docs/claude-code/devcontainer).
+
 **This tool is provided as-is under MIT License. Use at your own discretion.**
 
 ## Quick Start
@@ -73,7 +112,7 @@ npm install -g @paulduvall/claude-dev-toolkit
 # 3. Deploy commands to Claude Code
 claude-commands install --active    # Install 13 core commands
 # OR
-claude-commands install --all       # Install all 58 commands
+claude-commands install --all       # Install all 59 commands
 
 # 4. Configure OIDC for GitHub Actions to AWS (NEW!)
 claude-commands oidc --help         # Show OIDC configuration options
@@ -107,9 +146,9 @@ For contributing or accessing experimental features (⚠️ **Review source code
 # Install development version with experimental commands
 npm install -g @paulduvall/claude-dev-toolkit
 
-# Install experimental commands (45 additional commands)
+# Install experimental commands (46 additional commands)
 claude-commands install --experiments    # Experimental features
-claude-commands install --all            # All 58 commands
+claude-commands install --all            # All 59 commands
 
 # Access AI subagents for specialized tasks
 claude-commands subagents --install      # 26 specialized AI assistants
@@ -318,8 +357,8 @@ npm install -g @paulduvall/claude-dev-toolkit
 
 # Install command sets
 claude-commands install --active       # Install 13 core commands
-claude-commands install --experiments # Install 44 experimental commands
-claude-commands install --all          # Install all 58 commands
+claude-commands install --experiments # Install 46 experimental commands
+claude-commands install --all          # Install all 59 commands
 
 # Configuration management
 claude-commands config --list          # List available templates
@@ -369,7 +408,7 @@ cd claude-code
 ```bash
 ./deploy.sh                   # Deploy core commands only
 ./deploy.sh --experiments     # Deploy experimental commands  
-./deploy.sh --all            # Deploy all 58 commands
+./deploy.sh --all            # Deploy all 59 commands
 ./deploy-subagents.sh         # Deploy subagents separately
 ./deploy-subagents.sh --all   # Deploy all available subagents
 ```
@@ -389,7 +428,7 @@ ls ~/.claude/commands/x*.md  # List installed commands
 ## Repository Structure
 
 - **`slash-commands/active/`** - 13 production-ready commands (deployed by default)
-- **`slash-commands/experiments/`** - 44 experimental/conceptual commands  
+- **`slash-commands/experiments/`** - 46 experimental/conceptual commands  
 - **`subagents/`** - AI specialist subagents with persistent context
 - **`hooks/`** - Hybrid hook architecture with lightweight triggers
   - **Lightweight Trigger Scripts** (30-150 lines each):
@@ -446,13 +485,63 @@ The hook system has evolved through two major architectural improvements:
 
 ## Contributing
 
+We welcome contributions! Please read our [Contributing Guide](./docs/CONTRIBUTING.md) for details on:
+
+- **Conventional Commits**: We use semantic versioning with automated releases
+- **Development Workflow**: Fork, branch, test, and submit PRs
+- **Testing Requirements**: 100% of tests must pass before merging
+- **Code Standards**: Security-first development practices
+
+### Quick Contribution Steps
+
+1. **Fork and clone** the repository
+2. **Create a feature branch**: `git checkout -b feat/your-feature`
+3. **Make changes** following our [command development patterns](./docs/CONTRIBUTING.md#command-development-guidelines)
+4. **Write tests** for your changes
+5. **Use conventional commits**: `git commit -m "feat(xcommand): add new feature"`
+6. **Push and create PR** targeting the `main` branch
+
+### Commit Message Format
+
+We use [Conventional Commits](https://www.conventionalcommits.org/) for automated releases:
+
+```bash
+# New features (minor version bump)
+git commit -m "feat(xapi): add REST API testing command"
+
+# Bug fixes (patch version bump)
+git commit -m "fix(xtest): correct coverage report path"
+
+# Breaking changes (major version bump)
+git commit -m "feat(core)!: change command parameter structure
+
+BREAKING CHANGE: All commands now use --parameter format"
+```
+
+**Supported types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`
+
+### Automated Release Process
+
+Releases are fully automated when commits are merged to `main`:
+
+1. **Semantic-release** analyzes commit messages
+2. **Version bump** determined automatically from commit types
+3. **CHANGELOG.md** generated from commits
+4. **GitHub release** created with release notes
+5. **NPM package** published automatically
+6. **Git tags** created for version tracking
+
+Currently in **alpha** (0.0.x-alpha.y) until v1.0.0 production release.
+
+See our [Contributing Guide](./docs/CONTRIBUTING.md) for complete details on conventional commits and the release process.
+
 ### Command Development
 1. Create new commands in `slash-commands/active/` or `slash-commands/experiments/`
 2. Validate with `./validate-commands.sh`
 3. Test locally with `./deploy.sh --include yourcommand`
 4. Follow existing patterns and security best practices
 
-### Hybrid Hook Development  
+### Hybrid Hook Development
 1. **Lightweight Triggers**: Create focused trigger scripts (30-150 lines) following existing patterns
 2. **Use Shared Libraries**: Leverage `hooks/lib/` modules for consistency and security
 3. **AI Delegation**: Structure context and delegate complex logic to appropriate subagents
