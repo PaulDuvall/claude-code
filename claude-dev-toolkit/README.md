@@ -1,6 +1,6 @@
 # Claude Dev Toolkit
 
-**Transform Claude Code into a complete development platform** with 58 AI-powered custom commands that automate your entire software development workflow.
+**Transform Claude Code into a complete development platform** with 62 AI-powered custom commands that automate your entire software development workflow.
 
 ## 🚀 Quick Installation
 
@@ -15,8 +15,8 @@ claude
 
 ## 📦 What's Included
 
-- **13 Active Commands**: Production-ready commands for immediate use
-- **45 Experimental Commands**: Cutting-edge features for early adopters  
+- **16 Active Commands**: Production-ready commands for immediate use
+- **46 Experimental Commands**: Cutting-edge features for early adopters  
 - **Security Hooks**: Automated security validation and governance
 - **Configuration Templates**: Pre-configured settings for different workflows
 - **Interactive Setup Wizard**: Guided installation with customization options
@@ -33,9 +33,9 @@ npm install -g @paulduvall/claude-dev-toolkit
 ### Option 2: Manual Command Installation
 ```bash
 # Install specific command sets
-claude-commands install --active        # Install 13 production commands
-claude-commands install --experiments  # Install 45 experimental commands  
-claude-commands install --all           # Install all 58 commands
+claude-commands install --active        # Install 16 production commands
+claude-commands install --experiments  # Install 46 experimental commands
+claude-commands install --all           # Install all 62 commands
 ```
 
 ### Option 3: Custom Installation
@@ -68,7 +68,7 @@ claude-commands oidc --help             # Configure GitHub Actions OIDC with AWS
 - **`/xconfig`** - Configuration management
 - **`/xtdd`** - Test-driven development automation
 
-### 🧪 **Experimental Commands** (45 Additional)
+### 🧪 **Experimental Commands** (46 Additional)
 Advanced commands for specialized workflows:
 - **Planning & Analytics**: `/xplanning`, `/xanalytics`, `/xmetrics`
 - **Infrastructure**: `/xinfra`, `/xmonitoring`, `/xaws`
@@ -271,7 +271,7 @@ npm test
 - ✅ **Dependency Validation**: AWS CLI, Git, and GitHub CLI availability checking
 
 ### Version 0.0.1-alpha.8
-- ✅ **Documentation Consistency**: Fixed command counts (58) and subagent counts (26)
+- ✅ **Documentation Consistency**: Fixed command counts and subagent counts
 - ✅ **Test Infrastructure**: Enhanced test-results directory handling
 - ✅ **Repository Cleanup**: Removed outdated documentation and test artifacts
 - ✅ **Validation Logic**: Improved scenario-aware test validation
@@ -289,7 +289,7 @@ npm test
 - ✅ **JavaScript Migration**: Complete test suite migration from Python
 - ✅ **Enhanced Templates**: Fixed configuration template issues
 - ✅ **Test Suites**: Package structure and command validation
-- ✅ **58 Total Commands**: 13 active + 45 experimental commands
+- ✅ **62 Total Commands**: 16 active + 46 experimental commands
 - ✅ **Security Enhancements**: Comprehensive security hook system
 
 ## 📄 License
