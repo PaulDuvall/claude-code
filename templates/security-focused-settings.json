@@ -54,6 +54,10 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/audit-bash-commands.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-commit-test-runner.sh"
           }
         ]
       }

@@ -6,7 +6,7 @@
 # Execution Plan
 
 **Status:** IN PROGRESS | Generated: 2026-03-20T20:45:00-04:00
-**Total tasks:** 9 | **Done:** 2 | **Remaining:** 7
+**Total tasks:** 9 | **Done:** 3 | **Remaining:** 6
 
 ## Task Queue
 
@@ -14,7 +14,7 @@
 |---|---------|-----------|--------|--------------|---------|-----------|
 | 1 | claude-code-8g8 | Read npm sync rules (no code) | done | none | 2026-03-20 | 2026-03-20 |
 | 2 | claude-code-d6g | Fix broken hook references (13 skeleton hooks) | done | #1 | 2026-03-20 | 2026-03-20 |
-| 3 | claude-code-kxh | Add verification/zero-error rules to global CLAUDE.md | in-progress | #1, #2 | 2026-03-20 | |
+| 3 | claude-code-kxh | Add verification/zero-error rules to global CLAUDE.md | done | #1, #2 | 2026-03-20 | 2026-03-20 |
 | 4 | claude-code-5mw | Create pre-commit test runner hook | pending | #1, #2 | | |
 | 5 | claude-code-3og | Create xcontinue slash command | pending | #1, #3 | | |
 | 6 | claude-code-6ck | Create xexplore slash command | pending | #1 | | |
@@ -49,3 +49,4 @@ _Will be populated when execution begins._
 
 - #1 claude-code-8g8: Read-only prerequisite — 6 dual-write rules acknowledged.
 - #2 claude-code-d6g: Created 13 skeleton hooks, dual-written, tests refactored and passing.
+- #3 claude-code-kxh: Added 3 sections (2.7, 2.8, 2.9) to global-claude.md, dual-written, tests updated.

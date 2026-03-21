@@ -39,7 +39,8 @@ const EXPECTED = {
         'pre-compact-backup.sh',
         'session-init.sh',
         'prompt-security-scan.sh',
-        'security-session-init.sh'
+        'security-session-init.sh',
+        'pre-commit-test-runner.sh'
     ],
     requiredDirs: ['commands/', 'templates/', 'hooks/', 'subagents/']
 };
