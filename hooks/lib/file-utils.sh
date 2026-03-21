@@ -10,6 +10,20 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/config-constants.sh"
 
 ##################################
+# JSON Utilities
+##################################
+
+json_escape() {
+    local input="$1"
+    input="${input//\\/\\\\}"
+    input="${input//\"/\\\"}"
+    input="${input//$'\n'/\\n}"
+    input="${input//$'\r'/\\r}"
+    input="${input//$'\t'/\\t}"
+    printf '%s' "$input"
+}
+
+##################################
 # Directory Operations
 ##################################
 

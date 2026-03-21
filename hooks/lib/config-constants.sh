@@ -214,7 +214,6 @@ export CLAUDE_TOOL="${CLAUDE_TOOL:-unknown}"
 export CLAUDE_FILE="${CLAUDE_FILE:-}"
 export CLAUDE_CONTENT="${CLAUDE_CONTENT:-}"
 export CLAUDE_SESSION_ID="${CLAUDE_SESSION_ID:-$$}"
-export CLAUDE_SECURITY_OVERRIDE="${CLAUDE_SECURITY_OVERRIDE:-false}"
 
 ##################################
 # Version Information

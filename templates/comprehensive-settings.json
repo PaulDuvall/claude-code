@@ -170,7 +170,8 @@
   
   "// Standard Claude Code environment variables": "",
   "env": {
-    "ANTHROPIC_API_KEY": "your-api-key-here",
+    "// DO NOT commit real API keys. Set via: export ANTHROPIC_API_KEY=sk-ant-...": "",
+    "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}",
     "DISABLE_TELEMETRY": "1",
     "ANTHROPIC_LOG": "info",
     "CLAUDE_PROJECT_DIR": "."

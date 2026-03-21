@@ -269,19 +269,25 @@ send_security_notification() {
         return $EXIT_SUCCESS
     fi
     
+    local safe_type safe_path safe_details safe_user safe_ts
+    safe_type=$(json_escape "$violation_type")
+    safe_path=$(json_escape "$file_path")
+    safe_details=$(json_escape "$details")
+    safe_user=$(json_escape "$USER")
+    safe_ts=$(json_escape "$(date)")
+
     local payload
     payload=$(cat <<EOF
 {
-    "text": "🚨 SECURITY ALERT: Subagent hook violation",
+    "text": "SECURITY ALERT: Subagent hook violation",
     "attachments": [{
         "color": "danger",
         "fields": [
-            {"title": "Violation Type", "value": "$violation_type", "short": true},
-            {"title": "File", "value": "$file_path", "short": true},
-            {"title": "Details", "value": "$details", "short": false},
-            {"title": "User", "value": "$USER", "short": true},
-            {"title": "Timestamp", "value": "$(date)", "short": true},
-            {"title": "Host", "value": "$(hostname)", "short": true}
+            {"title": "Violation Type", "value": "$safe_type", "short": true},
+            {"title": "File", "value": "$safe_path", "short": true},
+            {"title": "Details", "value": "$safe_details", "short": false},
+            {"title": "User", "value": "$safe_user", "short": true},
+            {"title": "Timestamp", "value": "$safe_ts", "short": true}
         ]
     }]
 }

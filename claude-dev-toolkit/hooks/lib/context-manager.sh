@@ -75,7 +75,7 @@ gather_claude_context() {
     "content": "${CLAUDE_CONTENT:-none}",
     "version": "${CLAUDE_VERSION:-unknown}",
     "project": "${CLAUDE_PROJECT:-unknown}",
-    "security_override": "${CLAUDE_SECURITY_OVERRIDE:-false}"
+    "security_override": "disabled"
   }
 }
 EOF

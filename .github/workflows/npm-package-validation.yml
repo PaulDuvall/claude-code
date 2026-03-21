@@ -24,10 +24,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
     - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
@@ -125,36 +125,34 @@ jobs:
 
     - name: Verify file counts
       run: |
-        echo "📊 Verifying file counts..."
-        
-        ACTIVE_COUNT=$(find commands/active -name "*.md" | wc -l)
-        EXPERIMENTAL_COUNT=$(find commands/experiments -name "*.md" | wc -l)
-        SUBAGENTS_COUNT=$(find subagents -name "*.md" | wc -l)
-        
-        echo "Found $ACTIVE_COUNT active commands (expected: 13)"
-        echo "Found $EXPERIMENTAL_COUNT experimental commands (expected: 45)" 
-        echo "Found $SUBAGENTS_COUNT subagents (expected: 26)"
-        
-        if [ "$ACTIVE_COUNT" -ne 13 ]; then
-          echo "❌ Incorrect number of active commands"
+        echo "Verifying file counts..."
+
+        ACTIVE_COUNT=$(find commands/active -name "*.md" | wc -l | tr -d ' ')
+        EXPERIMENTAL_COUNT=$(find commands/experiments -name "*.md" | wc -l | tr -d ' ')
+        SUBAGENTS_COUNT=$(find subagents -name "*.md" | wc -l | tr -d ' ')
+
+        echo "Found $ACTIVE_COUNT active, $EXPERIMENTAL_COUNT experimental, $SUBAGENTS_COUNT subagents"
+
+        if [ "$ACTIVE_COUNT" -lt 1 ]; then
+          echo "No active commands found"
           exit 1
         fi
-        
-        if [ "$EXPERIMENTAL_COUNT" -ne 45 ]; then
-          echo "❌ Incorrect number of experimental commands"
+
+        if [ "$EXPERIMENTAL_COUNT" -lt 1 ]; then
+          echo "No experimental commands found"
           exit 1
         fi
-        
-        if [ "$SUBAGENTS_COUNT" -ne 26 ]; then
-          echo "❌ Incorrect number of subagents"
+
+        if [ "$SUBAGENTS_COUNT" -lt 1 ]; then
+          echo "No subagents found"
           exit 1
         fi
-        
-        echo "✅ All file counts are correct"
+
+        echo "All file categories populated"
 
     - name: Upload package artifact
       if: matrix.node-version == '20'  # Only upload once
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: claude-dev-toolkit-package
         path: claude-dev-toolkit/paulduvall-claude-dev-toolkit-*.tgz

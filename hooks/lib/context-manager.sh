@@ -32,6 +32,12 @@ gather_basic_context() {
     log_debug "Gathering basic context for $subagent_name (event: $event_type)"
     
     # Create base context structure
+    local safe_event safe_name safe_user safe_wd
+    safe_event=$(json_escape "$event_type")
+    safe_name=$(json_escape "$subagent_name")
+    safe_user=$(json_escape "$USER")
+    safe_wd=$(json_escape "$(pwd)")
+
     local context_json
     context_json=$(cat <<EOF
 {
@@ -41,13 +47,13 @@ gather_basic_context() {
     "api_version": "$API_VERSION"
   },
   "event": {
-    "type": "$event_type",
+    "type": "$safe_event",
     "trigger": "${CLAUDE_HOOK_TRIGGER:-manual}",
-    "subagent": "$subagent_name"
+    "subagent": "$safe_name"
   },
   "environment": {
-    "user": "$USER",
-    "working_directory": "$(pwd)",
+    "user": "$safe_user",
+    "working_directory": "$safe_wd",
     "process_id": $$,
     "session_id": "${CLAUDE_SESSION_ID:-$$}"
   }
@@ -75,7 +81,7 @@ gather_claude_context() {
     "content": "${CLAUDE_CONTENT:-none}",
     "version": "${CLAUDE_VERSION:-unknown}",
     "project": "${CLAUDE_PROJECT:-unknown}",
-    "security_override": "${CLAUDE_SECURITY_OVERRIDE:-false}"
+    "security_override": "disabled"
   }
 }
 EOF

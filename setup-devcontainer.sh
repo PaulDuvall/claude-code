@@ -222,6 +222,11 @@ check_existing_config() {
 generate_devcontainer_json() {
     local features=""
     local post_create_command=""
+    local post_start_command=""
+
+    if [[ "$NETWORK_FIREWALL" == "true" ]]; then
+        post_start_command=$'\n  "postStartCommand": "sudo /usr/local/bin/setup-firewall.sh",'
+    fi
 
     if [[ "$FULL_TOOLING" == "true" ]]; then
         features='{
@@ -249,7 +254,7 @@ generate_devcontainer_json() {
     "dockerfile": "Dockerfile"
   },
   "features": ${features},
-  "postCreateCommand": "${post_create_command}",
+  "postCreateCommand": "${post_create_command}",${post_start_command}
   "remoteEnv": {
     "ANTHROPIC_API_KEY": "\${localEnv:ANTHROPIC_API_KEY}",
     "GITHUB_TOKEN": "\${localEnv:GITHUB_TOKEN}",
@@ -259,6 +264,7 @@ generate_devcontainer_json() {
   },
   "runArgs": [
     "--cap-drop=ALL",
+    "--cap-add=NET_ADMIN",
     "--security-opt=no-new-privileges"
   ],
   "mounts": [],
@@ -404,7 +410,7 @@ print_configuration_summary() {
     echo "Configuration:"
     echo "  - Network firewall: $([ "$NETWORK_FIREWALL" == "true" ] && echo "ENABLED (allowlisted domains only)" || echo "DISABLED")"
     echo "  - Tooling: $([ "$FULL_TOOLING" == "true" ] && echo "Full (Node, Python, Git, GitHub CLI, AWS CLI, Docker)" || echo "Minimal (Node, Git, GitHub CLI)")"
-    echo "  - Capabilities: Dropped (--cap-drop=ALL)"
+    echo "  - Capabilities: Dropped (--cap-drop=ALL, +NET_ADMIN for firewall)"
     echo "  - Privilege escalation: Blocked (--security-opt=no-new-privileges)"
 }
 

@@ -18,7 +18,8 @@ LIB_DIR="$SCRIPT_DIR/lib"
 
 # Load only essential modules for lightweight operation
 source "$LIB_DIR/config-constants.sh"
-source "$LIB_DIR/context-manager.sh" 
+source "$LIB_DIR/file-utils.sh"
+source "$LIB_DIR/context-manager.sh"
 source "$LIB_DIR/error-handler.sh"
 
 ##################################
@@ -53,23 +54,31 @@ gather_simple_context() {
     local additional_context="$3"
     
     # Create lightweight context - much simpler than the original
+    local safe_name safe_event safe_ctx safe_user safe_wd safe_branch
+    safe_name=$(json_escape "$subagent_name")
+    safe_event=$(json_escape "$event_type")
+    safe_ctx=$(json_escape "$additional_context")
+    safe_user=$(json_escape "$USER")
+    safe_wd=$(json_escape "$(pwd)")
+    safe_branch=$(json_escape "$(git branch --show-current 2>/dev/null || echo 'not-in-git')")
+
     local context_data
     context_data=$(cat <<EOF
 {
   "trigger": "simple_subagent_trigger",
-  "subagent": "$subagent_name",
-  "event": "$event_type",
-  "additional_context": "$additional_context",
+  "subagent": "$safe_name",
+  "event": "$safe_event",
+  "additional_context": "$safe_ctx",
   "environment": {
     "tool": "${CLAUDE_TOOL:-unknown}",
-    "file": "${CLAUDE_FILE:-none}", 
-    "user": "$USER",
-    "working_directory": "$(pwd)",
+    "file": "${CLAUDE_FILE:-none}",
+    "user": "$safe_user",
+    "working_directory": "$safe_wd",
     "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
     "session_id": "${CLAUDE_SESSION_ID:-$$}"
   },
   "project": {
-    "git_branch": "$(git branch --show-current 2>/dev/null || echo 'not-in-git')"
+    "git_branch": "$safe_branch"
   }
 }
 EOF

@@ -38,26 +38,46 @@ log_violation() {
 }
 
 ##################################
+# JSON Utilities
+##################################
+json_escape() {
+    local input="$1"
+    input="${input//\\/\\\\}"
+    input="${input//\"/\\\"}"
+    input="${input//$'\n'/\\n}"
+    input="${input//$'\r'/\\r}"
+    input="${input//$'\t'/\\t}"
+    printf '%s' "$input"
+}
+
+##################################
 # Notification Functions
 ##################################
 notify_security_team() {
     local violation_type="$1"
     local file_path="$2"
     local pattern="$3"
-    
+
     if [[ -n "$NOTIFICATION_WEBHOOK" ]]; then
+        local safe_type safe_path safe_pattern safe_user safe_ts
+        safe_type=$(json_escape "$violation_type")
+        safe_path=$(json_escape "$file_path")
+        safe_pattern=$(json_escape "$pattern")
+        safe_user=$(json_escape "$USER")
+        safe_ts=$(json_escape "$(date)")
+
         curl -s -X POST "$NOTIFICATION_WEBHOOK" \
             -H "Content-Type: application/json" \
             -d "{
-                \"text\": \"🚨 SECURITY ALERT: Credential exposure prevented\",
+                \"text\": \"SECURITY ALERT: Credential exposure prevented\",
                 \"attachments\": [{
                     \"color\": \"danger\",
                     \"fields\": [
-                        {\"title\": \"Violation Type\", \"value\": \"$violation_type\", \"short\": true},
-                        {\"title\": \"File\", \"value\": \"$file_path\", \"short\": true},
-                        {\"title\": \"Pattern\", \"value\": \"$pattern\", \"short\": false},
-                        {\"title\": \"User\", \"value\": \"$USER\", \"short\": true},
-                        {\"title\": \"Timestamp\", \"value\": \"$(date)\", \"short\": true}
+                        {\"title\": \"Violation Type\", \"value\": \"$safe_type\", \"short\": true},
+                        {\"title\": \"File\", \"value\": \"$safe_path\", \"short\": true},
+                        {\"title\": \"Pattern\", \"value\": \"$safe_pattern\", \"short\": false},
+                        {\"title\": \"User\", \"value\": \"$safe_user\", \"short\": true},
+                        {\"title\": \"Timestamp\", \"value\": \"$safe_ts\", \"short\": true}
                     ]
                 }]
             }" 2>/dev/null || log "Failed to send security notification"
@@ -68,33 +88,33 @@ notify_security_team() {
 # Credential Detection Patterns
 ##################################
 # High-confidence patterns for common credential types
-declare -A CREDENTIAL_PATTERNS=(
-    # API Keys
-    ["anthropic_api_key"]='sk-ant-[a-zA-Z0-9]{95}'
-    ["openai_api_key"]='sk-[a-zA-Z0-9]{32,}'
-    ["github_token"]='gh[po]_[a-zA-Z0-9]{36}'
-    ["aws_access_key"]='AKIA[0-9A-Z]{16}'
-    ["azure_key"]='[a-zA-Z0-9/+]{86}=='
-    
-    # Database URLs with credentials
-    ["database_url_with_password"]='(mysql|postgresql|mongodb)://[^:]+:[^@]+@'
-    
-    # Generic high-entropy patterns
-    ["generic_api_key"]='["\']?[a-zA-Z0-9_-]*[aA][pP][iI][_-]?[kK][eE][yY]["\']?\s*[:=]\s*["\'][a-zA-Z0-9+/=]{20,}["\']'
-    ["generic_secret"]='["\']?[a-zA-Z0-9_-]*[sS][eE][cC][rR][eE][tT]["\']?\s*[:=]\s*["\'][a-zA-Z0-9+/=]{20,}["\']'
-    ["generic_password"]='["\']?[a-zA-Z0-9_-]*[pP][aA][sS][sS][wW][oO][rR][dD]["\']?\s*[:=]\s*["\'][^"\']{8,}["\']'
-    
-    # JWT Tokens
-    ["jwt_token"]='eyJ[a-zA-Z0-9+/=]{20,}\.[a-zA-Z0-9+/=]{20,}\.[a-zA-Z0-9+/=_-]{20,}'
-    
-    # Private Keys
-    ["private_key"]='-----BEGIN [A-Z ]*PRIVATE KEY-----'
-    ["ssh_private_key"]='-----BEGIN OPENSSH PRIVATE KEY-----'
-    
-    # Cloud Provider Specific
-    ["gcp_service_account_key"]='"type":\s*"service_account"'
-    ["slack_webhook"]='hooks\.slack\.com/services/[A-Z0-9]{9}/[A-Z0-9]{11}/[a-zA-Z0-9]{24}'
-)
+declare -A CREDENTIAL_PATTERNS
+
+# API Keys
+CREDENTIAL_PATTERNS["anthropic_api_key"]='sk-ant-[a-zA-Z0-9]{95}'
+CREDENTIAL_PATTERNS["openai_api_key"]='sk-[a-zA-Z0-9]{32,}'
+CREDENTIAL_PATTERNS["github_token"]='gh[po]_[a-zA-Z0-9]{36}'
+CREDENTIAL_PATTERNS["aws_access_key"]='AKIA[0-9A-Z]{16}'
+CREDENTIAL_PATTERNS["azure_key"]='[a-zA-Z0-9/+]{86}=='
+
+# Database URLs with credentials
+CREDENTIAL_PATTERNS["database_url_with_password"]='(mysql|postgresql|mongodb)://[^:]+:[^@]+@'
+
+# Generic high-entropy patterns
+CREDENTIAL_PATTERNS["generic_api_key"]='["'"'"']?[a-zA-Z0-9_-]*[aA][pP][iI][_-]?[kK][eE][yY]["'"'"']?\s*[:=]\s*["'"'"'][a-zA-Z0-9+/=]{20,}["'"'"']'
+CREDENTIAL_PATTERNS["generic_secret"]='["'"'"']?[a-zA-Z0-9_-]*[sS][eE][cC][rR][eE][tT]["'"'"']?\s*[:=]\s*["'"'"'][a-zA-Z0-9+/=]{20,}["'"'"']'
+CREDENTIAL_PATTERNS["generic_password"]='["'"'"']?[a-zA-Z0-9_-]*[pP][aA][sS][sS][wW][oO][rR][dD]["'"'"']?\s*[:=]\s*["'"'"'][^"'"'"']{8,}["'"'"']'
+
+# JWT Tokens
+CREDENTIAL_PATTERNS["jwt_token"]='eyJ[a-zA-Z0-9+/=]{20,}\.[a-zA-Z0-9+/=]{20,}\.[a-zA-Z0-9+/=_-]{20,}'
+
+# Private Keys
+CREDENTIAL_PATTERNS["private_key"]='-----BEGIN [A-Z ]*PRIVATE KEY-----'
+CREDENTIAL_PATTERNS["ssh_private_key"]='-----BEGIN OPENSSH PRIVATE KEY-----'
+
+# Cloud Provider Specific
+CREDENTIAL_PATTERNS["gcp_service_account_key"]='"type":\s*"service_account"'
+CREDENTIAL_PATTERNS["slack_webhook"]='hooks\.slack\.com/services/[A-Z0-9]{9}/[A-Z0-9]{11}/[a-zA-Z0-9]{24}'
 
 ##################################
 # Content Analysis Functions
@@ -235,18 +255,8 @@ main() {
         echo "- Add files to .gitignore if they contain test data"
         echo "- Use placeholder values in examples"
         echo ""
-        echo "For emergency override (NOT RECOMMENDED):"
-        echo "export CLAUDE_SECURITY_OVERRIDE=true"
-        
         log_violation "BLOCKED: $total_violations violations in $file_path"
-        
-        # Check for emergency override
-        if [[ "${CLAUDE_SECURITY_OVERRIDE:-false}" == "true" ]]; then
-            log "WARNING: Security override used - allowing dangerous operation"
-            echo "⚠️  WARNING: Security override enabled - proceeding with credential exposure risk"
-            exit 0
-        fi
-        
+
         exit 1
     fi
     

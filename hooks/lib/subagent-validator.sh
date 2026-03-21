@@ -323,12 +323,10 @@ validate_subagent_content() {
         return $EXIT_VALIDATION_FAILED
     fi
     
-    # Temporarily disable security validation for debugging
-    # if ! validate_content_security "$content" "$file_path"; then
-    #     return $EXIT_SECURITY_VIOLATION
-    # fi
-    log_debug "Content security validation temporarily disabled for debugging"
-    
+    if ! validate_content_security "$content" "$file_path"; then
+        return $EXIT_SECURITY_VIOLATION
+    fi
+
     log_debug "Subagent content validation passed: $file_path"
     return $EXIT_SUCCESS
 }

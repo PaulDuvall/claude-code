@@ -33,33 +33,38 @@ gather_error_context() {
     log_info "Gathering error context for debugging assistance"
     
     # Capture comprehensive error context
+    local safe_type safe_msg safe_cmd safe_user safe_wd safe_branch
+    safe_type=$(json_escape "$error_type")
+    safe_msg=$(json_escape "$error_message")
+    safe_cmd=$(json_escape "$failed_command")
+    safe_user=$(json_escape "$USER")
+    safe_wd=$(json_escape "$(pwd)")
+    safe_branch=$(json_escape "$(git branch --show-current 2>/dev/null || echo 'not-in-git')")
+
     local context_data
     context_data=$(cat <<EOF
 {
   "trigger": "on_error_debug",
   "error_info": {
-    "type": "$error_type",
-    "message": "$error_message", 
-    "failed_command": "$failed_command",
+    "type": "$safe_type",
+    "message": "$safe_msg",
+    "failed_command": "$safe_cmd",
     "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   },
   "environment": {
     "tool": "${CLAUDE_TOOL:-unknown}",
     "file": "${CLAUDE_FILE:-none}",
-    "working_directory": "$(pwd)",
-    "user": "$USER",
+    "working_directory": "$safe_wd",
+    "user": "$safe_user",
     "shell": "${SHELL##*/}",
     "session_id": "${CLAUDE_SESSION_ID:-$$}"
   },
   "project_context": {
-    "git_branch": "$(git branch --show-current 2>/dev/null || echo 'not-in-git')",
-    "git_status": "$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ') modified files",
-    "recent_files": $(find . -maxdepth 2 -name "*.py" -o -name "*.js" -o -name "*.ts" -o -name "*.go" -o -name "*.java" -o -name "*.md" | head -5 | jq -R -s 'split("\n")[:-1]')
+    "git_branch": "$safe_branch",
+    "git_status": "$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ') modified files"
   },
   "system_context": {
-    "os": "$(uname -s)",
-    "hostname": "$(hostname)", 
-    "processes": "$(ps aux | wc -l | tr -d ' ') running processes"
+    "os": "$(uname -s)"
   }
 }
 EOF

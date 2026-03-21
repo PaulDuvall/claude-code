@@ -36,8 +36,12 @@ claude --dangerously-skip-permissions
 ### Option 1: Setup Script (Recommended)
 
 ```bash
-# Download and run (if not in the repo)
-curl -sL https://raw.githubusercontent.com/PaulDuvall/claude-code/main/setup-devcontainer.sh | bash
+# Download, verify, then run
+curl -sL https://raw.githubusercontent.com/PaulDuvall/claude-code/main/setup-devcontainer.sh -o setup-devcontainer.sh
+chmod +x setup-devcontainer.sh
+# Review the script before running
+less setup-devcontainer.sh
+./setup-devcontainer.sh
 
 # Or if you have the repo cloned
 ./setup-devcontainer.sh

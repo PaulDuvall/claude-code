@@ -18,7 +18,8 @@ LIB_DIR="$SCRIPT_DIR/lib"
 
 # Load only essential modules for lightweight operation
 source "$LIB_DIR/config-constants.sh"
-source "$LIB_DIR/context-manager.sh" 
+source "$LIB_DIR/file-utils.sh"
+source "$LIB_DIR/context-manager.sh"
 source "$LIB_DIR/error-handler.sh"
 
 ##################################
@@ -29,18 +30,25 @@ gather_security_context() {
     local file="${CLAUDE_FILE:-none}"
     
     log_info "Pre-write security check triggered for: $tool on $file"
-    
+
     # Create lightweight context for subagent
+    local safe_tool safe_file safe_user safe_wd safe_branch
+    safe_tool=$(json_escape "$tool")
+    safe_file=$(json_escape "$file")
+    safe_user=$(json_escape "$USER")
+    safe_wd=$(json_escape "$(pwd)")
+    safe_branch=$(json_escape "$(git branch --show-current 2>/dev/null || echo 'not-in-git')")
+
     local context_data
     context_data=$(cat <<EOF
 {
   "trigger": "pre_write_security",
-  "tool": "$tool",
-  "file": "$file", 
+  "tool": "$safe_tool",
+  "file": "$safe_file",
   "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
-  "user": "$USER",
-  "working_directory": "$(pwd)",
-  "git_branch": "$(git branch --show-current 2>/dev/null || echo 'not-in-git')",
+  "user": "$safe_user",
+  "working_directory": "$safe_wd",
+  "git_branch": "$safe_branch",
   "session_id": "${CLAUDE_SESSION_ID:-$$}"
 }
 EOF
