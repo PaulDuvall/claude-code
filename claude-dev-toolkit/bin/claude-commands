@@ -48,7 +48,7 @@ Examples:
             console.log('  Commands directory not found');
         }
         
-        console.log('\n💡 Usage: Try /xhelp in Claude Code to see all commands');
+        console.log('\n💡 Usage: Run claude-commands list to see all commands');
     });
 
 program
@@ -339,6 +339,25 @@ program
         } catch (error) {
             console.error('❌ Could not check for updates');
             console.log('   Please check your internet connection');
+            process.exit(1);
+        }
+    });
+
+program
+    .command('uninstall')
+    .description('Remove all installed commands, hooks, and subagents')
+    .addHelpText('after', `
+Examples:
+  $ claude-commands uninstall           # Remove all installed files
+  $ claude-commands uninstall --dry-run # Preview what would be removed`)
+    .option('--dry-run', 'Preview what would be removed without deleting')
+    .option('--keep-settings', 'Keep settings.json intact')
+    .action((options) => {
+        const uninstaller = require('../lib/uninstall-command');
+        try {
+            uninstaller.execute(options);
+        } catch (error) {
+            console.error(`Uninstall failed: ${error.message}`);
             process.exit(1);
         }
     });
