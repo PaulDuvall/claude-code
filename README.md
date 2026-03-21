@@ -7,7 +7,7 @@
 ![Active Commands](https://img.shields.io/badge/active%20commands-16-blue)
 ![Experimental Commands](https://img.shields.io/badge/experimental%20commands-46-orange)
 ![Total Commands](https://img.shields.io/badge/total%20commands-62-brightgreen)
-![Sub-agents](https://img.shields.io/badge/sub--agents-26-purple)
+![Sub-agents](https://img.shields.io/badge/sub--agents-25-purple)
 
 **Transform Claude Code into a complete development platform** with 62 AI-powered commands that automate your entire software development workflow. Now with improved git identity management!
 
@@ -110,9 +110,9 @@ npm install -g @anthropic-ai/claude-code
 npm install -g @paulduvall/claude-dev-toolkit
 
 # 3. Deploy commands to Claude Code
-claude-commands install --active    # Install 15 core commands
+claude-commands install --active    # Install 16 core commands
 # OR
-claude-commands install --all       # Install all 59 commands
+claude-commands install --all       # Install all 62 commands
 
 # 4. Configure OIDC for GitHub Actions to AWS (NEW!)
 claude-commands oidc --help         # Show OIDC configuration options
@@ -128,7 +128,7 @@ claude-commands config --template security-focused-settings.json  # Enhanced sec
 claude-commands config --template comprehensive-settings.json     # Full features
 
 # 6. Install AI subagents (Optional)
-claude-commands subagents --install     # Install 26 specialized AI subagents
+claude-commands subagents --install     # Install 25 specialized AI subagents
 
 # 7. Start using AI-powered development commands
 claude
@@ -148,17 +148,17 @@ npm install -g @paulduvall/claude-dev-toolkit
 
 # Install experimental commands (46 additional commands)
 claude-commands install --experiments    # Experimental features
-claude-commands install --all            # All 59 commands
+claude-commands install --all            # All 62 commands
 
 # Access AI subagents for specialized tasks
-claude-commands subagents --install      # 26 specialized AI assistants
+claude-commands subagents --install      # 25 specialized AI assistants
 ```
 
-**That's it!** You now have 15 powerful AI development commands + intelligent subagents available in any project.
+**That's it!** You now have 16 powerful AI development commands + intelligent subagents available in any project.
 
 ## Core Commands (Always Available)
 
-Once installed, these 15 essential commands work in **any project** on your machine:
+Once installed, these 16 essential commands work in **any project** on your machine:
 
 ### 💻 **Daily Development**
 - **`/xtest`** - Smart test runner (detects framework, runs all tests)
@@ -318,7 +318,7 @@ hooks/subagent-trigger-simple.sh # → any subagent (flexible)
 - **Production Ready**: Error recovery, comprehensive logging, timeout handling
 - **Easy Extension**: Simple patterns for creating domain-specific triggers
 
-### 📊 Experimental Commands (44 Additional)
+### 📊 Experimental Commands (46 Additional)
 Advanced commands for specialized workflows:
 - **Planning & Analytics**: `/xplanning`, `/xanalytics`, `/xmetrics`
 - **Infrastructure**: `/xinfra`, `/xmonitoring`, `/xaws`  
@@ -326,7 +326,7 @@ Advanced commands for specialized workflows:
 - **Advanced Security**: `/xred`, `/xrisk`, `/xscan`
 - **Performance**: `/xperformance`, `/xoptimize`
 
-Deploy with: `cd claude-dev-toolkit && npm run install-commands`
+Deploy with: `claude-commands install --experiments`
 
 ## Why Use This?
 
@@ -358,9 +358,9 @@ Deploy with: `cd claude-dev-toolkit && npm run install-commands`
 npm install -g @paulduvall/claude-dev-toolkit
 
 # Install command sets
-claude-commands install --active       # Install 15 core commands
+claude-commands install --active       # Install 16 core commands
 claude-commands install --experiments # Install 46 experimental commands
-claude-commands install --all          # Install all 59 commands
+claude-commands install --all          # Install all 62 commands
 
 # Configuration management
 claude-commands config --list          # List available templates
@@ -387,7 +387,7 @@ claude-commands list   # List all available commands
 
 **Quick one-liner without global install:**
 ```bash
-npx @paulduvall/claude-dev-toolkit
+npx @paulduvall/claude-dev-toolkit install --all
 ```
 
 **Uninstall:**
@@ -422,7 +422,7 @@ ls ~/.claude/commands/x*.md           # List installed commands
 
 ## Repository Structure
 
-- **`slash-commands/active/`** - 15 production-ready commands (deployed by default)
+- **`slash-commands/active/`** - 16 production-ready commands (deployed by default)
 - **`slash-commands/experiments/`** - 46 experimental/conceptual commands  
 - **`subagents/`** - AI specialist subagents with persistent context
 - **`hooks/`** - Hybrid hook architecture with lightweight triggers

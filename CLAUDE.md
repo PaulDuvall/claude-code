@@ -72,7 +72,7 @@ claude-code/
 │   ├── deploy-subagents.sh          # Subagent deployment
 │   └── update-subagent-settings.py  # Settings updater
 ├── slash-commands/                    # Command implementations (source of truth)
-│   ├── active/                        # 15 production-ready commands
+│   ├── active/                        # 16 production-ready commands
 │   │   ├── xarchitecture.md          # Architecture design and analysis
 │   │   ├── xconfig.md                # Configuration management
 │   │   ├── xcontinue.md              # Execution plan continuation
@@ -101,7 +101,7 @@ claude-code/
 │       ├── xplanning.md              # Project planning
 │       ├── xrisk.md                  # Risk assessment
 │       └── [35 additional commands]  # Complete experimental collection
-├── subagents/                         # 26 subagent definitions
+├── subagents/                         # 25 subagent definitions
 ├── specs/                             # Command specifications
 │   ├── command-specifications.md      # Command development specs
 │   ├── custom-command-specifications.md # Custom command guidelines
