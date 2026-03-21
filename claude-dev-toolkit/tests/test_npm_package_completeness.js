@@ -2,23 +2,48 @@
 
 /**
  * Test: NPM Package Completeness
- * 
- * This test ensures that the npm package includes all required directories
- * and files, preventing the symlink issues that caused functionality to fail.
- * 
- * Tests:
- * - commands/active directory contains 13 command files
- * - commands/experiments directory contains 45 command files  
- * - templates directory contains configuration templates
- * - hooks directory contains hook scripts
- * - subagents directory contains 26 subagent files
- * - All files are actual files (not symlinks) in the packed tarball
+ *
+ * Ensures the npm package includes all required directories and files,
+ * preventing symlink issues that caused functionality to fail.
  */
 
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
+
+// Shared constants — single source of truth for expected counts and files
+const EXPECTED = {
+    activeCommandCount: 13,
+    experimentalCommandCount: 45,
+    subagentCount: 26,
+    templates: [
+        'basic-settings.json',
+        'comprehensive-settings.json',
+        'security-focused-settings.json'
+    ],
+    hooks: [
+        'file-logger.sh',
+        'prevent-credential-exposure.sh',
+        'pre-commit-quality.sh',
+        'pre-write-security.sh',
+        'backup-before-edit.sh',
+        'audit-bash-commands.sh',
+        'log-all-operations.sh',
+        'validate-changes.sh',
+        'handle-notifications.sh',
+        'prompt-analysis.sh',
+        'cleanup-on-stop.sh',
+        'subagent-cleanup.sh',
+        'session-cleanup.sh',
+        'pre-compact-backup.sh',
+        'session-init.sh',
+        'prompt-security-scan.sh',
+        'security-session-init.sh'
+    ],
+    requiredDirs: ['commands/', 'templates/', 'hooks/', 'subagents/']
+};
+
+const PACKAGE_ROOT = path.join(__dirname, '..');
 
 class PackageCompletenessTest {
     constructor() {
@@ -28,23 +53,17 @@ class PackageCompletenessTest {
     }
 
     log(message, type = 'info') {
-        const timestamp = new Date().toISOString();
-        const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
-        console.log(`${prefix} [${timestamp}] ${message}`);
+        const prefix = { error: 'x', success: 'v', info: 'i' }[type] || 'i';
+        console.log(`[${prefix}] ${message}`);
     }
 
     test(description, testFn) {
         try {
             const result = testFn();
-            if (result) {
-                this.log(`PASS: ${description}`, 'success');
-                this.passed++;
-                this.results.push({ test: description, status: 'PASS', error: null });
-            } else {
-                this.log(`FAIL: ${description}`, 'error');
-                this.failed++;
-                this.results.push({ test: description, status: 'FAIL', error: 'Test returned false' });
-            }
+            this.passed += result ? 1 : 0;
+            this.failed += result ? 0 : 1;
+            this.log(`${result ? 'PASS' : 'FAIL'}: ${description}`, result ? 'success' : 'error');
+            this.results.push({ test: description, status: result ? 'PASS' : 'FAIL' });
         } catch (error) {
             this.log(`FAIL: ${description} - ${error.message}`, 'error');
             this.failed++;
@@ -52,256 +71,156 @@ class PackageCompletenessTest {
         }
     }
 
-    runAllTests() {
-        this.log('🚀 Starting NPM Package Completeness Tests');
+    printSummary(label) {
+        this.log(`\n${label}:`);
+        this.log(`Passed: ${this.passed}, Failed: ${this.failed}, Total: ${this.passed + this.failed}`);
+        const allPassed = this.failed === 0;
+        this.log(allPassed ? 'All tests passed!' : 'Some tests failed.', allPassed ? 'success' : 'error');
+        return allPassed;
+    }
 
-        // Get npm pack output once and reuse it for all tests
-        let packOutput = null;
+    resolveDir(subpath) {
+        return path.join(PACKAGE_ROOT, subpath);
+    }
+
+    dirExistsAndNotSymlink(subpath) {
+        const full = this.resolveDir(subpath);
+        return fs.existsSync(full) && !fs.lstatSync(full).isSymbolicLink();
+    }
+
+    countMdFiles(subpath) {
+        const dir = this.resolveDir(subpath);
+        if (!fs.existsSync(dir)) return 0;
+        return fs.readdirSync(dir).filter(f => f.endsWith('.md')).length;
+    }
+
+    allFilesExist(dir, filenames) {
+        const base = this.resolveDir(dir);
+        if (!fs.existsSync(base)) return false;
+        return filenames.every(f => fs.existsSync(path.join(base, f)));
+    }
+
+    getPackOutput() {
+        return execSync('npm pack --dry-run 2>&1', {
+            encoding: 'utf-8',
+            cwd: PACKAGE_ROOT,
+            timeout: 30000
+        });
+    }
+
+    runPackDirectoryTests(packOutput) {
+        const dirs = ['commands/active/', 'commands/experiments/', 'templates/', 'hooks/', 'subagents/'];
+        dirs.forEach(dir => {
+            this.test(`npm pack includes ${dir}`, () => packOutput.includes(dir));
+        });
+    }
+
+    runPackFileCountTests(packOutput) {
+        this.test(`npm pack includes exactly ${EXPECTED.activeCommandCount} active commands`, () => {
+            return (packOutput.match(/commands\/active\/.*\.md/g) || []).length === EXPECTED.activeCommandCount;
+        });
+        this.test(`npm pack includes exactly ${EXPECTED.experimentalCommandCount} experimental commands`, () => {
+            return (packOutput.match(/commands\/experiments\/.*\.md/g) || []).length === EXPECTED.experimentalCommandCount;
+        });
+        this.test(`npm pack includes exactly ${EXPECTED.subagentCount} subagent files`, () => {
+            return (packOutput.match(/subagents\/.*\.md/g) || []).length === EXPECTED.subagentCount;
+        });
+    }
+
+    runPackExpectedFilesTests(packOutput) {
+        this.test('npm pack includes expected templates', () => {
+            return EXPECTED.templates.every(t => packOutput.includes(`templates/${t}`));
+        });
+        this.test('npm pack includes expected hooks', () => {
+            return EXPECTED.hooks.every(h => packOutput.includes(`hooks/${h}`));
+        });
+    }
+
+    runPackSymlinkTests() {
+        ['commands', 'templates', 'hooks'].forEach(dir => {
+            this.test(`${dir} directory is not a symlink`, () => this.dirExistsAndNotSymlink(dir));
+        });
+    }
+
+    runPackSizeTests(packOutput) {
+        this.test('Package builds without errors', () => {
+            try {
+                execSync('npm pack --silent 2>&1', { encoding: 'utf-8', cwd: PACKAGE_ROOT, timeout: 30000 });
+                return true;
+            } catch (_) {
+                return false;
+            }
+        });
+        this.test('Package size > 200KB', () => {
+            const match = packOutput.match(/package size:\s*([0-9.]+)\s*kB/);
+            return match ? parseFloat(match[1]) > 200 : false;
+        });
+        this.test('Package total files > 140', () => {
+            const match = packOutput.match(/total files:\s*(\d+)/);
+            return match ? parseInt(match[1]) > 140 : false;
+        });
+    }
+
+    runAllTests() {
+        this.log('Starting NPM Package Completeness Tests');
+
+        let packOutput;
         try {
-            packOutput = execSync('npm pack --dry-run 2>&1', { 
-                encoding: 'utf-8',
-                cwd: __dirname + '/..',
-                timeout: 30000
-            });
-        } catch (error) {
-            this.log(`⚠️  npm pack command failed: ${error.message}. Falling back to file system checks.`);
-            
-            // Fall back to file system based tests when npm pack fails
+            packOutput = this.getPackOutput();
+        } catch (_) {
+            this.log('npm pack failed, falling back to filesystem checks.');
             this.runFileSystemTests();
             return this.failed === 0;
         }
 
-        // Test 1: Verify npm pack includes all expected files
-        this.test('npm pack includes commands/active directory', () => {
-            return packOutput.includes('commands/active/');
-        });
+        this.runPackDirectoryTests(packOutput);
+        this.runPackFileCountTests(packOutput);
+        this.runPackExpectedFilesTests(packOutput);
+        this.runPackSymlinkTests();
+        this.runPackSizeTests(packOutput);
 
-        this.test('npm pack includes commands/experiments directory', () => {
-            return packOutput.includes('commands/experiments/');
-        });
-
-        this.test('npm pack includes templates directory', () => {
-            return packOutput.includes('templates/');
-        });
-
-        this.test('npm pack includes hooks directory', () => {
-            return packOutput.includes('hooks/');
-        });
-
-        this.test('npm pack includes subagents directory', () => {
-            return packOutput.includes('subagents/');
-        });
-
-        // Test 2: Count expected files in package
-        this.test('npm pack includes exactly 13 active command files', () => {
-            const activeCommands = packOutput.match(/commands\/active\/.*\.md/g) || [];
-            return activeCommands.length === 13;
-        });
-
-        this.test('npm pack includes exactly 45 experimental command files', () => {
-            const expCommands = packOutput.match(/commands\/experiments\/.*\.md/g) || [];
-            return expCommands.length === 45;
-        });
-
-        this.test('npm pack includes expected template files', () => {
-            const expectedTemplates = [
-                'templates/basic-settings.json',
-                'templates/comprehensive-settings.json', 
-                'templates/security-focused-settings.json'
-            ];
-            return expectedTemplates.every(template => packOutput.includes(template));
-        });
-
-        this.test('npm pack includes expected hook files', () => {
-            const expectedHooks = [
-                'hooks/file-logger.sh',
-                'hooks/prevent-credential-exposure.sh',
-                'hooks/pre-commit-quality.sh',
-                'hooks/pre-write-security.sh'
-            ];
-            return expectedHooks.every(hook => packOutput.includes(hook));
-        });
-
-        this.test('npm pack includes exactly 26 subagent files', () => {
-            const subagents = packOutput.match(/subagents\/.*\.md/g) || [];
-            return subagents.length === 26;
-        });
-
-        // Test 3: Verify directories are real (not symlinks) in local package
-        this.test('commands directory is not a symlink', () => {
-            const commandsPath = path.join(__dirname, '..', 'commands');
-            return fs.existsSync(commandsPath) && !fs.lstatSync(commandsPath).isSymbolicLink();
-        });
-
-        this.test('templates directory is not a symlink', () => {
-            const templatesPath = path.join(__dirname, '..', 'templates');
-            return fs.existsSync(templatesPath) && !fs.lstatSync(templatesPath).isSymbolicLink();
-        });
-
-        this.test('hooks directory is not a symlink', () => {
-            const hooksPath = path.join(__dirname, '..', 'hooks');
-            return fs.existsSync(hooksPath) && !fs.lstatSync(hooksPath).isSymbolicLink();
-        });
-
-        // Test 4: Test actual npm package functionality
-        this.test('Package builds without errors', () => {
-            try {
-                execSync('npm pack --silent 2>&1', { 
-                    encoding: 'utf-8',
-                    cwd: __dirname + '/..',
-                    timeout: 30000
-                });
-                return true;
-            } catch (error) {
-                return false;
-            }
-        });
-
-        // Test 5: Validate package size indicates all files are included
-        this.test('Package size indicates all files included (> 200KB)', () => {
-            const sizeMatch = packOutput.match(/package size:\s*([0-9.]+)\s*kB/);
-            if (sizeMatch) {
-                const sizeKB = parseFloat(sizeMatch[1]);
-                return sizeKB > 200; // Should be ~213KB with all files
-            }
-            return false;
-        });
-
-        this.test('Package includes expected total file count (> 140 files)', () => {
-            const filesMatch = packOutput.match(/total files:\s*(\d+)/);
-            if (filesMatch) {
-                const fileCount = parseInt(filesMatch[1]);
-                return fileCount > 140; // Should be ~142 files
-            }
-            return false;
-        });
-
-        // Summary
-        this.log(`\n📊 Test Summary:`);
-        this.log(`✅ Passed: ${this.passed}`);
-        this.log(`❌ Failed: ${this.failed}`);
-        this.log(`📊 Total: ${this.passed + this.failed}`);
-
-        if (this.failed === 0) {
-            this.log('🎉 All tests passed! NPM package is complete and functional.', 'success');
-            return true;
-        } else {
-            this.log('💥 Some tests failed. NPM package may have issues.', 'error');
-            
-            // Show failed tests
-            const failedTests = this.results.filter(r => r.status === 'FAIL');
-            if (failedTests.length > 0) {
-                this.log('\n❌ Failed Tests:');
-                failedTests.forEach(test => {
-                    this.log(`  - ${test.test}: ${test.error}`);
-                });
-            }
-            
-            return false;
-        }
+        return this.printSummary('NPM Pack Test Summary');
     }
 
-    // Fallback method when npm pack fails in CI environments
+    runFsDirTests() {
+        ['commands', 'templates', 'hooks'].forEach(dir => {
+            this.test(`${dir} exists and is not a symlink`, () => this.dirExistsAndNotSymlink(dir));
+        });
+        this.test('subagents directory exists', () => fs.existsSync(this.resolveDir('subagents')));
+    }
+
+    runFsFileCountTests() {
+        this.test(`commands/active contains ${EXPECTED.activeCommandCount} files`, () => {
+            return this.countMdFiles('commands/active') === EXPECTED.activeCommandCount;
+        });
+        this.test(`commands/experiments contains ${EXPECTED.experimentalCommandCount} files`, () => {
+            return this.countMdFiles('commands/experiments') === EXPECTED.experimentalCommandCount;
+        });
+        this.test(`subagents contains ${EXPECTED.subagentCount} files`, () => {
+            return this.countMdFiles('subagents') === EXPECTED.subagentCount;
+        });
+        this.test('templates contains expected files', () => this.allFilesExist('templates', EXPECTED.templates));
+        this.test('hooks contains expected files', () => this.allFilesExist('hooks', EXPECTED.hooks));
+    }
+
+    runFsPackageJsonTest() {
+        this.test('package.json files array includes required dirs', () => {
+            const pkgPath = path.join(PACKAGE_ROOT, 'package.json');
+            if (!fs.existsSync(pkgPath)) return false;
+            const files = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')).files || [];
+            return EXPECTED.requiredDirs.every(d => files.includes(d));
+        });
+    }
+
     runFileSystemTests() {
-        this.log('📁 Running file system based tests (npm pack unavailable)');
-
-        // Test 1: Verify required directories exist and are not symlinks
-        this.test('commands directory exists and is not a symlink', () => {
-            const commandsPath = path.join(__dirname, '..', 'commands');
-            return fs.existsSync(commandsPath) && !fs.lstatSync(commandsPath).isSymbolicLink();
-        });
-
-        this.test('templates directory exists and is not a symlink', () => {
-            const templatesPath = path.join(__dirname, '..', 'templates');
-            return fs.existsSync(templatesPath) && !fs.lstatSync(templatesPath).isSymbolicLink();
-        });
-
-        this.test('hooks directory exists and is not a symlink', () => {
-            const hooksPath = path.join(__dirname, '..', 'hooks');
-            return fs.existsSync(hooksPath) && !fs.lstatSync(hooksPath).isSymbolicLink();
-        });
-
-        this.test('subagents directory exists', () => {
-            const subagentsPath = path.join(__dirname, '..', 'subagents');
-            return fs.existsSync(subagentsPath);
-        });
-
-        // Test 2: Count files in each directory
-        this.test('commands/active contains exactly 13 command files', () => {
-            const activeDir = path.join(__dirname, '..', 'commands', 'active');
-            if (!fs.existsSync(activeDir)) return false;
-            const files = fs.readdirSync(activeDir).filter(f => f.endsWith('.md'));
-            return files.length === 13;
-        });
-
-        this.test('commands/experiments contains exactly 45 command files', () => {
-            const expDir = path.join(__dirname, '..', 'commands', 'experiments');
-            if (!fs.existsSync(expDir)) return false;
-            const files = fs.readdirSync(expDir).filter(f => f.endsWith('.md'));
-            return files.length === 45;
-        });
-
-        this.test('subagents directory contains exactly 26 subagent files', () => {
-            const subagentsDir = path.join(__dirname, '..', 'subagents');
-            if (!fs.existsSync(subagentsDir)) return false;
-            const files = fs.readdirSync(subagentsDir).filter(f => f.endsWith('.md'));
-            return files.length === 26;
-        });
-
-        this.test('templates directory contains expected template files', () => {
-            const templatesDir = path.join(__dirname, '..', 'templates');
-            if (!fs.existsSync(templatesDir)) return false;
-            const expectedTemplates = [
-                'basic-settings.json',
-                'comprehensive-settings.json', 
-                'security-focused-settings.json'
-            ];
-            return expectedTemplates.every(template => 
-                fs.existsSync(path.join(templatesDir, template))
-            );
-        });
-
-        this.test('hooks directory contains expected hook files', () => {
-            const hooksDir = path.join(__dirname, '..', 'hooks');
-            if (!fs.existsSync(hooksDir)) return false;
-            const expectedHooks = [
-                'file-logger.sh',
-                'prevent-credential-exposure.sh',
-                'pre-commit-quality.sh',
-                'pre-write-security.sh'
-            ];
-            return expectedHooks.every(hook => 
-                fs.existsSync(path.join(hooksDir, hook))
-            );
-        });
-
-        // Test 3: Verify package.json includes all directories
-        this.test('package.json files array includes required directories', () => {
-            const packagePath = path.join(__dirname, '..', 'package.json');
-            if (!fs.existsSync(packagePath)) return false;
-            
-            const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
-            const files = packageJson.files || [];
-            
-            const requiredDirs = ['commands/', 'templates/', 'hooks/', 'subagents/'];
-            return requiredDirs.every(dir => files.includes(dir));
-        });
-
-        // Summary
-        this.log(`\n📊 File System Test Summary:`);
-        this.log(`✅ Passed: ${this.passed}`);
-        this.log(`❌ Failed: ${this.failed}`);
-        this.log(`📊 Total: ${this.passed + this.failed}`);
-
-        if (this.failed === 0) {
-            this.log('🎉 All file system tests passed! Package structure is valid.', 'success');
-        } else {
-            this.log('💥 Some file system tests failed. Package structure may have issues.', 'error');
-        }
+        this.log('Running file system based tests (npm pack unavailable)');
+        this.runFsDirTests();
+        this.runFsFileCountTests();
+        this.runFsPackageJsonTest();
+        return this.printSummary('File System Test Summary');
     }
 }
 
-// Run tests if called directly
 if (require.main === module) {
     const tester = new PackageCompletenessTest();
     const success = tester.runAllTests();
