@@ -142,13 +142,13 @@ scan_file_content() {
     for pattern_name in "${!CREDENTIAL_PATTERNS[@]}"; do
         local pattern="${CREDENTIAL_PATTERNS[$pattern_name]}"
 
-        if echo "$content" | grep -qiP "$pattern"; then
+        if echo "$content" | grep -qiP -e "$pattern"; then
             log_violation "$pattern_name detected in $file_path" >&2
             violations+=("$pattern_name")
 
             # Extract the matched content for logging (but redact it)
             local matched_line
-            matched_line=$(echo "$content" | grep -iP "$pattern" | head -1)
+            matched_line=$(echo "$content" | grep -iP -e "$pattern" | head -1)
             local redacted_line
             redacted_line=$(echo "$matched_line" | sed 's/[a-zA-Z0-9+/=]\{10,\}/[REDACTED]/g')
 
