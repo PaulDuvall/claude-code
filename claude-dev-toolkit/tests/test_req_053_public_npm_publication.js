@@ -50,7 +50,7 @@ class PublicNpmPublicationTests {
     }
 
     test_automated_public_workflow_exists() {
-        const workflowPath = path.join(__dirname, '../../.github/workflows/npm-publish-simple.yml');
+        const workflowPath = path.join(__dirname, '../../.github/workflows/npm-publish-manual.yml');
         assert(fs.existsSync(workflowPath), 'GitHub Actions workflow for NPM publishing must exist');
         
         const content = fs.readFileSync(workflowPath, 'utf8');
@@ -129,11 +129,8 @@ class PublicNpmPublicationTests {
         assert(content.includes('NPM_TOKEN'), 'Auth script must support token authentication');
     }
 
-    runAllTests() {
-        console.log('🧪 REQ-053: Public NPM Registry Publication Test Suite');
-        console.log('=======================================================');
-
-        const tests = [
+    getTestCases() {
+        return [
             ['publish-public.sh script exists', this.test_publish_public_script_exists],
             ['publish-public.sh has proper structure', this.test_publish_public_script_has_proper_structure],
             ['Automated public workflow exists', this.test_automated_public_workflow_exists],
@@ -145,25 +142,25 @@ class PublicNpmPublicationTests {
             ['Publishing documentation exists', this.test_publishing_documentation_exists],
             ['Authentication setup script exists', this.test_authentication_setup_script_exists]
         ];
+    }
 
-        for (const [testName, testFn] of tests) {
-            this.runTest(testName, testFn);
-        }
-
+    printSummary() {
         console.log(`\n📊 Test Results: ${this.passed} passed, ${this.failed} failed`);
-        
         if (this.failed > 0) {
             console.log('\n🔴 REQ-053: Public NPM Registry Publication tests FAILED');
-            console.log('Missing features need to be implemented:');
-            console.log('  - Public NPM registry publication script');
-            console.log('  - Automated public npm publish workflow');
-            console.log('  - Version tagging automation');
-            console.log('  - Public registry authentication setup');
             return false;
         }
-        
         console.log('\n✅ All REQ-053 tests passed!');
         return true;
+    }
+
+    runAllTests() {
+        console.log('🧪 REQ-053: Public NPM Registry Publication Test Suite');
+        console.log('=======================================================');
+        for (const [name, fn] of this.getTestCases()) {
+            this.runTest(name, fn);
+        }
+        return this.printSummary();
     }
 }
 

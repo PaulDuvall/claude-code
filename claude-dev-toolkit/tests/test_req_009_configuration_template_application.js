@@ -104,7 +104,7 @@ class REQ009ConfigurationTemplateTests {
         assert(fs.existsSync(this.mockSettingsFile), 'Settings file should be created');
         
         const settings = JSON.parse(fs.readFileSync(this.mockSettingsFile, 'utf8'));
-        assert(settings.tools !== undefined, 'Comprehensive template should include tools configuration');
+        assert(settings.permissions !== undefined, 'Comprehensive template should include permissions configuration');
     }
 
     // Test 5: Updates Existing Settings File
@@ -252,11 +252,8 @@ class REQ009ConfigurationTemplateTests {
         assert(basicTemplate.features > 0, 'Should count template features');
     }
 
-    runAllTests() {
-        console.log('🧪 REQ-009: Configuration Template Application Test Suite');
-        console.log('=========================================================');
-        
-        const tests = [
+    getTestCases() {
+        return [
             ['Configuration template application module exists', this.test_configuration_template_application_module_exists],
             ['Applies basic template', this.test_applies_basic_template],
             ['Applies security-focused template', this.test_applies_security_focused_template],
@@ -271,21 +268,23 @@ class REQ009ConfigurationTemplateTests {
             ['JSONC parsing', this.test_jsonc_parsing],
             ['Available templates discovery', this.test_available_templates_discovery]
         ];
+    }
 
-        for (const [testName, testFn] of tests) {
-            this.runTest(testName, testFn);
-        }
-
-        console.log('');
-        console.log('📊 REQ-009 Test Results:');
-        console.log(`✅ Passed: ${this.passed}`);
-        console.log(`❌ Failed: ${this.failed}`);
-        console.log(`📈 Success Rate: ${((this.passed / (this.passed + this.failed)) * 100).toFixed(1)}%`);
-
-        // Cleanup
-        this.cleanup();
-        
+    printSummary() {
+        const rate = ((this.passed / (this.passed + this.failed)) * 100).toFixed(1);
+        console.log(`\n📊 REQ-009 Test Results:`);
+        console.log(`Passed: ${this.passed}, Failed: ${this.failed}, Rate: ${rate}%`);
         return this.failed === 0;
+    }
+
+    runAllTests() {
+        console.log('🧪 REQ-009: Configuration Template Application Test Suite');
+        console.log('=========================================================');
+        for (const [name, fn] of this.getTestCases()) {
+            this.runTest(name, fn);
+        }
+        this.cleanup();
+        return this.printSummary();
     }
 }
 
