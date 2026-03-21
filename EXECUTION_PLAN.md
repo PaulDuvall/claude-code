@@ -6,7 +6,7 @@
 # Execution Plan
 
 **Status:** 🔄 IN PROGRESS | Generated: 2026-03-20T23:00:00-04:00
-**Total tasks:** 24 | **Done:** 19 | **Remaining:** 5
+**Total tasks:** 24 | **Done:** 20 | **Remaining:** 4
 
 ## Context Saturation Protocol
 
@@ -41,7 +41,7 @@ After completing each task:
 | 14 | b9v | Implement uninstall mechanism for claude-dev-toolkit | ✅ done | #7 ✅ | 2026-03-20 | 2026-03-20 |
 | 15 | x51 | Add functional tests for hooks, hooks/lib, and slash commands | ⏳ pending | #1 ✅, #2 ✅, #3 ✅, #4 ✅, #7 ✅, #9 ✅ | | |
 | 16 | coh | Fix test claims, subagent validation, CLI flags, Windows support claim | ⏳ pending | #15 | | |
-| 17 | fr2 | Standardize subagent and slash command definition formats | ⏳ pending | #7 ✅, #9 ✅ | | |
+| 17 | fr2 | Standardize subagent and slash command definition formats | ✅ done | #7 ✅, #9 ✅ | 2026-03-20 | 2026-03-20 |
 | 18 | di4 | Clean up NPM package: remove backups, add LICENSE, drop Jest | ✅ done | #7 ✅ | 2026-03-20 | 2026-03-20 |
 | 19 | 7wz | Create xverify slash command for pre-action verification | ⏳ pending | #7 ✅ | | |
 | 20 | lop | Repo hygiene: remove empty files, binaries, .DS_Store, -OLD templates | ✅ done | none | 2026-03-20 | 2026-03-20 |
