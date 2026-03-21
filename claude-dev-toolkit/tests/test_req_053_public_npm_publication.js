@@ -57,7 +57,7 @@ class PublicNpmPublicationTests {
         assert(content.includes('npm publish'), 'Workflow must include npm publish step');
         assert(content.includes('registry.npmjs.org'), 'Workflow must target public npm registry');
         assert(content.includes('workflow_dispatch'), 'Workflow must be manually triggerable');
-        assert(content.includes('npm_token'), 'Workflow must have NPM token input');
+        assert(content.includes('NPM_TOKEN') || content.includes('npm_token'), 'Workflow must use NPM token for authentication');
     }
 
     test_version_tagging_automation() {
