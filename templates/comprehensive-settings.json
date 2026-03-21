@@ -25,7 +25,25 @@
     ]
   },
   "hooks": {
-    "PreToolUse": [],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/prevent-credential-exposure.sh",
+            "blocking": true,
+            "timeout": 10000
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/verify-before-edit.sh",
+            "blocking": false,
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
     "PostToolUse": []
   },
   "env": {

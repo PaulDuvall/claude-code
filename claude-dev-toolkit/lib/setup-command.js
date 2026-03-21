@@ -196,20 +196,57 @@ class SetupCommand {
     }
 
     /**
-     * Install hooks
+     * Install hooks and their lib/ dependencies to ~/.claude/hooks/
      */
     async installHooks() {
         console.log('🎣 Installing hooks...');
-        
+
         try {
-            // Check if hooks installer is available
             const hooksInstaller = require('./hook-installer');
-            await hooksInstaller.install();
-            console.log('   ✅ Hooks installed successfully');
+            const targetHooksDir = path.join(this.claudeDir, 'hooks');
+            const availableHooks = hooksInstaller.getAvailableHooks();
+            const hookNames = availableHooks.map(h => h.name);
+
+            const result = hooksInstaller.installSecurityHooks(
+                targetHooksDir,
+                hookNames,
+                { force: true, backup: true }
+            );
+
+            if (result.success) {
+                console.log(`   ✅ ${result.installed.length} hooks installed`);
+            } else {
+                console.log(`   ⚠️  Hook installation had issues: ${result.errors.join(', ')}`);
+            }
+
+            // Copy lib/ directory (shared modules required by most hooks)
+            this._installHookLibs(targetHooksDir);
+
         } catch (error) {
             console.log(`   ⚠️  Hooks installation skipped: ${error.message}`);
-            // Don't fail setup for hooks
         }
+    }
+
+    /**
+     * Copy hooks/lib/ modules to target directory
+     */
+    _installHookLibs(targetHooksDir) {
+        const sourceLibDir = path.join(__dirname, '..', 'hooks', 'lib');
+        const targetLibDir = path.join(targetHooksDir, 'lib');
+
+        if (!fs.existsSync(sourceLibDir)) {
+            return;
+        }
+
+        fs.mkdirSync(targetLibDir, { recursive: true });
+
+        const libFiles = fs.readdirSync(sourceLibDir).filter(f => f.endsWith('.sh'));
+        for (const file of libFiles) {
+            const content = fs.readFileSync(path.join(sourceLibDir, file), 'utf8');
+            fs.writeFileSync(path.join(targetLibDir, file), content, { mode: 0o755 });
+        }
+
+        console.log(`   ✅ ${libFiles.length} lib modules installed`);
     }
 
     /**
@@ -241,6 +278,19 @@ class SetupCommand {
             issues.push('Cannot read commands directory');
         }
         
+        // Check hooks installation
+        const hooksDir = path.join(this.claudeDir, 'hooks');
+        if (fs.existsSync(hooksDir)) {
+            const hooks = fs.readdirSync(hooksDir).filter(f => f.endsWith('.sh'));
+            if (hooks.length > 0) {
+                console.log(`   ✅ ${hooks.length} hooks installed`);
+            } else {
+                issues.push('Hooks directory exists but no hooks found');
+            }
+        } else {
+            issues.push('Hooks directory not found');
+        }
+
         // Check configuration
         if (fs.existsSync(this.settingsFile)) {
             console.log('   ✅ Configuration file present');
