@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
+set -uo pipefail
 
 # Subagent Discovery Module for Subagent-Hook Integration
-# 
+#
 # This module provides functionality to discover, locate, and enumerate
 # available subagents across different directory hierarchies.
 
+# Include guard
+[[ -n "${_SUBAGENT_DISCOVERY_LOADED:-}" ]] && return 0
+_SUBAGENT_DISCOVERY_LOADED=1
+
 # Source required modules
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="${SCRIPT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 source "$SCRIPT_DIR/config-constants.sh"
 source "$SCRIPT_DIR/file-utils.sh"
 source "$SCRIPT_DIR/error-handler.sh"

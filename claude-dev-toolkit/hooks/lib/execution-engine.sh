@@ -1,15 +1,22 @@
 #!/usr/bin/env bash
+set -uo pipefail
 
 # Execution Engine Module for Subagent-Hook Integration
-# 
+#
 # This module provides functionality to execute subagents with proper
 # timeout handling, blocking/non-blocking modes, and result processing.
 
+# Include guard
+[[ -n "${_EXECUTION_ENGINE_LOADED:-}" ]] && return 0
+_EXECUTION_ENGINE_LOADED=1
+
 # Source required modules
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="${SCRIPT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 source "$SCRIPT_DIR/config-constants.sh"
 source "$SCRIPT_DIR/file-utils.sh"
 source "$SCRIPT_DIR/error-handler.sh"
+source "$SCRIPT_DIR/execution-simulation.sh"
+source "$SCRIPT_DIR/execution-results.sh"
 
 ##################################
 # Execution State Management
@@ -210,199 +217,9 @@ EOF
 }
 
 ##################################
-# Subagent Simulation Functions
+# Simulation and Results
 ##################################
-
-execute_subagent_simulation() {
-    local subagent_file="$1"
-    local context_file="$2"
-    local timeout="$3"
-    
-    local subagent_name
-    subagent_name=$(basename "$subagent_file" "$SUBAGENT_FILE_EXTENSION")
-    
-    log_debug "Simulating subagent execution: $subagent_name"
-    
-    # Extract subagent configuration
-    local tools description
-    tools=$(extract_frontmatter_field "$subagent_file" "tools" false 2>/dev/null || echo "all")
-    description=$(extract_frontmatter_field "$subagent_file" "description" false 2>/dev/null || echo "No description")
-    
-    # Create simulated output
-    local simulation_output
-    simulation_output=$(cat <<EOF
-Subagent Execution Report
-========================
-Name: $subagent_name
-Description: $description
-Tools: ${tools:-all}
-Execution Time: $(date)
-Status: Executed successfully
-
-Context Analysis:
-$(analyze_context_for_simulation "$context_file")
-
-Recommendations:
-- Operation appears safe to proceed
-- No security violations detected
-- Code style conforms to standards
-- Continue with planned action
-
-Execution Summary:
-- Analysis completed successfully
-- No blocking issues found
-- Ready for next step in workflow
-EOF
-    )
-    
-    # Write to output file
-    if ! echo "$simulation_output" > "$EXECUTION_OUTPUT_FILE"; then
-        log_error "Failed to write simulation output"
-        return $EXIT_EXECUTION_FAILED
-    fi
-    
-    # Simulate processing time (shorter for testing)
-    sleep 1
-    
-    # Check for timeout simulation
-    local execution_time=$(($(date +%s) - EXECUTION_START_TIME))
-    local timeout_seconds=$((timeout / 1000))
-    
-    if [[ $execution_time -gt $timeout_seconds ]]; then
-        log_error "Simulated timeout exceeded: ${execution_time}s > ${timeout_seconds}s"
-        return $EXIT_TIMEOUT
-    fi
-    
-    log_debug "Subagent simulation completed successfully: $subagent_name"
-    return $EXIT_SUCCESS
-}
-
-analyze_context_for_simulation() {
-    local context_file="$1"
-    
-    if [[ ! -f "$context_file" ]]; then
-        echo "Context file not available"
-        return
-    fi
-    
-    # Extract key information from context
-    local event_type file_path git_branch
-    
-    if command -v jq >/dev/null 2>&1; then
-        event_type=$(jq -r '.event.type // "unknown"' "$context_file" 2>/dev/null)
-        file_path=$(jq -r '.file.path // "none"' "$context_file" 2>/dev/null)
-        git_branch=$(jq -r '.git.branch // "unknown"' "$context_file" 2>/dev/null)
-    else
-        event_type="unknown"
-        file_path="none"
-        git_branch="unknown"
-    fi
-    
-    cat <<EOF
-- Event Type: $event_type
-- Target File: $file_path
-- Git Branch: $git_branch
-- Analysis: Standard workflow operation detected
-EOF
-}
-
-##################################
-# Result Processing Functions
-##################################
-
-process_execution_results() {
-    local subagent_name="$1"
-    local execution_mode="$2"
-    
-    log_debug "Processing execution results for: $subagent_name"
-    
-    if [[ ! -f "$EXECUTION_OUTPUT_FILE" ]]; then
-        log_error "Execution output file not found: $EXECUTION_OUTPUT_FILE"
-        return $EXIT_EXECUTION_FAILED
-    fi
-    
-    # Read execution output
-    local output_content
-    if ! output_content=$(read_file_safely "$EXECUTION_OUTPUT_FILE"); then
-        log_error "Failed to read execution output"
-        return $EXIT_EXECUTION_FAILED
-    fi
-    
-    EXECUTION_RESULT="$output_content"
-    
-    # Check for blocking conditions in output
-    if check_for_blocking_conditions "$output_content"; then
-        log_warning "Subagent $subagent_name recommends BLOCKING the operation"
-        
-        if [[ "$execution_mode" == "blocking" ]]; then
-            # In blocking mode, this should fail the hook
-            display_blocking_message "$subagent_name" "$output_content"
-            return $EXIT_EXECUTION_FAILED
-        else
-            # In non-blocking mode, just log the warning
-            log_warning "Non-blocking mode: continuing despite blocking recommendation"
-        fi
-    fi
-    
-    # Log success
-    log_info "Execution results processed successfully: $subagent_name"
-    return $EXIT_SUCCESS
-}
-
-check_for_blocking_conditions() {
-    local output_content="$1"
-    
-    # First check for positive/safe patterns - these override blocking
-    local safe_patterns=(
-        "Operation appears safe to proceed"
-        "Continue with planned action"
-        "No security violations detected" 
-        "Status: Executed successfully"
-        "safe to proceed"
-        "continue with"
-    )
-    
-    local pattern
-    for pattern in "${safe_patterns[@]}"; do
-        if echo "$output_content" | grep -qi "$pattern"; then
-            log_debug "Safe operation pattern found: $pattern"
-            return $EXIT_GENERAL_ERROR  # No blocking condition - safe to proceed
-        fi
-    done
-    
-    # Look for explicit blocking directives only
-    local blocking_patterns=(
-        "OPERATION MUST BE BLOCKED"
-        "SECURITY VIOLATION DETECTED"
-        "CRITICAL ERROR - STOP"
-        "STOP EXECUTION IMMEDIATELY"
-        "ABORT OPERATION"
-        "BLOCK THIS OPERATION"
-    )
-    
-    for pattern in "${blocking_patterns[@]}"; do
-        if echo "$output_content" | grep -qi "$pattern"; then
-            log_debug "Blocking pattern found: $pattern"
-            return $EXIT_SUCCESS  # Found blocking condition
-        fi
-    done
-    
-    # Default: if no explicit safe or blocking patterns, allow operation
-    log_debug "No explicit blocking conditions found, allowing operation"
-    return $EXIT_GENERAL_ERROR  # No blocking condition found
-}
-
-display_blocking_message() {
-    local subagent_name="$1"
-    local output_content="$2"
-    
-    echo "🚨 OPERATION BLOCKED by subagent: $subagent_name" >&2
-    echo "" >&2
-    echo "Reason:" >&2
-    echo "$output_content" | head -20 >&2
-    echo "" >&2
-    echo "The operation has been blocked for safety. Please review the subagent's feedback above." >&2
-}
+# See: execution-simulation.sh, execution-results.sh
 
 ##################################
 # Multiple Subagent Execution

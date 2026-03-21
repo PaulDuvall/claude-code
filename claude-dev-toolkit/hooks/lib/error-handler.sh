@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
+set -uo pipefail
 
 # Error Handling Module for Subagent-Hook Integration
-# 
+#
 # This module provides standardized error handling, logging, and recovery
 # mechanisms for the subagent-hook integration system.
 
+# Include guard
+[[ -n "${_ERROR_HANDLER_LOADED:-}" ]] && return 0
+_ERROR_HANDLER_LOADED=1
+
 # Source required modules
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="${SCRIPT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 source "$SCRIPT_DIR/config-constants.sh"
 source "$SCRIPT_DIR/file-utils.sh"
 
@@ -380,7 +385,7 @@ validate_error_handler_dependencies() {
     local missing_commands=()
     
     # Check for required commands
-    local required_commands=("date" "tee" "find" "sed" "hostname")
+    local required_commands=("date" "tee" "find" "sed")
     
     for cmd in "${required_commands[@]}"; do
         if ! command -v "$cmd" >/dev/null 2>&1; then

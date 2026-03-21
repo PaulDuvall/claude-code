@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
+set -uo pipefail
 
 # File Utilities Module for Subagent-Hook Integration
-# 
+#
 # This module provides standardized file operations with proper error handling,
 # security checks, and logging for the subagent-hook integration system.
 
+# Include guard
+[[ -n "${_FILE_UTILS_LOADED:-}" ]] && return 0
+_FILE_UTILS_LOADED=1
+
 # Source required modules
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="${SCRIPT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 source "$SCRIPT_DIR/config-constants.sh"
 
 ##################################
@@ -141,20 +146,17 @@ write_file_safely() {
 
 create_temp_file() {
     local prefix="${1:-$CONTEXT_FILE_PREFIX}"
-    local suffix="${2:-$$}"
-    
-    local temp_file="${prefix}-${suffix}.tmp"
-    
-    # Create empty temp file with secure permissions
-    if ! touch "$temp_file" 2>/dev/null; then
-        return $EXIT_GENERAL_ERROR
-    fi
-    
+    local _suffix="${2:-}"  # kept for API compat; mktemp adds randomness
+
+    # Use mktemp for unpredictable temp file names
+    local temp_file
+    temp_file=$(mktemp "${prefix}-XXXXXX") || return $EXIT_GENERAL_ERROR
+
     if ! chmod "$SECURE_FILE_PERMISSIONS" "$temp_file" 2>/dev/null; then
         rm -f "$temp_file" 2>/dev/null
         return $EXIT_GENERAL_ERROR
     fi
-    
+
     echo "$temp_file"
     return $EXIT_SUCCESS
 }
@@ -355,35 +357,42 @@ ensure_log_files() {
 
 validate_path_safety() {
     local path="$1"
-    
+
     if [[ -z "$path" ]]; then
         return $EXIT_GENERAL_ERROR
     fi
-    
-    # Check for path traversal attempts
-    if [[ "$path" == *".."* ]] || [[ "$path" == *"/./"* ]]; then
+
+    # Resolve to canonical path to prevent traversal via symlinks/..
+    local resolved
+    resolved=$(realpath -m "$path" 2>/dev/null) || resolved="$path"
+
+    # Check for path traversal in the resolved path
+    if [[ "$resolved" == *".."* ]] || [[ "$resolved" == *"/./"* ]]; then
         return $EXIT_SECURITY_VIOLATION
     fi
-    
+
     # Check for absolute paths outside allowed directories
-    if [[ "$path" = /* ]]; then
+    if [[ "$resolved" = /* ]]; then
         # Allow paths within Claude base directory
-        if [[ "$path" == "$CLAUDE_BASE_DIR"* ]]; then
+        if [[ "$resolved" == "$CLAUDE_BASE_DIR"* ]]; then
             return $EXIT_SUCCESS
         fi
-        
+
         # Allow paths within project directory
-        if [[ "$path" == "$(pwd)"* ]]; then
+        local cwd
+        cwd=$(pwd)
+        if [[ "$resolved" == "$cwd"* ]]; then
             return $EXIT_SUCCESS
         fi
-        
-        # Allow temp files
-        if [[ "$path" == "/tmp/claude-subagent"* ]]; then
+
+        # Allow temp files (TMPDIR-aware)
+        local tmpdir="${TMPDIR:-/tmp}"
+        if [[ "$resolved" == "${tmpdir}/claude-subagent"* ]]; then
             return $EXIT_SUCCESS
         fi
-        
+
         return $EXIT_SECURITY_VIOLATION
     fi
-    
+
     return $EXIT_SUCCESS
 }

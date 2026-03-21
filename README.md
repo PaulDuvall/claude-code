@@ -326,7 +326,7 @@ Advanced commands for specialized workflows:
 - **Advanced Security**: `/xred`, `/xrisk`, `/xscan`
 - **Performance**: `/xperformance`, `/xoptimize`
 
-Deploy with: `./deploy.sh --experiments`
+Deploy with: `cd claude-dev-toolkit && npm run install-commands`
 
 ## Why Use This?
 
@@ -382,7 +382,7 @@ claude-commands status
 
 # Commands are now available in Claude Code
 claude
-/xhelp    # List all available commands
+claude-commands list   # List all available commands
 ```
 
 **Quick one-liner without global install:**
@@ -396,40 +396,33 @@ npx @paulduvall/claude-dev-toolkit
 npm uninstall -g @paulduvall/claude-dev-toolkit
 ```
 
-### 🚀 **Development Setup (For Contributors)**
+### Development Setup (For Contributors)
 ```bash
 git clone https://github.com/PaulDuvall/claude-code.git
-cd claude-code
-./setup.sh                           # Basic setup with 15 core commands + subagents
-./setup.sh --setup-type security     # Includes security hooks
-./setup.sh --setup-type comprehensive # All commands + all subagents + security
-./setup.sh --skip-subagents          # Skip subagent deployment
+cd claude-code/claude-dev-toolkit
+npm install                          # Install dependencies
+npm test                             # Run all tests
 ```
 
-### ⚙️ **Manual Setup**
+### Manual Setup
 ```bash
-./deploy.sh                   # Deploy core commands only
-./deploy.sh --experiments     # Deploy experimental commands  
-./deploy.sh --all            # Deploy all 59 commands
-./deploy-subagents.sh         # Deploy subagents separately
-./deploy-subagents.sh --all   # Deploy all available subagents
+bash scripts/sync-to-npm.sh          # Sync source files to npm package
+bash scripts/deploy-subagents.sh --all  # Deploy all subagents
 ```
 
-### 🔧 **Troubleshooting**
+### Troubleshooting
 ```bash
-./verify-setup.sh            # Diagnose installation issues
-./validate-commands.sh       # Validate command integrity
-ls ~/.claude/commands/x*.md  # List installed commands
+cd claude-dev-toolkit && npm test     # Validate package integrity
+ls ~/.claude/commands/x*.md           # List installed commands
 ```
 
 **Common Issues:**
 - Commands not recognized? Restart Claude Code: `claude`
-- Permission errors? Re-run: `./setup.sh`
 - Need help? Each command has built-in help: `/xtest help`
 
 ## Repository Structure
 
-- **`slash-commands/active/`** - 13 production-ready commands (deployed by default)
+- **`slash-commands/active/`** - 15 production-ready commands (deployed by default)
 - **`slash-commands/experiments/`** - 46 experimental/conceptual commands  
 - **`subagents/`** - AI specialist subagents with persistent context
 - **`hooks/`** - Hybrid hook architecture with lightweight triggers
@@ -438,7 +431,7 @@ ls ~/.claude/commands/x*.md  # List installed commands
     - `pre-commit-quality.sh` - Quality checks → style-enforcer subagent
     - `on-error-debug.sh` - Error analysis → debug-specialist subagent  
     - `subagent-trigger-simple.sh` - General-purpose subagent trigger
-  - **`lib/`** - Modular foundation (8 specialized modules):
+  - **`lib/`** - Modular foundation (12 specialized modules):
     - `config-constants.sh` - Configuration constants and validation
     - `file-utils.sh` - Secure file operations and path validation  
     - `error-handler.sh` - Standardized error handling and logging
@@ -446,7 +439,11 @@ ls ~/.claude/commands/x*.md  # List installed commands
     - `argument-parser.sh` - CLI argument parsing with validation
     - `subagent-discovery.sh` - Subagent discovery and enumeration
     - `subagent-validator.sh` - Comprehensive subagent validation
-    - `execution-engine.sh` - Advanced execution patterns (for complex scenarios)
+    - `execution-engine.sh` - Advanced execution patterns
+    - `execution-simulation.sh` - Execution simulation
+    - `execution-results.sh` - Result processing
+    - `field-validators.sh` - Field validation
+    - `validation-reporter.sh` - Validation reporting
 - **`templates/`** - Configuration templates for different use cases
   - `subagent-hooks.yaml` - Event mapping configuration template
   - `hybrid-hook-config.yaml` - Hybrid architecture configuration guide
@@ -535,12 +532,10 @@ Releases are fully automated when commits are merged to `main`:
 
 Currently in **alpha** (0.0.x-alpha.y) until v1.0.0 production release.
 
-See our [Contributing Guide](./docs/CONTRIBUTING.md) for complete details on conventional commits and the release process.
-
 ### Command Development
 1. Create new commands in `slash-commands/active/` or `slash-commands/experiments/`
-2. Validate with `./validate-commands.sh`
-3. Test locally with `./deploy.sh --include yourcommand`
+2. Sync to npm: `bash scripts/sync-to-npm.sh`
+3. Run tests: `cd claude-dev-toolkit && npm test`
 4. Follow existing patterns and security best practices
 
 ### Hybrid Hook Development

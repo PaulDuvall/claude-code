@@ -6,7 +6,7 @@
 # Execution Plan
 
 **Status:** 🔄 IN PROGRESS | Generated: 2026-03-20T23:00:00-04:00
-**Total tasks:** 24 | **Done:** 14 | **Remaining:** 10
+**Total tasks:** 24 | **Done:** 17 | **Remaining:** 7
 
 ## Context Saturation Protocol
 
@@ -32,11 +32,11 @@ After completing each task:
 | 5 | 21m | Fix CI/CD security: pin actions, guard badge-update, fix counts | ✅ done | none | 2026-03-20 | 2026-03-20 |
 | 6 | 5je | Fix devcontainer firewall: add lifecycle hook and NET_ADMIN | ✅ done | none | 2026-03-20 | 2026-03-20 |
 | 7 | anl | Eliminate duplicate file maintenance between repo root and npm package | ✅ done | none | 2026-03-20 | 2026-03-20 |
-| 8 | m27 | Reduce oversized files and remove dead code | ⏳ pending | #7 ✅ | | |
+| 8 | m27 | Reduce oversized files and remove dead code | ✅ done | #7 ✅ | 2026-03-20 | 2026-03-20 |
 | 9 | 4zj | Remove or implement 13 stub hooks, clean security templates | ✅ done | #1 ✅ | 2026-03-20 | 2026-03-20 |
-| 10 | mpf | Harden hooks/lib: mktemp, realpath, set -e, include guards | ⏳ pending | #7 ✅, #9 ✅ | | |
+| 10 | mpf | Harden hooks/lib: mktemp, realpath, set -e, include guards | ✅ done | #7 ✅, #9 ✅ | 2026-03-20 | 2026-03-20 |
 | 11 | 7bt | Fix security anti-patterns in documentation and templates | ✅ done | none | 2026-03-20 | 2026-03-20 |
-| 12 | 5rg | Fix critical documentation drift: CLAUDE.md, README.md, /xhelp | ⏳ pending | #7, #8, #9 | | |
+| 12 | 5rg | Fix critical documentation drift: CLAUDE.md, README.md, /xhelp | ✅ done | #7, #8, #9 | 2026-03-20 | 2026-03-20 |
 | 13 | 1g3 | Create CONTRIBUTING.md or remove all references | ⏳ pending | #12 | | |
 | 14 | b9v | Implement uninstall mechanism for claude-dev-toolkit | ⏳ pending | #7 ✅ | | |
 | 15 | x51 | Add functional tests for hooks, hooks/lib, and slash commands | ⏳ pending | #1 ✅, #2 ✅, #3 ✅, #4 ✅, #7 ✅, #9 ✅ | | |

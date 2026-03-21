@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
+set -uo pipefail
 
 # Context Management Module for Subagent-Hook Integration
-# 
+#
 # This module provides functionality to gather, manage, and pass context
 # information to subagents during hook execution.
 
+# Include guard
+[[ -n "${_CONTEXT_MANAGER_LOADED:-}" ]] && return 0
+_CONTEXT_MANAGER_LOADED=1
+
 # Source required modules
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="${SCRIPT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 source "$SCRIPT_DIR/config-constants.sh"
 source "$SCRIPT_DIR/file-utils.sh"
 source "$SCRIPT_DIR/error-handler.sh"
@@ -206,7 +211,7 @@ gather_system_context() {
     system_context=$(cat <<EOF
 {
   "system": {
-    "hostname": "$(hostname 2>/dev/null || echo 'unknown')",
+    "hostname": "redacted",
     "os": "$(uname -s 2>/dev/null || echo 'unknown')",
     "architecture": "$(uname -m 2>/dev/null || echo 'unknown')",
     "shell": "${SHELL##*/}",

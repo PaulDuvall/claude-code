@@ -14,7 +14,7 @@ const path = require('path');
 // Shared constants — single source of truth for expected counts and files
 const EXPECTED = {
     activeCommandCount: 15,
-    experimentalCommandCount: 45,
+    experimentalCommandCount: 46,
     subagentCount: 26,
     templates: [
         'basic-settings.json',
@@ -24,23 +24,13 @@ const EXPECTED = {
     ],
     hooks: [
         'file-logger.sh',
-        'prevent-credential-exposure.sh',
+        'on-error-debug.sh',
         'pre-commit-quality.sh',
-        'pre-write-security.sh',
-        'backup-before-edit.sh',
-        'audit-bash-commands.sh',
-        'log-all-operations.sh',
-        'validate-changes.sh',
-        'handle-notifications.sh',
-        'prompt-analysis.sh',
-        'cleanup-on-stop.sh',
-        'subagent-cleanup.sh',
-        'session-cleanup.sh',
-        'pre-compact-backup.sh',
-        'session-init.sh',
-        'prompt-security-scan.sh',
-        'security-session-init.sh',
         'pre-commit-test-runner.sh',
+        'pre-write-security.sh',
+        'prevent-credential-exposure.sh',
+        'subagent-trigger-simple.sh',
+        'subagent-trigger.sh',
         'verify-before-edit.sh'
     ],
     requiredDirs: ['commands/', 'templates/', 'hooks/', 'subagents/']

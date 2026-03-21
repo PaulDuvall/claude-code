@@ -26,30 +26,52 @@ All commands are designed to enhance developer productivity while maintaining se
 claude-code/
 ├── CLAUDE.md                           # This file - project guidance
 ├── README.md                           # Main project documentation
-├── setup.sh                           # One-command setup script
-├── configure-claude-code.sh            # Configuration automation
-├── deploy.sh                          # Command deployment script
-├── verify-setup.sh                    # Setup validation and diagnostics
-├── validate-commands.sh               # Command validation script
+├── setup-devcontainer.sh               # Devcontainer setup script
+├── claude-dev-toolkit/                 # NPM package (distributable toolkit)
+│   ├── package.json                   # NPM package manifest
+│   ├── bin/claude-commands            # CLI entry point
+│   ├── lib/                           # JavaScript modules
+│   ├── scripts/                       # Install/publish scripts
+│   ├── commands/                      # Synced command copies for npm
+│   ├── hooks/                         # Synced hook copies for npm
+│   ├── subagents/                     # Synced subagent copies for npm
+│   ├── templates/                     # Synced template copies for npm
+│   └── tests/                         # NPM package tests
 ├── docs/                              # Documentation directory
 │   ├── claude-custom-commands.md      # Command reference guide
 │   ├── claude-code-hooks-system.md    # Hooks documentation
-│   └── post-advanced-claude-code.md   # Advanced usage guide
-├── hooks/                             # Hook implementations (22 hooks)
+│   ├── devcontainer-guide.md          # Devcontainer guide
+│   └── subagent-hook-integration.md   # Subagent integration docs
+├── hooks/                             # Hook implementations (9 hooks)
 │   ├── file-logger.sh                # File operation logging
+│   ├── on-error-debug.sh             # Error debugging hook
+│   ├── pre-commit-quality.sh         # Pre-commit quality checks
+│   ├── pre-commit-test-runner.sh     # Auto-detect and run tests
+│   ├── pre-write-security.sh         # Pre-write security validation
 │   ├── prevent-credential-exposure.sh # Credential exposure prevention
-│   ├── pre-commit-test-runner.sh     # Auto-detect and run tests before commits
+│   ├── subagent-trigger.sh           # Subagent trigger hook
+│   ├── subagent-trigger-simple.sh    # Simple subagent trigger
 │   ├── verify-before-edit.sh         # Warn about fabricated references
-│   └── [18 additional hooks]         # Lifecycle, audit, and cleanup hooks
+│   └── lib/                           # Hook support libraries (12 modules)
+│       ├── config-constants.sh        # Configuration constants
+│       ├── file-utils.sh             # File utility functions
+│       ├── error-handler.sh          # Error handling and logging
+│       ├── argument-parser.sh        # CLI argument parsing
+│       ├── context-manager.sh        # Context management
+│       ├── execution-engine.sh       # Subagent execution engine
+│       ├── execution-simulation.sh   # Execution simulation
+│       ├── execution-results.sh      # Result processing
+│       ├── subagent-discovery.sh     # Subagent discovery
+│       ├── subagent-validator.sh     # Subagent validation
+│       ├── field-validators.sh       # Field validation
+│       └── validation-reporter.sh    # Validation reporting
 ├── lib/                               # Shared utility libraries
-│   ├── auth.sh                        # Authentication utilities
-│   ├── config.sh                     # Configuration management
-│   ├── ide.sh                        # IDE integration
-│   ├── mcp.sh                        # MCP server setup
-│   ├── os-detection.sh               # OS detection utilities
-│   ├── utils.sh                      # General utilities
-│   └── validation.sh                 # Validation functions
-├── slash-commands/                    # Command implementations
+│   └── logging.sh                    # Logging utilities
+├── scripts/                           # Build and deployment scripts
+│   ├── sync-to-npm.sh               # Sync source files to npm package
+│   ├── deploy-subagents.sh          # Subagent deployment
+│   └── update-subagent-settings.py  # Settings updater
+├── slash-commands/                    # Command implementations (source of truth)
 │   ├── active/                        # 15 production-ready commands
 │   │   ├── xarchitecture.md          # Architecture design and analysis
 │   │   ├── xconfig.md                # Configuration management
@@ -78,32 +100,37 @@ claude-code/
 │       ├── xperformance.md           # Performance optimization
 │       ├── xplanning.md              # Project planning
 │       ├── xrisk.md                  # Risk assessment
-│       └── [32 additional commands]  # Complete experimental collection
+│       └── [35 additional commands]  # Complete experimental collection
+├── subagents/                         # 26 subagent definitions
 ├── specs/                             # Command specifications
 │   ├── command-specifications.md      # Command development specs
 │   ├── custom-command-specifications.md # Custom command guidelines
-│   ├── help-functionality-specification.md # Help system specs
-│   └── tests/                        # Specification tests
-└── templates/                         # Configuration templates
-    ├── basic-settings.json           # Basic Claude Code settings
-    ├── comprehensive-settings.json   # Advanced settings
-    ├── security-focused-settings.json # Security-focused config
-    └── global-claude.md              # Global CLAUDE.md instructions template
+│   └── help-functionality-specification.md # Help system specs
+├── templates/                         # Configuration templates
+│   ├── basic-settings.json           # Basic Claude Code settings
+│   ├── comprehensive-settings.json   # Advanced settings
+│   ├── security-focused-settings.json # Security-focused config
+│   └── global-claude.md              # Global CLAUDE.md instructions template
+└── tests/                             # Shell-based test suites
+    ├── test_setup_devcontainer.sh    # Devcontainer tests
+    ├── test_devcontainer_advanced.sh # Advanced devcontainer tests
+    ├── test_logging.sh               # Logging tests
+    └── test_subagent_hook_integration.sh # Integration tests
 ```
 
 ## Command Categories
 
-### 🎯 Planning & Strategy
+### Planning & Strategy
 - `/xplanning` - Project planning with roadmaps and estimation
 - `/xproduct` - Product management and feature planning
 - `/xrisk` - Risk assessment and mitigation
 
-### 🏗️ Architecture & Design
+### Architecture & Design
 - `/xarchitecture` - System architecture design with proven patterns
 - `/xdesign` - Software design patterns and decisions
 - `/xconstraints` - Design constraint analysis
 
-### 💻 Development & Code Quality
+### Development & Code Quality
 - `/xrefactor` - Interactive code refactoring
 - `/xquality` - Code quality analysis with linting
 - `/xtdd` - Test-driven development automation
@@ -113,18 +140,18 @@ claude-code/
 - `/xcontinue` - Execution plan continuation across sessions
 - `/xexplore` - Codebase exploration before changes (read-only)
 
-### 🔒 Security & Compliance
+### Security & Compliance
 - `/xsecurity` - Security vulnerability scanning
 - `/xcompliance` - Compliance checking
 - `/xpolicy` - Policy enforcement and governance
 
-### 🚀 CI/CD & Deployment
+### CI/CD & Deployment
 - `/xgit` - Automated Git workflow
 - `/xcicd` - CI/CD pipeline management
 - `/xpipeline` - Build pipeline optimization
 - `/xrelease` - Release management
 
-### 🏗️ Infrastructure & Operations
+### Infrastructure & Operations
 - `/xinfra` - Infrastructure as Code management
 - `/xmonitoring` - Application monitoring setup
 - `/xmetrics` - Performance metrics collection
@@ -156,12 +183,12 @@ The actual command logic and automation steps.
 ### Security Requirements
 
 **CRITICAL**: This repository only supports defensive security tools and analysis:
-- ✅ Security vulnerability scanning and detection
-- ✅ Code quality analysis and improvement
-- ✅ Compliance checking and governance
-- ✅ Defensive security automation
-- ❌ Never create offensive security tools
-- ❌ Never assist with malicious code or attacks
+- Security vulnerability scanning and detection
+- Code quality analysis and improvement
+- Compliance checking and governance
+- Defensive security automation
+- Never create offensive security tools
+- Never assist with malicious code or attacks
 
 ### Command Development Standards
 
@@ -171,23 +198,18 @@ The actual command logic and automation steps.
 4. **Idempotent Operations**: Commands should be safe to run multiple times
 5. **Clear Output**: Provide structured, actionable feedback to users
 
-### Testing Commands
+### Testing
 
 ```bash
-# Validate all commands before deployment
-./validate-commands.sh
+# Run NPM package tests
+cd claude-dev-toolkit && npm test
 
-# Deploy active commands locally (default)
-./deploy.sh
+# Run shell-based tests
+bash tests/test_setup_devcontainer.sh
+bash tests/test_devcontainer_advanced.sh
 
-# Deploy experimental commands
-./deploy.sh --experiments
-
-# Test a specific command in Claude Code
-/xtest --help
-
-# Verify complete setup and functionality
-./verify-setup.sh --verbose
+# Sync source files to npm package before publishing
+bash scripts/sync-to-npm.sh
 ```
 
 ### Adding New Commands
@@ -195,33 +217,25 @@ The actual command logic and automation steps.
 1. **Create command file** in `slash-commands/active/` (production) or `slash-commands/experiments/` (testing) directory as `.md` file
 2. **Follow naming convention**: Use `x` prefix (e.g., `xnewfeature.md`)
 3. **Include proper documentation** with description, usage, and examples
-4. **Validate with**: `./validate-commands.sh` before committing
+4. **Run sync**: `bash scripts/sync-to-npm.sh` to copy to npm package
 5. **Test thoroughly**: Deploy and test in actual Claude Code environment
 6. **Update documentation**: Add to appropriate category in README.md and documentation
 
-### Deployment Process
+### NPM Package Deployment
 
 ```bash
-# One-time setup (installs Claude Code, configures settings, deploys commands)
-./setup.sh
+# Sync source files to npm package
+bash scripts/sync-to-npm.sh
 
-# Deploy active commands to Claude Code (default)
-./deploy.sh
+# Run npm package tests
+cd claude-dev-toolkit && npm test
 
-# Deploy experimental commands
-./deploy.sh --experiments
+# Install globally from npm
+npm install -g claude-dev-toolkit
 
-# Deploy specific commands only
-./deploy.sh --include xtest xquality
-
-# Preview deployment without changes
-./deploy.sh --dry-run --all
-
-# Verify deployment and complete setup
-./verify-setup.sh
-
-# Test commands in Claude Code interface
-/xhelp  # List available commands
+# Use the CLI
+claude-commands install
+claude-commands list
 ```
 
 ## Integration Patterns
@@ -250,7 +264,6 @@ Commands are designed to work together in workflows:
 /xsecurity --dependencies --code   # Security scanning
 /xcompliance --gdpr --audit       # Compliance check
 /xpolicy --review --access        # Policy review
-/xred --defensive-testing         # Defensive security testing
 ```
 
 ## Working with Claude Code
@@ -272,9 +285,7 @@ When working with this repository:
 - **Documentation**: Update README.md and relevant docs/ files
 - **Hooks**: Store in `hooks/` directory for security and governance automation
 - **Configuration templates**: Use templates in `templates/` directory for different setup scenarios
-- **Deployment**: Use `./deploy.sh` with options to install commands locally
-- **Setup automation**: Use `./setup.sh` for complete environment setup
-- **Validation**: Use `./validate-commands.sh` and `./verify-setup.sh` for testing
+- **NPM sync**: Run `bash scripts/sync-to-npm.sh` to sync source files to the npm package
 
 ### Quality Standards
 

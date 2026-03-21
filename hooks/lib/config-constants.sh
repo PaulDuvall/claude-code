@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -uo pipefail
 
 # Configuration Constants for Subagent-Hook Integration
 # 
@@ -96,9 +97,9 @@ readonly -a SECURITY_RELEVANT_TOOLS=(
 ##################################
 # Temporary File Constants
 ##################################
-readonly CONTEXT_FILE_PREFIX="/tmp/claude-subagent-context"
-readonly OUTPUT_FILE_PREFIX="/tmp/claude-subagent-output"
-readonly TEMP_FILE_PATTERN="claude-subagent-*"
+readonly CONTEXT_FILE_PREFIX="${TMPDIR:-/tmp}/claude-subagent-context"
+readonly OUTPUT_FILE_PREFIX="${TMPDIR:-/tmp}/claude-subagent-output"
+readonly TEMP_FILE_PATTERN="claude-subagent-XXXXXX"
 
 ##################################
 # Logging Level Constants

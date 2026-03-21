@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
+set -uo pipefail
 
 # Argument Parser Module for Subagent-Hook Integration
-# 
+#
 # This module provides command-line argument parsing and validation
 # for the subagent-hook integration system.
 
+# Include guard
+[[ -n "${_ARGUMENT_PARSER_LOADED:-}" ]] && return 0
+_ARGUMENT_PARSER_LOADED=1
+
 # Source required modules
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="${SCRIPT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 source "$SCRIPT_DIR/config-constants.sh"
 source "$SCRIPT_DIR/error-handler.sh"
 

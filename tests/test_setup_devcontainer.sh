@@ -285,28 +285,8 @@ test_force_overwrites() {
 
 ##################################
 # Environment Variable Tests
+# (see test_devcontainer_advanced.sh for full env var tests)
 ##################################
-test_anthropic_api_key_in_config() {
-    # Test ANTHROPIC_API_KEY is passed through
-    "$SCRIPT_PATH" > /dev/null 2>&1
-
-    grep -q "ANTHROPIC_API_KEY" ".devcontainer/devcontainer.json"
-}
-
-test_github_token_in_config() {
-    # Test GITHUB_TOKEN is passed through
-    "$SCRIPT_PATH" > /dev/null 2>&1
-
-    grep -q "GITHUB_TOKEN" ".devcontainer/devcontainer.json"
-}
-
-test_aws_credentials_in_config() {
-    # Test AWS credentials are passed through
-    "$SCRIPT_PATH" > /dev/null 2>&1
-
-    grep -q "AWS_ACCESS_KEY_ID" ".devcontainer/devcontainer.json" && \
-    grep -q "AWS_SECRET_ACCESS_KEY" ".devcontainer/devcontainer.json"
-}
 
 ##################################
 # Dockerfile Content Tests
@@ -388,122 +368,10 @@ test_minimal_and_no_firewall() {
 }
 
 ##################################
-# Strict Mode Tests
+# Advanced Tests
+# (strict mode, custom domains, output messages)
+# See: test_devcontainer_advanced.sh
 ##################################
-test_strict_flag_accepted() {
-    # Test --strict flag is accepted without error
-    local output
-    output=$("$SCRIPT_PATH" --strict --help 2>&1)
-
-    echo "$output" | grep -q "Usage:"
-}
-
-test_strict_without_api_key_fails() {
-    # Test --strict fails when ANTHROPIC_API_KEY is not set
-    local original_key="${ANTHROPIC_API_KEY:-}"
-    unset ANTHROPIC_API_KEY
-
-    local output exit_code
-    output=$("$SCRIPT_PATH" --strict 2>&1 || true)
-    exit_code=$?
-
-    # Restore the key
-    if [[ -n "$original_key" ]]; then
-        export ANTHROPIC_API_KEY="$original_key"
-    fi
-
-    # Should mention API key error
-    echo "$output" | grep -qi "ANTHROPIC_API_KEY"
-}
-
-test_strict_with_api_key_proceeds() {
-    # Test --strict proceeds when ANTHROPIC_API_KEY is set
-    export ANTHROPIC_API_KEY="test-key-for-testing"
-
-    local output
-    output=$("$SCRIPT_PATH" --strict 2>&1 || true)
-
-    # Should show API key is set
-    echo "$output" | grep -q "ANTHROPIC_API_KEY is set"
-}
-
-##################################
-# Custom Domain Tests
-##################################
-test_allow_domain_flag() {
-    # Test --allow-domain adds domain to firewall
-    "$SCRIPT_PATH" --allow-domain custom.example.com > /dev/null 2>&1
-
-    grep -q "custom.example.com" ".devcontainer/Dockerfile"
-}
-
-test_allow_domain_multiple() {
-    # Test multiple --allow-domain flags
-    "$SCRIPT_PATH" --allow-domain one.example.com --allow-domain two.example.com > /dev/null 2>&1
-
-    grep -q "one.example.com" ".devcontainer/Dockerfile" && \
-    grep -q "two.example.com" ".devcontainer/Dockerfile"
-}
-
-test_allow_domain_env_var() {
-    # Test DEVCONTAINER_EXTRA_DOMAINS environment variable
-    DEVCONTAINER_EXTRA_DOMAINS="envvar.example.com" "$SCRIPT_PATH" > /dev/null 2>&1
-
-    grep -q "envvar.example.com" ".devcontainer/Dockerfile"
-}
-
-test_allow_domain_env_var_comma_separated() {
-    # Test comma-separated domains in env var
-    DEVCONTAINER_EXTRA_DOMAINS="first.example.com,second.example.com" "$SCRIPT_PATH" > /dev/null 2>&1
-
-    grep -q "first.example.com" ".devcontainer/Dockerfile" && \
-    grep -q "second.example.com" ".devcontainer/Dockerfile"
-}
-
-test_allow_domain_missing_arg_error() {
-    # Test --allow-domain without argument shows error
-    local output
-    output=$("$SCRIPT_PATH" --allow-domain 2>&1 || true)
-
-    echo "$output" | grep -q "requires a domain argument"
-}
-
-test_default_domains_present() {
-    # Test default domains are still present with custom domain
-    "$SCRIPT_PATH" --allow-domain custom.example.com > /dev/null 2>&1
-
-    grep -q "api.anthropic.com" ".devcontainer/Dockerfile" && \
-    grep -q "github.com" ".devcontainer/Dockerfile" && \
-    grep -q "custom.example.com" ".devcontainer/Dockerfile"
-}
-
-##################################
-# Output Message Tests
-##################################
-test_success_message_shown() {
-    # Test success message is displayed
-    local output
-    output=$("$SCRIPT_PATH" 2>&1)
-
-    echo "$output" | grep -qi "success"
-}
-
-test_next_steps_shown() {
-    # Test next steps are displayed
-    local output
-    output=$("$SCRIPT_PATH" 2>&1)
-
-    echo "$output" | grep -q "Next steps"
-}
-
-test_shows_configuration_summary() {
-    # Test configuration summary is shown
-    local output
-    output=$("$SCRIPT_PATH" 2>&1)
-
-    echo "$output" | grep -q "Configuration:" && \
-    echo "$output" | grep -q "Network firewall:"
-}
 
 ##################################
 # Main Test Execution
@@ -562,12 +430,6 @@ main() {
     run_test "Force flag overwrites config" test_force_overwrites
 
     echo ""
-    echo "Environment Variable Tests:"
-    run_test "ANTHROPIC_API_KEY in config" test_anthropic_api_key_in_config
-    run_test "GITHUB_TOKEN in config" test_github_token_in_config
-    run_test "AWS credentials in config" test_aws_credentials_in_config
-
-    echo ""
     echo "Dockerfile Content Tests:"
     run_test "Correct base image" test_dockerfile_base_image
     run_test "Has healthcheck" test_dockerfile_has_healthcheck
@@ -589,25 +451,7 @@ main() {
     run_test "Minimal and no-firewall together" test_minimal_and_no_firewall
 
     echo ""
-    echo "Strict Mode Tests:"
-    run_test "Strict flag accepted" test_strict_flag_accepted
-    run_test "Strict mode checks API key" test_strict_without_api_key_fails
-    run_test "Strict mode with API key set" test_strict_with_api_key_proceeds
-
-    echo ""
-    echo "Custom Domain Tests:"
-    run_test "Allow domain flag works" test_allow_domain_flag
-    run_test "Multiple allow-domain flags" test_allow_domain_multiple
-    run_test "Extra domains env var" test_allow_domain_env_var
-    run_test "Comma-separated env var domains" test_allow_domain_env_var_comma_separated
-    run_test "Missing domain arg error" test_allow_domain_missing_arg_error
-    run_test "Default domains preserved" test_default_domains_present
-
-    echo ""
-    echo "Output Message Tests:"
-    run_test "Success message shown" test_success_message_shown
-    run_test "Next steps shown" test_next_steps_shown
-    run_test "Configuration summary shown" test_shows_configuration_summary
+    echo "(Advanced tests in test_devcontainer_advanced.sh)"
 
     # Cleanup
     cleanup_test_environment

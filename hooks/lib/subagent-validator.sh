@@ -1,15 +1,22 @@
 #!/usr/bin/env bash
+set -uo pipefail
 
 # Subagent Validator Module for Subagent-Hook Integration
-# 
+#
 # This module provides comprehensive validation functionality for subagents,
 # including format validation, content validation, and security checks.
 
+# Include guard
+[[ -n "${_SUBAGENT_VALIDATOR_LOADED:-}" ]] && return 0
+_SUBAGENT_VALIDATOR_LOADED=1
+
 # Source required modules
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="${SCRIPT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 source "$SCRIPT_DIR/config-constants.sh"
 source "$SCRIPT_DIR/file-utils.sh"
 source "$SCRIPT_DIR/error-handler.sh"
+source "$SCRIPT_DIR/field-validators.sh"
+source "$SCRIPT_DIR/validation-reporter.sh"
 
 ##################################
 # Basic Validation Functions
@@ -334,90 +341,7 @@ validate_subagent_content() {
 ##################################
 # Field Validation Functions
 ##################################
-
-validate_subagent_name_field() {
-    local name="$1"
-    
-    if [[ -z "$name" ]]; then
-        log_error "Subagent name cannot be empty"
-        return $EXIT_VALIDATION_FAILED
-    fi
-    
-    if [[ ${#name} -gt $MAX_SUBAGENT_NAME_LENGTH ]]; then
-        log_error "Subagent name too long: ${#name} chars (max: $MAX_SUBAGENT_NAME_LENGTH)"
-        return $EXIT_VALIDATION_FAILED
-    fi
-    
-    if [[ ! "$name" =~ $SUBAGENT_NAME_PATTERN ]]; then
-        log_error "Invalid subagent name format: $name"
-        return $EXIT_VALIDATION_FAILED
-    fi
-    
-    return $EXIT_SUCCESS
-}
-
-validate_description_field() {
-    local description="$1"
-    
-    if [[ -z "$description" ]]; then
-        log_error "Description cannot be empty"
-        return $EXIT_VALIDATION_FAILED
-    fi
-    
-    if [[ ${#description} -lt $MIN_DESCRIPTION_LENGTH ]]; then
-        log_error "Description too short: ${#description} chars (min: $MIN_DESCRIPTION_LENGTH)"
-        return $EXIT_VALIDATION_FAILED
-    fi
-    
-    if [[ ${#description} -gt $MAX_DESCRIPTION_LENGTH ]]; then
-        log_error "Description too long: ${#description} chars (max: $MAX_DESCRIPTION_LENGTH)"
-        return $EXIT_VALIDATION_FAILED
-    fi
-    
-    return $EXIT_SUCCESS
-}
-
-validate_version_field() {
-    local version="$1"
-    
-    # Semantic versioning pattern
-    if [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.-]+)?(\+[a-zA-Z0-9.-]+)?$ ]]; then
-        return $EXIT_SUCCESS
-    fi
-    
-    # Simple versioning pattern
-    if [[ "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
-        return $EXIT_SUCCESS
-    fi
-    
-    log_error "Invalid version format: $version"
-    return $EXIT_VALIDATION_FAILED
-}
-
-validate_tools_field() {
-    local tools="$1"
-    
-    # Tools can be comma-separated or a single word
-    # Allow: "Read, Edit, MultiEdit" or "Read,Edit,MultiEdit" or "Read"
-    if [[ "$tools" =~ ^[a-zA-Z][a-zA-Z0-9_]*([[:space:]]*,[[:space:]]*[a-zA-Z][a-zA-Z0-9_]*)*$ ]]; then
-        return $EXIT_SUCCESS
-    fi
-    
-    log_error "Invalid tools format: $tools"
-    return $EXIT_VALIDATION_FAILED
-}
-
-validate_tags_field() {
-    local tags="$1"
-    
-    # Tags can be array format or comma-separated
-    if [[ "$tags" =~ ^\[.*\]$ ]] || [[ "$tags" =~ ^[a-zA-Z][a-zA-Z0-9_,-\s]*$ ]]; then
-        return $EXIT_SUCCESS
-    fi
-    
-    log_error "Invalid tags format: $tags"
-    return $EXIT_VALIDATION_FAILED
-}
+# See: field-validators.sh
 
 ##################################
 # Security Validation Functions
@@ -469,121 +393,9 @@ validate_content_security() {
 }
 
 ##################################
-# Batch Validation Functions
+# Batch Validation & Reporting
 ##################################
-
-validate_all_subagents() {
-    local directory="${1:-$SUBAGENTS_DIR}"
-    local validation_mode="${2:-strict}"
-    local validation_results=()
-    local total_count=0
-    local passed_count=0
-    local failed_count=0
-    
-    log_info "Validating all subagents in: $directory"
-    
-    if [[ ! -d "$directory" ]]; then
-        log_error "Directory not found: $directory"
-        return $EXIT_GENERAL_ERROR
-    fi
-    
-    find "$directory" -name "*$SUBAGENT_FILE_EXTENSION" -type f 2>/dev/null | while read -r file; do
-        ((total_count++))
-        local filename=$(basename "$file")
-        
-        if validate_subagent_file "$file" "$validation_mode" 2>/dev/null; then
-            ((passed_count++))
-            validation_results+=("PASS: $filename")
-            log_debug "Validation passed: $filename"
-        else
-            ((failed_count++))
-            validation_results+=("FAIL: $filename")
-            log_debug "Validation failed: $filename"
-        fi
-    done
-    
-    # Output results
-    log_info "Validation Summary:"
-    log_info "  Total subagents: $total_count"
-    log_info "  Passed: $passed_count"
-    log_info "  Failed: $failed_count"
-    
-    # Detailed results in debug mode
-    if is_debug_mode 2>/dev/null; then
-        for result in "${validation_results[@]}"; do
-            log_debug "  $result"
-        done
-    fi
-    
-    if [[ $failed_count -gt 0 ]]; then
-        return $EXIT_VALIDATION_FAILED
-    fi
-    
-    return $EXIT_SUCCESS
-}
-
-##################################
-# Validation Reporting Functions
-##################################
-
-generate_validation_report() {
-    local directory="${1:-$SUBAGENTS_DIR}"
-    local output_format="${2:-text}"
-    
-    log_info "Generating validation report for: $directory"
-    
-    case "$output_format" in
-        "json")
-            generate_json_validation_report "$directory"
-            ;;
-        "text"|*)
-            generate_text_validation_report "$directory"
-            ;;
-    esac
-}
-
-generate_text_validation_report() {
-    local directory="$1"
-    
-    echo "Subagent Validation Report"
-    echo "========================="
-    echo "Directory: $directory"
-    echo "Generated: $(date)"
-    echo ""
-    
-    local total=0 passed=0 failed=0
-    
-    find "$directory" -name "*$SUBAGENT_FILE_EXTENSION" -type f 2>/dev/null | while read -r file; do
-        ((total++))
-        local filename=$(basename "$file")
-        local name=$(basename "$file" "$SUBAGENT_FILE_EXTENSION")
-        
-        echo -n "Validating $name... "
-        
-        if validate_subagent_file "$file" "strict" 2>/dev/null; then
-            ((passed++))
-            echo "PASSED"
-        else
-            ((failed++))
-            echo "FAILED"
-            
-            # Show specific validation errors
-            validate_subagent_file "$file" "strict" 2>&1 | sed "s/^/  Error: /"
-        fi
-        echo ""
-    done
-    
-    echo "Summary:"
-    echo "  Total: $total"
-    echo "  Passed: $passed"
-    echo "  Failed: $failed"
-    
-    if [[ $failed -eq 0 ]]; then
-        echo "  Status: ALL VALID ✓"
-    else
-        echo "  Status: ISSUES FOUND ✗"
-    fi
-}
+# See: validation-reporter.sh
 
 ##################################
 # Initialization

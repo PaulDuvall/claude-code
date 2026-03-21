@@ -19,6 +19,9 @@ SUBAGENTS_SOURCE_DIR="$SCRIPT_DIR/sub-agents"
 CLAUDE_DIR="$HOME/.claude"
 SUBAGENTS_DIR="$CLAUDE_DIR/sub-agents"
 
+# Source helper functions
+source "$SCRIPT_DIR/deploy-subagents-helpers.sh"
+
 # Available sub-agents - dynamically detect from source directory
 detect_available_subagents() {
     local subagents=()
@@ -303,21 +306,19 @@ deploy_subagent() {
 update_settings() {
     local subagents_deployed=("$@")
     local settings_file="$CLAUDE_DIR/settings.json"
-    
+
     if [[ "$DRY_RUN" == true ]]; then
         echo -e "${BLUE}[DRY RUN] Would update settings file: $settings_file${NC}"
         return
     fi
-    
+
     echo -e "${BLUE}Updating Claude Code settings...${NC}"
-    
-    # Validate Python is available for JSON processing
+
     if ! command -v python3 >/dev/null 2>&1; then
-        echo -e "${RED}Error: python3 is required for settings update but not found${NC}"
-        echo -e "${YELLOW}Please install Python 3 and try again${NC}"
+        echo -e "${RED}Error: python3 is required but not found${NC}"
         exit 1
     fi
-    
+
     # Create backup if settings exist
     if [[ -f "$settings_file" ]]; then
         local backup_file="$settings_file.backup.$(date +%Y%m%d_%H%M%S)"
@@ -325,96 +326,21 @@ update_settings() {
             echo -e "${RED}Error: Failed to create backup of settings file${NC}"
             exit 1
         fi
-        echo -e "${GREEN}✓ Settings backup created: $backup_file${NC}"
+        echo -e "${GREEN}Settings backup created: $backup_file${NC}"
     fi
-    
-    # Export environment variables for Python script
+
+    # Call external Python script
     export SETTINGS_FILE="$settings_file"
     export SUBAGENTS_DIR="$SUBAGENTS_DIR"
-    export SUBAGENTS_DEPLOYED="$(IFS=','; echo "${subagents_deployed[*]}")"
-    
-    # Update settings with Python script - enhanced error handling
-    python3 << 'EOF'
-import json
-import os
-import sys
-import traceback
+    export SUBAGENTS_DEPLOYED
+    SUBAGENTS_DEPLOYED="$(IFS=','; echo "${subagents_deployed[*]}")"
 
-try:
-    settings_file = os.environ.get('SETTINGS_FILE')
-    subagents_dir = os.environ.get('SUBAGENTS_DIR')
-    subagents_deployed_str = os.environ.get('SUBAGENTS_DEPLOYED', '')
-    
-    if not all([settings_file, subagents_dir, subagents_deployed_str]):
-        print('Error: Missing required environment variables', file=sys.stderr)
-        sys.exit(1)
-    
-    # Parse deployed subagents
-    subagents_deployed = [s.strip() for s in subagents_deployed_str.split(',') if s.strip()]
-    
-    # Read or create settings
-    if os.path.exists(settings_file):
-        try:
-            with open(settings_file, 'r') as f:
-                settings = json.load(f)
-        except json.JSONDecodeError as e:
-            print(f'Error: Invalid JSON in settings file: {e}', file=sys.stderr)
-            sys.exit(1)
-        except Exception as e:
-            print(f'Error reading settings file: {e}', file=sys.stderr)
-            sys.exit(1)
-    else:
-        settings = {}
-
-    # Ensure sub_agents section exists
-    if 'sub_agents' not in settings:
-        settings['sub_agents'] = {}
-
-    # Add configurations for each deployed sub-agent
-    for subagent in subagents_deployed:
-        if subagent == 'debug-specialist':
-            settings['sub_agents']['debug-specialist'] = {
-                'name': 'Debug Specialist',
-                'description': 'Expert debugging assistant with persistent context and systematic troubleshooting',
-                'config_file': f'{subagents_dir}/debug-specialist.md',
-                'context_file': f'{subagents_dir}/debug-context.md',
-                'auto_invoke_patterns': [
-                    'debug', 'error', 'exception', 'troubleshoot', 'issue', 'bug',
-                    'ModuleNotFoundError', 'ImportError', 'SyntaxError', 'TypeError',
-                    'AttributeError', 'ValueError', 'RuntimeError'
-                ],
-                'tools': ['Read', 'Bash', 'Grep', 'Edit', 'Glob'],
-                'priority': 'high'
-            }
-        # Add other sub-agents here as they're implemented
-        # elif subagent == 'security-analyst':
-        #     settings['sub_agents']['security-analyst'] = { ... }
-
-    # Write updated settings with validation
-    try:
-        with open(settings_file, 'w') as f:
-            json.dump(settings, f, indent=2)
-    except Exception as e:
-        print(f'Error writing settings file: {e}', file=sys.stderr)
-        sys.exit(1)
-
-    print('Settings updated successfully')
-
-except Exception as e:
-    print(f'Unexpected error: {e}', file=sys.stderr)
-    traceback.print_exc(file=sys.stderr)
-    sys.exit(1)
-EOF
-    local python_exit_code=$?
-    
-    # Check if Python script executed successfully
-    if [[ $python_exit_code -ne 0 ]]; then
+    if ! python3 "$SCRIPT_DIR/update-subagent-settings.py"; then
         echo -e "${RED}Error: Failed to update settings file${NC}"
-        echo -e "${YELLOW}Check the error messages above for details${NC}"
         exit 1
     fi
-    
-    echo -e "${GREEN}✓ Settings updated with sub-agent configurations${NC}"
+
+    echo -e "${GREEN}Settings updated with sub-agent configurations${NC}"
 }
 
 create_session_directories() {
@@ -438,153 +364,11 @@ create_session_directories() {
     done
 }
 
-test_installation() {
-    local subagents_deployed=("$@")
-    
-    if [[ "$DRY_RUN" == true ]]; then
-        echo -e "${BLUE}[DRY RUN] Would test installation${NC}"
-        return 0
-    fi
-    
-    echo -e "${BLUE}Testing installation...${NC}"
-    
-    local all_good=true
-    local test_results=()
-    
-    # Test each deployed sub-agent
-    for subagent in "${subagents_deployed[@]}"; do
-        local config_file="$SUBAGENTS_DIR/${subagent}.md"
-        if [[ -f "$config_file" && -r "$config_file" && -s "$config_file" ]]; then
-            echo -e "${GREEN}✓ ${subagent} configuration file exists and is readable${NC}"
-            test_results+=("${subagent}: OK")
-        else
-            echo -e "${RED}✗ ${subagent} configuration file missing, unreadable, or empty${NC}"
-            test_results+=("${subagent}: FAILED")
-            all_good=false
-        fi
-    done
-    
-    # Test settings file
-    local settings_file="$CLAUDE_DIR/settings.json"
-    if [[ -f "$settings_file" && -r "$settings_file" ]]; then
-        # Validate JSON syntax
-        if command -v python3 >/dev/null 2>&1; then
-            if python3 -m json.tool "$settings_file" >/dev/null 2>&1; then
-                echo -e "${GREEN}✓ Settings file exists and contains valid JSON${NC}"
-                test_results+=("settings.json: OK")
-            else
-                echo -e "${RED}✗ Settings file contains invalid JSON${NC}"
-                test_results+=("settings.json: INVALID JSON")
-                all_good=false
-            fi
-        else
-            echo -e "${GREEN}✓ Settings file exists${NC}"
-            test_results+=("settings.json: EXISTS (JSON not validated)")
-        fi
-    else
-        echo -e "${RED}✗ Settings file not found or not readable${NC}"
-        test_results+=("settings.json: FAILED")
-        all_good=false
-    fi
-    
-    # Test directory structure
-    if [[ -d "$SUBAGENTS_DIR" && -w "$SUBAGENTS_DIR" ]]; then
-        echo -e "${GREEN}✓ Sub-agents directory is writable${NC}"
-        test_results+=("sub-agents directory: OK")
-    else
-        echo -e "${RED}✗ Sub-agents directory missing or not writable${NC}"
-        test_results+=("sub-agents directory: FAILED")
-        all_good=false
-    fi
-    
-    # Summary
-    if [[ "$all_good" == true ]]; then
-        echo -e "${GREEN}✓ All installation tests passed${NC}"
-        return 0
-    else
-        echo -e "${RED}✗ Installation test failed${NC}"
-        echo -e "${YELLOW}Test Results Summary:${NC}"
-        printf '  %s\n' "${test_results[@]}"
-        return 1
-    fi
-}
-
-print_success_message() {
-    local subagents_deployed=("$@")
-    
-    if [[ "$DRY_RUN" == true ]]; then
-        echo -e "${BLUE}[DRY RUN] Deployment preview completed${NC}"
-        return
-    fi
-    
-    echo ""
-    echo -e "${GREEN}🎉 Sub-Agent(s) deployed successfully!${NC}"
-    echo ""
-    echo "Deployed sub-agents:"
-    for subagent in "${subagents_deployed[@]}"; do
-        echo "  • $subagent"
-    done
-    echo ""
-    echo "Usage:"
-    echo "  • Automatic: Sub-agents will be invoked based on trigger patterns"
-    echo "  • Manual: @[subagent-name] [your request]"
-    echo "  • Via slash commands: Complex issues will be automatically delegated"
-    echo ""
-    echo -e "${BLUE}Sub-agent files location: $SUBAGENTS_DIR${NC}"
-    echo -e "${BLUE}Settings file: $CLAUDE_DIR/settings.json${NC}"
-}
-
-cleanup_on_error() {
-    local exit_code=$?
-    if [[ $exit_code -ne 0 ]]; then
-        echo ""
-        echo -e "${RED}Deployment failed with exit code: $exit_code${NC}"
-        echo -e "${YELLOW}You may need to manually clean up partial installations${NC}"
-        echo -e "${BLUE}Check: $SUBAGENTS_DIR${NC}"
-        echo -e "${BLUE}Check: $CLAUDE_DIR/settings.json${NC}"
-        echo ""
-        echo "For troubleshooting, run: ./deploy-subagents.sh --help"
-    fi
-}
+# Helper functions sourced from deploy-subagents-helpers.sh:
+# test_installation, print_success_message, cleanup_on_error, validate_environment
 
 # Set up error cleanup
 trap cleanup_on_error ERR
-
-validate_environment() {
-    local errors=()
-    
-    # Check if source directory exists
-    if [[ ! -d "$SUBAGENTS_SOURCE_DIR" ]]; then
-        errors+=("Sub-agents source directory not found: $SUBAGENTS_SOURCE_DIR")
-    fi
-    
-    # Check if we're in the right directory structure
-    if [[ ! -f "$SCRIPT_DIR/CLAUDE.md" ]]; then
-        errors+=("Not running from claude-code repository root (CLAUDE.md not found)")
-    fi
-    
-    # Check required commands
-    local required_commands=("python3" "cp" "mkdir" "grep" "find")
-    for cmd in "${required_commands[@]}"; do
-        if ! command -v "$cmd" >/dev/null 2>&1; then
-            errors+=("Required command not found: $cmd")
-        fi
-    done
-    
-    # Check home directory is writable
-    if [[ ! -w "$HOME" ]]; then
-        errors+=("Home directory is not writable: $HOME")
-    fi
-    
-    # Report errors if any
-    if [[ ${#errors[@]} -gt 0 ]]; then
-        echo -e "${RED}Environment validation failed:${NC}"
-        printf '  %s\n' "${errors[@]}"
-        echo ""
-        echo -e "${YELLOW}Please fix these issues and try again.${NC}"
-        exit 1
-    fi
-}
 
 main() {
     # Parse arguments first
