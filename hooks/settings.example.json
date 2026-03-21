@@ -1,0 +1,52 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/check-complexity.py"
+          },
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/check-security.py"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/check-commit-signing.py"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/tab-color.sh green"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/tab-color.sh blue"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -19,8 +19,16 @@ sync_dir() {
         -exec cp {} "$dst/" \;
 }
 
-echo "Syncing hooks..."
+echo "Syncing hooks (shell)..."
 sync_dir "$REPO_ROOT/hooks" "$CDT_DIR/hooks" "*.sh"
+
+echo "Syncing hooks (python)..."
+sync_dir "$REPO_ROOT/hooks" "$CDT_DIR/hooks" "*.py"
+
+echo "Syncing hooks (config)..."
+for f in "$REPO_ROOT/hooks/"*.json "$REPO_ROOT/hooks/.smellrc.example.json"; do
+    [ -f "$f" ] && cp "$f" "$CDT_DIR/hooks/"
+done
 
 echo "Syncing hooks/lib..."
 sync_dir "$REPO_ROOT/hooks/lib" "$CDT_DIR/hooks/lib" "*.sh"

@@ -8,6 +8,24 @@ on:
   workflow_dispatch:
 
 jobs:
+  pytest-hooks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: actions/setup-python@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install pytest
+        run: pip install pytest
+
+      - name: Run Python hook tests
+        run: python -m pytest hooks/tests/ -v
+
   test:
     runs-on: ubuntu-latest
     permissions:

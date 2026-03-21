@@ -1,0 +1,19 @@
+{
+  "thresholds": {
+    "max_complexity": 10,
+    "max_function_lines": 20,
+    "max_nesting_depth": 3,
+    "max_parameters": 4,
+    "max_file_lines": 300,
+    "duplicate_min_lines": 4
+  },
+  "security": {
+    "enabled": true,
+    "trojan_enabled": true
+  },
+  "suppress_files": [
+    "tests/**",
+    "*_test.py",
+    "*.generated.*"
+  ]
+}
