@@ -11,7 +11,7 @@ set -uo pipefail
 _ERROR_HANDLER_LOADED=1
 
 # Source required modules
-SCRIPT_DIR="${SCRIPT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/config-constants.sh"
 source "$SCRIPT_DIR/file-utils.sh"
 
@@ -40,7 +40,7 @@ log_message() {
 
 log_info() {
     local message="$1"
-    log_message "INFO" "$message"
+    log_message "INFO" "$message" >&2
 }
 
 log_warning() {

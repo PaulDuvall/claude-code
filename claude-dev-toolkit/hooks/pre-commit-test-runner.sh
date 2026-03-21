@@ -51,7 +51,7 @@ is_commit_command() {
 # Framework Detection
 ##################################
 detect_framework() {
-    if [[ -f "pytest.ini" ]] || [[ -f "pyproject.toml" ]] && grep -q '\[tool.pytest' pyproject.toml 2>/dev/null; then
+    if [[ -f "pytest.ini" ]] || { [[ -f "pyproject.toml" ]] && grep -q '\[tool.pytest' pyproject.toml 2>/dev/null; }; then
         echo "pytest"
     elif [[ -f "package.json" ]] && grep -q '"test"' package.json 2>/dev/null; then
         if grep -qE '"(jest|vitest)' package.json 2>/dev/null; then

@@ -11,7 +11,7 @@ set -uo pipefail
 _FILE_UTILS_LOADED=1
 
 # Source required modules
-SCRIPT_DIR="${SCRIPT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/config-constants.sh"
 
 ##################################

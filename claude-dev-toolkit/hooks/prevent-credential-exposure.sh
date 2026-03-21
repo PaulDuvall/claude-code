@@ -134,27 +134,31 @@ scan_file_content() {
         return 0
     fi
     
-    log "Scanning file: $file_path"
-    
+    # Redirect log output to stderr so it doesn't pollute stdout
+    # (callers capture stdout via command substitution for the violation count)
+    log "Scanning file: $file_path" >&2
+
     # Check each credential pattern
     for pattern_name in "${!CREDENTIAL_PATTERNS[@]}"; do
         local pattern="${CREDENTIAL_PATTERNS[$pattern_name]}"
-        
-        if echo "$content" | grep -qiP "$pattern"; then
-            log_violation "$pattern_name detected in $file_path"
+
+        if echo "$content" | grep -qiP -e "$pattern"; then
+            log_violation "$pattern_name detected in $file_path" >&2
             violations+=("$pattern_name")
-            
+
             # Extract the matched content for logging (but redact it)
-            local matched_line=$(echo "$content" | grep -iP "$pattern" | head -1)
-            local redacted_line=$(echo "$matched_line" | sed 's/[a-zA-Z0-9+/=]\{10,\}/[REDACTED]/g')
-            
-            log_violation "Pattern: $pattern_name, Line: $redacted_line"
-            
+            local matched_line
+            matched_line=$(echo "$content" | grep -iP -e "$pattern" | head -1)
+            local redacted_line
+            redacted_line=$(echo "$matched_line" | sed 's/[a-zA-Z0-9+/=]\{10,\}/[REDACTED]/g')
+
+            log_violation "Pattern: $pattern_name, Line: $redacted_line" >&2
+
             # Notify security team
             notify_security_team "$pattern_name" "$file_path" "$redacted_line"
         fi
     done
-    
+
     # Return violation count
     echo "${#violations[@]}"
 }
@@ -165,13 +169,13 @@ check_environment_leakage() {
     
     # Check for environment variable exposure patterns
     if echo "$content" | grep -qiP 'process\.env\.[A-Z_]*(?:KEY|SECRET|PASSWORD|TOKEN)'; then
-        log_violation "Environment variable credential exposure detected"
+        log_violation "Environment variable credential exposure detected" >&2
         ((violations++))
     fi
-    
+
     # Check for hardcoded production URLs with credentials
     if echo "$content" | grep -qiP 'https?://[^:]+:[^@]+@[^/]+'; then
-        log_violation "URL with embedded credentials detected"
+        log_violation "URL with embedded credentials detected" >&2
         ((violations++))
     fi
     
