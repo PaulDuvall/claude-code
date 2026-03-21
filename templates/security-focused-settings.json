@@ -45,6 +45,10 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/prevent-credential-exposure.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/verify-before-edit.sh"
           }
         ]
       },

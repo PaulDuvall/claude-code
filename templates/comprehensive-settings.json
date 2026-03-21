@@ -48,6 +48,10 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/backup-before-edit.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/verify-before-edit.sh"
           }
         ]
       },

@@ -40,7 +40,8 @@ const EXPECTED = {
         'session-init.sh',
         'prompt-security-scan.sh',
         'security-session-init.sh',
-        'pre-commit-test-runner.sh'
+        'pre-commit-test-runner.sh',
+        'verify-before-edit.sh'
     ],
     requiredDirs: ['commands/', 'templates/', 'hooks/', 'subagents/']
 };
