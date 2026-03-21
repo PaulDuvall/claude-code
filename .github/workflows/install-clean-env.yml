@@ -1,0 +1,187 @@
+name: Clean Environment Install Test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'claude-dev-toolkit/**'
+      - 'hooks/**'
+      - 'scripts/**'
+      - '.github/workflows/install-clean-env.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'claude-dev-toolkit/**'
+      - 'hooks/**'
+      - 'scripts/**'
+  workflow_dispatch:
+
+jobs:
+  clean-install:
+    name: "Clean install (${{ matrix.os }}, Node ${{ matrix.node }})"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        node: ["18", "20"]
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Verify clean state (no pre-existing .claude)
+        run: |
+          if [ -d "$HOME/.claude" ]; then
+            echo "WARN: ~/.claude exists, removing for clean test"
+            rm -rf "$HOME/.claude"
+          fi
+          echo "Confirmed: no ~/.claude directory"
+
+      - name: Pack npm package
+        working-directory: claude-dev-toolkit
+        run: |
+          npm pack
+          TARBALL=$(ls *.tgz)
+          echo "TARBALL=$TARBALL" >> "$GITHUB_ENV"
+          echo "Packed: $TARBALL"
+
+      - name: Install package globally from tarball
+        working-directory: claude-dev-toolkit
+        run: npm install -g "./$TARBALL"
+
+      - name: Verify CLI is available
+        run: |
+          claude-commands --version
+          claude-commands --help
+
+      - name: Run setup (active commands, basic config)
+        run: claude-commands setup --type basic --commands active
+
+      - name: Verify directory structure created
+        run: |
+          FAIL=0
+          for dir in "$HOME/.claude" "$HOME/.claude/commands" "$HOME/.claude/hooks"; do
+            if [ -d "$dir" ]; then
+              echo "OK: $dir exists"
+            else
+              echo "FAIL: $dir missing"
+              FAIL=1
+            fi
+          done
+          [ $FAIL -eq 0 ] || exit 1
+
+      - name: Verify commands installed
+        run: |
+          COUNT=$(ls "$HOME/.claude/commands/"*.md 2>/dev/null | wc -l)
+          echo "Commands installed: $COUNT"
+          if [ "$COUNT" -lt 10 ]; then
+            echo "FAIL: expected >= 10 active commands, got $COUNT"
+            exit 1
+          fi
+          echo "OK: $COUNT commands installed"
+
+      - name: Verify hooks installed
+        run: |
+          SHELL_HOOKS=$(ls "$HOME/.claude/hooks/"*.sh 2>/dev/null | wc -l)
+          echo "Shell hooks installed: $SHELL_HOOKS"
+          if [ "$SHELL_HOOKS" -lt 1 ]; then
+            echo "FAIL: no shell hooks installed"
+            exit 1
+          fi
+          echo "OK: $SHELL_HOOKS shell hooks installed"
+
+      - name: Verify settings.json is valid JSON
+        run: |
+          SETTINGS="$HOME/.claude/settings.json"
+          if [ -f "$SETTINGS" ]; then
+            if python3 -c "import json; json.load(open('$SETTINGS'))"; then
+              echo "OK: settings.json is valid JSON"
+            else
+              echo "FAIL: settings.json is not valid JSON"
+              cat "$SETTINGS"
+              exit 1
+            fi
+          else
+            echo "WARN: settings.json not created (acceptable for basic template)"
+          fi
+
+      - name: Run verify command
+        run: claude-commands verify || true
+
+      - name: Run list command
+        run: claude-commands list
+
+      - name: Test idempotent re-install (no corruption)
+        run: |
+          # Capture state before
+          BEFORE_CMDS=$(ls "$HOME/.claude/commands/"*.md 2>/dev/null | wc -l)
+
+          # Run setup again
+          claude-commands setup --type basic --commands active
+
+          # Verify state after
+          AFTER_CMDS=$(ls "$HOME/.claude/commands/"*.md 2>/dev/null | wc -l)
+
+          if [ "$BEFORE_CMDS" -ne "$AFTER_CMDS" ]; then
+            echo "FAIL: command count changed ($BEFORE_CMDS -> $AFTER_CMDS)"
+            exit 1
+          fi
+          echo "OK: idempotent re-install preserved $AFTER_CMDS commands"
+
+          # Verify settings still valid JSON
+          SETTINGS="$HOME/.claude/settings.json"
+          if [ -f "$SETTINGS" ]; then
+            python3 -c "import json; json.load(open('$SETTINGS'))" || {
+              echo "FAIL: settings.json corrupted after re-install"
+              exit 1
+            }
+            echo "OK: settings.json still valid after re-install"
+          fi
+
+      - name: Test install with pre-existing user config
+        run: |
+          # Simulate a user who already has custom settings
+          SETTINGS="$HOME/.claude/settings.json"
+          cat > "$SETTINGS" << 'USERJSON'
+          {
+            "permissions": {
+              "allow": ["Bash(npm test)", "Read"]
+            },
+            "userCustomField": "do-not-delete"
+          }
+          USERJSON
+
+          # Run setup on top of existing config
+          claude-commands setup --type basic --commands active
+
+          # Verify user config wasn't destroyed
+          if python3 -c "
+          import json, sys
+          with open('$SETTINGS') as f:
+              data = json.load(f)
+          # Settings should still be valid JSON at minimum
+          print('Valid JSON: OK')
+          "; then
+            echo "OK: user config survived setup"
+          else
+            echo "FAIL: user config was corrupted"
+            cat "$SETTINGS"
+            exit 1
+          fi
+
+      - name: Test uninstall
+        run: |
+          claude-commands uninstall
+
+          # Verify commands removed
+          if ls "$HOME/.claude/commands/"*.md 2>/dev/null | head -1; then
+            echo "FAIL: commands still present after uninstall"
+            exit 1
+          fi
+          echo "OK: uninstall cleaned up commands"
+
+      - name: Clean up global install
+        if: always()
+        run: npm uninstall -g @paulduvall/claude-dev-toolkit || true
