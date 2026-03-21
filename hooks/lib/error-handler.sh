@@ -40,7 +40,7 @@ log_message() {
 
 log_info() {
     local message="$1"
-    log_message "INFO" "$message"
+    log_message "INFO" "$message" >&2
 }
 
 log_warning() {
