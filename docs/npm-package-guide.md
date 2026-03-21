@@ -127,7 +127,7 @@ claude-commands config --template security
 
 - **Interactive Setup Wizard:** Guided configuration process
 - **Error Recovery:** Automatic fallback mechanisms
-- **Cross-Platform:** Works on macOS, Linux, and Windows
+- **Cross-Platform:** Works on macOS and Linux (Windows via WSL)
 - **Claude Code Compatibility:** Checks for Claude Code installation
 - **Permission Handling:** Manages file permissions automatically
 
