@@ -484,7 +484,7 @@ The hook system has evolved through two major architectural improvements:
 
 ## Contributing
 
-We welcome contributions! Please read our [Contributing Guide](./docs/CONTRIBUTING.md) for details on:
+We welcome contributions! Key guidelines:
 
 - **Conventional Commits**: We use semantic versioning with automated releases
 - **Development Workflow**: Fork, branch, test, and submit PRs
@@ -495,7 +495,7 @@ We welcome contributions! Please read our [Contributing Guide](./docs/CONTRIBUTI
 
 1. **Fork and clone** the repository
 2. **Create a feature branch**: `git checkout -b feat/your-feature`
-3. **Make changes** following our [command development patterns](./docs/CONTRIBUTING.md#command-development-guidelines)
+3. **Make changes** following existing command development patterns
 4. **Write tests** for your changes
 5. **Use conventional commits**: `git commit -m "feat(xcommand): add new feature"`
 6. **Push and create PR** targeting the `main` branch
