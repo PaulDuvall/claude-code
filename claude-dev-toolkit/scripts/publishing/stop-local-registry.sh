@@ -1,6 +1,7 @@
 #!/bin/bash
+set -euo pipefail
 
-echo "🛑 Stopping Verdaccio Local Private NPM Registry"
+echo "Stopping Verdaccio Local Private NPM Registry"
 
 REGISTRY_PID_FILE="/tmp/verdaccio.pid"
 RED='\033[0;31m'

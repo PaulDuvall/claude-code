@@ -66,8 +66,7 @@ discover_available_subagents() {
     done < <(find "$search_dir" -name "*$SUBAGENT_FILE_EXTENSION" -type f -print0 2>/dev/null)
     
     # Sort subagents alphabetically
-    IFS=$'\n' subagents=($(sort <<<"${subagents[*]}"))
-    unset IFS
+    mapfile -t subagents < <(printf '%s\n' "${subagents[@]}" | sort)
     
     log_debug "Discovery complete: ${#subagents[@]} valid subagents found"
     
@@ -110,8 +109,7 @@ get_all_available_subagents() {
     done
     
     # Sort results
-    IFS=$'\n' unique_subagents=($(sort <<<"${unique_subagents[*]}"))
-    unset IFS
+    mapfile -t unique_subagents < <(printf '%s\n' "${unique_subagents[@]}" | sort)
     
     log_debug "Total unique subagents available: ${#unique_subagents[@]}"
     

@@ -1,6 +1,7 @@
 #!/bin/bash
+set -euo pipefail
 
-echo "🔑 NPM Public Registry Authentication Setup"
+echo "NPM Public Registry Authentication Setup"
 echo "==========================================="
 echo
 

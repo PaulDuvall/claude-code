@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Claude Dev Toolkit Manual Test Suite
 # Comprehensive test script for manual installation and validation

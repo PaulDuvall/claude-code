@@ -293,7 +293,8 @@ deploy_subagent() {
     fi
     
     # Verify files were copied successfully
-    local target_config="$SUBAGENTS_DIR/$(basename "$config_file")"
+    local target_config
+    target_config="$SUBAGENTS_DIR/$(basename "$config_file")"
     if [[ ! -f "$target_config" ]]; then
         echo -e "${RED}✗ Configuration file was not copied successfully${NC}"
         return 1
@@ -321,7 +322,8 @@ update_settings() {
 
     # Create backup if settings exist
     if [[ -f "$settings_file" ]]; then
-        local backup_file="$settings_file.backup.$(date +%Y%m%d_%H%M%S)"
+        local backup_file
+        backup_file="$settings_file.backup.$(date +%Y%m%d_%H%M%S)"
         if ! cp "$settings_file" "$backup_file"; then
             echo -e "${RED}Error: Failed to create backup of settings file${NC}"
             exit 1

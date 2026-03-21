@@ -77,8 +77,10 @@ main() {
     
     # Get basic file info if file exists
     if [[ -n "$file_path" ]] && [[ "$file_path" != "unknown" ]] && [[ -f "$file_path" ]]; then
-        local file_size=$(wc -c < "$file_path" 2>/dev/null || echo "0")
-        local file_lines=$(wc -l < "$file_path" 2>/dev/null || echo "0")
+        local file_size
+        file_size=$(wc -c < "$file_path" 2>/dev/null || echo "0")
+        local file_lines
+        file_lines=$(wc -l < "$file_path" 2>/dev/null || echo "0")
         
         log "File size: $file_size bytes"
         log "File lines: $file_lines"
