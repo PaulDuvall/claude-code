@@ -28,9 +28,12 @@ Display this usage information and exit.
 ### Step 1: Find the Execution Plan
 
 Search for execution plan files in the current directory:
-- Look for files matching: `*plan*`, `*PLAN*`, `EXECUTION-PLAN*`, `*execution*plan*`
+
+```bash
+find . -maxdepth 2 -iname "*plan*" -name "*.md" ! -path "*/node_modules/*" ! -path "*/.git/*" 2>/dev/null
+```
+
 - Common names: `EXECUTION_PLAN.md`, `PLAN.md`, `execution-plan.md`
-- Exclude: `node_modules/`, `.git/`, `vendor/`
 
 If no plan file is found:
 - Tell the user: "No execution plan found in this directory."

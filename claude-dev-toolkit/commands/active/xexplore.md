@@ -37,8 +37,10 @@ Stop and wait for input.
 ### Step 1: Search by File Name
 
 Find files whose names match the topic:
-- Use glob patterns: `**/*$ARGUMENTS*`, case-insensitive
-- Exclude: `node_modules/`, `.git/`, `vendor/`, `dist/`, `build/`
+
+```bash
+find . -iname "*$ARGUMENTS*" ! -path "*/node_modules/*" ! -path "*/.git/*" ! -path "*/vendor/*" 2>/dev/null | head -30
+```
 
 ### Step 2: Search by Content
 

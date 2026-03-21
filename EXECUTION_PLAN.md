@@ -6,7 +6,7 @@
 # Execution Plan
 
 **Status:** IN PROGRESS | Generated: 2026-03-20T20:45:00-04:00
-**Total tasks:** 9 | **Done:** 7 | **Remaining:** 2
+**Total tasks:** 9 | **Done:** 8 | **Remaining:** 1
 
 ## Task Queue
 
@@ -19,8 +19,8 @@
 | 5 | claude-code-3og | Create xcontinue slash command | done | #1, #3 | 2026-03-20 | 2026-03-20 |
 | 6 | claude-code-6ck | Create xexplore slash command | done | #1 | 2026-03-20 | 2026-03-20 |
 | 7 | claude-code-qji | Create verify-before-edit hook | done | #1, #2 | 2026-03-20 | 2026-03-20 |
-| 8 | claude-code-vc3 | Update stale model ID in templates | pending | #1, #2 | | |
-| 9 | claude-code-p61 | Update postinstall.js and setup-wizard.js | pending | #2, #4, #7 | | |
+| 8 | claude-code-vc3 | Update stale model ID in templates | done | #1, #2 | 2026-03-20 | 2026-03-20 |
+| 9 | claude-code-p61 | Update postinstall.js and setup-wizard.js | in-progress | #2, #4, #7 | 2026-03-20 | |
 
 ## Execution Phases
 
