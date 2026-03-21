@@ -221,6 +221,18 @@ EOF
     )
 }
 
+test_detects_pytest_ini_alone() {
+    (
+        cd "$TEST_DIR" && \
+        echo "[pytest]" > pytest.ini
+        export HOME="$TEST_DIR"
+        export CLAUDE_TOOL="Bash"
+        export CLAUDE_CONTENT="git commit -m test"
+        bash "$HOOK_PATH" > /dev/null 2>&1
+        grep -q "Detected framework: pytest" "$TEST_DIR/.claude/logs/pre-commit-test-runner.log"
+    )
+}
+
 test_detects_npm_test_framework() {
     (
         cd "$TEST_DIR" && \
@@ -391,7 +403,11 @@ main() {
           "$TEST_DIR/go.mod" "$TEST_DIR/Cargo.toml" "$TEST_DIR/mix.exs"
 
     > "$TEST_DIR/.claude/logs/pre-commit-test-runner.log"
-    run_test "Detects pytest framework" test_detects_pytest_framework
+    run_test "Detects pytest via pyproject.toml" test_detects_pytest_framework
+    rm -f "$TEST_DIR/pytest.ini" "$TEST_DIR/pyproject.toml"
+
+    > "$TEST_DIR/.claude/logs/pre-commit-test-runner.log"
+    run_test "Detects pytest via pytest.ini alone" test_detects_pytest_ini_alone
     rm -f "$TEST_DIR/pytest.ini" "$TEST_DIR/pyproject.toml"
 
     > "$TEST_DIR/.claude/logs/pre-commit-test-runner.log"
