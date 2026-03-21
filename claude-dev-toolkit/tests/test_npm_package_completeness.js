@@ -19,7 +19,8 @@ const EXPECTED = {
     templates: [
         'basic-settings.json',
         'comprehensive-settings.json',
-        'security-focused-settings.json'
+        'security-focused-settings.json',
+        'global-claude.md'
     ],
     hooks: [
         'file-logger.sh',

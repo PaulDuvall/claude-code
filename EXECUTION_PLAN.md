@@ -6,15 +6,15 @@
 # Execution Plan
 
 **Status:** IN PROGRESS | Generated: 2026-03-20T20:45:00-04:00
-**Total tasks:** 9 | **Done:** 1 | **Remaining:** 8
+**Total tasks:** 9 | **Done:** 2 | **Remaining:** 7
 
 ## Task Queue
 
 | # | Bead ID | Task Name | Status | Dependencies | Started | Completed |
 |---|---------|-----------|--------|--------------|---------|-----------|
 | 1 | claude-code-8g8 | Read npm sync rules (no code) | done | none | 2026-03-20 | 2026-03-20 |
-| 2 | claude-code-d6g | Fix broken hook references (13 skeleton hooks) | in-progress | #1 | 2026-03-20 | |
-| 3 | claude-code-kxh | Add verification/zero-error rules to global CLAUDE.md | pending | #1, #2 | | |
+| 2 | claude-code-d6g | Fix broken hook references (13 skeleton hooks) | done | #1 | 2026-03-20 | 2026-03-20 |
+| 3 | claude-code-kxh | Add verification/zero-error rules to global CLAUDE.md | in-progress | #1, #2 | 2026-03-20 | |
 | 4 | claude-code-5mw | Create pre-commit test runner hook | pending | #1, #2 | | |
 | 5 | claude-code-3og | Create xcontinue slash command | pending | #1, #3 | | |
 | 6 | claude-code-6ck | Create xexplore slash command | pending | #1 | | |
@@ -48,3 +48,4 @@ _Will be populated when execution begins._
 ## Completed Work Log
 
 - #1 claude-code-8g8: Read-only prerequisite — 6 dual-write rules acknowledged.
+- #2 claude-code-d6g: Created 13 skeleton hooks, dual-written, tests refactored and passing.
