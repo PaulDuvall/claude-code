@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Claude Code Custom Commands is a comprehensive collection of 58 custom slash commands for Claude Code that accelerate software development workflows through AI-powered automation. These commands provide intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring.
+Claude Code Custom Commands is a comprehensive collection of 61 custom slash commands for Claude Code that accelerate software development workflows through AI-powered automation. These commands provide intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring.
 
 ## Core Philosophy
 
@@ -35,9 +35,12 @@ claude-code/
 │   ├── claude-custom-commands.md      # Command reference guide
 │   ├── claude-code-hooks-system.md    # Hooks documentation
 │   └── post-advanced-claude-code.md   # Advanced usage guide
-├── hooks/                             # Hook implementations
+├── hooks/                             # Hook implementations (22 hooks)
 │   ├── file-logger.sh                # File operation logging
-│   └── prevent-credential-exposure.sh # Security hook
+│   ├── prevent-credential-exposure.sh # Credential exposure prevention
+│   ├── pre-commit-test-runner.sh     # Auto-detect and run tests before commits
+│   ├── verify-before-edit.sh         # Warn about fabricated references
+│   └── [18 additional hooks]         # Lifecycle, audit, and cleanup hooks
 ├── lib/                               # Shared utility libraries
 │   ├── auth.sh                        # Authentication utilities
 │   ├── config.sh                     # Configuration management
@@ -47,11 +50,13 @@ claude-code/
 │   ├── utils.sh                      # General utilities
 │   └── validation.sh                 # Validation functions
 ├── slash-commands/                    # Command implementations
-│   ├── active/                        # 13 production-ready commands
+│   ├── active/                        # 15 production-ready commands
 │   │   ├── xarchitecture.md          # Architecture design and analysis
 │   │   ├── xconfig.md                # Configuration management
+│   │   ├── xcontinue.md              # Execution plan continuation
 │   │   ├── xdebug.md                 # Advanced debugging
 │   │   ├── xdocs.md                  # Documentation generation
+│   │   ├── xexplore.md               # Codebase exploration (read-only)
 │   │   ├── xgit.md                   # Automated Git workflow
 │   │   ├── xpipeline.md              # CI/CD pipeline management
 │   │   ├── xquality.md               # Code quality analysis
@@ -61,7 +66,7 @@ claude-code/
 │   │   ├── xspec.md                  # Specification generation
 │   │   ├── xtdd.md                   # Test-driven development
 │   │   └── xtest.md                  # Testing automation
-│   └── experiments/                   # 44 experimental commands
+│   └── experiments/                   # 46 experimental commands
 │       ├── xact.md                   # GitHub Actions testing
 │       ├── xanalytics.md             # Analytics and metrics
 │       ├── xapi.md                   # API development tools
@@ -82,7 +87,8 @@ claude-code/
 └── templates/                         # Configuration templates
     ├── basic-settings.json           # Basic Claude Code settings
     ├── comprehensive-settings.json   # Advanced settings
-    └── security-focused-settings.json # Security-focused config
+    ├── security-focused-settings.json # Security-focused config
+    └── global-claude.md              # Global CLAUDE.md instructions template
 ```
 
 ## Command Categories
@@ -104,6 +110,8 @@ claude-code/
 - `/xtest` - Comprehensive testing with traceability
 - `/xcoverage` - Code coverage analysis
 - `/xdebug` - Advanced debugging assistance
+- `/xcontinue` - Execution plan continuation across sessions
+- `/xexplore` - Codebase exploration before changes (read-only)
 
 ### 🔒 Security & Compliance
 - `/xsecurity` - Security vulnerability scanning

@@ -59,6 +59,21 @@ cp templates/comprehensive-settings.json ~/.claude/settings.json
 # Configure webhooks and organizational settings
 ```
 
+### 4. `global-claude.md`
+**Use case**: Universal development standards for all projects
+**Features**:
+- Verification-before-action rules (prevent fabricated references)
+- Zero-error test policy
+- Platform-specific formatting guidelines (LinkedIn, Slack, GitHub, email)
+- Code structure limits (function length, nesting, complexity)
+- Security checklist (no hardcoded secrets, parameterized SQL, input validation)
+- Session management and failure protocols
+
+**To use**:
+```bash
+cp templates/global-claude.md ~/.claude/CLAUDE.md
+```
+
 ## Configuration Notes
 
 ### Settings Hierarchy

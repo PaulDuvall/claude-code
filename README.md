@@ -4,12 +4,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm version](https://badge.fury.io/js/@paulduvall%2Fclaude-dev-toolkit.svg)](https://www.npmjs.com/package/@paulduvall/claude-dev-toolkit)
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-blue)
-![Active Commands](https://img.shields.io/badge/active%20commands-13-blue)
+![Active Commands](https://img.shields.io/badge/active%20commands-15-blue)
 ![Experimental Commands](https://img.shields.io/badge/experimental%20commands-46-orange)
-![Total Commands](https://img.shields.io/badge/total%20commands-59-brightgreen)
+![Total Commands](https://img.shields.io/badge/total%20commands-61-brightgreen)
 ![Sub-agents](https://img.shields.io/badge/sub--agents-26-purple)
 
-**Transform Claude Code into a complete development platform** with 59 AI-powered commands that automate your entire software development workflow. Now with improved git identity management!
+**Transform Claude Code into a complete development platform** with 61 AI-powered commands that automate your entire software development workflow. Now with improved git identity management!
 
 ## What This Does
 
@@ -110,7 +110,7 @@ npm install -g @anthropic-ai/claude-code
 npm install -g @paulduvall/claude-dev-toolkit
 
 # 3. Deploy commands to Claude Code
-claude-commands install --active    # Install 13 core commands
+claude-commands install --active    # Install 15 core commands
 # OR
 claude-commands install --all       # Install all 59 commands
 
@@ -154,17 +154,19 @@ claude-commands install --all            # All 59 commands
 claude-commands subagents --install      # 26 specialized AI assistants
 ```
 
-**That's it!** You now have 13 powerful AI development commands + intelligent subagents available in any project.
+**That's it!** You now have 15 powerful AI development commands + intelligent subagents available in any project.
 
 ## Core Commands (Always Available)
 
-Once installed, these 13 essential commands work in **any project** on your machine:
+Once installed, these 15 essential commands work in **any project** on your machine:
 
 ### 💻 **Daily Development**
 - **`/xtest`** - Smart test runner (detects framework, runs all tests)
 - **`/xquality`** - Code quality checks (format, lint, type-check)
 - **`/xquality fix`** - Auto-fix common quality issues
 - **`/xgit`** - Automated git workflow with AI-generated commit messages
+- **`/xcontinue`** - Resume execution plans across sessions with context handoff
+- **`/xexplore`** - Explore codebase topics before making changes (read-only)
 
 ### 🔒 **Security & Quality**
 - **`/xsecurity`** - Comprehensive security scanning (secrets, vulnerabilities)
@@ -356,7 +358,7 @@ Deploy with: `./deploy.sh --experiments`
 npm install -g @paulduvall/claude-dev-toolkit
 
 # Install command sets
-claude-commands install --active       # Install 13 core commands
+claude-commands install --active       # Install 15 core commands
 claude-commands install --experiments # Install 46 experimental commands
 claude-commands install --all          # Install all 59 commands
 
@@ -398,7 +400,7 @@ npm uninstall -g @paulduvall/claude-dev-toolkit
 ```bash
 git clone https://github.com/PaulDuvall/claude-code.git
 cd claude-code
-./setup.sh                           # Basic setup with 13 core commands + subagents
+./setup.sh                           # Basic setup with 15 core commands + subagents
 ./setup.sh --setup-type security     # Includes security hooks
 ./setup.sh --setup-type comprehensive # All commands + all subagents + security
 ./setup.sh --skip-subagents          # Skip subagent deployment
