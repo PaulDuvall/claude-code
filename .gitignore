@@ -350,3 +350,4 @@ Thumbs.db
 # Add any project-specific files to ignore here
 test-results/
 tests/test-results/
+.npmrc

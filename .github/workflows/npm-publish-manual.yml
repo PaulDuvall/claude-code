@@ -3,311 +3,50 @@ name: NPM Publish
 on:
   workflow_dispatch:
     inputs:
-      npm_token:
-        description: 'NPM Token (optional if stored in SSM - get from https://www.npmjs.com/settings/tokens)'
-        required: false
-        type: string
-
-permissions:
-  id-token: write
-  contents: read
+      tag:
+        description: 'NPM dist-tag (alpha for pre-release, latest for stable)'
+        required: true
+        default: 'alpha'
+        type: choice
+        options:
+          - alpha
+          - latest
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-      
-      - name: Initialize Workflow Report
-        run: |
-          echo "📋 Initializing NPM Publish Report..."
-          mkdir -p workflow-reports
-          
-          # Create report header
-          cat > workflow-reports/npm-publish-report.md << 'EOF'
-          # NPM Publish Workflow Report
-          
-          ## Workflow Information
-          - **Run ID**: ${{ github.run_id }}
-          - **Run Number**: ${{ github.run_number }}
-          - **Actor**: ${{ github.actor }}
-          - **Event**: ${{ github.event_name }}
-          - **Repository**: ${{ github.repository }}
-          - **Branch**: ${{ github.ref_name }}
-          - **Commit SHA**: ${{ github.sha }}
-          - **Timestamp**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
-          - **Runner OS**: ${{ runner.os }}
-          
-          ## Workflow Steps
-          
-          EOF
-          
-          echo "✅ Report initialized" >> workflow-reports/npm-publish-report.md
-      
+
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
-      
-      - name: Report Node.js Setup
-        run: |
-          echo "" >> workflow-reports/npm-publish-report.md
-          echo "### 🟢 Node.js Setup" >> workflow-reports/npm-publish-report.md
-          echo "- **Node Version**: $(node --version)" >> workflow-reports/npm-publish-report.md
-          echo "- **NPM Version**: $(npm --version)" >> workflow-reports/npm-publish-report.md
-          echo "- **Registry**: $(npm config get registry)" >> workflow-reports/npm-publish-report.md
-          echo "- **Status**: ✅ Completed successfully" >> workflow-reports/npm-publish-report.md
-      
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
-        with:
-          role-to-assume: ${{ vars.AWS_DEPLOYMENT_ROLE }}
-          aws-region: us-east-1
-      
-      - name: Report AWS Setup
-        run: |
-          echo "" >> workflow-reports/npm-publish-report.md
-          echo "### 🔑 AWS Credentials Setup" >> workflow-reports/npm-publish-report.md
-          echo "- **AWS Region**: us-east-1" >> workflow-reports/npm-publish-report.md
-          echo "- **Role**: ${{ vars.AWS_DEPLOYMENT_ROLE }}" >> workflow-reports/npm-publish-report.md
-          echo "- **Status**: ✅ AWS credentials configured" >> workflow-reports/npm-publish-report.md
-      
-      - name: Retrieve or Store NPM Token
-        id: npm-token
-        run: |
-          # Try to get token from SSM first if no token provided
-          if [ -z "${{ inputs.npm_token }}" ]; then
-            echo "No token provided, checking SSM Parameter Store..."
-            if NPM_TOKEN=$(aws ssm get-parameter --name "/npm/tokens/PaulDuvall-claude-code" --with-decryption --query 'Parameter.Value' --output text 2>/dev/null); then
-              echo "✅ Retrieved NPM token from SSM Parameter Store"
-              echo "token=$NPM_TOKEN" >> $GITHUB_OUTPUT
-              echo "::add-mask::$NPM_TOKEN"
-            else
-              echo "❌ No token provided and no token found in SSM"
-              echo "Please provide an NPM token or ensure one is stored in SSM"
-              exit 1
-            fi
-          else
-            echo "Using provided NPM token"
-            echo "token=${{ inputs.npm_token }}" >> $GITHUB_OUTPUT
-            echo "::add-mask::${{ inputs.npm_token }}"
-            
-            # Store/update token in SSM for future use
-            if aws ssm put-parameter \
-              --name "/npm/tokens/PaulDuvall-claude-code" \
-              --value "${{ inputs.npm_token }}" \
-              --type "SecureString" \
-              --overwrite \
-              --description "NPM token for publishing @paulduvall/claude-dev-toolkit" 2>/dev/null; then
-              echo "✅ NPM token stored/updated in SSM Parameter Store"
-            else
-              echo "⚠️ Could not store token in SSM (continuing anyway)"
-            fi
-          fi
-      
-      - name: Report NPM Token Retrieval
-        run: |
-          echo "" >> workflow-reports/npm-publish-report.md
-          echo "### 🔐 NPM Token Management" >> workflow-reports/npm-publish-report.md
-          if [ -z "${{ inputs.npm_token }}" ]; then
-            echo "- **Source**: SSM Parameter Store" >> workflow-reports/npm-publish-report.md
-          else
-            echo "- **Source**: Workflow Input" >> workflow-reports/npm-publish-report.md
-          fi
-          echo "- **Parameter**: /npm/tokens/PaulDuvall-claude-code" >> workflow-reports/npm-publish-report.md
-          echo "- **Status**: ✅ NPM token retrieved successfully" >> workflow-reports/npm-publish-report.md
-      
-      - name: Configure NPM
-        run: |
-          npm config set //registry.npmjs.org/:_authToken=${{ steps.npm-token.outputs.token }}
-          echo "::add-mask::${{ steps.npm-token.outputs.token }}"
-      
-      - name: Report NPM Configuration
-        run: |
-          echo "" >> workflow-reports/npm-publish-report.md
-          echo "### ⚙️ NPM Configuration" >> workflow-reports/npm-publish-report.md
-          echo "- **Registry**: https://registry.npmjs.org" >> workflow-reports/npm-publish-report.md
-          echo "- **Auth Token**: [MASKED]" >> workflow-reports/npm-publish-report.md
-          echo "- **Status**: ✅ NPM configured for publishing" >> workflow-reports/npm-publish-report.md
-          
-      - name: Verify NPM Authentication
-        run: |
-          echo "Verifying NPM authentication..."
-          NPM_USER=$(npm whoami 2>/dev/null || echo "unknown")
-          echo "Registry config:"
-          npm config get registry
-      
-      - name: Report NPM Authentication
-        run: |
-          echo "" >> workflow-reports/npm-publish-report.md
-          echo "### 🔍 NPM Authentication Verification" >> workflow-reports/npm-publish-report.md
-          NPM_USER=$(npm whoami 2>/dev/null || echo "unknown")
-          if [ "$NPM_USER" != "unknown" ]; then
-            echo "- **Authenticated User**: $NPM_USER" >> workflow-reports/npm-publish-report.md
-            echo "- **Status**: ✅ Authentication verified" >> workflow-reports/npm-publish-report.md
-          else
-            echo "- **Status**: ⚠️ Could not verify authentication" >> workflow-reports/npm-publish-report.md
-          fi
-          echo "- **Registry**: $(npm config get registry)" >> workflow-reports/npm-publish-report.md
-      
-      - name: Publish
+
+      - name: Install dependencies and run tests
+        working-directory: claude-dev-toolkit
+        run: npm ci && npm test && npm run validate
+
+      - name: Publish to NPM
+        working-directory: claude-dev-toolkit
         env:
-          NODE_AUTH_TOKEN: ${{ steps.npm-token.outputs.token }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          cd claude-dev-toolkit
-          echo "Publishing @paulduvall/claude-dev-toolkit..."
-          echo "Current directory: $(pwd)"
-          echo "Package name from package.json:"
-          grep '"name"' package.json
-          
-          # Capture package info for reporting
-          PACKAGE_NAME=$(grep '"name"' package.json | sed 's/.*"name":\s*"\([^"]*\)".*/\1/')
-          PACKAGE_VERSION=$(grep '"version"' package.json | sed 's/.*"version":\s*"\([^"]*\)".*/\1/')
-          
-          npm publish --access public --verbose 2>&1 || {
-            echo "❌ Publish failed. Common causes:"
-            echo "  1. Token doesn't have publish permissions"
-            echo "  2. Package name already exists (try bumping version)"
-            echo "  3. Network/registry issues"
-            exit 1
-          }
-      
-      - name: Report Package Publishing
-        run: |
-          cd claude-dev-toolkit
-          PACKAGE_NAME=$(grep '"name"' package.json | sed 's/.*"name":\s*"\([^"]*\)".*/\1/')
-          PACKAGE_VERSION=$(grep '"version"' package.json | sed 's/.*"version":\s*"\([^"]*\)".*/\1/')
-          PACKAGE_DESC=$(grep '"description"' package.json | sed 's/.*"description":\s*"\([^"]*\)".*/\1/')
-          
-          echo "" >> ../workflow-reports/npm-publish-report.md
-          echo "### 📦 Package Publishing Results" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Package Name**: \`$PACKAGE_NAME\`" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Version**: \`$PACKAGE_VERSION\`" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Description**: $PACKAGE_DESC" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Access**: public" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Registry**: https://registry.npmjs.org" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Status**: ✅ Package published successfully" >> ../workflow-reports/npm-publish-report.md
-          echo "" >> ../workflow-reports/npm-publish-report.md
-          echo "#### 🔗 Package Links" >> ../workflow-reports/npm-publish-report.md
-          echo "- **NPM Package**: [https://www.npmjs.com/package/$PACKAGE_NAME](https://www.npmjs.com/package/$PACKAGE_NAME)" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Specific Version**: [https://www.npmjs.com/package/$PACKAGE_NAME/v/$PACKAGE_VERSION](https://www.npmjs.com/package/$PACKAGE_NAME/v/$PACKAGE_VERSION)" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Install Command**: \`npm install -g $PACKAGE_NAME@$PACKAGE_VERSION\`" >> ../workflow-reports/npm-publish-report.md
-      
-      - name: Verify SSM parameter (Optional)
-        continue-on-error: true
-        run: |
-          echo "Verifying SSM parameter exists..."
-          if aws ssm get-parameter --name "/npm/tokens/PaulDuvall-claude-code" --query 'Parameter.Name' --output text 2>/dev/null; then
-            echo "✅ SSM parameter verified"
-          else
-            echo "⚠️ SSM parameter not accessible (insufficient permissions or not created)"
-            echo "To enable SSM access, add ssm:GetParameter permission to your IAM role"
-          fi
-      
-      - name: Report SSM Verification
-        continue-on-error: true
-        run: |
-          echo "" >> workflow-reports/npm-publish-report.md
-          echo "### 🔒 SSM Parameter Verification" >> workflow-reports/npm-publish-report.md
-          if aws ssm get-parameter --name "/npm/tokens/PaulDuvall-claude-code" --query 'Parameter.Name' --output text 2>/dev/null; then
-            echo "- **Parameter**: /npm/tokens/PaulDuvall-claude-code" >> workflow-reports/npm-publish-report.md
-            echo "- **Status**: ✅ SSM parameter accessible" >> workflow-reports/npm-publish-report.md
-          else
-            echo "- **Parameter**: /npm/tokens/PaulDuvall-claude-code" >> workflow-reports/npm-publish-report.md
-            echo "- **Status**: ⚠️ SSM parameter not accessible" >> workflow-reports/npm-publish-report.md
-          fi
-      
-      - name: Add Test Results Summary
-        run: |
-          cd claude-dev-toolkit
-          PACKAGE_NAME=$(grep '"name"' package.json | sed 's/.*"name":\s*"\([^"]*\)".*/\1/')
-          PACKAGE_VERSION=$(grep '"version"' package.json | sed 's/.*"version":\s*"\([^"]*\)".*/\1/')
-          
-          echo "" >> ../workflow-reports/npm-publish-report.md
-          echo "### 🧪 Test Results Summary" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Test Execution**: All test suites executed during \`prepublishOnly\` script" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Test Status**: ✅ All tests passed successfully" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Coverage**: 25/25 test suites (100% success rate)" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Key Features Tested**:" >> ../workflow-reports/npm-publish-report.md
-          echo "  - ✅ OIDC command functionality" >> ../workflow-reports/npm-publish-report.md
-          echo "  - ✅ CLI foundation and commands" >> ../workflow-reports/npm-publish-report.md
-          echo "  - ✅ Configuration management" >> ../workflow-reports/npm-publish-report.md
-          echo "  - ✅ Package completeness validation" >> ../workflow-reports/npm-publish-report.md
-          echo "  - ✅ User experience workflows" >> ../workflow-reports/npm-publish-report.md
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          echo "Publishing $PACKAGE_NAME@$PACKAGE_VERSION with tag ${{ inputs.tag }}"
+          npm publish --access public --tag ${{ inputs.tag }}
 
-      - name: Finalize Workflow Report
+      - name: Summary
+        working-directory: claude-dev-toolkit
         run: |
-          cd claude-dev-toolkit
-          PACKAGE_NAME=$(grep '"name"' package.json | sed 's/.*"name":\s*"\([^"]*\)".*/\1/')
-          PACKAGE_VERSION=$(grep '"version"' package.json | sed 's/.*"version":\s*"\([^"]*\)".*/\1/')
-          
-          echo "" >> ../workflow-reports/npm-publish-report.md
-          echo "### 🎉 Workflow Completion" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Completion Time**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Overall Status**: ✅ NPM publish workflow completed successfully" >> ../workflow-reports/npm-publish-report.md
-          echo "" >> ../workflow-reports/npm-publish-report.md
-          echo "#### 📋 Quick Access" >> ../workflow-reports/npm-publish-report.md
-          echo "- **Install Package**: \`npm install -g $PACKAGE_NAME@$PACKAGE_VERSION\`" >> ../workflow-reports/npm-publish-report.md
-          echo "- **View on NPM**: [https://www.npmjs.com/package/$PACKAGE_NAME](https://www.npmjs.com/package/$PACKAGE_NAME)" >> ../workflow-reports/npm-publish-report.md
-          echo "- **GitHub Repository**: [${{ github.repository }}](https://github.com/${{ github.repository }})" >> ../workflow-reports/npm-publish-report.md
-          echo "- **This Run**: [Workflow Run #${{ github.run_number }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> ../workflow-reports/npm-publish-report.md
-          echo "" >> ../workflow-reports/npm-publish-report.md
-          echo "---" >> ../workflow-reports/npm-publish-report.md
-          echo "*Report generated automatically by GitHub Actions workflow*" >> ../workflow-reports/npm-publish-report.md
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
 
-      - name: Display Report Summary in Actions Output
-        run: |
-          cd claude-dev-toolkit
-          PACKAGE_NAME=$(grep '"name"' package.json | sed 's/.*"name":\s*"\([^"]*\)".*/\1/')
-          PACKAGE_VERSION=$(grep '"version"' package.json | sed 's/.*"version":\s*"\([^"]*\)".*/\1/')
-          
-          echo ""
-          echo "🎉 ================================="
-          echo "📦 NPM PUBLISH SUCCESSFUL!"
-          echo "================================="
-          echo "📋 Package: $PACKAGE_NAME@$PACKAGE_VERSION"
-          echo "🔗 NPM URL: https://www.npmjs.com/package/$PACKAGE_NAME"
-          echo "⚡ Install: npm install -g $PACKAGE_NAME@$PACKAGE_VERSION"
-          echo "📄 Full Report: Available in workflow artifacts"
-          echo "================================="
-          echo ""
-      
-      - name: Display Full Report
-        run: |
-          echo ""
-          echo "📄 ================================="
-          echo "📋 COMPLETE NPM PUBLISH REPORT"
-          echo "================================="
-          cat workflow-reports/npm-publish-report.md
-          echo ""
-          echo "================================="
-          echo ""
-
-      - name: Upload Workflow Report
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: npm-publish-report
-          path: workflow-reports/npm-publish-report.md
-          retention-days: 30
-          
-      - name: Set Job Summary
-        run: |
-          cd claude-dev-toolkit
-          PACKAGE_NAME=$(grep '"name"' package.json | sed 's/.*"name":\s*"\([^"]*\)".*/\1/')
-          PACKAGE_VERSION=$(grep '"version"' package.json | sed 's/.*"version":\s*"\([^"]*\)".*/\1/')
-          
-          # GitHub Actions Job Summary
-          echo "## 🎉 NPM Publish Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "## NPM Publish Successful" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 📦 Published Package" >> $GITHUB_STEP_SUMMARY
-          echo "- **Package**: [\`$PACKAGE_NAME@$PACKAGE_VERSION\`](https://www.npmjs.com/package/$PACKAGE_NAME)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Package**: \`$PACKAGE_NAME@$PACKAGE_VERSION\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag**: \`${{ inputs.tag }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Install**: \`npm install -g $PACKAGE_NAME@$PACKAGE_VERSION\`" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 🔗 Quick Links" >> $GITHUB_STEP_SUMMARY
-          echo "- [NPM Package Page](https://www.npmjs.com/package/$PACKAGE_NAME)" >> $GITHUB_STEP_SUMMARY
-          echo "- [Specific Version](https://www.npmjs.com/package/$PACKAGE_NAME/v/$PACKAGE_VERSION)" >> $GITHUB_STEP_SUMMARY
-          echo "- [GitHub Repository](https://github.com/${{ github.repository }})" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### ✅ Test Results" >> $GITHUB_STEP_SUMMARY
-          echo "All 25/25 test suites passed including new OIDC functionality!" >> $GITHUB_STEP_SUMMARY
+          echo "- **NPM**: [View on npmjs.com](https://www.npmjs.com/package/$PACKAGE_NAME)" >> $GITHUB_STEP_SUMMARY
