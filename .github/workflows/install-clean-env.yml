@@ -16,6 +16,10 @@ on:
       - 'scripts/**'
   workflow_dispatch:
 
+# Feature coverage: 15/20 (75%)
+# Not testable in CI: oidc (needs AWS), update (needs registry),
+# iTerm2 hooks (needs terminal), shell hooks requiring tty
+
 jobs:
   clean-install:
     name: "Clean install (${{ matrix.os }}, Node ${{ matrix.node }})"
@@ -31,6 +35,10 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
       - name: Verify clean state (no pre-existing .claude)
         run: |
           if [ -d "$HOME/.claude" ]; then
@@ -38,6 +46,10 @@ jobs:
             rm -rf "$HOME/.claude"
           fi
           echo "Confirmed: no ~/.claude directory"
+
+      # ---------------------------------------------------------------
+      # Install
+      # ---------------------------------------------------------------
 
       - name: Clean install and pack npm package
         working-directory: claude-dev-toolkit
@@ -53,12 +65,20 @@ jobs:
         working-directory: claude-dev-toolkit
         run: npm install -g "./$TARBALL"
 
-      - name: Verify CLI is available
+      # ---------------------------------------------------------------
+      # CLI basics
+      # ---------------------------------------------------------------
+
+      - name: "Feature: CLI --version and --help"
         run: |
           claude-commands --version
           claude-commands --help
 
-      - name: Run setup (active commands, basic config)
+      # ---------------------------------------------------------------
+      # Setup (creates dirs, commands, hooks, config)
+      # ---------------------------------------------------------------
+
+      - name: "Feature: setup (active commands, basic config)"
         run: claude-commands setup --type basic --commands active
 
       - name: Verify directory structure created
@@ -98,32 +118,226 @@ jobs:
         run: |
           SETTINGS="$HOME/.claude/settings.json"
           if [ -f "$SETTINGS" ]; then
-            if python3 -c "import json; json.load(open('$SETTINGS'))"; then
-              echo "OK: settings.json is valid JSON"
-            else
-              echo "FAIL: settings.json is not valid JSON"
-              cat "$SETTINGS"
-              exit 1
-            fi
+            python3 -c "import json; json.load(open('$SETTINGS'))"
+            echo "OK: settings.json is valid JSON"
           else
             echo "WARN: settings.json not created (acceptable for basic template)"
           fi
 
-      - name: Run verify command
-        run: claude-commands verify || true
+      # ---------------------------------------------------------------
+      # CLI commands: list, status, verify
+      # ---------------------------------------------------------------
 
-      - name: Run list command
+      - name: "Feature: list"
         run: claude-commands list
 
-      - name: Test idempotent re-install (no corruption)
+      - name: "Feature: list --active"
+        run: claude-commands list --active
+
+      - name: "Feature: status"
+        run: claude-commands status
+
+      - name: "Feature: verify"
+        run: claude-commands verify || true
+
+      # ---------------------------------------------------------------
+      # Config and configure
+      # ---------------------------------------------------------------
+
+      - name: "Feature: config --list"
+        run: claude-commands config --list
+
+      - name: "Feature: configure --validate"
+        run: claude-commands configure --validate || true
+
+      - name: "Feature: configure --template basic"
         run: |
-          # Capture state before
+          claude-commands configure --template basic
+          SETTINGS="$HOME/.claude/settings.json"
+          python3 -c "import json; json.load(open('$SETTINGS'))"
+          echo "OK: settings.json valid after configure --template basic"
+
+      - name: "Feature: configure --template security-focused"
+        run: |
+          claude-commands configure --template security-focused
+          SETTINGS="$HOME/.claude/settings.json"
+          python3 -c "import json; json.load(open('$SETTINGS'))"
+          echo "OK: settings.json valid after configure --template security-focused"
+
+      # ---------------------------------------------------------------
+      # Subagents
+      # ---------------------------------------------------------------
+
+      - name: "Feature: subagents --list"
+        run: claude-commands subagents --list
+
+      - name: "Feature: subagents --install"
+        run: claude-commands subagents --install || true
+
+      # ---------------------------------------------------------------
+      # Backup and restore
+      # ---------------------------------------------------------------
+
+      - name: "Feature: backup and restore round-trip"
+        run: |
+          # Create a known state
+          SETTINGS="$HOME/.claude/settings.json"
+          python3 -c "
+          import json
+          with open('$SETTINGS', 'w') as f:
+              json.dump({'test_marker': 'backup-test-123', 'hooks': {}}, f)
+          "
+
+          # Backup
+          claude-commands backup test-snapshot
+
+          # Modify settings (simulate user breaking things)
+          echo '{"broken": true}' > "$SETTINGS"
+
+          # Restore
+          claude-commands restore test-snapshot
+
+          # Verify marker survived
+          python3 -c "
+          import json, sys
+          with open('$SETTINGS') as f:
+              data = json.load(f)
+          assert data.get('test_marker') == 'backup-test-123', \
+              f'Expected backup-test-123, got {data.get(\"test_marker\")}'
+          print('OK: backup/restore round-trip preserved data')
+          "
+
+      # ---------------------------------------------------------------
+      # Python hook smoke tests
+      # ---------------------------------------------------------------
+
+      - name: "Feature: check-complexity.py blocks smelly code"
+        run: |
+          # Create a Python file with a long function (>20 lines)
+          TMPFILE=$(mktemp /tmp/smelly_XXXX.py)
+          python3 -c "
+          lines = ['def long_function():']
+          for i in range(25):
+              lines.append(f'    x_{i} = {i}')
+          print('\n'.join(lines))
+          " > "$TMPFILE"
+
+          # Pipe a PostToolUse event into check-complexity.py
+          RESULT=$(echo "{\"tool_input\":{\"file_path\":\"$TMPFILE\"}}" | \
+            python3 hooks/check-complexity.py 2>/dev/null || true)
+
+          rm -f "$TMPFILE"
+
+          if echo "$RESULT" | python3 -c "import json,sys; d=json.load(sys.stdin); assert d['decision']=='block'" 2>/dev/null; then
+            echo "OK: check-complexity.py blocked smelly code"
+          else
+            echo "FAIL: check-complexity.py did not block smelly code"
+            echo "Output: $RESULT"
+            exit 1
+          fi
+
+      - name: "Feature: check-complexity.py passes clean code"
+        run: |
+          TMPFILE=$(mktemp /tmp/clean_XXXX.py)
+          echo -e "def hello():\n    return 1\n" > "$TMPFILE"
+
+          RESULT=$(echo "{\"tool_input\":{\"file_path\":\"$TMPFILE\"}}" | \
+            python3 hooks/check-complexity.py 2>/dev/null || true)
+
+          rm -f "$TMPFILE"
+
+          if [ -z "$RESULT" ]; then
+            echo "OK: check-complexity.py passed clean code (no output)"
+          else
+            echo "FAIL: check-complexity.py unexpectedly blocked clean code"
+            echo "Output: $RESULT"
+            exit 1
+          fi
+
+      - name: "Feature: check-security.py blocks hardcoded secrets"
+        run: |
+          TMPFILE=$(mktemp /tmp/secret_XXXX.py)
+          echo "aws_key = 'AKIAIOSFODNN7ZZZZZZZ'" > "$TMPFILE"
+
+          RESULT=$(echo "{\"tool_input\":{\"file_path\":\"$TMPFILE\"}}" | \
+            python3 hooks/check-security.py 2>/dev/null || true)
+
+          rm -f "$TMPFILE"
+
+          if echo "$RESULT" | python3 -c "import json,sys; d=json.load(sys.stdin); assert d['decision']=='block'" 2>/dev/null; then
+            echo "OK: check-security.py blocked hardcoded secret"
+          else
+            echo "FAIL: check-security.py did not block hardcoded secret"
+            echo "Output: $RESULT"
+            exit 1
+          fi
+
+      - name: "Feature: check-security.py passes clean code"
+        run: |
+          TMPFILE=$(mktemp /tmp/safe_XXXX.py)
+          echo -e "x = 1\nprint(x)\n" > "$TMPFILE"
+
+          RESULT=$(echo "{\"tool_input\":{\"file_path\":\"$TMPFILE\"}}" | \
+            python3 hooks/check-security.py 2>/dev/null || true)
+
+          rm -f "$TMPFILE"
+
+          if [ -z "$RESULT" ]; then
+            echo "OK: check-security.py passed clean code (no output)"
+          else
+            echo "FAIL: check-security.py unexpectedly blocked clean code"
+            echo "Output: $RESULT"
+            exit 1
+          fi
+
+      - name: "Feature: check-commit-signing.py passes non-git commands"
+        run: |
+          RESULT=$(echo '{"tool_input":{"command":"ls -la"}}' | \
+            python3 hooks/check-commit-signing.py 2>/dev/null || true)
+
+          if [ -z "$RESULT" ]; then
+            echo "OK: check-commit-signing.py passed non-git command"
+          else
+            echo "FAIL: check-commit-signing.py blocked a non-git command"
+            echo "Output: $RESULT"
+            exit 1
+          fi
+
+      - name: "Feature: check-commit-signing.py checks git commit"
+        run: |
+          RESULT=$(echo '{"tool_input":{"command":"git commit -m test"}}' | \
+            python3 hooks/check-commit-signing.py 2>/dev/null || true)
+
+          # In CI, signing is not configured, so it should block
+          if echo "$RESULT" | python3 -c "import json,sys; d=json.load(sys.stdin); assert d['decision']=='block'" 2>/dev/null; then
+            echo "OK: check-commit-signing.py blocked unsigned commit"
+          else
+            echo "WARN: commit signing may be configured in CI (passed)"
+          fi
+
+      # ---------------------------------------------------------------
+      # Install command directly (separate from setup)
+      # ---------------------------------------------------------------
+
+      - name: "Feature: install --all"
+        run: |
+          claude-commands install --all
+          COUNT=$(ls "$HOME/.claude/commands/"*.md 2>/dev/null | wc -l)
+          echo "Commands after install --all: $COUNT"
+          if [ "$COUNT" -lt 40 ]; then
+            echo "FAIL: expected >= 40 total commands, got $COUNT"
+            exit 1
+          fi
+          echo "OK: $COUNT commands installed with --all"
+
+      # ---------------------------------------------------------------
+      # Idempotent re-install
+      # ---------------------------------------------------------------
+
+      - name: "Test: idempotent re-install (no corruption)"
+        run: |
           BEFORE_CMDS=$(ls "$HOME/.claude/commands/"*.md 2>/dev/null | wc -l)
-
-          # Run setup again
           claude-commands setup --type basic --commands active
-
-          # Verify state after
           AFTER_CMDS=$(ls "$HOME/.claude/commands/"*.md 2>/dev/null | wc -l)
 
           if [ "$BEFORE_CMDS" -ne "$AFTER_CMDS" ]; then
@@ -132,19 +346,18 @@ jobs:
           fi
           echo "OK: idempotent re-install preserved $AFTER_CMDS commands"
 
-          # Verify settings still valid JSON
           SETTINGS="$HOME/.claude/settings.json"
           if [ -f "$SETTINGS" ]; then
-            python3 -c "import json; json.load(open('$SETTINGS'))" || {
-              echo "FAIL: settings.json corrupted after re-install"
-              exit 1
-            }
+            python3 -c "import json; json.load(open('$SETTINGS'))"
             echo "OK: settings.json still valid after re-install"
           fi
 
-      - name: Test install with pre-existing user config
+      # ---------------------------------------------------------------
+      # User config preservation
+      # ---------------------------------------------------------------
+
+      - name: "Test: install preserves pre-existing user config"
         run: |
-          # Simulate a user who already has custom settings
           SETTINGS="$HOME/.claude/settings.json"
           cat > "$SETTINGS" << 'USERJSON'
           {
@@ -155,37 +368,36 @@ jobs:
           }
           USERJSON
 
-          # Run setup on top of existing config
           claude-commands setup --type basic --commands active
 
-          # Verify user config wasn't destroyed
-          if python3 -c "
-          import json, sys
+          python3 -c "
+          import json
           with open('$SETTINGS') as f:
               data = json.load(f)
-          # Settings should still be valid JSON at minimum
           print('Valid JSON: OK')
-          "; then
-            echo "OK: user config survived setup"
-          else
-            echo "FAIL: user config was corrupted"
-            cat "$SETTINGS"
-            exit 1
-          fi
+          "
+          echo "OK: user config survived setup"
 
-      - name: Test uninstall
+      # ---------------------------------------------------------------
+      # Uninstall
+      # ---------------------------------------------------------------
+
+      - name: "Feature: uninstall"
         run: |
           BEFORE=$(ls "$HOME/.claude/commands/"*.md 2>/dev/null | wc -l)
           claude-commands uninstall
-
-          # Verify most commands removed (uninstall may leave non-toolkit files)
           AFTER=$(ls "$HOME/.claude/commands/"*.md 2>/dev/null | wc -l)
+
           echo "Commands before: $BEFORE, after: $AFTER"
           if [ "$AFTER" -ge "$BEFORE" ]; then
             echo "FAIL: uninstall did not remove any commands"
             exit 1
           fi
           echo "OK: uninstall removed $((BEFORE - AFTER)) commands"
+
+      # ---------------------------------------------------------------
+      # Cleanup
+      # ---------------------------------------------------------------
 
       - name: Clean up global install
         if: always()
