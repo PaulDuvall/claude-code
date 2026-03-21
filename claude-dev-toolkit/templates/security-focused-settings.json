@@ -32,30 +32,8 @@
     ]
   },
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/prevent-credential-exposure.sh"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/verify-before-edit.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/pre-commit-test-runner.sh"
-          }
-        ]
-      }
-    ]
+    "PreToolUse": [],
+    "PostToolUse": []
   },
   "env": {
     "DISABLE_TELEMETRY": "1",
