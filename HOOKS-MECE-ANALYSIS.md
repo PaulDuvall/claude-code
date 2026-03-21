@@ -29,7 +29,7 @@ The hooks system has **strong MECE compliance overall** with minor overlaps and 
 | **verify-before-edit.sh** | PreToolUse (Edit, Write, MultiEdit) | Warn about fabricated references/IDs | No | Basic |
 | **pre-commit-quality.sh** | Custom (pre-commit) | Analyze staged changes for quality | No | Git, JSON parsing |
 | **pre-commit-test-runner.sh** | Custom (pre-commit) | Auto-detect and run tests | **Yes** | Framework detection |
-| **on-error-debug.sh** | OnError | Gather error context + delegate to debug subagent | No | Context mgr, error handler |
+| **on-error-debug.sh** | Manual invocation | Gather error context + delegate to debug subagent | No | Context mgr, error handler |
 | **subagent-trigger.sh** | Manual or custom | Full-featured subagent orchestration | No | All lib modules (9 deps) |
 | **subagent-trigger-simple.sh** | Manual or custom | Lightweight subagent delegation | No | 4 core modules |
 
@@ -45,8 +45,8 @@ The hooks system has **strong MECE compliance overall** with minor overlaps and 
 - `pre-commit-quality.sh` — code quality assessment
 - `pre-commit-test-runner.sh` — test automation
 
-**Error Handling (OnError):**
-- `on-error-debug.sh` — error context gathering + subagent delegation
+**Error Handling (Manual):**
+- `on-error-debug.sh` — error context gathering + subagent delegation (manually invoked; no OnError hook event in Claude Code)
 
 **Manual/Event-Driven:**
 - `subagent-trigger.sh` — orchestration hub
@@ -297,7 +297,7 @@ source "$SCRIPT_DIR/error-handler.sh"
 |----------|----------|--------|-------|
 | **Pre-write validation** | 4 hooks | ✅ Complete | Credentials, security, references, logging |
 | **Pre-commit validation** | 2 hooks | ✅ Complete | Quality, tests |
-| **Error handling** | 1 hook | ✅ Complete | on-error-debug covers all error types |
+| **Error handling** | 1 hook | ⚠️ Manual only | on-error-debug requires manual invocation (no OnError hook event) |
 | **Subagent orchestration** | 2 hooks | ⚠️ Redundant | Both do same job; clarify intent |
 | **Post-merge validation** | 0 hooks | ❌ Missing | **CRITICAL GAP** |
 | **Post-deploy validation** | 0 hooks | ❌ Missing | **CRITICAL GAP** |
@@ -451,6 +451,7 @@ Blocking: No (warning only)
 
 ### on-error-debug.sh
 - **Purpose:** Error context gathering + subagent delegation
+- **Trigger:** Manual invocation only (Claude Code has no OnError hook event)
 - **Overlaps:** None
 - **Conflicts:** None
 - **MECE:** ✅ Fully exclusive (only error handler)

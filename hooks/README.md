@@ -100,7 +100,7 @@ The following hooks provide logging, validation, and cleanup at various Claude C
 | `pre-commit-test-runner.sh` | PreToolUse (Bash) | Auto-detects test framework, blocks commits on failure |
 | `pre-write-security.sh` | PreToolUse (Write) | Security scan before file writes |
 | `verify-before-edit.sh` | PreToolUse (Edit/Write) | Warns about fabricated references (non-blocking) |
-| `on-error-debug.sh` | OnError | Debug context capture on errors |
+| `on-error-debug.sh` | Manual invocation | Debug context capture on errors |
 | `subagent-trigger.sh` | PostToolUse (*) | Triggers subagent workflows |
 | `subagent-trigger-simple.sh` | PostToolUse (*) | Simplified subagent trigger |
 

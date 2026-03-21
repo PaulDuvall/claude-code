@@ -28,12 +28,11 @@ hooks_configuration:
           blocking: false
           description: "Log file modifications"
 
-  OnError:
-    - hooks:
-        - command: "~/.claude/hooks/on-error-debug.sh"
-          blocking: false
-          description: "Automatic debugging via debug-specialist subagent"
-          
+  # NOTE: There is no "OnError" hook event in Claude Code's schema.
+  # Valid hook events: PreToolUse, PostToolUse, Notification, Stop,
+  # SubagentStop, UserPromptSubmit, PreCompact, SessionStart, SessionEnd.
+  # Use on-error-debug.sh via manual invocation or PostToolUse instead.
+
   custom:
     pre-commit:
       command: "~/.claude/hooks/pre-commit-quality.sh"

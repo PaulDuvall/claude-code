@@ -4,7 +4,7 @@ set -euo pipefail
 # Claude Code Hook: Error Handling Trigger
 # 
 # Purpose: Lightweight trigger for automatic debugging assistance on errors
-# Trigger: OnError events or manual invocation during debugging sessions
+# Trigger: Manual invocation or PostToolUse (no OnError hook event exists in Claude Code)
 # Approach: Capture error context and delegate to debug-specialist subagent
 #
 # This hook provides immediate debugging help by gathering error context
