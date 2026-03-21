@@ -1,4 +1,5 @@
 ---
+name: debug-specialist
 description: "Specialized debugging assistant with expertise in root cause analysis, error interpretation, and systematic troubleshooting"
 tags: ["debugging", "error-analysis", "troubleshooting", "performance"]
 tools: ["Read", "Bash", "Grep", "Edit", "Glob"]

@@ -180,7 +180,7 @@ function initDirs() {
 async function runSetup() {
     try {
         const dirs = initDirs();
-        const packageDir = __dirname.replace('/scripts', '');
+        const packageDir = path.dirname(__dirname);
 
         if (!skipSetup && process.stdin.isTTY) {
             await runInteractiveInstall(packageDir, dirs);

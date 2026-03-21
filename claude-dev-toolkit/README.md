@@ -20,7 +20,7 @@ claude
 - **Security Hooks**: Automated security validation and governance
 - **Configuration Templates**: Pre-configured settings for different workflows
 - **Interactive Setup Wizard**: Guided installation with customization options
-- **JavaScript Test Suite**: 100% test coverage with 10 comprehensive test suites
+- **JavaScript Test Suite**: 25 test suites validating package structure, commands, and integration
 
 ## 🎯 Quick Start
 
@@ -166,11 +166,11 @@ npm run lint             # Code linting
 ```
 
 ### Test Coverage
-- **10 Test Suites**: 100% passing
-- **Command Validation**: All 58 commands validated
-- **Security Tests**: Comprehensive security pattern validation
-- **Integration Tests**: End-to-end workflow testing
-- **Configuration Tests**: Template and setup validation
+- **25 Test Suites**: Package structure, CLI, and command validation
+- **Command Validation**: All commands validated for structure and naming
+- **Security Tests**: Credential exposure and placeholder detection
+- **Integration Tests**: Hook and subagent workflow testing
+- **Shell Tests**: 8 bash test suites for hooks and lib modules
 
 ### Architecture
 - **Self-Contained Package**: No dependencies on repository cloning
@@ -288,7 +288,7 @@ npm test
 - ✅ **Symlink Consolidation**: Eliminated duplicate directories
 - ✅ **JavaScript Migration**: Complete test suite migration from Python
 - ✅ **Enhanced Templates**: Fixed configuration template issues
-- ✅ **100% Test Coverage**: All 10 test suites passing
+- ✅ **Test Suites**: Package structure and command validation
 - ✅ **58 Total Commands**: 13 active + 45 experimental commands
 - ✅ **Security Enhancements**: Comprehensive security hook system
 

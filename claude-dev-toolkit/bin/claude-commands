@@ -28,27 +28,56 @@ Examples:
     .option('-e, --experiments', 'Show only experimental commands')
     .action((options) => {
         const claudeDir = path.join(os.homedir(), '.claude', 'commands');
-        
+        const pkgDir = path.join(__dirname, '..', 'commands');
+
         console.log('📦 Claude Custom Commands\n');
-        
-        if (fs.existsSync(claudeDir)) {
-            const allCommands = fs.readdirSync(claudeDir)
+
+        // Determine source: installed commands or package commands
+        const sourceDir = fs.existsSync(claudeDir) ? claudeDir : null;
+
+        if (sourceDir) {
+            let allCommands = fs.readdirSync(sourceDir)
                 .filter(f => f.endsWith('.md'))
                 .map(f => f.replace('.md', ''))
                 .sort();
-            
+
+            // Apply --active/--experiments filters using package source dirs
+            if (options.active || options.experiments) {
+                const activeDir = path.join(pkgDir, 'active');
+                const expDir = path.join(pkgDir, 'experiments');
+                const activeSet = new Set();
+                const expSet = new Set();
+
+                if (fs.existsSync(activeDir)) {
+                    fs.readdirSync(activeDir)
+                        .filter(f => f.endsWith('.md'))
+                        .forEach(f => activeSet.add(f.replace('.md', '')));
+                }
+                if (fs.existsSync(expDir)) {
+                    fs.readdirSync(expDir)
+                        .filter(f => f.endsWith('.md'))
+                        .forEach(f => expSet.add(f.replace('.md', '')));
+                }
+
+                if (options.active) {
+                    allCommands = allCommands.filter(cmd => activeSet.has(cmd));
+                } else if (options.experiments) {
+                    allCommands = allCommands.filter(cmd => expSet.has(cmd));
+                }
+            }
+
             if (allCommands.length > 0) {
-                console.log('🚀 Available Commands:');
+                const label = options.active ? 'Active' : options.experiments ? 'Experimental' : 'Available';
+                console.log(`🚀 ${label} Commands:`);
                 allCommands.forEach(cmd => console.log(`  /${cmd}`));
                 console.log(`\n📊 Total: ${allCommands.length} commands`);
             } else {
-                console.log('  No commands found');
+                console.log('  No commands found matching filter');
             }
         } else {
             console.log('  Commands directory not found');
+            console.log('  Run: claude-commands install');
         }
-        
-        console.log('\n💡 Usage: Run claude-commands list to see all commands');
     });
 
 program
