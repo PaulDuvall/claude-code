@@ -39,9 +39,11 @@ jobs:
           fi
           echo "Confirmed: no ~/.claude directory"
 
-      - name: Pack npm package
+      - name: Clean install and pack npm package
         working-directory: claude-dev-toolkit
         run: |
+          rm -rf node_modules package-lock.json
+          npm install --ignore-scripts
           npm pack
           TARBALL=$(ls *.tgz)
           echo "TARBALL=$TARBALL" >> "$GITHUB_ENV"
