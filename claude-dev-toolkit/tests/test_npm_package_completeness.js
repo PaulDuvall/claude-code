@@ -15,7 +15,7 @@ const path = require('path');
 const EXPECTED = {
     activeCommandCount: 15,
     experimentalCommandCount: 46,
-    subagentCount: 26,
+    subagentCount: 25,
     templates: [
         'basic-settings.json',
         'comprehensive-settings.json',

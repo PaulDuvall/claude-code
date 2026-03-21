@@ -6,7 +6,7 @@
 # Execution Plan
 
 **Status:** 🔄 IN PROGRESS | Generated: 2026-03-20T23:00:00-04:00
-**Total tasks:** 24 | **Done:** 17 | **Remaining:** 7
+**Total tasks:** 24 | **Done:** 19 | **Remaining:** 5
 
 ## Context Saturation Protocol
 
@@ -37,8 +37,8 @@ After completing each task:
 | 10 | mpf | Harden hooks/lib: mktemp, realpath, set -e, include guards | ✅ done | #7 ✅, #9 ✅ | 2026-03-20 | 2026-03-20 |
 | 11 | 7bt | Fix security anti-patterns in documentation and templates | ✅ done | none | 2026-03-20 | 2026-03-20 |
 | 12 | 5rg | Fix critical documentation drift: CLAUDE.md, README.md, /xhelp | ✅ done | #7, #8, #9 | 2026-03-20 | 2026-03-20 |
-| 13 | 1g3 | Create CONTRIBUTING.md or remove all references | ⏳ pending | #12 | | |
-| 14 | b9v | Implement uninstall mechanism for claude-dev-toolkit | ⏳ pending | #7 ✅ | | |
+| 13 | 1g3 | Create CONTRIBUTING.md or remove all references | ✅ done | #12 ✅ | 2026-03-20 | 2026-03-20 |
+| 14 | b9v | Implement uninstall mechanism for claude-dev-toolkit | ✅ done | #7 ✅ | 2026-03-20 | 2026-03-20 |
 | 15 | x51 | Add functional tests for hooks, hooks/lib, and slash commands | ⏳ pending | #1 ✅, #2 ✅, #3 ✅, #4 ✅, #7 ✅, #9 ✅ | | |
 | 16 | coh | Fix test claims, subagent validation, CLI flags, Windows support claim | ⏳ pending | #15 | | |
 | 17 | fr2 | Standardize subagent and slash command definition formats | ⏳ pending | #7 ✅, #9 ✅ | | |

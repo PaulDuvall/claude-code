@@ -1,3 +1,8 @@
+---
+description: "Initialize a new project with comprehensive CLAUDE.md and specification framework"
+tags: ["project", "setup", "initialization"]
+---
+
 # Initialize repo with comprehensive CLAUDE.md + Specification-Driven Development
 
 Initialize a new project with comprehensive CLAUDE.md and specification framework.
