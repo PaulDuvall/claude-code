@@ -12,7 +12,7 @@ set -uo pipefail
 _FIELD_VALIDATORS_LOADED=1
 
 # Source required modules
-SCRIPT_DIR="${SCRIPT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/config-constants.sh"
 source "$SCRIPT_DIR/error-handler.sh"
 
