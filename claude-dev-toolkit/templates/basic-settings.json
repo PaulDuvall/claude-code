@@ -1,22 +1,14 @@
 {
-  "// Basic Claude Code settings.json template": "Copy to ~/.claude/settings.json",
-  "// Based on official Claude Code documentation": "https://docs.anthropic.com/en/docs/claude-code/settings",
-  
-  "// Core tool permissions (replaces invalid 'allowedTools')": "",
   "permissions": {
     "allow": [
-      "Edit(*)",
       "Bash(*)",
       "Read(*)",
+      "Edit(*)",
       "Write(*)",
-      "MultiEdit(*)",
       "Glob(*)",
-      "Grep(*)",
-      "LS(*)"
+      "Grep(*)"
     ]
   },
-  
-  "// Basic hooks configuration": "",
   "hooks": {
     "PreToolUse": [
       {
@@ -30,15 +22,9 @@
       }
     ]
   },
-  
-  "// Standard Claude Code environment variables": "",
   "env": {
     "DISABLE_TELEMETRY": "1"
   },
-  
-  "// Optional: Include Claude co-authorship in git commits": "",
   "includeCoAuthoredBy": true,
-  
-  "// Optional: Custom retention for chat transcripts (days)": "",
   "cleanupPeriodDays": 30
 }

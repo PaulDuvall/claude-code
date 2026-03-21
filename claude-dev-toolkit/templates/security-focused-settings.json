@@ -1,9 +1,4 @@
 {
-  "// Security-focused Claude Code settings.json template": "Copy to ~/.claude/settings.json",
-  "// Based on official Claude Code documentation": "https://docs.anthropic.com/en/docs/claude-code/settings",
-  "// Includes comprehensive security controls and governance": "",
-  
-  "// Restrictive tool permissions for security": "",
   "permissions": {
     "allow": [
       "Read(*)",
@@ -16,7 +11,8 @@
       "Bash(npm run *)",
       "Bash(python -m *)",
       "Bash(node *)",
-      "MultiEdit(*)"
+      "Glob(*)",
+      "Grep(*)"
     ],
     "deny": [
       "Bash(curl *)",
@@ -35,12 +31,10 @@
       "Read(~/.ssh/id_*)"
     ]
   },
-  
-  "// Comprehensive security hooks": "",
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Edit|Write|MultiEdit",
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
@@ -63,17 +57,11 @@
       }
     ]
   },
-  
-  "// Standard Claude Code environment variables": "",
   "env": {
     "DISABLE_TELEMETRY": "1",
     "ANTHROPIC_LOG": "error"
   },
-  
-  "// Security-focused settings": "",
   "includeCoAuthoredBy": false,
   "cleanupPeriodDays": 7,
-  
-  "// Disable auto-approval of MCP servers for security": "",
   "enableAllProjectMcpServers": false
 }

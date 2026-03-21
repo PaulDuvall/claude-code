@@ -1,25 +1,15 @@
 {
-  "// Comprehensive Claude Code settings.json template": "Copy to ~/.claude/settings.json",
-  "// Based on official Claude Code documentation": "https://docs.anthropic.com/en/docs/claude-code/settings",
-  "// Includes all advanced features and hook events": "",
-  
-  "// Comprehensive tool permissions": "",
   "permissions": {
     "allow": [
-      "Edit(*)",
       "Bash(*)",
       "Read(*)",
+      "Edit(*)",
       "Write(*)",
-      "MultiEdit(*)",
       "Glob(*)",
       "Grep(*)",
-      "LS(*)",
-      "Task(*)",
       "WebFetch(*)",
       "WebSearch(*)",
-      "NotebookEdit(*)",
-      "BashOutput(*)",
-      "KillBash(*)"
+      "NotebookEdit(*)"
     ],
     "ask": [
       "Bash(sudo *)",
@@ -34,12 +24,10 @@
       "Edit(/etc/passwd)"
     ]
   },
-  
-  "// Comprehensive hooks covering all supported events": "",
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Edit|Write|MultiEdit",
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
@@ -63,41 +51,12 @@
     ],
     "PostToolUse": []
   },
-  
-  "// Standard Claude Code environment variables": "",
   "env": {
-    "// DO NOT commit real API keys. Set via: export ANTHROPIC_API_KEY=sk-ant-...": "",
-    "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}",
     "DISABLE_TELEMETRY": "1",
-    "ANTHROPIC_LOG": "info",
-    "CLAUDE_PROJECT_DIR": "."
+    "ANTHROPIC_LOG": "info"
   },
-  
-  "// Advanced Claude Code configuration": "",
   "includeCoAuthoredBy": true,
   "cleanupPeriodDays": 30,
-  "// Model options: claude-sonnet-4-6 (default), claude-opus-4-6 (most capable), claude-haiku-4-5-20251001 (fastest)": "",
   "model": "claude-sonnet-4-6",
-  
-  "// MCP server configuration": "",
-  "enableAllProjectMcpServers": false,
-  "enabledMcpjsonServers": [
-    "approved-server-1",
-    "approved-server-2"
-  ],
-  "disabledMcpjsonServers": [
-    "blocked-server-1"
-  ],
-  
-  "// Optional: Custom API key helper script": "",
-  "apiKeyHelper": "~/.claude/scripts/get-api-key.sh",
-  
-  "// Optional: Force specific login method": "",
-  "forceLoginMethod": "api-key",
-  
-  "// Optional: Custom status line configuration": "",
-  "statusLine": {
-    "enabled": true,
-    "format": "Claude Code - Project: {project} | Model: {model} | Tools: {tools_count}"
-  }
+  "enableAllProjectMcpServers": false
 }
