@@ -179,7 +179,8 @@
   "// Advanced Claude Code configuration": "",
   "includeCoAuthoredBy": true,
   "cleanupPeriodDays": 30,
-  "model": "claude-3-5-sonnet-20241022",
+  "// Model options: claude-sonnet-4-6 (default), claude-opus-4-6 (most capable), claude-haiku-4-5-20251001 (fastest)": "",
+  "model": "claude-sonnet-4-6",
   
   "// MCP server configuration": "",
   "enableAllProjectMcpServers": false,
