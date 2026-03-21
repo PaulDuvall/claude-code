@@ -18,9 +18,7 @@
     "commander": "^9.4.1",
     "marked": "^4.3.0"
   },
-  "devDependencies": {
-    "jest": "^29.5.0"
-  },
+  "devDependencies": {},
   "engines": {
     "node": ">=16.0.0"
   },

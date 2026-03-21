@@ -6,7 +6,7 @@
 # Execution Plan
 
 **Status:** 🔄 IN PROGRESS | Generated: 2026-03-20T23:00:00-04:00
-**Total tasks:** 24 | **Done:** 9 | **Remaining:** 15
+**Total tasks:** 24 | **Done:** 14 | **Remaining:** 10
 
 ## Context Saturation Protocol
 
@@ -31,24 +31,24 @@ After completing each task:
 | 4 | 1lz | Fix JSON injection in webhook notification payloads | ✅ done | none | 2026-03-20 | 2026-03-20 |
 | 5 | 21m | Fix CI/CD security: pin actions, guard badge-update, fix counts | ✅ done | none | 2026-03-20 | 2026-03-20 |
 | 6 | 5je | Fix devcontainer firewall: add lifecycle hook and NET_ADMIN | ✅ done | none | 2026-03-20 | 2026-03-20 |
-| 7 | anl | Eliminate duplicate file maintenance between repo root and npm package | ⏳ pending | none | | |
-| 8 | m27 | Reduce oversized files and remove dead code | ⏳ pending | #7 | | |
-| 9 | 4zj | Remove or implement 13 stub hooks, clean security templates | ⏳ pending | #1 ✅ | | |
-| 10 | mpf | Harden hooks/lib: mktemp, realpath, set -e, include guards | ⏳ pending | #7, #9 | | |
+| 7 | anl | Eliminate duplicate file maintenance between repo root and npm package | ✅ done | none | 2026-03-20 | 2026-03-20 |
+| 8 | m27 | Reduce oversized files and remove dead code | ⏳ pending | #7 ✅ | | |
+| 9 | 4zj | Remove or implement 13 stub hooks, clean security templates | ✅ done | #1 ✅ | 2026-03-20 | 2026-03-20 |
+| 10 | mpf | Harden hooks/lib: mktemp, realpath, set -e, include guards | ⏳ pending | #7 ✅, #9 ✅ | | |
 | 11 | 7bt | Fix security anti-patterns in documentation and templates | ✅ done | none | 2026-03-20 | 2026-03-20 |
 | 12 | 5rg | Fix critical documentation drift: CLAUDE.md, README.md, /xhelp | ⏳ pending | #7, #8, #9 | | |
 | 13 | 1g3 | Create CONTRIBUTING.md or remove all references | ⏳ pending | #12 | | |
-| 14 | b9v | Implement uninstall mechanism for claude-dev-toolkit | ⏳ pending | #7 | | |
-| 15 | x51 | Add functional tests for hooks, hooks/lib, and slash commands | ⏳ pending | #1 ✅, #2 ✅, #3 ✅, #4 ✅, #7, #9 | | |
+| 14 | b9v | Implement uninstall mechanism for claude-dev-toolkit | ⏳ pending | #7 ✅ | | |
+| 15 | x51 | Add functional tests for hooks, hooks/lib, and slash commands | ⏳ pending | #1 ✅, #2 ✅, #3 ✅, #4 ✅, #7 ✅, #9 ✅ | | |
 | 16 | coh | Fix test claims, subagent validation, CLI flags, Windows support claim | ⏳ pending | #15 | | |
-| 17 | fr2 | Standardize subagent and slash command definition formats | ⏳ pending | #7, #9 | | |
-| 18 | di4 | Clean up NPM package: remove backups, add LICENSE, drop Jest | ⏳ pending | #7 | | |
-| 19 | 7wz | Create xverify slash command for pre-action verification | ⏳ pending | #7 | | |
+| 17 | fr2 | Standardize subagent and slash command definition formats | ⏳ pending | #7 ✅, #9 ✅ | | |
+| 18 | di4 | Clean up NPM package: remove backups, add LICENSE, drop Jest | ✅ done | #7 ✅ | 2026-03-20 | 2026-03-20 |
+| 19 | 7wz | Create xverify slash command for pre-action verification | ⏳ pending | #7 ✅ | | |
 | 20 | lop | Repo hygiene: remove empty files, binaries, .DS_Store, -OLD templates | ✅ done | none | 2026-03-20 | 2026-03-20 |
-| 21 | asd | Fix shell minor issues: $* quoting, hostname leak, unwired tests | ⏳ pending | #9 | | |
+| 21 | asd | Fix shell minor issues: $* quoting, hostname leak, unwired tests | ✅ done | #9 ✅ | 2026-03-20 | 2026-03-20 |
 | 22 | 9ad | Fix dependencies.txt wrong package name | ✅ done | none | 2026-03-20 | 2026-03-20 |
 | 23 | rit | Fix ShellCheck warnings and shell hygiene across scripts | ⏳ pending | #8, #10 | | |
-| 24 | 74h | Improve CLI UX: subcommand help examples and error messages | ⏳ pending | none | | |
+| 24 | 74h | Improve CLI UX: subcommand help examples and error messages | ✅ done | none | 2026-03-20 | 2026-03-20 |
 
 ---
 

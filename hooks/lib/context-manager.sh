@@ -206,7 +206,7 @@ gather_system_context() {
     system_context=$(cat <<EOF
 {
   "system": {
-    "hostname": "$(hostname 2>/dev/null || echo 'unknown')",
+    "hostname": "redacted",
     "os": "$(uname -s 2>/dev/null || echo 'unknown')",
     "architecture": "$(uname -m 2>/dev/null || echo 'unknown')",
     "shell": "${SHELL##*/}",
