@@ -6,7 +6,7 @@
 # Execution Plan
 
 **Status:** 🔄 IN PROGRESS | Generated: 2026-03-20T23:00:00-04:00
-**Total tasks:** 24 | **Done:** 21 | **Remaining:** 3
+**Total tasks:** 24 | **Done:** 22 | **Remaining:** 2
 
 ## Context Saturation Protocol
 
@@ -47,7 +47,7 @@ After completing each task:
 | 20 | lop | Repo hygiene: remove empty files, binaries, .DS_Store, -OLD templates | ✅ done | none | 2026-03-20 | 2026-03-20 |
 | 21 | asd | Fix shell minor issues: $* quoting, hostname leak, unwired tests | ✅ done | #9 ✅ | 2026-03-20 | 2026-03-20 |
 | 22 | 9ad | Fix dependencies.txt wrong package name | ✅ done | none | 2026-03-20 | 2026-03-20 |
-| 23 | rit | Fix ShellCheck warnings and shell hygiene across scripts | ⏳ pending | #8, #10 | | |
+| 23 | rit | Fix ShellCheck warnings and shell hygiene across scripts | ✅ done | #8 ✅, #10 ✅ | 2026-03-20 | 2026-03-20 |
 | 24 | 74h | Improve CLI UX: subcommand help examples and error messages | ✅ done | none | 2026-03-20 | 2026-03-20 |
 
 ---
