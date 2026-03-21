@@ -380,7 +380,7 @@ validate_error_handler_dependencies() {
     local missing_commands=()
     
     # Check for required commands
-    local required_commands=("date" "tee" "find" "sed")
+    local required_commands=("date" "tee" "find" "sed" "hostname")
     
     for cmd in "${required_commands[@]}"; do
         if ! command -v "$cmd" >/dev/null 2>&1; then

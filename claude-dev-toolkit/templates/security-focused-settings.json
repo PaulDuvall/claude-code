@@ -57,44 +57,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/audit-bash-commands.sh"
-          },
-          {
-            "type": "command",
             "command": "~/.claude/hooks/pre-commit-test-runner.sh"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/log-all-operations.sh"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command", 
-            "command": "~/.claude/hooks/prompt-security-scan.sh"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/security-session-init.sh"
           }
         ]
       }

@@ -24,6 +24,7 @@
     "claude-commands": "bin/claude-commands"
   },
   "scripts": {
+    "prepublishOnly": "bash ../scripts/sync-to-npm.sh",
     "postinstall": "node scripts/postinstall.js",
     "test": "node scripts/run-all-tests.js",
     "test:report": "node scripts/generate-test-report.js",

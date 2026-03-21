@@ -19,6 +19,11 @@ program
 program
     .command('list')
     .description('List all available commands')
+    .addHelpText('after', `
+Examples:
+  $ claude-commands list              # List all installed commands
+  $ claude-commands list --active     # Show only production commands
+  $ claude-commands list --experiments # Show only experimental commands`)
     .option('-a, --active', 'Show only active commands')
     .option('-e, --experiments', 'Show only experimental commands')
     .action((options) => {
@@ -49,6 +54,11 @@ program
 program
     .command('install')
     .description('Install command sets to ~/.claude/commands/')
+    .addHelpText('after', `
+Examples:
+  $ claude-commands install            # Install active commands (default)
+  $ claude-commands install --all      # Install all commands
+  $ claude-commands install --dry-run  # Preview without changes`)
     .option('--active', 'Install production-ready commands (default)')
     .option('--experiments', 'Install experimental commands only')
     .option('--all', 'Install both active and experimental')
@@ -153,6 +163,11 @@ program
 program
     .command('setup')
     .description('Setup the Claude Dev Toolkit with custom commands and configuration')
+    .addHelpText('after', `
+Examples:
+  $ claude-commands setup                            # Interactive setup
+  $ claude-commands setup --type basic --commands all # Basic config, all commands
+  $ claude-commands setup --dry-run                   # Preview setup actions`)
     .option('--type <template>', 'Configuration template to apply (basic, comprehensive, security-focused)')
     .option('--commands <set>', 'Command set to install (active, experiments, all, none)')
     .option('--skip-configure', 'Skip configuration step')

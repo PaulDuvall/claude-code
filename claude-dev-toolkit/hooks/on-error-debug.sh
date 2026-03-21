@@ -31,7 +31,7 @@ gather_error_context() {
     local failed_command="${3:-unknown}"
     
     log_info "Gathering error context for debugging assistance"
-
+    
     # Capture comprehensive error context
     local safe_type safe_msg safe_cmd safe_user safe_wd safe_branch
     safe_type=$(json_escape "$error_type")

@@ -30,7 +30,7 @@ gather_security_context() {
     local file="${CLAUDE_FILE:-none}"
     
     log_info "Pre-write security check triggered for: $tool on $file"
-
+    
     # Create lightweight context for subagent
     local safe_tool safe_file safe_user safe_wd safe_branch
     safe_tool=$(json_escape "$tool")

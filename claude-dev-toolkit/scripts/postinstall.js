@@ -127,6 +127,10 @@ async function runInteractiveInstall(packageDir, dirs) {
     const envCheck = wizard.validateEnvironment();
     if (!envCheck.valid) {
         console.error('Environment validation failed:', envCheck.message);
+        console.error('\nTroubleshooting:');
+        console.error('  - Ensure Node.js >= 18 is installed');
+        console.error('  - Check write permissions on ~/.claude/');
+        console.error('  - Try: claude-commands setup --dry-run');
         process.exit(1);
     }
     const result = await wizard.runInteractiveSetup();
@@ -157,12 +161,25 @@ function printSummary(commandsDir) {
     console.log('4. Explore commands in Claude Code using /xhelp\n');
 }
 
+function printInstallError(error) {
+    console.error('Installation failed:', error.message);
+    console.error('\nTroubleshooting:');
+    console.error('  - Check write permissions: ls -la ~/.claude/');
+    console.error('  - Try manual install: claude-commands install --all');
+    console.error('  - Report issues: https://github.com/PaulDuvall/claude-code/issues');
+}
+
+function initDirs() {
+    const dirs = getClaudeDirs();
+    ensureDir(dirs.claudeDir, '.claude');
+    ensureDir(dirs.commandsDir, '.claude/commands');
+    ensureDir(dirs.hooksDir, '.claude/hooks');
+    return dirs;
+}
+
 async function runSetup() {
     try {
-        const dirs = getClaudeDirs();
-        ensureDir(dirs.claudeDir, '.claude');
-        ensureDir(dirs.commandsDir, '.claude/commands');
-        ensureDir(dirs.hooksDir, '.claude/hooks');
+        const dirs = initDirs();
         const packageDir = __dirname.replace('/scripts', '');
 
         if (!skipSetup && process.stdin.isTTY) {
@@ -170,10 +187,9 @@ async function runSetup() {
         } else {
             runNonInteractiveInstall(packageDir, dirs);
         }
-
         printSummary(dirs.commandsDir);
     } catch (error) {
-        console.error('Installation failed:', error.message);
+        printInstallError(error);
         process.exit(1);
     }
 }

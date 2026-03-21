@@ -72,6 +72,38 @@ This directory contains security and workflow hooks for Claude Code that provide
 - `SECURITY_WEBHOOK_URL`: Optional Slack/Teams webhook for security alerts
 - `CLAUDE_SECURITY_OVERRIDE`: Emergency override (use with extreme caution)
 
+### Lifecycle & Event Hooks
+
+The following hooks provide logging, validation, and cleanup at various Claude Code lifecycle events. All are non-blocking and log to `~/.claude/logs/`.
+
+| Hook | Event | Purpose |
+|------|-------|---------|
+| `backup-before-edit.sh` | PreToolUse (Edit/Write) | Preserves file state before modifications |
+| `audit-bash-commands.sh` | PreToolUse (Bash) | Logs shell commands for security audit trail |
+| `log-all-operations.sh` | PostToolUse (*) | Audit trail for all tool usage |
+| `validate-changes.sh` | PostToolUse (Edit/Write) | Post-edit validation of changes |
+| `handle-notifications.sh` | Notification | Security event notification logging |
+| `prompt-analysis.sh` | UserPromptSubmit | Validates prompts for security concerns |
+| `prompt-security-scan.sh` | UserPromptSubmit | Scans prompts for credential exposure risks |
+| `cleanup-on-stop.sh` | Stop | Cleans temporary state on execution stop |
+| `subagent-cleanup.sh` | SubagentStop | Cleans subagent resources on completion |
+| `session-cleanup.sh` | SessionEnd | End-of-session security cleanup |
+| `pre-compact-backup.sh` | PreCompact | Checkpoint before context compaction |
+| `session-init.sh` | SessionStart | Validates environment at session start |
+| `security-session-init.sh` | SessionStart | Enhanced security posture validation |
+
+### Quality & Workflow Hooks
+
+| Hook | Event | Purpose |
+|------|-------|---------|
+| `pre-commit-quality.sh` | PreToolUse (Bash) | Code quality checks before commits |
+| `pre-commit-test-runner.sh` | PreToolUse (Bash) | Auto-detects test framework, blocks commits on failure |
+| `pre-write-security.sh` | PreToolUse (Write) | Security scan before file writes |
+| `verify-before-edit.sh` | PreToolUse (Edit/Write) | Warns about fabricated references (non-blocking) |
+| `on-error-debug.sh` | OnError | Debug context capture on errors |
+| `subagent-trigger.sh` | PostToolUse (*) | Triggers subagent workflows |
+| `subagent-trigger-simple.sh` | PostToolUse (*) | Simplified subagent trigger |
+
 ## Hook Installation
 
 ### Option 1: Global Installation (Recommended)

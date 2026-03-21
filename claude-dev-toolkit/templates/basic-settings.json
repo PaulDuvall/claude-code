@@ -1,30 +1,44 @@
 {
   "// Basic Claude Code settings.json template": "Copy to ~/.claude/settings.json",
-  "// This provides minimal configuration for custom commands to work": "",
+  "// Based on official Claude Code documentation": "https://docs.anthropic.com/en/docs/claude-code/settings",
   
-  "allowedTools": [
-    "Edit",
-    "Bash",
-    "Read",
-    "Write"
-  ],
+  "// Core tool permissions (replaces invalid 'allowedTools')": "",
+  "permissions": {
+    "allow": [
+      "Edit(*)",
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "MultiEdit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "LS(*)"
+    ]
+  },
   
   "// Basic hooks configuration": "",
   "hooks": {
-    "PreToolUse": [],
-    "PostToolUse": []
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Tool execution logged at $(date)' >> ~/.claude/logs/tool-usage.log"
+          }
+        ]
+      }
+    ]
   },
   
-  "// Trust and onboarding settings": "",
-  "hasTrustDialogAccepted": true,
-  "hasCompletedProjectOnboarding": true,
-  
-  "// Performance optimization": "",
-  "parallelTasksCount": 3,
-  
-  "// Optional: Environment variables": "",
+  "// Standard Claude Code environment variables": "",
   "env": {
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "true",
-    "BASH_DEFAULT_TIMEOUT_MS": "120000"
-  }
+    "DISABLE_TELEMETRY": "1"
+  },
+  
+  "// Optional: Include Claude co-authorship in git commits": "",
+  "includeCoAuthoredBy": true,
+  
+  "// Optional: Custom retention for chat transcripts (days)": "",
+  "cleanupPeriodDays": 30
 }

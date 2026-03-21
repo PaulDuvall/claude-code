@@ -47,10 +47,6 @@
           },
           {
             "type": "command",
-            "command": "~/.claude/hooks/backup-before-edit.sh"
-          },
-          {
-            "type": "command",
             "command": "~/.claude/hooks/verify-before-edit.sh"
           }
         ]
@@ -60,112 +56,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/audit-bash-commands.sh"
-          },
-          {
-            "type": "command",
             "command": "~/.claude/hooks/pre-commit-test-runner.sh"
           }
         ]
       }
     ],
-    "PostToolUse": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/log-all-operations.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/validate-changes.sh"
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/handle-notifications.sh"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/prompt-analysis.sh"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cleanup-on-stop.sh"
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/subagent-cleanup.sh"
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/session-cleanup.sh"
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/pre-compact-backup.sh"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/session-init.sh"
-          }
-        ]
-      }
-    ]
+    "PostToolUse": []
   },
   
   "// Standard Claude Code environment variables": "",

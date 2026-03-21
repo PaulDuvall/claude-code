@@ -38,26 +38,46 @@ log_violation() {
 }
 
 ##################################
+# JSON Utilities
+##################################
+json_escape() {
+    local input="$1"
+    input="${input//\\/\\\\}"
+    input="${input//\"/\\\"}"
+    input="${input//$'\n'/\\n}"
+    input="${input//$'\r'/\\r}"
+    input="${input//$'\t'/\\t}"
+    printf '%s' "$input"
+}
+
+##################################
 # Notification Functions
 ##################################
 notify_security_team() {
     local violation_type="$1"
     local file_path="$2"
     local pattern="$3"
-    
+
     if [[ -n "$NOTIFICATION_WEBHOOK" ]]; then
+        local safe_type safe_path safe_pattern safe_user safe_ts
+        safe_type=$(json_escape "$violation_type")
+        safe_path=$(json_escape "$file_path")
+        safe_pattern=$(json_escape "$pattern")
+        safe_user=$(json_escape "$USER")
+        safe_ts=$(json_escape "$(date)")
+
         curl -s -X POST "$NOTIFICATION_WEBHOOK" \
             -H "Content-Type: application/json" \
             -d "{
-                \"text\": \"🚨 SECURITY ALERT: Credential exposure prevented\",
+                \"text\": \"SECURITY ALERT: Credential exposure prevented\",
                 \"attachments\": [{
                     \"color\": \"danger\",
                     \"fields\": [
-                        {\"title\": \"Violation Type\", \"value\": \"$violation_type\", \"short\": true},
-                        {\"title\": \"File\", \"value\": \"$file_path\", \"short\": true},
-                        {\"title\": \"Pattern\", \"value\": \"$pattern\", \"short\": false},
-                        {\"title\": \"User\", \"value\": \"$USER\", \"short\": true},
-                        {\"title\": \"Timestamp\", \"value\": \"$(date)\", \"short\": true}
+                        {\"title\": \"Violation Type\", \"value\": \"$safe_type\", \"short\": true},
+                        {\"title\": \"File\", \"value\": \"$safe_path\", \"short\": true},
+                        {\"title\": \"Pattern\", \"value\": \"$safe_pattern\", \"short\": false},
+                        {\"title\": \"User\", \"value\": \"$safe_user\", \"short\": true},
+                        {\"title\": \"Timestamp\", \"value\": \"$safe_ts\", \"short\": true}
                     ]
                 }]
             }" 2>/dev/null || log "Failed to send security notification"
