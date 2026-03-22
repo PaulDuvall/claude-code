@@ -4,12 +4,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm version](https://badge.fury.io/js/@paulduvall%2Fclaude-dev-toolkit.svg)](https://www.npmjs.com/package/@paulduvall/claude-dev-toolkit)
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-blue)
-![Active Commands](https://img.shields.io/badge/active%20commands-16-blue)
-![Experimental Commands](https://img.shields.io/badge/experimental%20commands-46-orange)
-![Total Commands](https://img.shields.io/badge/total%20commands-62-brightgreen)
+![Active Commands](https://img.shields.io/badge/active%20commands-17-blue)
+![Experimental Commands](https://img.shields.io/badge/experimental%20commands-47-orange)
+![Total Commands](https://img.shields.io/badge/total%20commands-64-brightgreen)
 ![Sub-agents](https://img.shields.io/badge/sub--agents-25-purple)
 
-**Transform Claude Code into a complete development platform** with 62 AI-powered commands that automate your entire software development workflow. Now with improved git identity management!
+**Transform Claude Code into a complete development platform** with 64 AI-powered commands that automate your entire software development workflow. Now with improved git identity management!
 
 ## What This Does
 
