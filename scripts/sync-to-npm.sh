@@ -48,6 +48,7 @@ sync_dir "$REPO_ROOT/slash-commands/experiments" \
 
 echo "Syncing templates..."
 sync_dir "$REPO_ROOT/templates" "$CDT_DIR/templates" "*.json"
+sync_dir "$REPO_ROOT/templates" "$CDT_DIR/templates" "*.md"
 
 # Copy hooks README
 if [[ -f "$REPO_ROOT/hooks/README.md" ]]; then
