@@ -269,54 +269,160 @@ Most users authenticate via browser (no API key needed). See [Claude Code docs](
 - **Multi-Language Support**: Python, JavaScript, Java, Go, and more
 - **Performance Debugging**: Memory leaks, bottlenecks, optimization
 
-### 🔒 Hybrid Hook Architecture
-**NEW**: Lightweight trigger scripts that delegate to AI subagents:
+### 🔒 Code Quality & Security Hooks
+
+PostToolUse hooks that **block Claude from proceeding** when code violates quality or security thresholds. Claude fixes violations immediately, then continues. Based on the approach described in [Code Quality Gates: Using Claude Code Hooks to Block Code Smells on Every Write](https://www.paulmduvall.com/claude-code-hooks-code-quality-guardrails/).
+
+#### Quick Setup
 
 ```bash
-# Automatic security analysis before file changes
-CLAUDE_TOOL="Edit" ./hooks/pre-write-security.sh
+# Automated: creates symlinks, merges settings, verifies installation
+bash setup-hooks.sh
 
-# Quality checks before git commits  
-./hooks/pre-commit-quality.sh
+# Preview what it will do (no changes made)
+bash setup-hooks.sh --dry-run
 
-# Automatic debugging assistance on errors
-./hooks/on-error-debug.sh "ImportError: No module named 'requests'"
+# Remove hooks cleanly
+bash setup-hooks.sh --uninstall
 ```
 
-**Hybrid Approach Benefits:**
-- **Immediate Response**: Lightweight bash triggers (30-150 lines each)
-- **AI Intelligence**: Complex analysis delegated to specialized subagents
-- **Simplified Maintenance**: Replaced 253-line monolithic script with focused triggers
-- **Clear Delegation**: Structured context passed to appropriate subagents
+Requires Python 3.8+ and jq. Backs up `~/.claude/settings.json` before modifying.
 
-**Available Trigger Scripts:**
-```bash
-hooks/pre-write-security.sh      # → security-auditor subagent
-hooks/pre-commit-quality.sh      # → style-enforcer subagent  
-hooks/on-error-debug.sh          # → debug-specialist subagent
-hooks/subagent-trigger-simple.sh # → any subagent (flexible)
+#### What Gets Checked
+
+**Code Smells** (PostToolUse on every Write/Edit via `check-complexity.py`):
+
+| Metric | Default Limit | What It Catches |
+|--------|--------------|-----------------|
+| Cyclomatic complexity | 10 | Too many decision paths in a function |
+| Function length | 20 lines | Functions doing too much |
+| Nesting depth | 3 levels | Deep nesting that obscures control flow |
+| Parameters per function | 4 | Functions that need decomposition |
+| File length | 300 lines | Files that should be split |
+| Duplicate blocks | 4+ lines, 2+ occurrences | Copy-paste code that belongs in a helper |
+
+Language support:
+- **Python**: Full AST analysis (all 6 checks) + ruff auto-fix
+- **JavaScript/TypeScript**: Native token-based parser (all 6 checks, zero dependencies)
+- **Go, Java, Rust, C/C++**: Via [Lizard](https://github.com/terryyin/lizard) (complexity, length, params)
+
+**Security** (PostToolUse on every Write/Edit via `check-security.py`):
+- **Secrets detection**: AWS keys, GitHub tokens, Stripe keys, OpenAI keys, private keys, credential URLs
+- **Bandit-style checks** (Python): `eval`/`exec`, `shell=True`, pickle, hardcoded passwords, bare `except: pass`
+- **Trojan source**: Unicode bidi overrides and zero-width characters (CVE-2021-42574)
+
+**Commit Signing** (PreToolUse on Bash via `check-commit-signing.py`):
+- Blocks unsigned `git commit` commands
+- Provides GPG and SSH signing setup instructions
+
+#### How It Works
+
+When Claude writes or edits a file, the hook:
+1. Parses the file using language-specific analysis (AST for Python, token parser for JS/TS)
+2. Checks against thresholds
+3. If violations found: returns `{"decision": "block", "reason": "..."}` with specific fix instructions
+4. Claude refactors the code and retries -- the hook fires again on the new version
+5. Once clean, Claude continues normally
+
+#### Customizing Thresholds
+
+Create `.smellrc.json` in your project root to override defaults per-project:
+
+```json
+{
+  "thresholds": {
+    "max_complexity": 15,
+    "max_function_lines": 30,
+    "max_nesting_depth": 4,
+    "max_parameters": 5,
+    "max_file_lines": 500,
+    "duplicate_min_lines": 6
+  },
+  "security": {
+    "enabled": true,
+    "trojan_enabled": true
+  },
+  "suppress_files": ["*_test.py", "conftest.py", "migrations/*.py"]
+}
 ```
 
-**Claude Code Integration:**
+#### Inline Suppression
+
+Suppress specific violations on individual lines:
+
+```python
+# smell: ignore[complexity,long_function]
+def necessarily_complex_state_machine():
+    ...
+
+# security: ignore[B101]
+assert condition, "This assert is intentional"
+```
+
+Suppressions apply to the annotated line and the line immediately following.
+
+#### Manual Setup (Alternative to setup-hooks.sh)
+
+If you prefer to configure manually, add to `~/.claude/settings.json`:
+
 ```json
 {
   "hooks": {
-    "PreToolUse": [{
-      "matcher": "Edit|Write|MultiEdit",
-      "hooks": [{
-        "command": "~/.claude/hooks/pre-write-security.sh",
-        "blocking": true
-      }]
-    }]
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $HOME/.claude/hooks/check-complexity.py"
+          },
+          {
+            "type": "command",
+            "command": "python3 $HOME/.claude/hooks/check-security.py"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $HOME/.claude/hooks/check-commit-signing.py"
+          }
+        ]
+      }
+    ]
   }
 }
 ```
 
-**Architecture Foundation:**
-- **8 Modular Libraries**: Shared utilities in `hooks/lib/` for consistency
-- **Security First**: Input validation, credential detection, audit trails  
-- **Production Ready**: Error recovery, comprehensive logging, timeout handling
-- **Easy Extension**: Simple patterns for creating domain-specific triggers
+Then symlink the hook files:
+
+```bash
+mkdir -p ~/.claude/hooks
+for f in check-complexity.py check-security.py check-commit-signing.py \
+         config.py suppression.py smell_types.py smell_python.py \
+         smell_javascript.py smell_checks.py smell_ruff.py \
+         security_checks.py security_secrets.py security_bandit.py \
+         security_trojan.py; do
+    ln -sf /path/to/claude-code/hooks/$f ~/.claude/hooks/$f
+done
+```
+
+#### Subagent-Based Hooks (Additional)
+
+Lightweight bash hooks that delegate analysis to AI subagents:
+
+```bash
+hooks/pre-write-security.sh      # Security analysis via subagent
+hooks/pre-commit-quality.sh      # Quality analysis via subagent
+hooks/on-error-debug.sh          # Debugging assistance via subagent
+hooks/pre-commit-test-runner.sh  # Auto-detect and run tests before commits
+hooks/verify-before-edit.sh      # Warn about placeholder/fabricated references
+hooks/prevent-credential-exposure.sh  # Credential pattern scanning
+```
 
 ### 📊 Experimental Commands (46 Additional)
 Advanced commands for specialized workflows:
