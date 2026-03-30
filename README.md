@@ -5,11 +5,11 @@
 [![npm version](https://badge.fury.io/js/@paulduvall%2Fclaude-dev-toolkit.svg)](https://www.npmjs.com/package/@paulduvall/claude-dev-toolkit)
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-blue)
 ![Active Commands](https://img.shields.io/badge/active%20commands-17-blue)
-![Experimental Commands](https://img.shields.io/badge/experimental%20commands-47-orange)
-![Total Commands](https://img.shields.io/badge/total%20commands-64-brightgreen)
+![Experimental Commands](https://img.shields.io/badge/experimental%20commands-25-orange)
+![Total Commands](https://img.shields.io/badge/total%20commands-42-brightgreen)
 ![Sub-agents](https://img.shields.io/badge/sub--agents-25-purple)
 
-**Transform Claude Code into a complete development platform** with 64 AI-powered commands that automate your entire software development workflow. Now with improved git identity management!
+**Transform Claude Code into a complete development platform** with 42 AI-powered commands that automate your entire software development workflow. Now with improved git identity management!
 
 ## What This Does
 
@@ -146,7 +146,7 @@ For contributing or accessing experimental features (⚠️ **Review source code
 # Install development version with experimental commands
 npm install -g @paulduvall/claude-dev-toolkit
 
-# Install experimental commands (46 additional commands)
+# Install experimental commands (25 additional commands)
 claude-commands install --experiments    # Experimental features
 claude-commands install --all            # All 62 commands
 
@@ -424,13 +424,13 @@ hooks/verify-before-edit.sh      # Warn about placeholder/fabricated references
 hooks/prevent-credential-exposure.sh  # Credential pattern scanning
 ```
 
-### 📊 Experimental Commands (46 Additional)
+### 📊 Experimental Commands (25 Additional)
 Advanced commands for specialized workflows:
-- **Planning & Analytics**: `/xplanning`, `/xanalytics`, `/xmetrics`
-- **Infrastructure**: `/xinfra`, `/xmonitoring`, `/xaws`  
-- **Compliance**: `/xcompliance`, `/xgovernance`, `/xpolicy`
-- **Advanced Security**: `/xred`, `/xrisk`, `/xscan`
-- **Performance**: `/xperformance`, `/xoptimize`
+- **Planning & Product**: `/xplanning`, `/xproduct`, `/xatomic`
+- **Infrastructure**: `/xinfra`, `/xaws`, `/xiac`, `/xoidc`
+- **Compliance & Governance**: `/xcompliance`, `/xgovernance`, `/xpolicy`
+- **CI/CD & Ops**: `/xcicd`, `/xact`, `/xincident`
+- **Specialized**: `/xapi`, `/xdb`, `/xux`, `/xmultirepo`, `/xknowledge`
 
 Deploy with: `claude-commands install --experiments`
 
@@ -465,7 +465,7 @@ npm install -g @paulduvall/claude-dev-toolkit
 
 # Install command sets
 claude-commands install --active       # Install 16 core commands
-claude-commands install --experiments # Install 46 experimental commands
+claude-commands install --experiments # Install 25 experimental commands
 claude-commands install --all          # Install all 62 commands
 
 # Configuration management
@@ -529,7 +529,7 @@ ls ~/.claude/commands/x*.md           # List installed commands
 ## Repository Structure
 
 - **`slash-commands/active/`** - 16 production-ready commands (deployed by default)
-- **`slash-commands/experiments/`** - 46 experimental/conceptual commands  
+- **`slash-commands/experiments/`** - 25 experimental commands  
 - **`subagents/`** - AI specialist subagents with persistent context
 - **`hooks/`** - Hybrid hook architecture with lightweight triggers
   - **Lightweight Trigger Scripts** (30-150 lines each):
