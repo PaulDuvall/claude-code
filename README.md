@@ -465,7 +465,7 @@ npm install -g @paulduvall/claude-dev-toolkit
 
 # Install command sets
 claude-commands install --active       # Install 16 core commands
-claude-commands install --experiments # Install 25 experimental commands
+claude-commands install --experiments # Install 28 experimental commands
 claude-commands install --all          # Install all 62 commands
 
 # Configuration management
@@ -529,7 +529,7 @@ ls ~/.claude/commands/x*.md           # List installed commands
 ## Repository Structure
 
 - **`slash-commands/active/`** - 16 production-ready commands (deployed by default)
-- **`slash-commands/experiments/`** - 25 experimental commands  
+- **`slash-commands/experiments/`** - 28 experimental commands  
 - **`subagents/`** - AI specialist subagents with persistent context
 - **`hooks/`** - Hybrid hook architecture with lightweight triggers
   - **Lightweight Trigger Scripts** (30-150 lines each):

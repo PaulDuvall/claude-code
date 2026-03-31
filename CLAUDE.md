@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Claude Code Custom Commands is a comprehensive collection of 42 custom slash commands for Claude Code that accelerate software development workflows through AI-powered automation. These commands provide intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring.
+Claude Code Custom Commands is a comprehensive collection of 45 custom slash commands for Claude Code that accelerate software development workflows through AI-powered automation. These commands provide intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring.
 
 ## Core Philosophy
 
@@ -88,7 +88,7 @@ claude-code/
 │   │   ├── xspec.md                  # Specification generation
 │   │   ├── xtdd.md                   # Test-driven development
 │   │   └── xtest.md                  # Testing automation
-│   └── experiments/                   # 25 experimental commands
+│   └── experiments/                   # 28 experimental commands
 │       ├── xact.md                   # GitHub Actions testing
 │       ├── xanalytics.md             # Analytics and metrics
 │       ├── xapi.md                   # API development tools
