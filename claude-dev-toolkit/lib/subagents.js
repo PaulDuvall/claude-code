@@ -1,16 +1,14 @@
 /**
- * Subagents Module - Async/Await Version (CommonJS)
- * Backward compatible with enhanced async support
+ * Subagents Module - Async/Await (CommonJS)
  */
 
 const fs = require('fs').promises;
-const fsSync = require('fs');
 const path = require('path');
 const os = require('os');
 const { Result } = require('./result');
 const { SubagentFormatter } = require('./subagent-formatter');
 
-// Enhanced Result with async support
+// Async helper for Result pattern
 class AsyncResult extends Result {
     static async tryAsync(fn) {
         try {
@@ -18,35 +16,6 @@ class AsyncResult extends Result {
             return Result.ok(result);
         } catch (error) {
             return Result.err(error);
-        }
-    }
-
-    async mapAsync(fn) {
-        if (this.isError) return this;
-        
-        try {
-            const result = await fn(this.value);
-            return Result.ok(result);
-        } catch (error) {
-            return Result.err(error);
-        }
-    }
-
-    async flatMapAsync(fn) {
-        if (this.isError) return this;
-        
-        try {
-            return await fn(this.value);
-        } catch (error) {
-            return Result.err(error);
-        }
-    }
-
-    async matchAsync(okFn, errFn) {
-        if (this.isOk) {
-            return await okFn(this.value);
-        } else {
-            return await errFn(this.error);
         }
     }
 }
@@ -310,13 +279,13 @@ class AsyncSubagentsManager {
     // Async versions of all methods
     async listAvailableSubagentsAsync() {
         const result = await this.coreService.getSubagentNames();
-        
-        return await result.matchAsync(
-            async (names) => {
+
+        return result.match(
+            (names) => {
                 SubagentFormatter.displayList(names);
                 return true;
             },
-            async (error) => {
+            (error) => {
                 SubagentFormatter.displayError(`Failed to list subagents: ${error.message}`);
                 return false;
             }
@@ -325,16 +294,16 @@ class AsyncSubagentsManager {
 
     async installSubagentsAsync() {
         const result = await this.coreService.installAllSubagents();
-        
-        return await result.matchAsync(
-            async (installationData) => {
+
+        return result.match(
+            (installationData) => {
                 SubagentFormatter.displayInstallation({
                     subagents: [...installationData.installed, ...installationData.failed.map(f => f.filename)],
                     onProgress: (callback) => {
                         installationData.installed.forEach(filename => {
                             callback(filename, true, null);
                         });
-                        
+
                         installationData.failed.forEach(failure => {
                             callback(failure.filename, false, failure.error);
                         });
@@ -346,10 +315,10 @@ class AsyncSubagentsManager {
                     },
                     summary: installationData.summary
                 });
-                
+
                 return installationData.summary.installed > 0;
             },
-            async (error) => {
+            (error) => {
                 SubagentFormatter.displayError(`Installation failed: ${error.message}`);
                 return false;
             }
@@ -380,92 +349,6 @@ class AsyncSubagentsManager {
         return await this.showHelpAsync();
     }
 
-    // Backward compatible sync versions (using fallback)
-    listAvailableSubagents() {
-        // For sync compatibility, we fall back to the sync version
-        // In a real scenario, you might want to use sync fs operations here
-        console.warn('Using async method synchronously. Consider using the async version.');
-        
-        // Use the sync fallback from the original implementation
-        const { SubagentsCoreService } = require('./subagents-core');
-        const syncService = new SubagentsCoreService();
-        const result = syncService.getSubagentNames();
-        
-        return result.match(
-            (names) => {
-                SubagentFormatter.displayList(names);
-                return true;
-            },
-            (error) => {
-                SubagentFormatter.displayError(`Failed to list subagents: ${error.message}`);
-                return false;
-            }
-        );
-    }
-
-    installSubagents() {
-        console.warn('Using async method synchronously. Consider using the async version.');
-        
-        const { SubagentsCoreService } = require('./subagents-core');
-        const syncService = new SubagentsCoreService();
-        const result = syncService.installAllSubagents();
-        
-        return result.match(
-            (installationData) => {
-                SubagentFormatter.displayInstallation({
-                    subagents: [...installationData.installed, ...installationData.failed.map(f => f.filename)],
-                    onProgress: (callback) => {
-                        installationData.installed.forEach(filename => {
-                            callback(filename, true, null);
-                        });
-                        
-                        installationData.failed.forEach(failure => {
-                            callback(failure.filename, false, failure.error);
-                        });
-                    },
-                    onDirectoryCreated: (callback) => {
-                        if (installationData.summary.directoryCreated) {
-                            callback(installationData.summary.path);
-                        }
-                    },
-                    summary: installationData.summary
-                });
-                
-                return installationData.summary.installed > 0;
-            },
-            (error) => {
-                SubagentFormatter.displayError(`Installation failed: ${error.message}`);
-                return false;
-            }
-        );
-    }
-
-    showHelp() {
-        const { SubagentsCoreService } = require('./subagents-core');
-        const syncService = new SubagentsCoreService();
-        const countResult = syncService.getAvailableSubagents();
-        const count = countResult.unwrapOr([]).length;
-        
-        SubagentFormatter.displayHelp(count);
-        return true;
-    }
-
-    handleCommand(options) {
-        if (options.help) {
-            return this.showHelp();
-        }
-
-        if (options.list) {
-            return this.listAvailableSubagents();
-        }
-
-        if (options.install) {
-            return this.installSubagents();
-        }
-
-        return this.showHelp();
-    }
-
     // Pure async business logic methods
     async getStatusAsync() {
         return await this.coreService.getInstallationStatus();
@@ -484,23 +367,17 @@ class AsyncSubagentsManager {
 const asyncSubagentsManager = new AsyncSubagentsManager();
 
 module.exports = {
-    // Legacy compatibility - sync interface
-    handleCommand: (options) => asyncSubagentsManager.handleCommand(options),
-    listAvailableSubagents: () => asyncSubagentsManager.listAvailableSubagents(),
-    installSubagents: () => asyncSubagentsManager.installSubagents(),
-    showHelp: () => asyncSubagentsManager.showHelp(),
-    
-    // New async interface (recommended)
+    // Async interface
     handleCommandAsync: (options) => asyncSubagentsManager.handleCommandAsync(options),
     listAvailableSubagentsAsync: () => asyncSubagentsManager.listAvailableSubagentsAsync(),
     installSubagentsAsync: () => asyncSubagentsManager.installSubagentsAsync(),
     showHelpAsync: () => asyncSubagentsManager.showHelpAsync(),
-    
+
     // Pure business logic (async)
     getStatusAsync: () => asyncSubagentsManager.getStatusAsync(),
     validateInstallationAsync: () => asyncSubagentsManager.validateInstallationAsync(),
     getAvailableSubagentsAsync: () => asyncSubagentsManager.getAvailableSubagentsAsync(),
-    
+
     // Export classes for advanced usage
     AsyncSubagentsManager,
     AsyncSubagentsCoreService,

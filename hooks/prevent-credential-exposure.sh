@@ -17,37 +17,15 @@ HOOK_NAME="prevent-credential-exposure"
 LOG_FILE="$HOME/.claude/logs/security-hooks.log"
 VIOLATION_LOG="$HOME/.claude/logs/credential-violations.log"
 NOTIFICATION_WEBHOOK="${SECURITY_WEBHOOK_URL:-}"
-
-# Ensure log directory exists with secure permissions
-mkdir -p "$(dirname "$LOG_FILE")"
-chmod 700 "$(dirname "$LOG_FILE")"
-
-# Create log files with restrictive permissions if they don't exist
-touch "$LOG_FILE" "$VIOLATION_LOG"
-chmod 600 "$LOG_FILE" "$VIOLATION_LOG"
+source "$(dirname "$0")/lib/hook-helpers.sh"
+ensure_log_setup "$LOG_FILE"
+ensure_log_setup "$VIOLATION_LOG"
 
 ##################################
 # Logging Functions
 ##################################
-log() {
-    echo "[$(date +'%Y-%m-%d %H:%M:%S')] [$HOOK_NAME] $*" | tee -a "$LOG_FILE"
-}
-
 log_violation() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] VIOLATION: $*" | tee -a "$VIOLATION_LOG"
-}
-
-##################################
-# JSON Utilities
-##################################
-json_escape() {
-    local input="$1"
-    input="${input//\\/\\\\}"
-    input="${input//\"/\\\"}"
-    input="${input//$'\n'/\\n}"
-    input="${input//$'\r'/\\r}"
-    input="${input//$'\t'/\\t}"
-    printf '%s' "$input"
 }
 
 ##################################

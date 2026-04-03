@@ -7,13 +7,13 @@
 
 const BaseCommand = require('./base/base-command');
 const DependencyValidator = require('./dependency-validator');
-const ErrorHandlerUtils = require('./error-handler-utils');
+const ErrorManager = require('./error-manager');
 
 class OidcCommand extends BaseCommand {
     constructor() {
         super();
         this.dependencyValidator = new DependencyValidator();
-        this.errorHandlerUtils = new ErrorHandlerUtils();
+        this.errorHandlerUtils = new ErrorManager();
     }
 
     /**

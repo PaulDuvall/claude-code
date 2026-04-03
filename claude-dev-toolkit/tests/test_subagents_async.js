@@ -102,16 +102,12 @@ class AsyncSubagentsTests {
         assert(status.isOk || status.isError, 'Should return a Result object');
     }
 
-    async test_backward_compatibility() {
-        // Test that sync methods still work
-        assert(typeof this.manager.handleCommand === 'function', 'Should have sync handleCommand');
-        assert(typeof this.manager.listAvailableSubagents === 'function', 'Should have sync listAvailableSubagents');
-        assert(typeof this.manager.installSubagents === 'function', 'Should have sync installSubagents');
-        assert(typeof this.manager.showHelp === 'function', 'Should have sync showHelp');
-        
-        // Test that help works (doesn't throw)
-        const helpResult = this.manager.showHelp();
-        assert(typeof helpResult === 'boolean', 'showHelp should return boolean');
+    async test_async_help() {
+        // Test that async help works
+        assert(typeof this.manager.showHelpAsync === 'function', 'Should have showHelpAsync');
+
+        const helpResult = await this.manager.showHelpAsync();
+        assert(typeof helpResult === 'boolean', 'showHelpAsync should return boolean');
     }
 
     async runAllTests() {
@@ -126,7 +122,7 @@ class AsyncSubagentsTests {
             ['Async installation status', this.test_async_installation_status],
             ['Async validation', this.test_async_validation],
             ['Manager async methods', this.test_manager_async_methods],
-            ['Backward compatibility', this.test_backward_compatibility]
+            ['Async help', this.test_async_help]
         ];
 
         for (const [testName, testFn] of tests) {

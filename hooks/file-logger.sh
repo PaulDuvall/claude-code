@@ -15,21 +15,8 @@ set -euo pipefail
 ##################################
 HOOK_NAME="file-logger"
 LOG_FILE="$HOME/.claude/logs/file-logger.log"
-
-# Ensure log directory exists with secure permissions
-mkdir -p "$(dirname "$LOG_FILE")"
-chmod 700 "$(dirname "$LOG_FILE")"
-
-# Create log file with restrictive permissions if it doesn't exist
-touch "$LOG_FILE"
-chmod 600 "$LOG_FILE"
-
-##################################
-# Logging Functions
-##################################
-log() {
-    echo "[$(date +'%Y-%m-%d %H:%M:%S')] [$HOOK_NAME] $*" | tee -a "$LOG_FILE"
-}
+source "$(dirname "$0")/lib/hook-helpers.sh"
+ensure_log_setup "$LOG_FILE"
 
 ##################################
 # Dependency Validation

@@ -151,9 +151,9 @@ program
     .description('Manage AI subagents for Claude Code')
     .option('-l, --list', 'List available subagents')
     .option('-i, --install', 'Install subagents to Claude Code')
-    .action((options) => {
+    .action(async (options) => {
         const subagents = require('../lib/subagents');
-        subagents.handleCommand(options);
+        await subagents.handleCommandAsync(options);
     });
 
 program

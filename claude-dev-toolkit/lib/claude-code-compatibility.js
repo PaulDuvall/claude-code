@@ -17,13 +17,13 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const PlatformUtils = require('./platform-utils');
-const ErrorFactory = require('./error-factory');
+const ErrorManager = require('./error-manager');
 const ErrorRecoverySystem = require('./error-recovery-system');
 
 class ClaudeCodeCompatibility {
     constructor() {
         this.platformUtils = new PlatformUtils();
-        this.errorFactory = new ErrorFactory();
+        this.errorFactory = new ErrorManager();
         this.errorRecovery = new ErrorRecoverySystem();
         this.config = {
             minimumVersion: '0.1.0',

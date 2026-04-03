@@ -12,13 +12,12 @@
  * - Integration with error handling workflow
  */
 
-const ErrorHandlerUtils = require('./error-handler-utils');
-const ErrorFactory = require('./error-factory');
+const ErrorManager = require('./error-manager');
 
 class ErrorRecoverySystem {
     constructor() {
-        this.errorHandler = new ErrorHandlerUtils();
-        this.errorFactory = new ErrorFactory();
+        this.errorHandler = new ErrorManager();
+        this.errorFactory = new ErrorManager();
         
         this.config = {
             defaultRetryConfig: {

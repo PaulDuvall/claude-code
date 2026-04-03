@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const ErrorFactory = require('./error-factory');
+const ErrorManager = require('./error-manager');
 const ErrorRecoverySystem = require('./error-recovery-system');
 
 /**
@@ -25,7 +25,7 @@ class FailureRecoveryInstaller {
         this.hooksDir = path.join(claudeDir, 'hooks');
         
         // Initialize centralized error handling
-        this.errorFactory = new ErrorFactory();
+        this.errorFactory = new ErrorManager();
         this.errorRecovery = new ErrorRecoverySystem();
     }
 
