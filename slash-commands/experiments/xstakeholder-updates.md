@@ -2,7 +2,7 @@ Generate a stakeholder update email from recently completed tasks in any support
 
 ## Arguments
 
-`$ARGUMENTS` may contain some, all, or none of these values: `<source> <label_or_filter> <recipient_name> <recipient_email>`
+`$ARGUMENTS` may contain some, all, or none of these values: `<source> <label_or_filter> <recipient_name> <recipient_email> <sender_name>`
 
 For any values not provided in the arguments, prompt the user interactively.
 Ask for all missing values in a single prompt, not one at a time.
@@ -11,6 +11,7 @@ Ask for all missing values in a single prompt, not one at a time.
 2. **label_or_filter** — Label, project name, or filter for relevant tasks
 3. **recipient_name** — First name for the greeting (e.g., "Rob")
 4. **recipient_email** — Their email address (e.g., "rob@example.com")
+5. **sender_name** — Your name for the sign-off (e.g., "Paul"). If not provided, try to infer from `git config user.name`; if that fails, ask the user.
 
 ## Steps
 
@@ -147,7 +148,7 @@ These are all live in production at <production_url>. If you run into any other 
 
 We appreciate your feedback.
 
-Paul
+<sender_name>
 ```
 
 Rules for summary text:
