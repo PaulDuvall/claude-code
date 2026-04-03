@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Claude Code Custom Commands is a comprehensive collection of 45 custom slash commands for Claude Code that accelerate software development workflows through AI-powered automation. These commands provide intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring.
+Claude Code Custom Commands is a comprehensive collection of 46 custom slash commands for Claude Code that accelerate software development workflows through AI-powered automation. These commands provide intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring.
 
 ## Core Philosophy
 
@@ -42,7 +42,7 @@ claude-code/
 │   ├── claude-code-hooks-system.md    # Hooks documentation
 │   ├── devcontainer-guide.md          # Devcontainer guide
 │   └── subagent-hook-integration.md   # Subagent integration docs
-├── hooks/                             # Hook implementations (9 hooks)
+├── hooks/                             # Hook implementations (11 shell + 14 Python)
 │   ├── file-logger.sh                # File operation logging
 │   ├── on-error-debug.sh             # Error debugging hook
 │   ├── pre-commit-quality.sh         # Pre-commit quality checks
@@ -51,7 +51,9 @@ claude-code/
 │   ├── prevent-credential-exposure.sh # Credential exposure prevention
 │   ├── subagent-trigger.sh           # Subagent trigger hook
 │   ├── subagent-trigger-simple.sh    # Simple subagent trigger
+│   ├── tab-color.sh                  # Terminal tab colorization
 │   ├── verify-before-edit.sh         # Warn about fabricated references
+│   ├── claude-wrapper.sh             # Claude wrapper script
 │   └── lib/                           # Hook support libraries (12 modules)
 │       ├── config-constants.sh        # Configuration constants
 │       ├── file-utils.sh             # File utility functions
@@ -72,7 +74,7 @@ claude-code/
 │   ├── deploy-subagents.sh          # Subagent deployment
 │   └── update-subagent-settings.py  # Settings updater
 ├── slash-commands/                    # Command implementations (source of truth)
-│   ├── active/                        # 16 production-ready commands
+│   ├── active/                        # 17 production-ready commands
 │   │   ├── xarchitecture.md          # Architecture design and analysis
 │   │   ├── xconfig.md                # Configuration management
 │   │   ├── xcontinue.md              # Execution plan continuation
@@ -80,6 +82,7 @@ claude-code/
 │   │   ├── xdocs.md                  # Documentation generation
 │   │   ├── xexplore.md               # Codebase exploration (read-only)
 │   │   ├── xgit.md                   # Automated Git workflow
+│   │   ├── xhelp.md                  # Built-in help system
 │   │   ├── xpipeline.md              # CI/CD pipeline management
 │   │   ├── xquality.md               # Code quality analysis
 │   │   ├── xrefactor.md              # Code refactoring automation
@@ -87,20 +90,21 @@ claude-code/
 │   │   ├── xsecurity.md              # Security scanning and analysis
 │   │   ├── xspec.md                  # Specification generation
 │   │   ├── xtdd.md                   # Test-driven development
-│   │   └── xtest.md                  # Testing automation
-│   └── experiments/                   # 28 experimental commands
+│   │   ├── xtest.md                  # Testing automation
+│   │   └── xverify.md               # Reference verification
+│   └── experiments/                   # 29 experimental commands
 │       ├── xact.md                   # GitHub Actions testing
-│       ├── xanalytics.md             # Analytics and metrics
 │       ├── xapi.md                   # API development tools
 │       ├── xaws.md                   # AWS integration
 │       ├── xcicd.md                  # Advanced CI/CD
 │       ├── xcompliance.md            # Compliance checking
 │       ├── xinfra.md                 # Infrastructure as Code
-│       ├── xmonitoring.md            # Application monitoring
-│       ├── xperformance.md           # Performance optimization
+│       ├── xmetrics.md               # Metrics collection
 │       ├── xplanning.md              # Project planning
+│       ├── xpolicy.md                # Policy enforcement
+│       ├── xproduct.md               # Product management
 │       ├── xrisk.md                  # Risk assessment
-│       └── [35 additional commands]  # Complete experimental collection
+│       └── [18 additional commands]  # Complete experimental collection
 ├── subagents/                         # 25 subagent definitions
 ├── specs/                             # Command specifications
 │   ├── command-specifications.md      # Command development specs

@@ -110,9 +110,9 @@ npm install -g @anthropic-ai/claude-code
 npm install -g @paulduvall/claude-dev-toolkit
 
 # 3. Deploy commands to Claude Code
-claude-commands install --active    # Install 16 core commands
+claude-commands install --active    # Install 17 core commands
 # OR
-claude-commands install --all       # Install all 62 commands
+claude-commands install --all       # Install all 46 commands
 
 # 4. Configure OIDC for GitHub Actions to AWS (NEW!)
 claude-commands oidc --help         # Show OIDC configuration options
@@ -146,19 +146,19 @@ For contributing or accessing experimental features (⚠️ **Review source code
 # Install development version with experimental commands
 npm install -g @paulduvall/claude-dev-toolkit
 
-# Install experimental commands (25 additional commands)
+# Install experimental commands (29 additional commands)
 claude-commands install --experiments    # Experimental features
-claude-commands install --all            # All 62 commands
+claude-commands install --all            # All 46 commands
 
 # Access AI subagents for specialized tasks
 claude-commands subagents --install      # 25 specialized AI assistants
 ```
 
-**That's it!** You now have 16 powerful AI development commands + intelligent subagents available in any project.
+**That's it!** You now have 17 powerful AI development commands + intelligent subagents available in any project.
 
 ## Core Commands (Always Available)
 
-Once installed, these 16 essential commands work in **any project** on your machine:
+Once installed, these 17 essential commands work in **any project** on your machine:
 
 ### 💻 **Daily Development**
 - **`/xtest`** - Smart test runner (detects framework, runs all tests)
@@ -424,7 +424,7 @@ hooks/verify-before-edit.sh      # Warn about placeholder/fabricated references
 hooks/prevent-credential-exposure.sh  # Credential pattern scanning
 ```
 
-### 📊 Experimental Commands (25 Additional)
+### 📊 Experimental Commands (29 Additional)
 Advanced commands for specialized workflows:
 - **Planning & Product**: `/xplanning`, `/xproduct`, `/xatomic`
 - **Infrastructure**: `/xinfra`, `/xaws`, `/xiac`, `/xoidc`
@@ -464,9 +464,9 @@ Deploy with: `claude-commands install --experiments`
 npm install -g @paulduvall/claude-dev-toolkit
 
 # Install command sets
-claude-commands install --active       # Install 16 core commands
-claude-commands install --experiments # Install 28 experimental commands
-claude-commands install --all          # Install all 62 commands
+claude-commands install --active       # Install 17 core commands
+claude-commands install --experiments # Install 29 experimental commands
+claude-commands install --all          # Install all 46 commands
 
 # Configuration management
 claude-commands config --list          # List available templates
@@ -528,8 +528,8 @@ ls ~/.claude/commands/x*.md           # List installed commands
 
 ## Repository Structure
 
-- **`slash-commands/active/`** - 16 production-ready commands (deployed by default)
-- **`slash-commands/experiments/`** - 28 experimental commands  
+- **`slash-commands/active/`** - 17 production-ready commands (deployed by default)
+- **`slash-commands/experiments/`** - 29 experimental commands  
 - **`subagents/`** - AI specialist subagents with persistent context
 - **`hooks/`** - Hybrid hook architecture with lightweight triggers
   - **Lightweight Trigger Scripts** (30-150 lines each):

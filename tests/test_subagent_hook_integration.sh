@@ -23,19 +23,10 @@ SUBAGENTS_DIR="$TEST_DIR/.claude/subagents"
 CONFIG_FILE="$TEST_DIR/.claude/subagent-hooks.yaml"
 LOG_FILE="$TEST_DIR/.claude/logs/subagent-hooks.log"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
-
-# Test counters
-TESTS_RUN=0
-TESTS_PASSED=0
-TESTS_FAILED=0
+source "$(dirname "$0")/lib/test-helpers.sh"
 
 ##################################
-# Test Setup Functions
+# Test Setup Functions (CUSTOM)
 ##################################
 setup_test_environment() {
     echo "Setting up test environment..."
@@ -132,22 +123,6 @@ cleanup_test_environment() {
 ##################################
 # Test Functions
 ##################################
-run_test() {
-    local test_name="$1"
-    local test_function="$2"
-    
-    echo -n "Running: $test_name... "
-    ((TESTS_RUN++))
-    
-    if $test_function; then
-        echo -e "${GREEN}PASSED${NC}"
-        ((TESTS_PASSED++))
-    else
-        echo -e "${RED}FAILED${NC}"
-        ((TESTS_FAILED++))
-    fi
-}
-
 test_hook_script_exists() {
     [[ -f "$HOOKS_DIR/subagent-trigger.sh" ]] && [[ -x "$HOOKS_DIR/subagent-trigger.sh" ]]
 }
@@ -353,11 +328,8 @@ test_integration_error_handling_flow() {
 # Main Test Execution
 ##################################
 main() {
-    echo "========================================="
-    echo "$TEST_NAME"
-    echo "========================================="
-    echo ""
-    
+    print_test_header
+
     # Setup
     setup_test_environment
     
@@ -388,28 +360,11 @@ main() {
     # Cleanup
     cleanup_test_environment
     
-    # Summary
-    echo ""
-    echo "========================================="
-    echo "Test Summary"
-    echo "========================================="
-    echo "Tests Run: $TESTS_RUN"
-    echo -e "Tests Passed: ${GREEN}$TESTS_PASSED${NC}"
-    echo -e "Tests Failed: ${RED}$TESTS_FAILED${NC}"
-    
-    if [[ $TESTS_FAILED -eq 0 ]]; then
-        echo -e "\n${GREEN}✅ All tests passed!${NC}"
-        echo "Subagent-hook integration is working correctly."
-        exit 0
-    else
-        echo -e "\n${RED}❌ Some tests failed!${NC}"
-        echo "Please review the failures above."
-        exit 1
-    fi
+    print_test_summary
 }
 
 # Handle interrupts gracefully
-trap cleanup_test_environment EXIT INT TERM
+setup_test_trap
 
 # Run main function
 main "$@"

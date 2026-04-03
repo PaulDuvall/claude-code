@@ -14,44 +14,32 @@ TEST_NAME="setup-devcontainer.sh Advanced Test Suite"
 TEST_DIR="/tmp/test-setup-devcontainer-adv-$$"
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SCRIPT_PATH="$SCRIPT_DIR/setup-devcontainer.sh"
-
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-NC='\033[0m'
-
-TESTS_RUN=0
-TESTS_PASSED=0
-TESTS_FAILED=0
-
-##################################
-# Test Setup Functions
-##################################
-setup_test_environment() {
-    echo "Setting up advanced test environment..."
-    mkdir -p "$TEST_DIR"
-    cd "$TEST_DIR" || exit 1
-}
-
-cleanup_test_environment() {
-    echo "Cleaning up advanced test environment..."
-    cd "$SCRIPT_DIR" || true
-    rm -rf "$TEST_DIR"
-}
+source "$(dirname "$0")/lib/test-helpers.sh"
 
 reset_test_dir() {
     rm -rf "$TEST_DIR/.devcontainer"
 }
 
+# Override setup/cleanup to cd into test dir (required by devcontainer tests)
+setup_test_environment() {
+    echo "Setting up test environment..."
+    mkdir -p "$TEST_DIR"
+    cd "$TEST_DIR" || exit 1
+}
+
+cleanup_test_environment() {
+    echo "Cleaning up test environment..."
+    cd "$SCRIPT_DIR" || true
+    rm -rf "$TEST_DIR"
+}
+
+# Override run_test to reset .devcontainer between tests
 run_test() {
     local test_name="$1"
     local test_function="$2"
-
     echo -n "Running: $test_name... "
     ((TESTS_RUN++))
     reset_test_dir
-
     if $test_function; then
         echo -e "${GREEN}PASSED${NC}"
         ((TESTS_PASSED++))
@@ -174,10 +162,7 @@ test_shows_configuration_summary() {
 # Main Test Execution
 ##################################
 main() {
-    echo "========================================="
-    echo "$TEST_NAME"
-    echo "========================================="
-    echo ""
+    print_test_header
 
     setup_test_environment
 
@@ -209,22 +194,8 @@ main() {
 
     cleanup_test_environment
 
-    echo ""
-    echo "========================================="
-    echo "Advanced Test Summary"
-    echo "========================================="
-    echo "Tests Run: $TESTS_RUN"
-    echo -e "Tests Passed: ${GREEN}$TESTS_PASSED${NC}"
-    echo -e "Tests Failed: ${RED}$TESTS_FAILED${NC}"
-
-    if [[ $TESTS_FAILED -eq 0 ]]; then
-        echo -e "\n${GREEN}All advanced tests passed!${NC}"
-        exit 0
-    else
-        echo -e "\n${RED}Some advanced tests failed!${NC}"
-        exit 1
-    fi
+    print_test_summary
 }
 
-trap cleanup_test_environment EXIT INT TERM
+setup_test_trap
 main "$@"

@@ -19,21 +19,14 @@ TEST_NAME="setup-devcontainer.sh Test Suite"
 TEST_DIR="/tmp/test-setup-devcontainer-$$"
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SCRIPT_PATH="$SCRIPT_DIR/setup-devcontainer.sh"
+source "$(dirname "$0")/lib/test-helpers.sh"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+reset_test_dir() {
+    # Reset test directory for a fresh test
+    rm -rf "$TEST_DIR/.devcontainer"
+}
 
-# Test counters
-TESTS_RUN=0
-TESTS_PASSED=0
-TESTS_FAILED=0
-
-##################################
-# Test Setup Functions
-##################################
+# Override setup/cleanup to cd into test dir (required by devcontainer tests)
 setup_test_environment() {
     echo "Setting up test environment..."
     mkdir -p "$TEST_DIR"
@@ -46,24 +39,13 @@ cleanup_test_environment() {
     rm -rf "$TEST_DIR"
 }
 
-reset_test_dir() {
-    # Reset test directory for a fresh test
-    rm -rf "$TEST_DIR/.devcontainer"
-}
-
-##################################
-# Test Utility Functions
-##################################
+# Override run_test to reset .devcontainer between tests
 run_test() {
     local test_name="$1"
     local test_function="$2"
-
     echo -n "Running: $test_name... "
     ((TESTS_RUN++))
-
-    # Reset environment for each test
     reset_test_dir
-
     if $test_function; then
         echo -e "${GREEN}PASSED${NC}"
         ((TESTS_PASSED++))
@@ -377,10 +359,7 @@ test_minimal_and_no_firewall() {
 # Main Test Execution
 ##################################
 main() {
-    echo "========================================="
-    echo "$TEST_NAME"
-    echo "========================================="
-    echo ""
+    print_test_header
 
     # Setup
     setup_test_environment
@@ -456,28 +435,10 @@ main() {
     # Cleanup
     cleanup_test_environment
 
-    # Summary
-    echo ""
-    echo "========================================="
-    echo "Test Summary"
-    echo "========================================="
-    echo "Tests Run: $TESTS_RUN"
-    echo -e "Tests Passed: ${GREEN}$TESTS_PASSED${NC}"
-    echo -e "Tests Failed: ${RED}$TESTS_FAILED${NC}"
-
-    if [[ $TESTS_FAILED -eq 0 ]]; then
-        echo -e "\n${GREEN}All tests passed!${NC}"
-        echo "setup-devcontainer.sh is working correctly."
-        exit 0
-    else
-        echo -e "\n${RED}Some tests failed!${NC}"
-        echo "Please review the failures above."
-        exit 1
-    fi
+    print_test_summary
 }
 
-# Handle interrupts gracefully
-trap cleanup_test_environment EXIT INT TERM
+setup_test_trap
 
 # Run main function
 main "$@"

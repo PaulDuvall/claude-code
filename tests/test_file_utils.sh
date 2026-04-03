@@ -13,55 +13,13 @@ TEST_NAME="hooks/lib/file-utils.sh Test Suite"
 TEST_DIR="/tmp/test-file-utils-$$"
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 LIB_DIR="$SCRIPT_DIR/hooks/lib"
-
-# Colors for test output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-NC='\033[0m'
-
-# Test counters
-TESTS_RUN=0
-TESTS_PASSED=0
-TESTS_FAILED=0
-
-##################################
-# Test Setup
-##################################
-setup_test_environment() {
-    echo "Setting up test environment..."
-    mkdir -p "$TEST_DIR"
-    export HOME="$TEST_DIR"
-}
-
-cleanup_test_environment() {
-    echo "Cleaning up test environment..."
-    rm -rf "$TEST_DIR"
-}
+source "$(dirname "$0")/lib/test-helpers.sh"
 
 source_lib() {
     unset CONFIG_CONSTANTS_LOADED _FILE_UTILS_LOADED
     export HOME="$TEST_DIR"
     export SCRIPT_DIR="$LIB_DIR"
     source "$LIB_DIR/file-utils.sh"
-}
-
-##################################
-# Test Utility Functions
-##################################
-run_test() {
-    local test_name="$1"
-    local test_function="$2"
-
-    echo -n "Running: $test_name... "
-    ((TESTS_RUN++))
-
-    if $test_function; then
-        echo -e "${GREEN}PASSED${NC}"
-        ((TESTS_PASSED++))
-    else
-        echo -e "${RED}FAILED${NC}"
-        ((TESTS_FAILED++))
-    fi
 }
 
 ##################################
@@ -392,10 +350,7 @@ test_cleanup_nonexistent_file_ok() {
 # Main Test Execution
 ##################################
 main() {
-    echo "========================================="
-    echo "$TEST_NAME"
-    echo "========================================="
-    echo ""
+    print_test_header
 
     setup_test_environment
 
@@ -459,23 +414,9 @@ main() {
 
     cleanup_test_environment
 
-    echo ""
-    echo "========================================="
-    echo "Test Summary"
-    echo "========================================="
-    echo "Tests Run: $TESTS_RUN"
-    echo -e "Tests Passed: ${GREEN}$TESTS_PASSED${NC}"
-    echo -e "Tests Failed: ${RED}$TESTS_FAILED${NC}"
-
-    if [[ $TESTS_FAILED -eq 0 ]]; then
-        echo -e "\n${GREEN}All tests passed!${NC}"
-        exit 0
-    else
-        echo -e "\n${RED}Some tests failed!${NC}"
-        exit 1
-    fi
+    print_test_summary
 }
 
-trap cleanup_test_environment EXIT INT TERM
+setup_test_trap
 
 main "$@"
