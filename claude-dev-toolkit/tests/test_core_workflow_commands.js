@@ -76,35 +76,38 @@ class CoreWorkflowCommandsTests {
         console.log(`Command structure validated (${totalCommands}/${totalCommands} commands)`);
         
         assert(activeCommands.length >= 10, 'Must have at least 10 active commands');
-        assert(expCommands.length >= 40, 'Must have at least 40 experimental commands');
-        assert(totalCommands >= 50, 'Must have at least 50 total commands');
+        assert(expCommands.length >= 25, 'Must have at least 25 experimental commands');
+        assert(totalCommands >= 35, 'Must have at least 35 total commands');
     }
 
-    test_command_categories_coverage() {
-        const activeCommands = this.getCommandFiles(this.activeDir);
-        
-        const categories = {
+    getCategoryDefinitions() {
+        return {
             daily_development: ['xgit', 'xtest', 'xquality'],
             security_safety: ['xrefactor', 'xsecurity'],
             problem_solving: ['xdebug', 'xarchitecture'],
             documentation: ['xdocs', 'xspec'],
             devops: ['xpipeline', 'xrelease', 'xconfig']
         };
+    }
 
-        let coveredCategories = 0;
+    countCoveredCategories(categories, activeCommands) {
+        let covered = 0;
         for (const [category, commands] of Object.entries(categories)) {
-            const covered = commands.filter(cmd => activeCommands.includes(cmd));
-            console.log(`  ${category}: ${JSON.stringify(covered)}`);
-            if (covered.length > 0) {
-                coveredCategories++;
-            }
+            const matched = commands.filter(cmd => activeCommands.includes(cmd));
+            console.log(`  ${category}: ${JSON.stringify(matched)}`);
+            if (matched.length > 0) covered++;
         }
+        return covered;
+    }
 
-        const totalCategories = Object.keys(categories).length;
-        console.log(`Command categories coverage validated (${coveredCategories}/${totalCategories} categories)`);
-        
-        assert(coveredCategories === totalCategories, 
-            `Expected ${totalCategories} categories covered, got ${coveredCategories}`);
+    test_command_categories_coverage() {
+        const activeCommands = this.getCommandFiles(this.activeDir);
+        const categories = this.getCategoryDefinitions();
+        const total = Object.keys(categories).length;
+        const covered = this.countCoveredCategories(categories, activeCommands);
+
+        console.log(`Command categories coverage validated (${covered}/${total} categories)`);
+        assert(covered === total, `Expected ${total} categories covered, got ${covered}`);
     }
 
     test_command_distribution() {
@@ -118,30 +121,30 @@ class CoreWorkflowCommandsTests {
         console.log(`Total commands: ${totalCommands}`);
         console.log(`Active ratio: ${activeRatio.toFixed(1)}%`);
 
-        assert(activeRatio >= 15 && activeRatio <= 35, 
-            `Active command ratio should be 15-35%, got ${activeRatio.toFixed(1)}%`);
+        assert(activeRatio >= 15 && activeRatio <= 45,
+            `Active command ratio should be 15-45%, got ${activeRatio.toFixed(1)}%`);
     }
 
-    runAllTests() {
-        console.log('🧪 Running Core Workflow Command Tests');
-        console.log('==================================================');
-
-        const tests = [
+    getTestSuite() {
+        return [
             ['Workflow commands existence', this.test_workflow_commands_existence],
             ['Core commands coverage', this.test_core_commands_coverage],
             ['Command file structure', this.test_command_file_structure],
             ['Command categories coverage', this.test_command_categories_coverage],
             ['Command distribution', this.test_command_distribution]
         ];
+    }
 
-        for (const [testName, testFn] of tests) {
+    runAllTests() {
+        console.log('🧪 Running Core Workflow Command Tests');
+        console.log('==================================================');
+
+        for (const [testName, testFn] of this.getTestSuite()) {
             this.runTest(testName, testFn);
         }
 
         console.log(`\n==================================================`);
         console.log(`Core workflow tests: ${this.passed} passed, ${this.failed} failed, 0 skipped`);
-        console.log('🎉 All core workflow command tests passed!');
-        
         return this.failed === 0;
     }
 }

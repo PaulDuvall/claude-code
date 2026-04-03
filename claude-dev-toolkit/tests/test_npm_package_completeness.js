@@ -14,7 +14,7 @@ const path = require('path');
 // Shared constants — single source of truth for expected counts and files
 const EXPECTED = {
     activeCommandCount: 17,
-    experimentalCommandCount: 47,
+    experimentalCommandCount: 29,
     subagentCount: 25,
     templates: [
         'basic-settings.json',

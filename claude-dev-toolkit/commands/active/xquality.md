@@ -51,6 +51,8 @@ Detect available quality tools:
 !python -c "import mypy" 2>/dev/null && echo "MyPy available" || echo "MyPy not available"
 !which eslint 2>/dev/null && echo "ESLint available" || echo "ESLint not available"
 
+If a tool is not found or not installed, skip that check with a warning and continue with available alternative tools. Do not fail the entire run due to a missing optional tool.
+
 ### Step 2: Apply Maturity-Aware Thresholds
 
 Per centralized-rules/base/code-quality, apply thresholds based on project maturity:

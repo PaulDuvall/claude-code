@@ -116,7 +116,7 @@ Per centralized-rules principle #7 (Dependency Management):
 Check:
 - Known CVEs in dependencies
 - Outdated packages with security patches
-- Unused dependencies (attack surface reduction)
+- Unused dependencies (reducing exposure)
 - Lock file integrity
 
 **Mode 4: OWASP Top 10 Review (argument: "owasp")**
@@ -156,7 +156,7 @@ Report pass/fail for each item with file locations for any issues.
 ## Security Analysis Results
 
 Categorize findings by severity (per centralized-rules incident response levels):
-- **Critical**: Active exploitation risk or data breach potential (fix immediately)
+- **Critical**: High-risk vulnerability or data breach potential (fix immediately)
 - **High**: Serious vulnerability (fix within days)
 - **Medium**: Important issue (fix in next release)
 - **Low**: Minor issue (fix when convenient)
