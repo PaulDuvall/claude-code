@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "true",
+    "BASH_DEFAULT_TIMEOUT_MS": "300000",
+    "MCP_TIMEOUT": "60000",
+    "CLAUDE_SECURITY_OVERRIDE": "false",
+    "ANTHROPIC_LOG": "info",
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
+    "SHEETS_WEBHOOK_URL": "https://script.google.com/macros/s/AKfycbwR2oIecLSS0ZqSp1qLet4U5QJrXVw6BbhjVAOZnhoUbMVmZvj5_CjKuGJlUXKYiQYEBA/exec",
+    "SECURITY_WEBHOOK_URL": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(python -m *)",
+      "Bash(git *)",
+      "Bash(docker *)",
+      "Bash(kubectl *)",
+      "Bash(terraform *)",
+      "Edit(*)",
+      "Read(*)",
+      "Write(*)",
+      "MultiEdit(*)"
+    ],
+    "deny": [
+      "Bash(curl *:/admin*)",
+      "Bash(ssh *prod*)",
+      "Bash(sudo *)",
+      "Bash(rm -rf *)",
+      "Bash(*production*)"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/activate-rules.sh"
+          },
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/tab-color.sh blue"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/tab-color.sh green"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/log-all-operations.sh",
+            "blocking": false,
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh documentation-curator post_write",
+            "blocking": false,
+            "timeout": 8000
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(*test*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh performance-guardian post_test",
+            "blocking": false,
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/prevent-credential-exposure.sh",
+            "blocking": true,
+            "timeout": 10000
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh security-auditor pre_write",
+            "blocking": true,
+            "timeout": 10000
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh style-enforcer pre_write",
+            "blocking": false,
+            "timeout": 5000
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(git commit*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh trunk-guardian pre_commit",
+            "blocking": true,
+            "timeout": 10000
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(*test*|*spec*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh test-writer pre_test",
+            "blocking": false,
+            "timeout": 8000
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh debug-specialist on_error",
+            "blocking": false,
+            "timeout": 15000
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/subagent-trigger.sh rollback-first-responder on_error",
+            "blocking": false,
+            "timeout": 10000
+          }
+        ]
+      }
+    ]
+  },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    }
+  },
+  "effortLevel": "high",
+  "autoDreamEnabled": true,
+  "skipDangerousModePermissionPrompt": true,
+  "mcpServers": {
+    "puppeteer": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--init",
+        "-e",
+        "DOCKER_CONTAINER=true",
+        "mcp/puppeteer"
+      ]
+    }
+  },
+  "allowedTools": [
+    "Edit",
+    "Bash",
+    "Read",
+    "Write",
+    "MultiEdit",
+    "Glob",
+    "Grep",
+    "LS",
+    "Task",
+    "WebFetch",
+    "WebSearch",
+    "NotebookEdit",
+    "BashOutput",
+    "KillBash"
+  ],
+  "tools": {
+    "bash": {
+      "defaultTimeout": 300000,
+      "maxParallelCommands": 3
+    },
+    "edit": {
+      "autoBackup": true,
+      "validateChanges": true
+    },
+    "web": {
+      "allowedDomains": [
+        "github.com",
+        "docs.anthropic.com",
+        "stackoverflow.com"
+      ],
+      "timeout": 30000
+    }
+  },
+  "hasTrustDialogAccepted": true,
+  "hasCompletedProjectOnboarding": true,
+  "parallelTasksCount": 5
+}
