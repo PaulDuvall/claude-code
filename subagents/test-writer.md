@@ -1,7 +1,12 @@
 ---
 name: test-writer
 description: Ensure tests exist and grow with code; target coverage on changed lines.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [testing, code-quality]
 tools: Read, Edit, Write, Grep, Bash, Glob
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

@@ -17,6 +17,7 @@ HOOK_NAME="file-logger"
 LOG_FILE="$HOME/.claude/logs/file-logger.log"
 source "$(dirname "$0")/lib/hook-helpers.sh"
 ensure_log_setup "$LOG_FILE"
+setup_hook_traps
 
 ##################################
 # Dependency Validation

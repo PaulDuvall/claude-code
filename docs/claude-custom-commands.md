@@ -1,5 +1,8 @@
 # Claude Custom Commands Reference
 
+> **Source of truth for command descriptions:** `slash-commands/active/*.md` and `slash-commands/experiments/*.md`.
+> This document provides extended usage examples and workflow guidance.
+
 This document describes custom Claude commands for development projects implementing SpecDriven AI methodology. All commands support machine-readable specifications with authority levels, dual coverage tracking, and Test-Driven Development workflows.
 
 ## Core Concepts
@@ -124,7 +127,6 @@ This document describes custom Claude commands for development projects implemen
 | `/xgit` | Auto stage, commit, and push changes | [Commit & Version Control](#commit--version-control) |
 | `/xanalytics` | Business and performance analytics | [Analytics & Business Intelligence](#analytics--business-intelligence) |
 | `/xapi` | API design and management | [API Management](#api-management) |
-| `/xcicd` | Manage CI/CD pipelines and deployments | [CI/CD Pipeline Management](#cicd-pipeline-management) |
 | `/xdb` | Database management and operations | [Database Management](#database-management) |
 | `/xincident` | Incident response and management | [Incident Management](#incident-management) |
 | `/xinfra` | Infrastructure and operations | [Infrastructure Management](#infrastructure-management) |
@@ -470,21 +472,17 @@ Implements: specs/specifications/cli-interface.md#{#cli1a authority=developer}
 
 ### CI/CD Pipeline Management
 
-#### `/xcicd` - CI/CD Operations
+#### `/xpipeline` - CI/CD Pipeline Management
 ```bash
-/xcicd --pipeline <type>      # Create pipeline configuration
-/xcicd --validate             # Validate pipeline configuration
-/xcicd --optimize             # Optimize pipeline performance
-/xcicd --security             # Security scan pipeline
-/xcicd --deploy <env>         # Deploy to environment
-```
-
-#### `/xpipeline` - Pipeline Configuration
-```bash
-/xpipeline --init <platform>  # Initialize pipeline for platform
+/xpipeline --init <platform>  # Initialize pipeline (github, gitlab, generic)
+/xpipeline --validate         # Validate pipeline best practices
+/xpipeline --optimize         # Optimize pipeline performance
+/xpipeline --security         # Security scan pipeline
+/xpipeline --deploy <env>     # Deploy to environment
+/xpipeline --monitor          # DORA metrics and pipeline health
+/xpipeline --rollback <env>   # Rollback deployment
 /xpipeline --stage <name>     # Add pipeline stage
 /xpipeline --artifact         # Configure artifact management
-/xpipeline --test-stage       # Configure testing stage
 /xpipeline --deploy-stage     # Configure deployment stage
 ```
 
@@ -1065,22 +1063,22 @@ Automate and optimize development workflows with configurable automation pattern
 #### Phase 2: Security and Compliance
 ```bash
 # Scan pipeline for security issues
-/xcicd --security
+/xpipeline --security
 # Expected: Security analysis of pipeline configuration
 
 # Validate against CI/CD best practices
-/xcicd --validate
+/xpipeline --validate
 # Expected: Compliance check against documented standards
 
 # Optimize pipeline performance
-/xcicd --optimize
+/xpipeline --optimize
 # Expected: Performance improvements identified
 ```
 
 #### Phase 3: Deployment and Monitoring
 ```bash
 # Deploy to staging environment
-/xcicd --deploy staging
+/xpipeline --deploy staging
 # Expected: Successful deployment with validation
 
 # Monitor deployment metrics
@@ -1088,7 +1086,7 @@ Automate and optimize development workflows with configurable automation pattern
 # Expected: Health checks and performance metrics
 
 # Generate deployment report
-/xcicd --report
+/xpipeline --monitor
 # Expected: Deployment summary with success metrics
 ```
 

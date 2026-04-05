@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Dynamic Test Runner for Claude Code Tests
-# Discovers and runs both JavaScript and shell test files
+# Test Runner for Claude Code Tests
+# Discovers and runs both shell and JavaScript test files
+# Requires: bash, node
 
 set -e
 
@@ -12,98 +13,59 @@ TOTAL_TESTS=0
 PASSED_TESTS=0
 FAILED_TESTS=0
 
-##################################
-# Shell Test Runner
-##################################
-echo "Discovering shell test files..."
-
-SHELL_TEST_FILES=$(find . -maxdepth 1 -name "test_*.sh" -type f | sort)
-
-if [ -n "$SHELL_TEST_FILES" ]; then
-    echo "Found shell test files:"
-    echo "$SHELL_TEST_FILES" | while read -r file; do
-        echo "  - $file"
-    done
+# Warn about bash version (many tests need bash 4+ for associative arrays)
+if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
+    echo "WARNING: bash ${BASH_VERSION} detected. Many tests require bash 4+."
+    echo "         Install with: brew install bash"
+    echo "         Tests that need bash 4+ will be skipped (not failed)."
     echo ""
-
-    for TEST_FILE in $SHELL_TEST_FILES; do
-        if [ -n "$TEST_FILE" ]; then
-            echo "Running: $TEST_FILE"
-            echo "----------------------------------------"
-
-            if timeout 300 bash "$TEST_FILE"; then
-                echo "PASSED: $TEST_FILE"
-                PASSED_TESTS=$((PASSED_TESTS + 1))
-            else
-                echo "FAILED: $TEST_FILE"
-                FAILED_TESTS=$((FAILED_TESTS + 1))
-            fi
-
-            TOTAL_TESTS=$((TOTAL_TESTS + 1))
-            echo "----------------------------------------"
-            echo ""
-        fi
-    done
 fi
 
 ##################################
-# JavaScript Test Runner
+# Shell Tests
 ##################################
-echo "Discovering JavaScript test files..."
+echo "Running shell tests..."
 
-JS_TEST_FILES=$(find . -maxdepth 1 -name "*.js" -type f | grep -E "(test|spec|validator|tester|validate)" | sort)
+for test_file in test_*.sh; do
+    [[ -f "$test_file" ]] || continue
+    echo "Running: ./$test_file"
+    echo "----------------------------------------"
 
-# Add customization guide parser test
-if [ -f "./customization-guide-parser.js" ]; then
-    JS_TEST_FILES="$JS_TEST_FILES ./customization-guide-parser.js"
-fi
+    if timeout 300 bash "$test_file"; then
+        echo "PASSED: ./$test_file"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+    else
+        echo "FAILED: ./$test_file"
+        FAILED_TESTS=$((FAILED_TESTS + 1))
+    fi
 
-if [ -n "$JS_TEST_FILES" ]; then
-    echo "Found JavaScript test files:"
-    echo "$JS_TEST_FILES" | while read -r file; do
-        echo "  - $file"
-    done
+    TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    echo "----------------------------------------"
     echo ""
+done
 
-    for TEST_FILE in $JS_TEST_FILES; do
-        if [ -n "$TEST_FILE" ]; then
-            echo "Running: $TEST_FILE"
-            echo "----------------------------------------"
+##################################
+# JavaScript Tests
+##################################
+echo "Running JavaScript tests..."
 
-            if [[ "$TEST_FILE" == *"security-validator.js" ]]; then
-                INSTALL_GUIDE=""
-                if [ -f "../docs/install-guide.md" ]; then
-                    INSTALL_GUIDE="../docs/install-guide.md"
-                elif [ -f "../README.md" ]; then
-                    INSTALL_GUIDE="../README.md"
-                fi
+for test_file in *.js; do
+    [[ -f "$test_file" ]] || continue
+    echo "Running: ./$test_file"
+    echo "----------------------------------------"
 
-                if [ -n "$INSTALL_GUIDE" ]; then
-                    if timeout 300 node "$TEST_FILE" "$INSTALL_GUIDE"; then
-                        echo "PASSED: $TEST_FILE"
-                        PASSED_TESTS=$((PASSED_TESTS + 1))
-                    else
-                        echo "FAILED: $TEST_FILE"
-                        FAILED_TESTS=$((FAILED_TESTS + 1))
-                    fi
-                else
-                    echo "Skipped: no install guide for security-validator.js"
-                    continue
-                fi
-            elif timeout 300 node "$TEST_FILE"; then
-                echo "PASSED: $TEST_FILE"
-                PASSED_TESTS=$((PASSED_TESTS + 1))
-            else
-                echo "FAILED: $TEST_FILE"
-                FAILED_TESTS=$((FAILED_TESTS + 1))
-            fi
+    if timeout 300 node "$test_file"; then
+        echo "PASSED: ./$test_file"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+    else
+        echo "FAILED: ./$test_file"
+        FAILED_TESTS=$((FAILED_TESTS + 1))
+    fi
 
-            TOTAL_TESTS=$((TOTAL_TESTS + 1))
-            echo "----------------------------------------"
-            echo ""
-        fi
-    done
-fi
+    TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    echo "----------------------------------------"
+    echo ""
+done
 
 ##################################
 # Summary
@@ -113,7 +75,7 @@ echo "  Total: $TOTAL_TESTS"
 echo "  Passed: $PASSED_TESTS"
 echo "  Failed: $FAILED_TESTS"
 
-if [ $FAILED_TESTS -gt 0 ]; then
+if [[ $FAILED_TESTS -gt 0 ]]; then
     echo "Some tests failed"
     exit 1
 else

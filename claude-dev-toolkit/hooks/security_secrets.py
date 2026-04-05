@@ -2,31 +2,51 @@
 
 Scans source lines for common secret patterns: API keys, tokens,
 private key headers, and credential URLs. Skips known false positives.
+
+Patterns are loaded from hooks/lib/credential-patterns.conf (shared
+source of truth with shell hooks). Falls back to inline defaults if
+the shared file is missing.
 """
 
 from __future__ import annotations
 
 import re
+from pathlib import Path
 
 from smell_types import FIXES, Smell
 
 # ---------------------------------------------------------------------------
-# Secret patterns -- each is (compiled_regex, description)
+# Secret patterns -- loaded from shared conf, with inline fallback
 # ---------------------------------------------------------------------------
 
-_PATTERNS: list[tuple[re.Pattern[str], str]] = [
+
+def _load_patterns() -> list[tuple[re.Pattern[str], str]]:
+    """Load credential patterns from shared conf file."""
+    conf = Path(__file__).parent / "lib" / "credential-patterns.conf"
+    if not conf.exists():
+        return _FALLBACK_PATTERNS
+
+    patterns: list[tuple[re.Pattern[str], str]] = []
+    for line in conf.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        parts = line.split("|", 3)
+        if len(parts) == 4:
+            _name, _confidence, regex, description = parts
+            patterns.append((re.compile(regex), description))
+    return patterns or _FALLBACK_PATTERNS
+
+
+# Inline fallback — used only when credential-patterns.conf is missing
+_FALLBACK_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"AKIA[0-9A-Z]{16}"), "AWS access key"),
     (re.compile(r"ghp_[0-9a-zA-Z]{36}"), "GitHub personal access token"),
-    (re.compile(r"gho_[0-9a-zA-Z]{36}"), "GitHub OAuth token"),
-    (re.compile(r"xoxb-[0-9]{10,13}-[0-9a-zA-Z-]+"), "Slack bot token"),
-    (re.compile(r"xoxp-[0-9]{10,13}-[0-9a-zA-Z-]+"), "Slack user token"),
-    (re.compile(r"sk_live_[0-9a-zA-Z]{24,}"), "Stripe secret key"),
-    (re.compile(r"rk_live_[0-9a-zA-Z]{24,}"), "Stripe restricted key"),
-    (re.compile(r"AIza[0-9A-Za-z_-]{35}"), "Google API key"),
-    (re.compile(r"sk-[0-9a-zA-Z]{20,}T3BlbkFJ[0-9a-zA-Z]+"), "OpenAI API key"),
-    (re.compile(r"-----BEGIN\s+(RSA |EC |DSA )?PRIVATE KEY-----"), "private key"),
+    (re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"), "private key"),
     (re.compile(r"[a-zA-Z+]+://[^:]+:[^@]+@[^\s]+"), "credentials in URL"),
 ]
+
+_PATTERNS: list[tuple[re.Pattern[str], str]] = _load_patterns()
 
 # ---------------------------------------------------------------------------
 # False-positive skip heuristics

@@ -90,8 +90,7 @@ Reference this categorized command catalog:
 |---------|---------|
 | `/xgit` | Automated git workflow (stage, commit, push) |
 | `/xcommit` | Commits linked to specs with traceability |
-| `/xcicd` | Platform-agnostic CI/CD pipelines |
-| `/xpipeline` | Build pipeline optimization |
+| `/xpipeline` | CI/CD pipeline configuration, deployment, and optimization |
 | `/xrelease` | Release management and deployment |
 | `/xact` | Local GitHub Actions testing with nektos/act |
 | `/xoidc` | AWS OIDC role creation for GitHub Actions |

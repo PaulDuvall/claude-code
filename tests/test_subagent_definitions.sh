@@ -23,7 +23,7 @@ test_subagents_dir_exists() {
 
 test_subagents_not_empty() {
     local count
-    count=$(find "$SUBAGENTS_DIR" -name "*.md" -type f 2>/dev/null | wc -l)
+    count=$(find "$SUBAGENTS_DIR" -name "*.md" -type f ! -name "README.md" ! -name "TEMPLATE.md" 2>/dev/null | wc -l)
     [[ "$count" -gt 0 ]]
 }
 
@@ -39,7 +39,7 @@ test_lowercase_filenames() {
             echo "  Uppercase in filename: $basename" >&2
             ((bad++))
         fi
-    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f 2>/dev/null)
+    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f ! -name "README.md" ! -name "TEMPLATE.md" 2>/dev/null)
     [[ "$bad" -eq 0 ]]
 }
 
@@ -52,7 +52,7 @@ test_kebab_case_filenames() {
             echo "  Non-kebab-case: $basename" >&2
             ((bad++))
         fi
-    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f 2>/dev/null)
+    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f ! -name "README.md" ! -name "TEMPLATE.md" 2>/dev/null)
     [[ "$bad" -eq 0 ]]
 }
 
@@ -74,7 +74,7 @@ test_all_have_frontmatter() {
             echo "  Missing frontmatter: $(basename "$file")" >&2
             ((missing++))
         fi
-    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f 2>/dev/null)
+    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f ! -name "README.md" ! -name "TEMPLATE.md" 2>/dev/null)
     [[ "$missing" -eq 0 ]]
 }
 
@@ -91,7 +91,7 @@ test_frontmatter_closed() {
                 ((unclosed++))
             fi
         fi
-    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f 2>/dev/null)
+    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f ! -name "README.md" ! -name "TEMPLATE.md" 2>/dev/null)
     [[ "$unclosed" -eq 0 ]]
 }
 
@@ -102,7 +102,7 @@ test_all_have_name_field() {
             echo "  Missing name: $(basename "$file")" >&2
             ((missing++))
         fi
-    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f 2>/dev/null)
+    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f ! -name "README.md" ! -name "TEMPLATE.md" 2>/dev/null)
     [[ "$missing" -eq 0 ]]
 }
 
@@ -113,7 +113,7 @@ test_all_have_description_field() {
             echo "  Missing description: $(basename "$file")" >&2
             ((missing++))
         fi
-    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f 2>/dev/null)
+    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f ! -name "README.md" ! -name "TEMPLATE.md" 2>/dev/null)
     [[ "$missing" -eq 0 ]]
 }
 
@@ -124,7 +124,7 @@ test_all_have_tools_field() {
             echo "  Missing tools: $(basename "$file")" >&2
             ((missing++))
         fi
-    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f 2>/dev/null)
+    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f ! -name "README.md" ! -name "TEMPLATE.md" 2>/dev/null)
     [[ "$missing" -eq 0 ]]
 }
 
@@ -142,7 +142,7 @@ test_name_matches_filename() {
             echo "  Mismatch: file=$basename name=$name_field" >&2
             ((mismatch++))
         fi
-    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f 2>/dev/null)
+    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f ! -name "README.md" ! -name "TEMPLATE.md" 2>/dev/null)
     [[ "$mismatch" -eq 0 ]]
 }
 
@@ -158,7 +158,7 @@ test_descriptions_not_empty() {
             echo "  Short/empty description: $(basename "$file")" >&2
             ((empty++))
         fi
-    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f 2>/dev/null)
+    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f ! -name "README.md" ! -name "TEMPLATE.md" 2>/dev/null)
     [[ "$empty" -eq 0 ]]
 }
 
@@ -172,7 +172,7 @@ test_content_after_frontmatter() {
             echo "  Too short (<8 lines): $(basename "$file")" >&2
             ((empty++))
         fi
-    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f 2>/dev/null)
+    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f ! -name "README.md" ! -name "TEMPLATE.md" 2>/dev/null)
     [[ "$empty" -eq 0 ]]
 }
 
@@ -183,7 +183,7 @@ test_no_binary_content() {
             echo "  Binary content: $(basename "$file")" >&2
             ((binary++))
         fi
-    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f 2>/dev/null)
+    done < <(find "$SUBAGENTS_DIR" -name "*.md" -type f ! -name "README.md" ! -name "TEMPLATE.md" 2>/dev/null)
     [[ "$binary" -eq 0 ]]
 }
 

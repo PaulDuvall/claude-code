@@ -40,7 +40,7 @@ hooks_configuration:
       blocking: true
       
     manual-security:
-      command: "~/.claude/hooks/subagent-trigger-simple.sh security-auditor manual"
+      command: "~/.claude/hooks/subagent-trigger.sh --simple security-auditor manual"
       description: "Manual security audit"
 
 ##################################
@@ -64,7 +64,7 @@ trigger_mappings:
     purpose: "Automatic debugging assistance when errors occur"
     context_includes: ["error_info", "system_context", "diagnostics"]
     
-  subagent-trigger-simple.sh:
+  subagent-trigger.sh --simple:
     delegates_to: "any (specified as argument)"
     purpose: "General-purpose lightweight subagent trigger"
     context_includes: ["subagent", "event", "environment", "project"]
@@ -101,9 +101,9 @@ available_subagents:
 
 # Manual subagent invocation:
 manual_usage:
-  - "~/.claude/hooks/subagent-trigger-simple.sh security-auditor pre_write"
-  - "~/.claude/hooks/subagent-trigger-simple.sh style-enforcer pre_commit 'Check Python files'"
-  - "~/.claude/hooks/subagent-trigger-simple.sh debug-specialist on_error 'ImportError'"
+  - "~/.claude/hooks/subagent-trigger.sh --simple security-auditor pre_write"
+  - "~/.claude/hooks/subagent-trigger.sh --simple style-enforcer pre_commit 'Check Python files'"
+  - "~/.claude/hooks/subagent-trigger.sh --simple debug-specialist on_error 'ImportError'"
 
 # Event-driven automatic invocation:
 automatic_usage:

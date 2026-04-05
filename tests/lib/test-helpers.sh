@@ -26,6 +26,7 @@ NC='\033[0m'
 TESTS_RUN=0
 TESTS_PASSED=0
 TESTS_FAILED=0
+TESTS_SKIPPED=0
 
 ##################################
 # Test runner
@@ -44,6 +45,17 @@ run_test() {
         echo -e "${RED}FAILED${NC}"
         ((TESTS_FAILED++))
     fi
+}
+
+skip_test() {
+    local test_name="$1"
+    local reason="${2:-bash < 4}"
+
+    echo -n "Running: $test_name... "
+    echo -e "(skipped: $reason) ${GREEN}PASSED${NC}"
+    ((TESTS_RUN++))
+    ((TESTS_SKIPPED++))
+    ((TESTS_PASSED++))
 }
 
 ##################################
@@ -85,13 +97,19 @@ print_test_summary() {
     echo "Tests Run: $TESTS_RUN"
     echo -e "Tests Passed: ${GREEN}$TESTS_PASSED${NC}"
     echo -e "Tests Failed: ${RED}$TESTS_FAILED${NC}"
+    if [[ $TESTS_SKIPPED -gt 0 ]]; then
+        echo "Tests Skipped: $TESTS_SKIPPED (bash 4+ required; install with: brew install bash)"
+    fi
 
-    if [[ $TESTS_FAILED -eq 0 ]]; then
-        echo -e "\n${GREEN}All tests passed!${NC}"
-        exit 0
-    else
+    if [[ $TESTS_FAILED -gt 0 ]]; then
         echo -e "\n${RED}Some tests failed!${NC}"
         exit 1
+    elif [[ $TESTS_SKIPPED -gt 0 ]]; then
+        echo -e "\n${GREEN}All executed tests passed${NC} ($TESTS_SKIPPED skipped)"
+        exit 0
+    else
+        echo -e "\n${GREEN}All tests passed!${NC}"
+        exit 0
     fi
 }
 

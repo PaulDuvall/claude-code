@@ -1,7 +1,12 @@
 ---
 name: contract-tester
 description: Validate service interactions and prevent integration drift.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [testing, code-quality]
 tools: Read, Write, Bash
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

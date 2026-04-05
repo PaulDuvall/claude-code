@@ -1,3 +1,7 @@
+---
+description: Comprehensive traceability tracking and analysis for SpecDriven AI development with end-to-end requirement tracking
+---
+
 # `/xtrace` - SpecDriven AI Traceability Analysis
 
 Comprehensive traceability tracking and analysis for SpecDriven AI development with end-to-end requirement tracking.

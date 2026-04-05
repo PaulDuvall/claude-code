@@ -22,6 +22,7 @@ HOOK_NAME="pre-commit-test-runner"
 LOG_FILE="$HOME/.claude/logs/pre-commit-test-runner.log"
 source "$(dirname "$0")/lib/hook-helpers.sh"
 ensure_log_setup "$LOG_FILE"
+setup_hook_traps
 
 ##################################
 # Commit Detection
@@ -110,11 +111,6 @@ main() {
     log "Security check passed — all tests green"
     exit 0
 }
-
-##################################
-# Error Handling
-##################################
-trap 'log "Hook failed with error on line $LINENO"' ERR
 
 ##################################
 # Execute

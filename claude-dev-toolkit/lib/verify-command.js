@@ -9,9 +9,11 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { execSync } = require('child_process');
+const BaseCommand = require('./base/base-command');
 
-class VerifyCommand {
-    constructor() {
+class VerifyCommand extends BaseCommand {
+    constructor(config = null, logger = null) {
+        super(config, logger);
         this.homeDir = process.env.TEST_HOME || os.homedir();
         this.claudeDir = path.join(this.homeDir, '.claude');
         this.commandsDir = path.join(this.claudeDir, 'commands');
@@ -25,38 +27,30 @@ class VerifyCommand {
     }
 
     /**
-     * Execute verification with options
+     * Main command logic dispatched by BaseCommand.execute()
      */
-    async execute(options = {}) {
+    async run(options = {}) {
         const { verbose = false, fix = false } = options;
-        
-        console.log('🔍 Claude Dev Toolkit Verification\n');
-        
-        try {
-            // Run all verification checks
-            await this.checkSystemInformation(verbose);
-            await this.checkClaudeCodeInstallation(verbose);
-            await this.checkDirectoryStructure(verbose);
-            await this.checkCommandInstallation(verbose);
-            await this.checkConfiguration(verbose);
-            await this.checkHooksInstallation(verbose);
-            
-            // Attempt fixes if requested
-            if (fix && this.results.issues.length > 0) {
-                await this.attemptFixes();
-            }
-            
-            // Generate final report
-            this.generateHealthReport(verbose);
-            
-            return this.results;
 
-        } catch (error) {
-            console.error(`\n❌ Verification failed: ${error.message}`);
-            this.results.overall = 'error';
-            this.results.error = error.message;
-            return this.results;
+        console.log('🔍 Claude Dev Toolkit Verification\n');
+
+        // Run all verification checks
+        await this.checkSystemInformation(verbose);
+        await this.checkClaudeCodeInstallation(verbose);
+        await this.checkDirectoryStructure(verbose);
+        await this.checkCommandInstallation(verbose);
+        await this.checkConfiguration(verbose);
+        await this.checkHooksInstallation(verbose);
+
+        // Attempt fixes if requested
+        if (fix && this.results.issues.length > 0) {
+            await this.attemptFixes();
         }
+
+        // Generate final report
+        this.generateHealthReport(verbose);
+
+        return this.results;
     }
 
     /**

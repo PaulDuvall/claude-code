@@ -1,7 +1,12 @@
 ---
 name: continuous-release-orchestrator
 description: Enable on-demand production deployment with automated quality gates and release readiness validation.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [release, deployment, ci-cd]
 tools: Read, Write, Bash
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

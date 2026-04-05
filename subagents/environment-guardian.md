@@ -1,7 +1,12 @@
 ---
 name: environment-guardian
 description: Infrastructure provisioning, environment parity validation, and configuration drift detection.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [infrastructure, deployment, monitoring]
 tools: Read, Write, Bash, Grep, Glob
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

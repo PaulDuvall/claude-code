@@ -1,3 +1,7 @@
+---
+description: Generate stakeholder update emails from recently completed tasks in any supported issue tracker
+---
+
 Generate a stakeholder update email from recently completed tasks in any supported issue tracker.
 
 ## Arguments

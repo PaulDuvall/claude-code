@@ -1,7 +1,12 @@
 ---
 name: deployment-strategist
 description: Execute safe, fast deployments with progressive delivery and intelligent rollback automation.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [deployment, infrastructure, release]
 tools: Read, Write, Bash
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

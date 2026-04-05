@@ -1,7 +1,12 @@
 ---
 name: data-steward
 description: Database migration management, data quality validation, and data pipeline reliability.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [data, code-quality, infrastructure]
 tools: Read, Write, Bash, Grep, Glob
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

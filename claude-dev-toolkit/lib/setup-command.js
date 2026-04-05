@@ -9,9 +9,11 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { execSync } = require('child_process');
+const BaseCommand = require('./base/base-command');
 
-class SetupCommand {
-    constructor() {
+class SetupCommand extends BaseCommand {
+    constructor(config = null, logger = null) {
+        super(config, logger);
         this.homeDir = process.env.TEST_HOME || os.homedir();
         this.claudeDir = path.join(this.homeDir, '.claude');
         this.commandsDir = path.join(this.claudeDir, 'commands');
@@ -19,11 +21,11 @@ class SetupCommand {
     }
 
     /**
-     * Execute setup with options
+     * Main command logic dispatched by BaseCommand.execute()
      */
-    async execute(options = {}) {
+    async run(options = {}) {
         console.log('🚀 Claude Dev Toolkit Setup\n');
-        
+
         const {
             type = 'basic',
             commands = 'active',
@@ -37,42 +39,36 @@ class SetupCommand {
             return this.showDryRun(options);
         }
 
-        try {
-            // 1. Verify Claude Code availability (optional check)
-            this.checkClaudeCode();
+        // 1. Verify Claude Code availability (optional check)
+        this.checkClaudeCode();
 
-            // 2. Create directory structure
-            await this.createDirectoryStructure(force);
+        // 2. Create directory structure
+        await this.createDirectoryStructure(force);
 
-            // 3. Install commands
-            if (commands !== 'none') {
-                await this.installCommands(commands);
-            }
-
-            // 4. Apply configuration template
-            if (!skipConfigure) {
-                await this.applyConfigurationTemplate(type);
-            }
-
-            // 5. Install hooks (if requested)
-            if (!skipHooks) {
-                await this.installHooks();
-            }
-
-            // 6. Verify installation
-            await this.verifySetup();
-
-            console.log('\n✅ Setup completed successfully!');
-            console.log('\n💡 Next steps:');
-            console.log('   • Run: claude-commands verify');
-            console.log('   • Try: /xhelp in Claude Code to see all commands');
-
-            return { success: true, message: 'Setup completed successfully' };
-
-        } catch (error) {
-            console.error(`\n❌ Setup failed: ${error.message}`);
-            return { success: false, error: error.message };
+        // 3. Install commands
+        if (commands !== 'none') {
+            await this.installCommands(commands);
         }
+
+        // 4. Apply configuration template
+        if (!skipConfigure) {
+            await this.applyConfigurationTemplate(type);
+        }
+
+        // 5. Install hooks (if requested)
+        if (!skipHooks) {
+            await this.installHooks();
+        }
+
+        // 6. Verify installation
+        await this.verifySetup();
+
+        console.log('\n✅ Setup completed successfully!');
+        console.log('\n💡 Next steps:');
+        console.log('   • Run: claude-commands verify');
+        console.log('   • Try: /xhelp in Claude Code to see all commands');
+
+        return { success: true, message: 'Setup completed successfully' };
     }
 
     /**

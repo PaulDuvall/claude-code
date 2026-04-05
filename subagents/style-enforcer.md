@@ -1,7 +1,12 @@
 ---
 name: style-enforcer
 description: Enforce formatting, linting, and type checks; auto-fix where safe.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [code-quality, workflow]
 tools: Read, Edit, MultiEdit, Bash, Glob
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

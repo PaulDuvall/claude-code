@@ -1,7 +1,12 @@
 ---
 name: rollback-first-responder
 description: Automated revert/flag-off on guardrail breach; capture breadcrumbs for RCA.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [deployment, debugging, monitoring]
 tools: Read, Write, Bash
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

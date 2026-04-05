@@ -1,7 +1,12 @@
 ---
 name: security-auditor
 description: Continuous SAST/SCA/secret scanning with prioritized remediation.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [security, compliance, code-quality]
 tools: Bash, Read, Write, Grep, Glob
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

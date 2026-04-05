@@ -22,6 +22,7 @@ HOOK_NAME="verify-before-edit"
 LOG_FILE="$HOME/.claude/logs/verify-before-edit.log"
 source "$(dirname "$0")/lib/hook-helpers.sh"
 ensure_log_setup "$LOG_FILE"
+setup_hook_traps
 
 ##################################
 # Skip Checks
@@ -108,11 +109,6 @@ main() {
     log "Security validation complete for $file_path"
     exit 0
 }
-
-##################################
-# Error Handling
-##################################
-trap 'log "Hook failed with error on line $LINENO"' ERR
 
 ##################################
 # Execute

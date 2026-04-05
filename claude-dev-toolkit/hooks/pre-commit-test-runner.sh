@@ -20,18 +20,9 @@ set -euo pipefail
 ##################################
 HOOK_NAME="pre-commit-test-runner"
 LOG_FILE="$HOME/.claude/logs/pre-commit-test-runner.log"
-
-mkdir -p "$(dirname "$LOG_FILE")"
-chmod 700 "$(dirname "$LOG_FILE")"
-touch "$LOG_FILE"
-chmod 600 "$LOG_FILE"
-
-##################################
-# Logging
-##################################
-log() {
-    echo "[$(date +'%Y-%m-%d %H:%M:%S')] [$HOOK_NAME] $*" >> "$LOG_FILE"
-}
+source "$(dirname "$0")/lib/hook-helpers.sh"
+ensure_log_setup "$LOG_FILE"
+setup_hook_traps
 
 ##################################
 # Commit Detection
@@ -120,11 +111,6 @@ main() {
     log "Security check passed — all tests green"
     exit 0
 }
-
-##################################
-# Error Handling
-##################################
-trap 'log "Hook failed with error on line $LINENO"' ERR
 
 ##################################
 # Execute

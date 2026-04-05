@@ -1,7 +1,12 @@
 ---
 name: product-owner-proxy
 description: Define business intent as user stories with clear acceptance criteria and measurable outcomes.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [workflow, documentation]
 tools: Read, Write, Grep, Glob
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

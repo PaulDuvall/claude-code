@@ -1,7 +1,12 @@
 ---
 name: ci-pipeline-curator
 description: Design deterministic, fast pipelines with parallelism and flake intolerance.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [ci-cd, deployment, workflow]
 tools: Read, Write
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

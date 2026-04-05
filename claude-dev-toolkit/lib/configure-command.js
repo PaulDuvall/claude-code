@@ -8,9 +8,11 @@ const path = require('path');
 const os = require('os');
 const inquirer = require('inquirer');
 const { applyConfigurationTemplate, parseJSONC } = require('./config');
+const BaseCommand = require('./base/base-command');
 
-class ConfigureCommand {
-    constructor() {
+class ConfigureCommand extends BaseCommand {
+    constructor(config = null, logger = null) {
+        super(config, logger);
         this.claudeDir = path.join(os.homedir(), '.claude');
         this.settingsPath = path.join(this.claudeDir, 'settings.json');
         this.templatesDir = path.join(__dirname, '..', 'templates');
@@ -18,37 +20,22 @@ class ConfigureCommand {
     }
 
     /**
-     * Execute the configure command with given options
+     * Main command logic dispatched by BaseCommand.execute()
      */
-    async execute(options = {}) {
-        try {
-            // Handle template application
-            if (options.template) {
-                return await this.applyTemplate(options.template, options);
-            }
-
-            // Handle interactive mode
-            if (options.interactive) {
-                return await this.interactiveConfiguration();
-            }
-
-            // Handle validation
-            if (options.validate) {
-                return await this.validateConfiguration();
-            }
-
-            // Handle reset
-            if (options.reset) {
-                return await this.resetConfiguration(options);
-            }
-
-            // Default: show current configuration
-            return await this.showCurrentConfiguration();
-
-        } catch (error) {
-            console.error(`❌ Configuration failed: ${error.message}`);
-            return { success: false, error: error.message };
+    async run(options = {}) {
+        if (options.template) {
+            return await this.applyTemplate(options.template, options);
         }
+        if (options.interactive) {
+            return await this.interactiveConfiguration();
+        }
+        if (options.validate) {
+            return await this.validateConfiguration();
+        }
+        if (options.reset) {
+            return await this.resetConfiguration(options);
+        }
+        return await this.showCurrentConfiguration();
     }
 
     /**

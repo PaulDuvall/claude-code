@@ -1,7 +1,12 @@
 ---
 name: license-compliance-guardian
 description: License compliance scanning, legal risk assessment, and open source governance.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [compliance, security, dependency-management]
 tools: Read, Write, Bash, Grep, Glob
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

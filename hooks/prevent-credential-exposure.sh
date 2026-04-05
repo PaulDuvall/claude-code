@@ -20,6 +20,7 @@ NOTIFICATION_WEBHOOK="${SECURITY_WEBHOOK_URL:-}"
 source "$(dirname "$0")/lib/hook-helpers.sh"
 ensure_log_setup "$LOG_FILE"
 ensure_log_setup "$VIOLATION_LOG"
+setup_hook_traps
 
 ##################################
 # Logging Functions
@@ -65,34 +66,25 @@ notify_security_team() {
 ##################################
 # Credential Detection Patterns
 ##################################
-# High-confidence patterns for common credential types
+# Loaded from shared credential-patterns.conf (single source of truth)
 declare -A CREDENTIAL_PATTERNS
 
-# API Keys
-CREDENTIAL_PATTERNS["anthropic_api_key"]='sk-ant-[a-zA-Z0-9]{95}'
-CREDENTIAL_PATTERNS["openai_api_key"]='sk-[a-zA-Z0-9]{32,}'
-CREDENTIAL_PATTERNS["github_token"]='gh[po]_[a-zA-Z0-9]{36}'
-CREDENTIAL_PATTERNS["aws_access_key"]='AKIA[0-9A-Z]{16}'
-CREDENTIAL_PATTERNS["azure_key"]='[a-zA-Z0-9/+]{86}=='
+load_shared_patterns() {
+    local patterns_file
+    patterns_file="$(dirname "$0")/lib/credential-patterns.conf"
+    if [[ ! -f "$patterns_file" ]]; then
+        log "WARNING: Shared patterns file not found: $patterns_file"
+        return 1
+    fi
 
-# Database URLs with credentials
-CREDENTIAL_PATTERNS["database_url_with_password"]='(mysql|postgresql|mongodb)://[^:]+:[^@]+@'
+    while IFS='|' read -r name confidence regex description; do
+        # Skip comments and empty lines
+        [[ -z "$name" || "$name" =~ ^[[:space:]]*# ]] && continue
+        CREDENTIAL_PATTERNS["$name"]="$regex"
+    done < "$patterns_file"
+}
 
-# Generic high-entropy patterns
-CREDENTIAL_PATTERNS["generic_api_key"]='["'"'"']?[a-zA-Z0-9_-]*[aA][pP][iI][_-]?[kK][eE][yY]["'"'"']?\s*[:=]\s*["'"'"'][a-zA-Z0-9+/=]{20,}["'"'"']'
-CREDENTIAL_PATTERNS["generic_secret"]='["'"'"']?[a-zA-Z0-9_-]*[sS][eE][cC][rR][eE][tT]["'"'"']?\s*[:=]\s*["'"'"'][a-zA-Z0-9+/=]{20,}["'"'"']'
-CREDENTIAL_PATTERNS["generic_password"]='["'"'"']?[a-zA-Z0-9_-]*[pP][aA][sS][sS][wW][oO][rR][dD]["'"'"']?\s*[:=]\s*["'"'"'][^"'"'"']{8,}["'"'"']'
-
-# JWT Tokens
-CREDENTIAL_PATTERNS["jwt_token"]='eyJ[a-zA-Z0-9+/=]{20,}\.[a-zA-Z0-9+/=]{20,}\.[a-zA-Z0-9+/=_-]{20,}'
-
-# Private Keys
-CREDENTIAL_PATTERNS["private_key"]='-----BEGIN [A-Z ]*PRIVATE KEY-----'
-CREDENTIAL_PATTERNS["ssh_private_key"]='-----BEGIN OPENSSH PRIVATE KEY-----'
-
-# Cloud Provider Specific
-CREDENTIAL_PATTERNS["gcp_service_account_key"]='"type":\s*"service_account"'
-CREDENTIAL_PATTERNS["slack_webhook"]='hooks\.slack\.com/services/[A-Z0-9]{9}/[A-Z0-9]{11}/[a-zA-Z0-9]{24}'
+load_shared_patterns
 
 ##################################
 # Content Analysis Functions
@@ -245,11 +237,6 @@ main() {
     log "Security scan passed for $file_path"
     exit 0
 }
-
-##################################
-# Error Handling
-##################################
-trap 'log "Hook failed with error on line $LINENO"' ERR
 
 ##################################
 # Execute Main Function

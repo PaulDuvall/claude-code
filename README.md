@@ -5,11 +5,11 @@
 [![npm version](https://badge.fury.io/js/@paulduvall%2Fclaude-dev-toolkit.svg)](https://www.npmjs.com/package/@paulduvall/claude-dev-toolkit)
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-blue)
 ![Active Commands](https://img.shields.io/badge/active%20commands-17-blue)
-![Experimental Commands](https://img.shields.io/badge/experimental%20commands-29-orange)
-![Total Commands](https://img.shields.io/badge/total%20commands-46-brightgreen)
+![Experimental Commands](https://img.shields.io/badge/experimental%20commands-28-orange)
+![Total Commands](https://img.shields.io/badge/total%20commands-45-brightgreen)
 ![Sub-agents](https://img.shields.io/badge/sub--agents-25-purple)
 
-**Transform Claude Code into a complete development platform** with 46 AI-powered commands that automate your entire software development workflow. Now with improved git identity management!
+**Transform Claude Code into a complete development platform** with 45 AI-powered commands that automate your entire software development workflow. Now with improved git identity management!
 
 ## What This Does
 
@@ -112,7 +112,7 @@ npm install -g @paulduvall/claude-dev-toolkit
 # 3. Deploy commands to Claude Code
 claude-commands install --active    # Install 17 core commands
 # OR
-claude-commands install --all       # Install all 46 commands
+claude-commands install --all       # Install all 45 commands
 
 # 4. Configure OIDC for GitHub Actions to AWS (NEW!)
 claude-commands oidc --help         # Show OIDC configuration options
@@ -158,40 +158,33 @@ claude-commands subagents --install      # 25 specialized AI assistants
 
 ## Core Commands (Always Available)
 
-Once installed, these 17 essential commands work in **any project** on your machine:
+Once installed, these essential commands work in **any project** on your machine:
 
-### 💻 **Daily Development**
-- **`/xtest`** - Smart test runner (detects framework, runs all tests)
-- **`/xquality`** - Code quality checks (format, lint, type-check)
-- **`/xquality fix`** - Auto-fix common quality issues
-- **`/xgit`** - Automated git workflow with AI-generated commit messages
-- **`/xcontinue`** - Resume execution plans across sessions with context handoff
-- **`/xexplore`** - Explore codebase topics before making changes (read-only)
+> **Source of truth:** [`slash-commands/active/`](./slash-commands/active/) — run `bash scripts/generate-command-docs.sh update` to regenerate.
 
-### 🔒 **Security & Quality**
-- **`/xsecurity`** - Comprehensive security scanning (secrets, vulnerabilities)
-- **`/xrefactor`** - Intelligent code refactoring and smell detection
-- **`/xdebug`** - AI-powered debugging assistant with persistent context
+<!-- BEGIN:ACTIVE_COMMANDS -->
+| Command | Description |
+|---------|-------------|
+| `/xarchitecture` | Design, analyze, and evolve system architecture using Domain-Driven Design, 12-Factor App, and proven patterns |
+| `/xconfig` | Manage project configuration files, environment variables, and application settings |
+| `/xcontinue` | Continue an execution plan from where it left off across sessions |
+| `/xdebug` | Interactive debugging support with error analysis and fix suggestions - integrates with Debug Specialist sub-agent for complex issues |
+| `/xdocs` | Generate and maintain comprehensive documentation from code |
+| `/xexplore` | Explore a codebase topic before making changes (read-only) |
+| `/xgit` | Automate git workflow - stage, commit with smart messages, and push to specified branch |
+| `/xhelp` | Command navigator that recommends the right slash commands for your task |
+| `/xpipeline` | Advanced CI/CD pipeline configuration, build automation, deployment orchestration, and optimization |
+| `/xquality` | Run code quality checks with maturity-aware thresholds and centralized-rules integration |
+| `/xrefactor` | Interactive refactoring assistant based on Martin Fowler's catalog and project-specific rules for code smell detection |
+| `/xrelease` | Comprehensive release management with planning, coordination, deployment automation, and monitoring |
+| `/xsecurity` | Run security scans with maturity-aware checks and centralized-rules integration |
+| `/xspec` | Machine-readable specifications with unique identifiers and authority levels for precise AI code generation |
+| `/xtdd` | Complete Test-Driven Development workflow automation with Red-Green-Refactor-Commit cycle |
+| `/xtest` | Run tests with smart defaults, maturity-aware thresholds, and centralized-rules integration |
+| `/xverify` | Verify references before taking action — catch fabricated URLs, placeholder IDs, and unverified claims |
+<!-- END:ACTIVE_COMMANDS -->
 
-### 🏗️ **Architecture & Planning**
-- **`/xarchitecture`** - System design and architecture analysis
-- **`/xspec`** - Requirements and specification generation
-- **`/xdocs`** - Documentation generation and maintenance
-
-### 🚀 **DevOps & Deployment**
-- **`/xpipeline`** - CI/CD pipeline optimization and management
-- **`/xrelease`** - Release management and deployment automation
-- **`/xconfig`** - Configuration management and environment setup
-
-
-### ℹ️ **Getting Help**
-Every command includes built-in help:
-```bash
-/xtest help         # Show all testing options
-/xquality help      # Show quality check options
-/xsecurity help     # Show security scanning options
-/xconfig help       # Show configuration options
-```
+Every command includes built-in help: `/xtest help`, `/xquality help`, etc.
 
 ## Real-World Usage Examples
 
@@ -424,13 +417,42 @@ hooks/verify-before-edit.sh      # Warn about placeholder/fabricated references
 hooks/prevent-credential-exposure.sh  # Credential pattern scanning
 ```
 
-### 📊 Experimental Commands (29 Additional)
-Advanced commands for specialized workflows:
-- **Planning & Product**: `/xplanning`, `/xproduct`, `/xatomic`
-- **Infrastructure**: `/xinfra`, `/xaws`, `/xiac`, `/xoidc`
-- **Compliance & Governance**: `/xcompliance`, `/xgovernance`, `/xpolicy`
-- **CI/CD & Ops**: `/xcicd`, `/xact`, `/xincident`
-- **Specialized**: `/xapi`, `/xdb`, `/xux`, `/xmultirepo`, `/xknowledge`
+### Experimental Commands
+
+> **Source of truth:** [`slash-commands/experiments/`](./slash-commands/experiments/)
+
+<!-- BEGIN:EXPERIMENTAL_COMMANDS -->
+| Command | Description |
+|---------|-------------|
+| `/xact` | Local GitHub Actions testing with nektos/act for rapid development feedback |
+| `/xapi` | Design, implement, test, and document APIs with comprehensive automation and best practices |
+| `/xatomic` | Break complex tasks into 4-8 hour atomic units for efficient development workflow |
+| `/xaws` | AWS integration for credentials, services, and IAM testing with moto mocking |
+| `/xbaseline` | Establish and track quality, performance, and security baselines with regression detection |
+| `/xchoice` | Generate multiple implementation options with trade-off analysis for informed decision-making |
+| `/xcompliance` | Check project compliance with standards and generate audit documentation |
+| `/xcoverage` | Comprehensive dual coverage analysis for code and specifications |
+| `/xdb` | Comprehensive database management, migrations, and performance operations |
+| `/xdevcontainer` | Set up Anthropic's official devcontainer for running Claude Code with --dangerously-skip-permissions safely |
+| `/xgovernance` | Comprehensive development governance framework for policies, audits, and compliance |
+| `/xiac` | Comprehensive Infrastructure as Code management with focus on AWS IAM, Terraform, CloudFormation, and infrastructure validation |
+| `/ximagespec` | Generate specifications and code from visual artifacts — diagrams, mockups, and screenshots |
+| `/xincident` | Incident response automation, post-mortem analysis, and system reliability improvement through SpecDriven AI methodology |
+| `/xinfra` | Manage infrastructure operations, container orchestration, cloud resources, and deployment automation |
+| `/xknowledge` | Manage organizational knowledge, facilitate team onboarding, and create training materials with SpecDriven AI methodology |
+| `/xmaturity` | Assess and improve team's development maturity with actionable insights |
+| `/xmetrics` | Advanced metrics collection and analysis for development process optimization and SpecDriven AI insights |
+| `/xmultirepo` | Coordinate changes across multiple repositories with parallel agent orchestration |
+| `/xnew` | Initialize a new project with comprehensive CLAUDE.md and specification framework |
+| `/xoidc` | Automate AWS OIDC role creation for GitHub Actions with local policy discovery |
+| `/xplanning` | AI-assisted project planning with roadmaps, estimation, and risk analysis |
+| `/xpolicy` | Generate, validate, and test IAM policies with automated policy creation and best practices enforcement |
+| `/xproduct` | Product management and strategic planning tools for feature development and product lifecycle management |
+| `/xrisk` | Comprehensive risk assessment and mitigation across technical, security, and operational domains |
+| `/xstakeholder-updates` | Generate stakeholder update emails from recently completed tasks in any supported issue tracker |
+| `/xtrace` | Comprehensive traceability tracking and analysis for SpecDriven AI development with end-to-end requirement tracking |
+| `/xux` | User experience optimization, frontend testing, and accessibility compliance with SpecDriven AI methodology integration |
+<!-- END:EXPERIMENTAL_COMMANDS -->
 
 Deploy with: `claude-commands install --experiments`
 
@@ -465,8 +487,8 @@ npm install -g @paulduvall/claude-dev-toolkit
 
 # Install command sets
 claude-commands install --active       # Install 17 core commands
-claude-commands install --experiments # Install 29 experimental commands
-claude-commands install --all          # Install all 46 commands
+claude-commands install --experiments # Install 28 experimental commands
+claude-commands install --all          # Install all 45 commands
 
 # Configuration management
 claude-commands config --list          # List available templates
@@ -529,14 +551,14 @@ ls ~/.claude/commands/x*.md           # List installed commands
 ## Repository Structure
 
 - **`slash-commands/active/`** - 17 production-ready commands (deployed by default)
-- **`slash-commands/experiments/`** - 29 experimental commands  
+- **`slash-commands/experiments/`** - 28 experimental commands  
 - **`subagents/`** - AI specialist subagents with persistent context
 - **`hooks/`** - Hybrid hook architecture with lightweight triggers
   - **Lightweight Trigger Scripts** (30-150 lines each):
     - `pre-write-security.sh` - Security analysis → security-auditor subagent
     - `pre-commit-quality.sh` - Quality checks → style-enforcer subagent
     - `on-error-debug.sh` - Error analysis → debug-specialist subagent  
-    - `subagent-trigger-simple.sh` - General-purpose subagent trigger
+    - `subagent-trigger.sh --simple` - General-purpose lightweight trigger
   - **`lib/`** - Modular foundation (12 specialized modules):
     - `config-constants.sh` - Configuration constants and validation
     - `file-utils.sh` - Secure file operations and path validation  

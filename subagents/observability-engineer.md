@@ -1,7 +1,12 @@
 ---
 name: observability-engineer
 description: Ensure metrics, logs, and traces exist; keep dashboards and alerts current.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [monitoring, infrastructure]
 tools: Read, Write, Grep, Glob
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

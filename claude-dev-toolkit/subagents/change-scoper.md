@@ -1,7 +1,12 @@
 ---
 name: change-scoper
 description: Break work into small, trunk-sized tasks with binary DoD and safe rollback.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [workflow, architecture]
 tools: Read, Write
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

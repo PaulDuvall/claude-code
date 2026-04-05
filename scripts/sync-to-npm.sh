@@ -35,6 +35,8 @@ sync_dir "$REPO_ROOT/hooks/lib" "$CDT_DIR/hooks/lib" "*.sh"
 
 echo "Syncing subagents..."
 sync_dir "$REPO_ROOT/subagents" "$CDT_DIR/subagents" "*.md"
+# Remove non-subagent files (TEMPLATE.md and README.md are references, not subagents)
+rm -f "$CDT_DIR/subagents/TEMPLATE.md" "$CDT_DIR/subagents/README.md"
 
 echo "Syncing commands/active..."
 mkdir -p "$CDT_DIR/commands/active"
@@ -49,6 +51,7 @@ sync_dir "$REPO_ROOT/slash-commands/experiments" \
 echo "Syncing templates..."
 sync_dir "$REPO_ROOT/templates" "$CDT_DIR/templates" "*.json"
 sync_dir "$REPO_ROOT/templates" "$CDT_DIR/templates" "*.md"
+sync_dir "$REPO_ROOT/templates" "$CDT_DIR/templates" "*.yaml"
 
 # Copy hooks README
 if [[ -f "$REPO_ROOT/hooks/README.md" ]]; then

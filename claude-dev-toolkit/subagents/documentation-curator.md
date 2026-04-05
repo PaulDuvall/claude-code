@@ -1,7 +1,12 @@
 ---
 name: documentation-curator
 description: Maintain living documentation, generate API docs, and ensure doc-code synchronization.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [documentation, code-quality]
 tools: Read, Write, Grep, Glob, Bash
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

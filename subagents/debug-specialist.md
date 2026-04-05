@@ -1,8 +1,12 @@
 ---
 name: debug-specialist
-description: "Specialized debugging assistant with expertise in root cause analysis, error interpretation, and systematic troubleshooting"
-tags: ["debugging", "error-analysis", "troubleshooting", "performance"]
-tools: ["Read", "Bash", "Grep", "Edit", "Glob"]
+description: Specialized debugging assistant with expertise in root cause analysis, error interpretation, and systematic troubleshooting
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [debugging, error-analysis, troubleshooting, performance]
+tools: Read, Bash, Grep, Edit, Glob
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 # Debug Specialist Sub-Agent

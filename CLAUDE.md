@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Claude Code Custom Commands is a comprehensive collection of 46 custom slash commands for Claude Code that accelerate software development workflows through AI-powered automation. These commands provide intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring.
+Claude Code Custom Commands is a comprehensive collection of 45 custom slash commands for Claude Code that accelerate software development workflows through AI-powered automation. These commands provide intelligent automation for every stage of the software development lifecycle, from planning and architecture to deployment and monitoring.
 
 ## Core Philosophy
 
@@ -49,17 +49,19 @@ claude-code/
 │   ├── pre-commit-test-runner.sh     # Auto-detect and run tests
 │   ├── pre-write-security.sh         # Pre-write security validation
 │   ├── prevent-credential-exposure.sh # Credential exposure prevention
-│   ├── subagent-trigger.sh           # Subagent trigger hook
-│   ├── subagent-trigger-simple.sh    # Simple subagent trigger
+│   ├── subagent-trigger.sh           # Subagent trigger hook (--simple for lightweight mode)
 │   ├── tab-color.sh                  # Terminal tab colorization
 │   ├── verify-before-edit.sh         # Warn about fabricated references
 │   ├── claude-wrapper.sh             # Claude wrapper script
-│   └── lib/                           # Hook support libraries (12 modules)
+│   └── lib/                           # Hook support libraries (14 modules)
+│       ├── hook-helpers.sh           # Shared helpers for standalone hooks
 │       ├── config-constants.sh        # Configuration constants
 │       ├── file-utils.sh             # File utility functions
 │       ├── error-handler.sh          # Error handling and logging
 │       ├── argument-parser.sh        # CLI argument parsing
-│       ├── context-manager.sh        # Context management
+│       ├── context-manager.sh        # Context orchestrator (thin)
+│       ├── context-gathering.sh      # Context data gathering
+│       ├── context-file-ops.sh       # Context file I/O and validation
 │       ├── execution-engine.sh       # Subagent execution engine
 │       ├── execution-simulation.sh   # Execution simulation
 │       ├── execution-results.sh      # Result processing
@@ -92,11 +94,10 @@ claude-code/
 │   │   ├── xtdd.md                   # Test-driven development
 │   │   ├── xtest.md                  # Testing automation
 │   │   └── xverify.md               # Reference verification
-│   └── experiments/                   # 29 experimental commands
+│   └── experiments/                   # 28 experimental commands
 │       ├── xact.md                   # GitHub Actions testing
 │       ├── xapi.md                   # API development tools
 │       ├── xaws.md                   # AWS integration
-│       ├── xcicd.md                  # Advanced CI/CD
 │       ├── xcompliance.md            # Compliance checking
 │       ├── xinfra.md                 # Infrastructure as Code
 │       ├── xmetrics.md               # Metrics collection
@@ -104,7 +105,7 @@ claude-code/
 │       ├── xpolicy.md                # Policy enforcement
 │       ├── xproduct.md               # Product management
 │       ├── xrisk.md                  # Risk assessment
-│       └── [18 additional commands]  # Complete experimental collection
+│       └── [17 additional commands]  # Complete experimental collection
 ├── subagents/                         # 25 subagent definitions
 ├── specs/                             # Command specifications
 │   ├── command-specifications.md      # Command development specs
@@ -122,43 +123,67 @@ claude-code/
     └── test_subagent_hook_integration.sh # Integration tests
 ```
 
-## Command Categories
+## Command Reference
 
-### Planning & Strategy
-- `/xplanning` - Project planning with roadmaps and estimation
-- `/xproduct` - Product management and feature planning
-- `/xrisk` - Risk assessment and mitigation
+> **Source of truth:** `slash-commands/active/` and `slash-commands/experiments/`
+> Run `bash scripts/generate-command-docs.sh update` to regenerate this section.
 
-### Architecture & Design
-- `/xarchitecture` - System architecture design with proven patterns
-- `/xdesign` - Software design patterns and decisions
-- `/xconstraints` - Design constraint analysis
+### Active Commands
 
-### Development & Code Quality
-- `/xrefactor` - Interactive code refactoring
-- `/xquality` - Code quality analysis with linting
-- `/xtdd` - Test-driven development automation
-- `/xtest` - Comprehensive testing with traceability
-- `/xcoverage` - Code coverage analysis
-- `/xdebug` - Advanced debugging assistance
-- `/xcontinue` - Execution plan continuation across sessions
-- `/xexplore` - Codebase exploration before changes (read-only)
+<!-- BEGIN:COMMANDS -->
+| Command | Description |
+|---------|-------------|
+| `/xarchitecture` | Design, analyze, and evolve system architecture using Domain-Driven Design, 12-Factor App, and proven patterns |
+| `/xconfig` | Manage project configuration files, environment variables, and application settings |
+| `/xcontinue` | Continue an execution plan from where it left off across sessions |
+| `/xdebug` | Interactive debugging support with error analysis and fix suggestions - integrates with Debug Specialist sub-agent for complex issues |
+| `/xdocs` | Generate and maintain comprehensive documentation from code |
+| `/xexplore` | Explore a codebase topic before making changes (read-only) |
+| `/xgit` | Automate git workflow - stage, commit with smart messages, and push to specified branch |
+| `/xhelp` | Command navigator that recommends the right slash commands for your task |
+| `/xpipeline` | Advanced CI/CD pipeline configuration, build automation, deployment orchestration, and optimization |
+| `/xquality` | Run code quality checks with maturity-aware thresholds and centralized-rules integration |
+| `/xrefactor` | Interactive refactoring assistant based on Martin Fowler's catalog and project-specific rules for code smell detection |
+| `/xrelease` | Comprehensive release management with planning, coordination, deployment automation, and monitoring |
+| `/xsecurity` | Run security scans with maturity-aware checks and centralized-rules integration |
+| `/xspec` | Machine-readable specifications with unique identifiers and authority levels for precise AI code generation |
+| `/xtdd` | Complete Test-Driven Development workflow automation with Red-Green-Refactor-Commit cycle |
+| `/xtest` | Run tests with smart defaults, maturity-aware thresholds, and centralized-rules integration |
+| `/xverify` | Verify references before taking action — catch fabricated URLs, placeholder IDs, and unverified claims |
 
-### Security & Compliance
-- `/xsecurity` - Security vulnerability scanning
-- `/xcompliance` - Compliance checking
-- `/xpolicy` - Policy enforcement and governance
+### Experimental Commands (28)
 
-### CI/CD & Deployment
-- `/xgit` - Automated Git workflow
-- `/xcicd` - CI/CD pipeline management
-- `/xpipeline` - Build pipeline optimization
-- `/xrelease` - Release management
-
-### Infrastructure & Operations
-- `/xinfra` - Infrastructure as Code management
-- `/xmonitoring` - Application monitoring setup
-- `/xmetrics` - Performance metrics collection
+| Command | Description |
+|---------|-------------|
+| `/xact` | Local GitHub Actions testing with nektos/act for rapid development feedback |
+| `/xapi` | Design, implement, test, and document APIs with comprehensive automation and best practices |
+| `/xatomic` | Break complex tasks into 4-8 hour atomic units for efficient development workflow |
+| `/xaws` | AWS integration for credentials, services, and IAM testing with moto mocking |
+| `/xbaseline` | Establish and track quality, performance, and security baselines with regression detection |
+| `/xchoice` | Generate multiple implementation options with trade-off analysis for informed decision-making |
+| `/xcompliance` | Check project compliance with standards and generate audit documentation |
+| `/xcoverage` | Comprehensive dual coverage analysis for code and specifications |
+| `/xdb` | Comprehensive database management, migrations, and performance operations |
+| `/xdevcontainer` | Set up Anthropic's official devcontainer for running Claude Code with --dangerously-skip-permissions safely |
+| `/xgovernance` | Comprehensive development governance framework for policies, audits, and compliance |
+| `/xiac` | Comprehensive Infrastructure as Code management with focus on AWS IAM, Terraform, CloudFormation, and infrastructure validation |
+| `/ximagespec` | Generate specifications and code from visual artifacts — diagrams, mockups, and screenshots |
+| `/xincident` | Incident response automation, post-mortem analysis, and system reliability improvement through SpecDriven AI methodology |
+| `/xinfra` | Manage infrastructure operations, container orchestration, cloud resources, and deployment automation |
+| `/xknowledge` | Manage organizational knowledge, facilitate team onboarding, and create training materials with SpecDriven AI methodology |
+| `/xmaturity` | Assess and improve team's development maturity with actionable insights |
+| `/xmetrics` | Advanced metrics collection and analysis for development process optimization and SpecDriven AI insights |
+| `/xmultirepo` | Coordinate changes across multiple repositories with parallel agent orchestration |
+| `/xnew` | Initialize a new project with comprehensive CLAUDE.md and specification framework |
+| `/xoidc` | Automate AWS OIDC role creation for GitHub Actions with local policy discovery |
+| `/xplanning` | AI-assisted project planning with roadmaps, estimation, and risk analysis |
+| `/xpolicy` | Generate, validate, and test IAM policies with automated policy creation and best practices enforcement |
+| `/xproduct` | Product management and strategic planning tools for feature development and product lifecycle management |
+| `/xrisk` | Comprehensive risk assessment and mitigation across technical, security, and operational domains |
+| `/xstakeholder-updates` | Generate stakeholder update emails from recently completed tasks in any supported issue tracker |
+| `/xtrace` | Comprehensive traceability tracking and analysis for SpecDriven AI development with end-to-end requirement tracking |
+| `/xux` | User experience optimization, frontend testing, and accessibility compliance with SpecDriven AI methodology integration |
+<!-- END:COMMANDS -->
 
 ## Development Guidelines
 
@@ -223,7 +248,7 @@ bash scripts/sync-to-npm.sh
 3. **Include proper documentation** with description, usage, and examples
 4. **Run sync**: `bash scripts/sync-to-npm.sh` to copy to npm package
 5. **Test thoroughly**: Deploy and test in actual Claude Code environment
-6. **Update documentation**: Add to appropriate category in README.md and documentation
+6. **Update documentation**: Run `bash scripts/generate-command-docs.sh update` to regenerate README.md and CLAUDE.md
 
 ### NPM Package Deployment
 

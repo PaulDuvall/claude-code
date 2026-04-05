@@ -1,7 +1,12 @@
 ---
 name: performance-guardian
 description: Automated performance testing, regression detection, and optimization recommendations.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [testing, monitoring, code-quality]
 tools: Read, Write, Bash, Grep, Glob
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

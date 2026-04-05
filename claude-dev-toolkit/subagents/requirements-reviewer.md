@@ -1,7 +1,12 @@
 ---
 name: requirements-reviewer
 description: Ensure traceability from requirements to code and tests; flag gaps early.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [compliance, documentation, testing]
 tools: Read, Grep, Glob, Write
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

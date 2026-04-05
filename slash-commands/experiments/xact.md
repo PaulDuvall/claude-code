@@ -712,7 +712,7 @@ If no specific operation, auto-discover and run workflows:
 - Detailed logging and troubleshooting information
 
 ### 📋 **Integration Points**
-- Works with existing `/xcicd` for production pipeline management
+- Works with existing `/xpipeline` for production pipeline management
 - Complements `/xworkflow` for general workflow automation
 - Supports local development workflow before GitHub push
 - Compatible with standard GitHub Actions workflow patterns

@@ -1,7 +1,12 @@
 ---
 name: workflow-coordinator
 description: Orchestrate handoffs; enforce per-phase checklists across DPRA.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [workflow, ci-cd]
 tools: Read, Write
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

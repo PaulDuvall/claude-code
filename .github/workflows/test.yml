@@ -122,7 +122,7 @@ jobs:
         
         # Test trigger scripts syntax
         echo "📋 Testing trigger scripts..."
-        trigger_scripts=("pre-write-security.sh" "pre-commit-quality.sh" "on-error-debug.sh" "subagent-trigger-simple.sh")
+        trigger_scripts=("pre-write-security.sh" "pre-commit-quality.sh" "on-error-debug.sh" "subagent-trigger.sh")
         for script in "${trigger_scripts[@]}"; do
           if [ -f "hooks/$script" ]; then
             echo "  Checking $script..."
@@ -140,10 +140,10 @@ jobs:
         
         # Test trigger script help functionality
         echo "📋 Testing trigger script help systems..."
-        if hooks/subagent-trigger-simple.sh --help > /dev/null 2>&1; then
-          echo "  ✅ subagent-trigger-simple.sh help works"
+        if hooks/subagent-trigger.sh --simple --help > /dev/null 2>&1; then
+          echo "  ✅ subagent-trigger.sh --simple help works"
         else
-          echo "  ❌ subagent-trigger-simple.sh help failed"
+          echo "  ❌ subagent-trigger.sh --simple help failed"
           exit 1
         fi
         

@@ -1,7 +1,12 @@
 ---
 name: sbom-provenance
 description: Produce SBOMs and build attestations for every artifact.
+version: 1.0.0
+author: Claude Dev Toolkit Team
+tags: [compliance, security, release]
 tools: Bash, Read, Write
+created: 2025-08-19
+modified: 2026-04-03
 ---
 
 Goal

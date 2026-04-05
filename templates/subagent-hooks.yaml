@@ -1,28 +1,21 @@
-# Claude Code Subagent-Hook Event Mapping Configuration
-# 
-# This file defines which subagents should be automatically invoked
-# during specific Claude Code events. Place this file at:
-# ~/.claude/subagent-hooks.yaml
+# ============================================================================
+# ASPIRATIONAL / REFERENCE ONLY
+# ============================================================================
+# This file is a DESIGN REFERENCE showing how subagents COULD be mapped to
+# development lifecycle events. It is NOT directly consumable by Claude Code.
+#
+# Claude Code hook events are: PreToolUse, PostToolUse, Notification, Stop,
+# SubagentStop, UserPromptSubmit, PreCompact, SessionStart, SessionEnd.
+# The events below are CONCEPTUAL triggers for a future orchestration layer.
+#
+# To configure real Claude Code hooks, use settings.json with the events above.
+# See templates/comprehensive-settings.json for a working example.
+# ============================================================================
 #
 # Format:
 #   event_name:
 #     - subagent-name
 #     - another-subagent
-#
-# Available events (subagent orchestration events, NOT Claude Code hook events):
-# NOTE: Claude Code hook events are: PreToolUse, PostToolUse, Notification,
-# Stop, SubagentStop, UserPromptSubmit, PreCompact, SessionStart, SessionEnd.
-# The events below are conceptual triggers for the subagent orchestration layer.
-#   - pre_write: Before any file write/edit operation
-#   - post_write: After successful file write/edit
-#   - pre_commit: Before git commit operations
-#   - post_commit: After successful git commit
-#   - pre_test: Before running tests
-#   - post_test: After test execution
-#   - on_error: When an error occurs (manual invocation only)
-#   - security_check: Security validation events
-#   - code_review: Code review triggers
-#   - deployment: Deployment-related events
 
 # File modification events
 pre_write:
