@@ -146,9 +146,9 @@ For contributing or accessing experimental features (⚠️ **Review source code
 # Install development version with experimental commands
 npm install -g @paulduvall/claude-dev-toolkit
 
-# Install experimental commands (29 additional commands)
+# Install experimental commands (28 additional commands)
 claude-commands install --experiments    # Experimental features
-claude-commands install --all            # All 46 commands
+claude-commands install --all            # All 45 commands
 
 # Access AI subagents for specialized tasks
 claude-commands subagents --install      # 25 specialized AI assistants
@@ -559,7 +559,7 @@ ls ~/.claude/commands/x*.md           # List installed commands
     - `pre-commit-quality.sh` - Quality checks → style-enforcer subagent
     - `on-error-debug.sh` - Error analysis → debug-specialist subagent  
     - `subagent-trigger.sh --simple` - General-purpose lightweight trigger
-  - **`lib/`** - Modular foundation (12 specialized modules):
+  - **`lib/`** - Modular foundation (15 specialized modules):
     - `config-constants.sh` - Configuration constants and validation
     - `file-utils.sh` - Secure file operations and path validation  
     - `error-handler.sh` - Standardized error handling and logging

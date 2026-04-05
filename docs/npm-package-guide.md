@@ -34,15 +34,18 @@ claude-commands
 npx @paulduvall/claude-dev-toolkit
 ```
 
-### 2. **57 Custom Slash Commands**
+### 2. **45 Custom Slash Commands**
 The toolkit includes production-ready and experimental commands:
 
-#### Production Commands (13)
+#### Active Commands (17)
 - `/xarchitecture` - Architecture design and analysis
 - `/xconfig` - Configuration management
+- `/xcontinue` - Execution plan continuation
 - `/xdebug` - Advanced debugging
 - `/xdocs` - Documentation generation
+- `/xexplore` - Codebase exploration (read-only)
 - `/xgit` - Automated Git workflow
+- `/xhelp` - Command navigator
 - `/xpipeline` - CI/CD pipeline management
 - `/xquality` - Code quality analysis
 - `/xrefactor` - Code refactoring automation
@@ -51,8 +54,9 @@ The toolkit includes production-ready and experimental commands:
 - `/xspec` - Specification generation
 - `/xtdd` - Test-driven development
 - `/xtest` - Testing automation
+- `/xverify` - Reference verification
 
-#### Experimental Commands (44)
+#### Experimental Commands (28)
 Including analytics, API tools, AWS integration, monitoring, performance optimization, and more.
 
 ### 3. **Configuration Templates**
@@ -147,7 +151,7 @@ Share this with users:
 ```markdown
 ## Install Claude Dev Toolkit
 
-Enhance your Claude Code experience with 58 custom commands:
+Enhance your Claude Code experience with 45 custom commands:
 
 \`\`\`bash
 npm install -g @paulduvall/claude-dev-toolkit

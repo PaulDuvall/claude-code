@@ -140,7 +140,7 @@ class SettingsTemplateValidator {
    */
   async validateOfficialConfigKeys(config, result) {
     const officialKeys = [
-      'apiKeyHelper', 'cleanupPeriodDays', 'env', 'includeCoAuthoredBy',
+      '$schema', 'apiKeyHelper', 'cleanupPeriodDays', 'env', 'includeCoAuthoredBy',
       'permissions', 'hooks', 'model', 'statusLine', 'forceLoginMethod',
       'enableAllProjectMcpServers', 'enabledMcpjsonServers', 'disabledMcpjsonServers'
     ];
@@ -208,10 +208,19 @@ class SettingsTemplateValidator {
         continue;
       }
 
+      // Events that operate on tools require a matcher; others do not
+      const toolEvents = ['PreToolUse', 'PostToolUse'];
+      const requiresMatcher = toolEvents.includes(event);
+
       for (const hookGroup of hooks) {
-        if (!hookGroup.matcher || !hookGroup.hooks) {
+        if (requiresMatcher && (!hookGroup.matcher || !hookGroup.hooks)) {
           structureValid = false;
           structureErrors.push(`${event} hook missing 'matcher' or 'hooks' property`);
+          continue;
+        }
+        if (!hookGroup.hooks) {
+          structureValid = false;
+          structureErrors.push(`${event} hook missing 'hooks' property`);
           continue;
         }
 

@@ -33,6 +33,11 @@ done
 echo "Syncing hooks/lib..."
 sync_dir "$REPO_ROOT/hooks/lib" "$CDT_DIR/hooks/lib" "*.sh"
 
+echo "Syncing hooks/lib config files..."
+for f in "$REPO_ROOT/hooks/lib/"*.conf; do
+    [ -f "$f" ] && cp "$f" "$CDT_DIR/hooks/lib/"
+done
+
 echo "Syncing subagents..."
 sync_dir "$REPO_ROOT/subagents" "$CDT_DIR/subagents" "*.md"
 # Remove non-subagent files (TEMPLATE.md and README.md are references, not subagents)

@@ -39,10 +39,17 @@ claude-code/
 │   └── tests/                         # NPM package tests
 ├── docs/                              # Documentation directory
 │   ├── claude-custom-commands.md      # Command reference guide
-│   ├── claude-code-hooks-system.md    # Hooks documentation
+│   ├── claude-code-hooks-system.md    # Hooks architecture documentation
+│   ├── debug-context.md              # Debug context management
 │   ├── devcontainer-guide.md          # Devcontainer guide
-│   └── subagent-hook-integration.md   # Subagent integration docs
-├── hooks/                             # Hook implementations (11 shell + 14 Python)
+│   ├── manual-uninstall-install-guide.md # Installation/uninstallation guide
+│   ├── npm-distribution-plan.md       # NPM distribution strategy
+│   ├── npm-package-guide.md           # Published package information
+│   ├── subagent-hook-integration.md   # Subagent integration docs
+│   ├── npm-only/                      # NPM consolidation migration guides
+│   ├── plans/                         # Implementation plans
+│   └── publish/                       # Blog articles
+├── hooks/                             # Hook implementations (10 shell + 14 Python)
 │   ├── file-logger.sh                # File operation logging
 │   ├── on-error-debug.sh             # Error debugging hook
 │   ├── pre-commit-quality.sh         # Pre-commit quality checks
@@ -53,7 +60,7 @@ claude-code/
 │   ├── tab-color.sh                  # Terminal tab colorization
 │   ├── verify-before-edit.sh         # Warn about fabricated references
 │   ├── claude-wrapper.sh             # Claude wrapper script
-│   └── lib/                           # Hook support libraries (14 modules)
+│   └── lib/                           # Hook support libraries (15 shell modules + 1 config)
 │       ├── hook-helpers.sh           # Shared helpers for standalone hooks
 │       ├── config-constants.sh        # Configuration constants
 │       ├── file-utils.sh             # File utility functions
@@ -68,13 +75,19 @@ claude-code/
 │       ├── subagent-discovery.sh     # Subagent discovery
 │       ├── subagent-validator.sh     # Subagent validation
 │       ├── field-validators.sh       # Field validation
-│       └── validation-reporter.sh    # Validation reporting
+│       ├── validation-reporter.sh    # Validation reporting
+│       └── credential-patterns.conf  # Credential detection patterns
 ├── lib/                               # Shared utility libraries
 │   └── logging.sh                    # Logging utilities
 ├── scripts/                           # Build and deployment scripts
 │   ├── sync-to-npm.sh               # Sync source files to npm package
 │   ├── deploy-subagents.sh          # Subagent deployment
-│   └── update-subagent-settings.py  # Settings updater
+│   ├── generate-command-docs.sh     # Auto-generate command docs
+│   ├── setup-hooks.sh               # Hook installation script
+│   ├── setup-npm-ssm.sh             # NPM SSM parameter setup
+│   ├── beads-orchestrator.sh        # Beads task orchestration
+│   ├── update-subagent-settings.py  # Settings updater
+│   └── xact.sh                      # GitHub Actions local testing
 ├── slash-commands/                    # Command implementations (source of truth)
 │   ├── active/                        # 17 production-ready commands
 │   │   ├── xarchitecture.md          # Architecture design and analysis
@@ -115,12 +128,21 @@ claude-code/
 │   ├── basic-settings.json           # Basic Claude Code settings
 │   ├── comprehensive-settings.json   # Advanced settings
 │   ├── security-focused-settings.json # Security-focused config
-│   └── global-claude.md              # Global CLAUDE.md instructions template
-└── tests/                             # Shell-based test suites
-    ├── test_setup_devcontainer.sh    # Devcontainer tests
-    ├── test_devcontainer_advanced.sh # Advanced devcontainer tests
-    ├── test_logging.sh               # Logging tests
-    └── test_subagent_hook_integration.sh # Integration tests
+│   ├── global-settings-backup.json   # Global settings backup
+│   ├── global-claude.md              # Global CLAUDE.md instructions template
+│   ├── headless-examples.md          # Headless mode examples
+│   ├── hybrid-hook-config.yaml       # Hybrid hook configuration
+│   └── subagent-hooks.yaml           # Subagent hook definitions
+└── tests/                             # Test suites (shell + JS)
+    ├── run-all-tests.sh              # Test runner script
+    ├── test_*.sh                     # 25 shell-based test files for hooks/lib
+    ├── validate-settings-templates.js # Settings template validation
+    ├── validate-documentation-accuracy.js # Documentation accuracy checks
+    ├── install-guide-tester.js       # Install guide testing
+    ├── customization-guide-tester.js # Customization guide testing
+    ├── security-validator.js         # Security validation
+    ├── hook-integration/             # Hook integration test suite
+    └── lib/                          # Shared test utilities
 ```
 
 ## Command Reference
