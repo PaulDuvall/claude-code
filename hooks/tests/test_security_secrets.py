@@ -30,7 +30,7 @@ class TestCheckSecrets:
         lines = ["-----BEGIN RSA PRIVATE KEY-----"]
         result = check_secrets(lines)
         assert len(result) == 1
-        assert "private key" in result[0].detail
+        assert "private key" in result[0].detail.lower()
 
     def test_credential_url_detected(self):
         lines = ["db = 'postgres://user:pass123@host/db'"]
