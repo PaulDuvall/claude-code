@@ -351,3 +351,4 @@ Thumbs.db
 test-results/
 tests/test-results/
 .npmrc
+.beads/
