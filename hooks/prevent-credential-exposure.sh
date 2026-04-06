@@ -67,7 +67,9 @@ notify_security_team() {
 # Credential Detection Patterns
 ##################################
 # Loaded from shared credential-patterns.conf (single source of truth)
-declare -A CREDENTIAL_PATTERNS
+# Uses parallel arrays for bash 3.2 compatibility (no declare -A)
+PATTERN_NAMES=()
+PATTERN_REGEXES=()
 
 load_shared_patterns() {
     local patterns_file
@@ -78,9 +80,9 @@ load_shared_patterns() {
     fi
 
     while IFS='|' read -r name confidence regex description; do
-        # Skip comments and empty lines
         [[ -z "$name" || "$name" =~ ^[[:space:]]*# ]] && continue
-        CREDENTIAL_PATTERNS["$name"]="$regex"
+        PATTERN_NAMES+=("$name")
+        PATTERN_REGEXES+=("$regex")
     done < "$patterns_file"
 }
 
@@ -92,45 +94,39 @@ load_shared_patterns
 scan_file_content() {
     local file_path="$1"
     local content="$2"
-    local violations=()
-    
-    # Skip if file doesn't exist or is binary
+    local violation_count=0
+
     if [[ ! -f "$file_path" ]]; then
         return 0
     fi
-    
-    # Check if file is binary (avoid scanning binary files)
+
     if file "$file_path" 2>/dev/null | grep -q "binary"; then
         return 0
     fi
-    
-    # Redirect log output to stderr so it doesn't pollute stdout
-    # (callers capture stdout via command substitution for the violation count)
+
     log "Scanning file: $file_path" >&2
 
-    # Check each credential pattern
-    for pattern_name in "${!CREDENTIAL_PATTERNS[@]}"; do
-        local pattern="${CREDENTIAL_PATTERNS[$pattern_name]}"
+    local i=0
+    while [[ $i -lt ${#PATTERN_NAMES[@]} ]]; do
+        local pattern_name="${PATTERN_NAMES[$i]}"
+        local pattern="${PATTERN_REGEXES[$i]}"
 
         if echo "$content" | grep -qiP -e "$pattern"; then
             log_violation "$pattern_name detected in $file_path" >&2
-            violations+=("$pattern_name")
+            ((violation_count++))
 
-            # Extract the matched content for logging (but redact it)
             local matched_line
             matched_line=$(echo "$content" | grep -iP -e "$pattern" | head -1)
             local redacted_line
             redacted_line=$(echo "$matched_line" | sed 's/[a-zA-Z0-9+/=]\{10,\}/[REDACTED]/g')
 
             log_violation "Pattern: $pattern_name, Line: $redacted_line" >&2
-
-            # Notify security team
             notify_security_team "$pattern_name" "$file_path" "$redacted_line"
         fi
+        ((i++))
     done
 
-    # Return violation count
-    echo "${#violations[@]}"
+    echo "$violation_count"
 }
 
 check_environment_leakage() {

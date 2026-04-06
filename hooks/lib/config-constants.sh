@@ -72,7 +72,7 @@ readonly -a SUPPORTED_EVENTS=(
     "post_commit"
     "pre_test"
     "post_test"
-    "on_error"
+    "notification"
     "security_check"
     "code_review"
     "deployment"
@@ -198,7 +198,7 @@ get_timeout_for_event() {
         "security_check"|"pre_write")
             echo $SECURITY_CHECK_TIMEOUT
             ;;
-        "on_error"|"debug")
+        "notification"|"debug")
             echo $DEBUG_TIMEOUT
             ;;
         *)

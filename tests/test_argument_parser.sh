@@ -157,14 +157,14 @@ test_validate_event_type_accepts_pre_write() {
     )
 }
 
-test_validate_event_type_accepts_on_error() {
+test_validate_event_type_accepts_notification() {
     (
         export HOME="$TEST_DIR"
         unset _ARGUMENT_PARSER_LOADED
         unset CONFIG_CONSTANTS_LOADED
         unset _ERROR_HANDLER_LOADED
         source "$LIB_DIR/argument-parser.sh" 2>/dev/null
-        validate_event_type "on_error" 2>/dev/null
+        validate_event_type "notification" 2>/dev/null
     )
 }
 
@@ -390,7 +390,7 @@ main() {
     run_test "Rejects empty event" test_validate_event_type_rejects_empty
     run_test "Rejects unsupported event" test_validate_event_type_rejects_unsupported
     run_test "Accepts pre_write event" test_validate_event_type_accepts_pre_write
-    run_test "Accepts on_error event" test_validate_event_type_accepts_on_error
+    run_test "Accepts notification event" test_validate_event_type_accepts_notification
     run_test "Accepts security_check event" test_validate_event_type_accepts_security_check
 
     echo ""

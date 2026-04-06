@@ -64,7 +64,7 @@ pre_commit:
 pre_test:
   - test-writer
 
-on_error:
+notification_error:
   - debug-specialist
 
 priorities:
@@ -318,10 +318,10 @@ test_integration_pre_write_flow() {
 
 test_integration_error_handling_flow() {
     # Simulate error handling flow
-    export CLAUDE_HOOK_TRIGGER="on_error"
-    
+    export CLAUDE_HOOK_TRIGGER="notification"
+
     # Run debug-specialist for error handling
-    "$HOOKS_DIR/subagent-trigger.sh" "debug-specialist" "on_error" 2>/dev/null
+    "$HOOKS_DIR/subagent-trigger.sh" "debug-specialist" "notification" 2>/dev/null
 }
 
 ##################################

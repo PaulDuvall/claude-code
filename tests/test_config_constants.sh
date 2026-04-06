@@ -116,12 +116,12 @@ test_is_supported_event_security_check() {
     )
 }
 
-test_is_supported_event_on_error() {
+test_is_supported_event_notification() {
     (
         export HOME="$TEST_DIR"
         unset CONFIG_CONSTANTS_LOADED
         source "$LIB_DIR/config-constants.sh"
-        is_supported_event "on_error"
+        is_supported_event "notification"
     )
 }
 
@@ -187,13 +187,13 @@ test_get_timeout_for_security_check() {
     )
 }
 
-test_get_timeout_for_on_error() {
+test_get_timeout_for_notification() {
     (
         export HOME="$TEST_DIR"
         unset CONFIG_CONSTANTS_LOADED
         source "$LIB_DIR/config-constants.sh"
         local timeout
-        timeout=$(get_timeout_for_event "on_error")
+        timeout=$(get_timeout_for_event "notification")
         [[ "$timeout" -eq "$DEBUG_TIMEOUT" ]]
     )
 }
@@ -276,7 +276,7 @@ main() {
     run_test "pre_write is supported event" test_is_supported_event_valid
     run_test "nonexistent_event is rejected" test_is_supported_event_invalid
     run_test "security_check is supported" test_is_supported_event_security_check
-    run_test "on_error is supported" test_is_supported_event_on_error
+    run_test "notification is supported" test_is_supported_event_notification
 
     echo ""
     echo "Tool Detection Tests:"
@@ -289,7 +289,7 @@ main() {
     echo ""
     echo "Timeout Function Tests:"
     run_test "Security check gets correct timeout" test_get_timeout_for_security_check
-    run_test "on_error gets debug timeout" test_get_timeout_for_on_error
+    run_test "notification gets debug timeout" test_get_timeout_for_notification
     run_test "Unknown event gets default timeout" test_get_timeout_for_unknown_event
 
     echo ""

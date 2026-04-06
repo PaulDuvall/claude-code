@@ -105,18 +105,39 @@ The following hooks provide logging, validation, and cleanup at various Claude C
 
 ## Hook Installation
 
-### Option 1: Global Installation (Recommended)
-```bash
-# Copy to Claude Code hooks directory
-cp hooks/file-logger.sh ~/.claude/hooks/
+### Option 1: Symlink Installation (Recommended)
 
-# Make executable
-chmod +x ~/.claude/hooks/file-logger.sh
+Symlink the hooks so updates to this repo are picked up automatically:
+
+```bash
+# Symlink individual hook scripts
+ln -s /path/to/claude-code/hooks/subagent-trigger.sh ~/.claude/hooks/subagent-trigger.sh
+ln -s /path/to/claude-code/hooks/prevent-credential-exposure.sh ~/.claude/hooks/prevent-credential-exposure.sh
+# ... repeat for other hooks you want
+
+# IMPORTANT: Symlink the lib/ directory — required by subagent-trigger.sh
+# and other hooks that source shared modules
+ln -s /path/to/claude-code/hooks/lib ~/.claude/hooks/lib
 
 # Configure in ~/.claude/settings.json
 ```
 
-### Option 2: Project-Specific Installation
+**Note:** If you symlink hook scripts without also symlinking `lib/`, any hook that depends on shared modules (e.g., `subagent-trigger.sh`) will fail with `PreToolUse:Bash hook error`.
+
+### Option 2: Copy Installation
+
+```bash
+# Copy hooks and the shared lib directory
+cp hooks/*.sh ~/.claude/hooks/
+cp -r hooks/lib ~/.claude/hooks/lib
+
+# Make executable
+chmod +x ~/.claude/hooks/*.sh
+
+# Configure in ~/.claude/settings.json
+```
+
+### Option 3: Project-Specific Installation
 ```bash
 # Use relative path in project settings
 # Add to .claude/settings.json in your project

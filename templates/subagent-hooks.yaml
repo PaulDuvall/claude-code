@@ -64,8 +64,8 @@ post_deployment:
   - observability-engineer # Verify monitoring active
   - performance-guardian   # Check performance metrics
 
-# Error handling events
-on_error:
+# Error handling events (maps to Notification hook in settings.json — NOT "OnError")
+notification_error:
   - debug-specialist      # Analyze and diagnose errors
   - rollback-first-responder # Prepare recovery plan
 
@@ -140,7 +140,7 @@ overrides:
       timeout: 120
       require_approval: true  # Human approval needed
 
-  on_error:
+  notification_error:
     debug-specialist:
       timeout: 600    # 10 minutes for debugging
       tools: "all"     # Full tool access for debugging

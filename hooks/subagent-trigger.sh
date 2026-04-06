@@ -64,7 +64,7 @@ Arguments:
 Examples:
   subagent-trigger.sh --simple security-auditor pre_write
   subagent-trigger.sh --simple style-enforcer pre_commit "Check Python files"
-  subagent-trigger.sh --simple debug-specialist on_error "ImportError in main.py"
+  subagent-trigger.sh --simple debug-specialist notification "ImportError in main.py"
 
 Available Events: ${SUPPORTED_EVENTS[*]}
 EOF
