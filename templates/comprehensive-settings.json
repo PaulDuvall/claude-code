@@ -53,5 +53,9 @@
   "includeCoAuthoredBy": true,
   "cleanupPeriodDays": 30,
   "model": "claude-sonnet-4-6",
-  "enableAllProjectMcpServers": false
+  "enableAllProjectMcpServers": false,
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/hooks/statusline.sh"
+  }
 }

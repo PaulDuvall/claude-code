@@ -130,7 +130,10 @@ claude-commands config --template comprehensive-settings.json     # Full feature
 # 6. Install AI subagents (Optional)
 claude-commands subagents --install     # Install 25 specialized AI subagents
 
-# 7. Start using AI-powered development commands
+# 7. Install quality/security hooks + status line (Optional)
+bash setup-hooks.sh                     # Symlinks hooks, configures status line
+
+# 8. Start using AI-powered development commands
 claude
 /xtest          # Run all tests intelligently
 /xquality       # Check and fix code quality issues

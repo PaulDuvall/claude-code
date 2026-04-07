@@ -39,6 +39,11 @@ PYTHON_HOOKS=(
     security_trojan.py
 )
 
+# Shell scripts to symlink (non-hook utilities)
+SHELL_SCRIPTS=(
+    statusline.sh
+)
+
 # Hook configuration to merge into settings.json
 read -r -d '' HOOKS_JSON << 'HOOKEOF' || true
 {
@@ -120,7 +125,7 @@ create_symlinks() {
     mkdir -p "$HOOKS_TARGET"
 
     local created=0 skipped=0
-    for hook_file in "${PYTHON_HOOKS[@]}"; do
+    for hook_file in "${PYTHON_HOOKS[@]}" "${SHELL_SCRIPTS[@]}"; do
         local source="$HOOKS_SOURCE/$hook_file"
         local target="$HOOKS_TARGET/$hook_file"
 
@@ -161,7 +166,7 @@ remove_symlinks() {
     echo "Removing symlinks from $HOOKS_TARGET ..."
 
     local removed=0
-    for hook_file in "${PYTHON_HOOKS[@]}"; do
+    for hook_file in "${PYTHON_HOOKS[@]}" "${SHELL_SCRIPTS[@]}"; do
         local target="$HOOKS_TARGET/$hook_file"
         if [[ -L "$target" ]]; then
             local link_target
@@ -216,6 +221,7 @@ merge_hooks_into_settings() {
 
     # Merge strategy: append our hook entries to existing arrays,
     # skipping any that already reference our hook commands.
+    # Also sets statusLine config if not already present.
     local merged
     merged=$(jq --argjson new_hooks "$HOOKS_JSON" '
         # Initialize .hooks if missing
@@ -238,7 +244,13 @@ merge_hooks_into_settings() {
                 else .hooks[$event] += [$entry]
                 end
             )
-        )
+        ) |
+
+        # Add statusLine if not already configured
+        if .statusLine == null then
+            .statusLine = {"type": "command", "command": "~/.claude/hooks/statusline.sh"}
+        else .
+        end
     ' "$SETTINGS_FILE")
 
     if [[ "$DRY_RUN" == true ]]; then
@@ -261,7 +273,7 @@ remove_hooks_from_settings() {
 
     backup_settings
 
-    # Remove entries that reference our hook commands
+    # Remove entries that reference our hook commands and statusLine config
     local cleaned
     cleaned=$(jq '
         .hooks.PostToolUse //= [] |
@@ -273,7 +285,11 @@ remove_hooks_from_settings() {
         .hooks.PreToolUse = [
             .hooks.PreToolUse[] |
             select(.hooks | map(.command) | any(contains("check-commit-signing.py")) | not)
-        ]
+        ] |
+        if .statusLine.command == "~/.claude/hooks/statusline.sh" then
+            del(.statusLine)
+        else .
+        end
     ' "$SETTINGS_FILE")
 
     if [[ "$DRY_RUN" == true ]]; then
@@ -358,8 +374,9 @@ Usage:
 What it does:
     1. Creates symlinks in ~/.claude/hooks/ pointing to this repo's hook files
     2. Merges PostToolUse and PreToolUse hook config into ~/.claude/settings.json
-    3. Backs up settings.json before any modification
-    4. Verifies the installation works
+    3. Configures the status line (model name, directory, context usage)
+    4. Backs up settings.json before any modification
+    5. Verifies the installation works
 
 Hooks installed:
     PostToolUse (fires after every Write/Edit):
@@ -427,6 +444,7 @@ main() {
     echo " Hooks are now active. On your next Claude Code session:"
     echo "   - Every Write/Edit will be checked for code smells and security issues"
     echo "   - Git commits will require signing configuration"
+    echo "   - Status line shows model, directory, and context usage"
     echo ""
     echo " Customize thresholds by creating .smellrc.json in your project root:"
     echo '   {"thresholds": {"max_function_lines": 30, "max_complexity": 15}}'

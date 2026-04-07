@@ -74,6 +74,36 @@ cp templates/comprehensive-settings.json ~/.claude/settings.json
 cp templates/global-claude.md ~/.claude/CLAUDE.md
 ```
 
+### 5. Status Line (`statusline.sh`)
+**Use case**: Show model name, project directory, and context usage in the Claude Code footer
+**Features**:
+- Displays active model (e.g., Claude Opus 4.6)
+- Shows current project directory name
+- Shows context window usage percentage
+**Requires**: `jq` (`brew install jq` / `apt install jq`)
+
+**To use** (automatic with `setup-hooks.sh`, or manual):
+```bash
+cp hooks/statusline.sh ~/.claude/hooks/
+chmod +x ~/.claude/hooks/statusline.sh
+```
+Then add to `~/.claude/settings.json`:
+```json
+"statusLine": {
+  "type": "command",
+  "command": "~/.claude/hooks/statusline.sh"
+}
+```
+
+**Output example**: `[Claude Opus 4.6] my-project | 42% context`
+
+**Customization**: Edit `~/.claude/hooks/statusline.sh` directly. Common additions:
+```bash
+# Add git branch
+BRANCH=$(git branch --show-current 2>/dev/null)
+echo "[$MODEL] ${DIR##*/} ($BRANCH) | ${PCT}% context"
+```
+
 ## Configuration Notes
 
 ### Settings Hierarchy
