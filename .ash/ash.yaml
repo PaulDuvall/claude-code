@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/awslabs/automated-security-helper/v3.2.6/automated_security_helper/schemas/AshConfig.json
+#
+# ASH (AWS Automated Security Helper) configuration — pinned to v3.2.6.
+# This file is the single source of truth for which scanners ASH runs and at
+# what severity. The tiered git hooks (hooks/scan_router.py) mirror the same
+# scanner-to-filetype applicability mapping; keep the two in sync.
+#
+# ASH runs at Tier 2 (pre-push, `ash --mode precommit`) and Tier 3 (CI,
+# `ash --mode container`) only. It NEVER runs at Tier 0 (PostToolUse) or as
+# an inline per-write gate — those stay sub-300ms Python/secrets-only checks.
+
+project_name: claude-code
+fail_on_findings: true
+
+global_settings:
+  severity_threshold: MEDIUM
+  ignore_paths:
+    - path: tests/
+      reason: Test fixtures and intentionally-insecure sample inputs, not shipped code.
+    - path: hooks/tests/
+      reason: Hook unit-test fixtures, not runtime code.
+    - path: claude-dev-toolkit/tests/
+      reason: NPM package test fixtures, not shipped code.
+
+scanners:
+  # --- SAST -----------------------------------------------------------------
+  bandit:
+    enabled: true
+  semgrep:
+    enabled: true
+  # --- Secrets --------------------------------------------------------------
+  detect-secrets:
+    enabled: true
+  # --- IaC ------------------------------------------------------------------
+  checkov:
+    enabled: true
+  cfn-nag:
+    enabled: true
+  # cdk-nag is DISABLED ON PURPOSE. ASH's README documents a CfnInclude
+  # BootstrapVersion collision on CDK-synthesized templates: cdk-nag re-parses
+  # the synthesized template through CfnInclude, whose BootstrapVersion
+  # parameter handling collides with the CDK bootstrap parameter, producing
+  # spurious failures unrelated to real findings. cfn-nag and checkov remain
+  # enabled and provide CloudFormation coverage. Do not "fix" the collision —
+  # it is an upstream interaction, not a config error in this repo.
+  cdk-nag:
+    enabled: false
+  # --- SCA / dependencies ---------------------------------------------------
+  grype:
+    enabled: true
+  npm-audit:
+    enabled: true
