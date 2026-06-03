@@ -132,6 +132,12 @@ if $UNINSTALL; then
         fi
     fi
 
+    if ! $DRY_RUN && [ -f "$SCRIPT_DIR/install-git-hooks.sh" ]; then
+        echo ""
+        echo "Removing chained git hooks..."
+        bash "$SCRIPT_DIR/install-git-hooks.sh" --uninstall || true
+    fi
+
     echo ""
     echo "Done. Removed $installed, skipped $skipped."
     exit 0
@@ -212,6 +218,16 @@ EOF
         log_action "added claude wrapper to .zshrc"
         installed=$((installed + 1))
     fi
+fi
+
+echo ""
+echo "Installing chained git hooks (pre-commit / pre-push)..."
+if $DRY_RUN; then
+    log_dry "install chained git hooks via install-git-hooks.sh"
+elif [ -f "$SCRIPT_DIR/install-git-hooks.sh" ]; then
+    bash "$SCRIPT_DIR/install-git-hooks.sh" || echo "  WARN: git-hook install reported an issue"
+else
+    echo "  WARN: install-git-hooks.sh not found; skipping"
 fi
 
 echo ""

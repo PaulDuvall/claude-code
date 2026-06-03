@@ -10,8 +10,10 @@ No wildcards supported -- explicit check names required.
 
 from __future__ import annotations
 
+import os
 import re
 import sys
+from pathlib import Path
 
 from smell_types import Smell
 
@@ -68,15 +70,52 @@ def _warn_excessive(count: int, total_lines: int) -> None:
         )
 
 
+def _repo_root(start: str) -> str:
+    """Walk up from start to the nearest .git ancestor; fall back to start."""
+    current = os.path.abspath(start)
+    while True:
+        if os.path.isdir(os.path.join(current, ".git")):
+            return current
+        parent = os.path.dirname(current)
+        if parent == current:
+            return os.path.abspath(start)
+        current = parent
+
+
+def _log_suppressions(
+    smells: list[Smell], namespace: str, file_path: str,
+) -> None:
+    """Append honored (non-secret) suppressions to the audit log, best-effort."""
+    root = _repo_root(os.path.dirname(os.path.abspath(file_path)))
+    log_path = Path(root) / ".quality-gate" / "suppressions.log"
+    try:
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(log_path, "a", encoding="utf-8") as handle:
+            for smell in smells:
+                handle.write(f"{file_path}:{smell.line} {namespace}:{smell.kind}\n")
+    except OSError:
+        pass
+
+
 def filter_suppressed(
     smells: list[Smell], lines: list[str], namespace: str,
+    file_path: str | None = None,
 ) -> list[Smell]:
-    """Remove smells covered by inline suppression comments."""
+    """Remove smells covered by inline suppression comments.
+
+    Secrets are never suppressible. Every honored suppression is appended to
+    the audit log (.quality-gate/suppressions.log) when file_path is given.
+    """
     suppression_map = _build_suppression_map(lines)
     _warn_excessive(len(suppression_map), len(lines))
-    result: list[Smell] = []
+    kept: list[Smell] = []
+    honored: list[Smell] = []
     for smell in smells:
         active = suppression_map.get(smell.line, {})
-        if not _is_suppressed(smell, namespace, active):
-            result.append(smell)
-    return result
+        if smell.kind != "secrets" and _is_suppressed(smell, namespace, active):
+            honored.append(smell)
+        else:
+            kept.append(smell)
+    if honored and file_path:
+        _log_suppressions(honored, namespace, file_path)
+    return kept

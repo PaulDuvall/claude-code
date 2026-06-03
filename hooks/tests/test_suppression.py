@@ -1,5 +1,7 @@
 """Tests for suppression module."""
 
+from pathlib import Path
+
 from smell_types import Smell
 from suppression import filter_suppressed
 
@@ -46,8 +48,43 @@ class TestFilterSuppressed:
         result = filter_suppressed(smells, lines, "smell")
         assert result == []
 
-    def test_security_namespace(self):
+    def test_security_namespace_suppresses_non_secret(self):
+        smells = [_smell("B101", 2)]
+        lines = ["# security: ignore[B101]", "assert x"]
+        result = filter_suppressed(smells, lines, "security")
+        assert result == []
+
+    def test_secrets_are_never_suppressible(self):
+        # Secrets must NOT be suppressible even with a matching ignore.
         smells = [_smell("secrets", 2)]
         lines = ["# security: ignore[secrets]", "key = 'abc'"]
         result = filter_suppressed(smells, lines, "security")
+        assert result == smells
+
+
+class TestSuppressionAuditLog:
+    def test_honored_suppression_is_logged(self, tmp_path):
+        target = tmp_path / "mod.py"
+        target.write_text("# smell: ignore[complexity]\ndef f(): pass\n")
+        smells = [_smell("complexity", 2)]
+        lines = ["# smell: ignore[complexity]", "def f(): pass"]
+        result = filter_suppressed(smells, lines, "smell", str(target))
         assert result == []
+        log = tmp_path / ".quality-gate" / "suppressions.log"
+        assert log.exists()
+        assert f"{target}:2 smell:complexity" in log.read_text()
+
+    def test_suppressed_secret_is_not_logged(self, tmp_path):
+        target = tmp_path / "mod.py"
+        target.write_text("key = 'abc'  # security: ignore[secrets]\n")
+        smells = [_smell("secrets", 1)]
+        lines = ["key = 'abc'  # security: ignore[secrets]"]
+        result = filter_suppressed(smells, lines, "security", str(target))
+        # Secret kept (never suppressed) -> nothing honored -> no log file.
+        assert result == smells
+        assert not (tmp_path / ".quality-gate" / "suppressions.log").exists()
+
+    def test_no_file_path_skips_logging(self):
+        smells = [_smell("complexity", 1)]
+        lines = ["x = 1  # smell: ignore[complexity]"]
+        assert filter_suppressed(smells, lines, "smell") == []
