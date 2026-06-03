@@ -65,9 +65,11 @@ The numbers — not the table above — decide tier placement.
 |-------------|--------|----------|
 | `checkov -f <one .tf>` (steady-state, via `uvx`) | **~1.55s** (1.52 / 1.55 / 1.61s) | **>300ms → IaC check lives at Tier 1**, not Tier 0. PostToolUse stays Python/secrets-only. Well under the 5s Tier-1 budget. |
 | pure `python3` startup floor | 0.01s | inline Python hooks have ample headroom under 300ms |
-| `ash --mode precommit` (1–2 file change) | *pending* | measured when Tier 2 pre-push is wired (T4) |
-| `ash --mode container` (full tree) | *pending* | measured by the first Tier 3 CI run (T4); needs a container runtime, which CI provides |
-| ASH per-scanner zero-input startup | *pending* | decides whether applicability gating must happen at the wrapper before invoking ASH (T4) |
+| `ash --mode precommit`, **cold** (first run, tool provisioning) | **82.1s** | one-time cost when ASH's tool copies are first built; not paid per-push |
+| `ash --mode precommit`, **warm** (1-file change) | **9.9s** | under the 30s Tier-2 budget, but a ~10s fixed floor |
+| `ash --mode precommit`, **warm** (zero matching input) | **9.7s** | ASH pays the floor even with nothing to scan → **applicability MUST be gated at the wrapper** (don't invoke ASH unless a code/IaC scanner applies). Confirms applicability rule 6. |
+| `ash --mode precommit --scanners checkov` (warm) | **9.8s** | scoping to one scanner does **not** reduce the floor — the ~10s is ASH orchestration, not scanner count |
+| `ash --mode container` (full tree) | *CI-only* | needs a container runtime; measured by the first Tier 3 CI run (Docker is present on the runner) |
 
 **Why checkov is Tier 1, not Tier 0:** the single-file run is ~1.5s, roughly 5×
 the 300ms on-write budget. Per the integration's own escape clause, the IaC check
@@ -76,5 +78,44 @@ gate stays the existing inline Python smell + secret checks. Nothing in the ASH
 bundle starts fast enough for a sub-300ms per-write gate, which is why ASH never
 runs at Tier 0.
 
-The pending ASH-mode numbers are captured when Tiers 2–3 are wired; the container
-figure is authoritative from CI, where Docker is present by default.
+### Tier 2 (pre-push) design notes — what the benchmark forced
+
+Two facts from the numbers changed the wiring from the naive "run `ash --mode
+precommit` on the changed files":
+
+1. **`precommit` is a *speed preset*, not a git filter.** In ASH v3.2.6,
+   `--mode precommit` means "Python-based scanners only, simplified output" — it
+   scans the whole `--source-dir`; there is **no per-file flag**. To keep Tier 2
+   file-scoped, the pre-push hook stages the push-range files into a temp dir and
+   runs ASH with `--source-dir` pointed at it. Cross-file analysis is therefore
+   **not** done at Tier 2 by design — that is Tier 3's job.
+2. **ASH pays a ~10s floor even for zero input.** So `hooks/prepush_checks.py`
+   gates *before* invoking ASH: it computes the push range
+   (`git diff --name-only @{push}`, falling back to the default branch on a new
+   branch — never the whole tree), and runs ASH only when a **code/IaC** scanner
+   (`bandit`/`semgrep`/`checkov`) applies. A docs-only push matches only
+   `detect-secrets`, which is already gated dependency-free at Tiers 0–1 and
+   re-checked by the CI container — so it does **not** pay the ASH floor and the
+   pre-push exits silently.
+
+The container figure is authoritative from CI, where Docker is present by default.
+
+## Install & activation
+
+One entry point wires the local spine: `bash scripts/setup-hooks.sh`. It is
+idempotent and:
+
+- symlinks the Claude Code hooks into `~/.claude/hooks/`,
+- installs **chained** git hooks (Tier 1 `pre-commit`, Tier 2 `pre-push`) via
+  `scripts/install-git-hooks.sh`, preserving any pre-existing hook (e.g. the
+  beads `pre-commit`) by chaining it — no `core.hooksPath` override.
+
+**Tier 0 activation is opt-in.** The PostToolUse hooks fire only once their
+config is present in `~/.claude/settings.json`. By default `setup-hooks.sh` does
+**not** edit your global settings; pass `--wire-settings` to merge
+`hooks/settings.example.json` in idempotently (additive — existing hooks are
+preserved), or merge it by hand. Tier 3 (CI) needs no install: it ships in
+`.github/workflows/ash.yml` and runs on PRs and pushes to `main`.
+
+Uninstall with `bash scripts/setup-hooks.sh --uninstall` (restores any chained
+hooks).

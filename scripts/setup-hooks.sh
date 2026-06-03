@@ -17,17 +17,23 @@ TARGET_HOOKS_DIR="$HOME/.claude/hooks"
 ZSHRC="$HOME/.zshrc"
 DRY_RUN=false
 UNINSTALL=false
+WIRE_SETTINGS=false
 
 for arg in "$@"; do
     case "$arg" in
         --dry-run) DRY_RUN=true ;;
         --uninstall) UNINSTALL=true ;;
+        --wire-settings) WIRE_SETTINGS=true ;;
         --help|-h)
-            echo "Usage: bash scripts/setup-hooks.sh [--dry-run] [--uninstall]"
+            echo "Usage: bash scripts/setup-hooks.sh [--dry-run] [--uninstall] [--wire-settings]"
             echo ""
             echo "Options:"
-            echo "  --dry-run    Show what would be done without making changes"
-            echo "  --uninstall  Remove installed symlinks and .zshrc wrapper"
+            echo "  --dry-run        Show what would be done without making changes"
+            echo "  --uninstall      Remove installed symlinks and .zshrc wrapper"
+            echo "  --wire-settings  Also merge the PostToolUse/PreToolUse hook config"
+            echo "                   into ~/.claude/settings.json (idempotent, additive)."
+            echo "                   Off by default so your global settings are never"
+            echo "                   edited unless you ask."
             exit 0
             ;;
         *)
@@ -228,6 +234,23 @@ elif [ -f "$SCRIPT_DIR/install-git-hooks.sh" ]; then
     bash "$SCRIPT_DIR/install-git-hooks.sh" || echo "  WARN: git-hook install reported an issue"
 else
     echo "  WARN: install-git-hooks.sh not found; skipping"
+fi
+
+echo ""
+if $WIRE_SETTINGS; then
+    echo "Wiring hook config into ~/.claude/settings.json..."
+    if $DRY_RUN; then
+        log_dry "merge $SOURCE_HOOKS_DIR/settings.example.json into ~/.claude/settings.json"
+    else
+        python3 "$SCRIPT_DIR/wire-settings.py" \
+            --source "$SOURCE_HOOKS_DIR/settings.example.json" \
+            --target "$HOME/.claude/settings.json" \
+            || echo "  WARN: settings wiring reported an issue"
+    fi
+else
+    echo "Tier 0 (PostToolUse) activation: hook config NOT wired into settings.json."
+    echo "  Re-run with --wire-settings to merge it automatically (idempotent),"
+    echo "  or merge $SOURCE_HOOKS_DIR/settings.example.json manually."
 fi
 
 echo ""
