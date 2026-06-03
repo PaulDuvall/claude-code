@@ -269,20 +269,39 @@ Most users authenticate via browser (no API key needed). See [Claude Code docs](
 
 PostToolUse hooks that **block Claude from proceeding** when code violates quality or security thresholds. Claude fixes violations immediately, then continues. Based on the approach described in [Code Quality Gates: Using Claude Code Hooks to Block Code Smells on Every Write](https://www.paulmduvall.com/claude-code-hooks-code-quality-guardrails/).
 
+#### Four-Tier Scanner Model
+
+Scanning is layered for feedback at the speed of typing, escalating to thorough only as the blast radius grows. Each tier is scoped tighter than the last and is **applicability-gated** — a scanner runs only when the change set contains a file type it analyzes, so an irrelevant change (e.g. editing a README) produces no output.
+
+| Tier | Trigger | Budget | Scope | What runs |
+|------|---------|--------|-------|-----------|
+| 0 on-write | PostToolUse Write/Edit | <300ms | the one file written | inline Python smell + secret checks |
+| 1 pre-commit | `git commit` | <5s | staged files | secrets + `checkov` on staged IaC |
+| 2 pre-push | `git push` | <30s | push range | ASH (`precommit` mode) on changed files |
+| 3 CI | PR / push to `main` | minutes | full tree | ASH (`container` mode), all scanners, SARIF + SBOM |
+
+Every tier except CI is **file-scoped**. Cross-file and cross-resource analysis (e.g. a security group defined in one file and referenced in another) is **CI-only by design** — it would blow the smaller budgets. Tier 3 is the only un-bypassable tier. [AWS Automated Security Helper (ASH)](https://github.com/awslabs/automated-security-helper) backs Tiers 2–3; ASH never runs at Tier 0, since nothing in its bundle starts fast enough for a sub-300ms per-write gate. See [docs/ash-integration.md](./docs/ash-integration.md) for the wiring, benchmarks, and supply-chain posture.
+
 #### Quick Setup
 
 ```bash
-# Automated: creates symlinks, merges settings, verifies installation
+# Automated: symlinks the Claude Code hooks (Tier 0) and installs the chained
+# git hooks (Tier 1 pre-commit, Tier 2 pre-push). Idempotent; any pre-existing
+# git hook (e.g. beads) is preserved by chaining, not overwritten.
 bash setup-hooks.sh
+
+# Also merge the PostToolUse/PreToolUse config into ~/.claude/settings.json
+# (opt-in; off by default so your global settings are never edited unless asked)
+bash setup-hooks.sh --wire-settings
 
 # Preview what it will do (no changes made)
 bash setup-hooks.sh --dry-run
 
-# Remove hooks cleanly
+# Remove hooks cleanly (restores any chained hooks)
 bash setup-hooks.sh --uninstall
 ```
 
-Requires Python 3.8+ and jq. Backs up `~/.claude/settings.json` before modifying.
+Requires Python 3.8+. Tier 0 fires only once its config is in `~/.claude/settings.json` — use `--wire-settings` or merge `hooks/settings.example.json` by hand. Tier 3 (CI) needs no install; it ships in `.github/workflows/ash.yml`.
 
 #### What Gets Checked
 
@@ -306,6 +325,7 @@ Language support:
 - **Secrets detection**: AWS keys, GitHub tokens, Stripe keys, OpenAI keys, private keys, credential URLs
 - **Bandit-style checks** (Python): `eval`/`exec`, `shell=True`, pickle, hardcoded passwords, bare `except: pass`
 - **Trojan source**: Unicode bidi overrides and zero-width characters (CVE-2021-42574)
+- **Severity gate**: secrets and HIGH-severity findings **block**; findings below HIGH are reported to Claude without blocking. Secrets are **never suppressible**; honored `# smell|security: ignore[...]` suppressions are logged to `.quality-gate/suppressions.log`.
 
 **Commit Signing** (PreToolUse on Bash via `check-commit-signing.py`):
 - Blocks unsigned `git commit` commands
