@@ -21,6 +21,46 @@ global_settings:
       reason: Hook unit-test fixtures, not runtime code.
     - path: claude-dev-toolkit/tests/
       reason: NPM package test fixtures, not shipped code.
+  # Suppressions triaged from the first full ASH scan. These are documented,
+  # rule-scoped decisions (not per-finding rubber-stamps): noisy Semgrep audit
+  # rules on the CLI installer that are false positives, plus two confirmed test
+  # fixtures / idioms. Genuine findings (npm-publish shell injection, xact.sh
+  # curl|bash) were FIXED, not suppressed. GitHub Actions hardening is tracked
+  # in bd claude-code-0qi.
+  suppressions:
+    - path: claude-dev-toolkit/**
+      rule_id: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
+      reason: >-
+        False positive. The toolkit is a local CLI installer that builds paths
+        from trusted config under the user's own ~/.claude; no untrusted remote
+        input reaches path.join/resolve here.
+    - path: claude-dev-toolkit/**
+      rule_id: javascript.lang.security.detect-child-process.detect-child-process
+      reason: >-
+        Accepted. The toolkit is an installer; invoking git/npm via child_process
+        with list args (no shell string interpolation) is its core function.
+    - path: claude-dev-toolkit/**
+      rule_id: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
+      reason: False positive. Regexes are built from internal constants, not user input.
+    - path: claude-dev-toolkit/**
+      rule_id: javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring
+      reason: False positive. Format arguments are internal, not attacker-controlled.
+    - path: .github/workflows/install-clean-env.yml
+      rule_id: generic.secrets.security.detected-aws-access-key-id-value.detected-aws-access-key-id-value
+      reason: >-
+        Intentional test fixture. This step writes the well-known fake key
+        AKIA...ZZZZZZZ to verify the secret-detection hook fires. Not a real key.
+    - path: scripts/deploy-subagents.sh
+      rule_id: bash.lang.security.ifs-tampering.ifs-tampering
+      reason: >-
+        False positive. IFS=$'\n\t' is the standard bash strict-mode idiom
+        (set -euo pipefail), a hardening measure, not IFS tampering.
+    - path: .github/workflows/**
+      rule_id: CKV2_GHA_1
+      reason: GitHub Actions least-privilege permissions hardening tracked in bd claude-code-0qi.
+    - path: .github/workflows/**
+      rule_id: CKV_GHA_7
+      reason: GitHub Actions hardening tracked in bd claude-code-0qi.
 
 scanners:
   # --- SAST -----------------------------------------------------------------

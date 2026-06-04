@@ -32,14 +32,17 @@ jobs:
         working-directory: claude-dev-toolkit
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          TAG: ${{ inputs.tag }}
         run: |
           PACKAGE_NAME=$(node -p "require('./package.json').name")
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          echo "Publishing $PACKAGE_NAME@$PACKAGE_VERSION with tag ${{ inputs.tag }}"
-          npm publish --access public --tag ${{ inputs.tag }}
+          echo "Publishing $PACKAGE_NAME@$PACKAGE_VERSION with tag $TAG"
+          npm publish --access public --tag "$TAG"
 
       - name: Summary
         working-directory: claude-dev-toolkit
+        env:
+          TAG: ${{ inputs.tag }}
         run: |
           PACKAGE_NAME=$(node -p "require('./package.json').name")
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
@@ -47,6 +50,6 @@ jobs:
           echo "## NPM Publish Successful" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Package**: \`$PACKAGE_NAME@$PACKAGE_VERSION\`" >> $GITHUB_STEP_SUMMARY
-          echo "- **Tag**: \`${{ inputs.tag }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag**: \`$TAG\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Install**: \`npm install -g $PACKAGE_NAME@$PACKAGE_VERSION\`" >> $GITHUB_STEP_SUMMARY
           echo "- **NPM**: [View on npmjs.com](https://www.npmjs.com/package/$PACKAGE_NAME)" >> $GITHUB_STEP_SUMMARY

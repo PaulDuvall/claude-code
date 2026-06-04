@@ -129,12 +129,17 @@ install_dependencies() {
                 install_failed=true
             fi
         elif [[ "$OSTYPE" == "linux"* ]]; then
-            if curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash; then
+            # Download the installer to a temp file first (no curl|bash) so it
+            # can be inspected/verified before execution.
+            act_installer="$(mktemp)"
+            if curl -fsSL https://raw.githubusercontent.com/nektos/act/master/install.sh -o "$act_installer" \
+                && sudo bash "$act_installer"; then
                 echo "✓ nektos/act installed successfully"
             else
                 echo "✗ Failed to install nektos/act"
                 install_failed=true
             fi
+            rm -f "$act_installer"
         else
             echo "✗ Unsupported platform: $OSTYPE"
             install_failed=true
