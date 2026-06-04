@@ -100,6 +100,39 @@ precommit` on the changed files":
 
 The container figure is authoritative from CI, where Docker is present by default.
 
+## Findings triage policy
+
+Suppressions are a system with documented reasons, not silent ignores. Every
+finding ASH reports is resolved in exactly one of three ways, all visible in
+version control and reviewed in the PR that introduces them:
+
+1. **FIXED** — the finding is real and corrected in code (e.g. the GitHub
+   Actions script injection in `npm-publish-manual.yml` and the `curl | bash`
+   in `scripts/xact.sh` were fixed, not suppressed).
+2. **SUPPRESSED with a reason** — a confirmed false positive or an accepted,
+   explained risk. Each entry in `.ash/ash.yaml` `global_settings.suppressions`
+   carries:
+   - a **`rule_id`** and a **`path`** scoped as narrowly as practical (never a
+     blanket repo-wide "ignore everything"),
+   - a **`reason`** stating *why* it is not actionable (e.g. "this 40-char hex
+     is the pinned ASH commit SHA, not a secret"; "documentation example of a
+     credential pattern").
+3. **TRACKED** — real but out-of-scope-to-fix-now work is suppressed with a
+   reason that **references a Beads task** and an **`expiration`** date that
+   forces re-review (e.g. the GitHub Actions hardening tracked in
+   `claude-code-0qi`, expiring `2026-09-01`).
+
+Rules of thumb: prefer FIX over SUPPRESS; scope suppressions to the narrowest
+`path` + `rule_id` that covers the false positive; give accepted-risk and
+tracked suppressions an `expiration` so they cannot rot; secrets findings are
+suppressed only after confirming each is a non-secret (the inline Tier 0/1
+hooks keep real secrets non-suppressible regardless).
+
+Note on local vs CI for secrets: ASH's `detect-secrets` plugin runs in CI but
+no-ops in local `--mode local` on some machines (the tool runs in an isolated
+`uvx` environment). Treat **CI as the authoritative validator for
+detect-secrets**; the suppressions above were triaged from the CI artifact.
+
 ## Install & activation
 
 One entry point wires the local spine: `bash scripts/setup-hooks.sh`. It is

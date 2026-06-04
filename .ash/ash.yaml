@@ -21,6 +21,11 @@ global_settings:
       reason: Hook unit-test fixtures, not runtime code.
     - path: claude-dev-toolkit/tests/
       reason: NPM package test fixtures, not shipped code.
+    - path: claude-dev-toolkit/test-reports/
+      reason: >-
+        Generated test-run artifacts (HTML/JSON/MD reports), not source. Their
+        high-entropy test data trips detect-secrets. Candidate for gitignore +
+        git-rm in a follow-up; ignored here meanwhile.
   # Suppressions triaged from the first full ASH scan. These are documented,
   # rule-scoped decisions (not per-finding rubber-stamps): noisy Semgrep audit
   # rules on the CLI installer that are false positives, plus two confirmed test
@@ -58,9 +63,50 @@ global_settings:
     - path: .github/workflows/**
       rule_id: CKV2_GHA_1
       reason: GitHub Actions least-privilege permissions hardening tracked in bd claude-code-0qi.
+      expiration: "2026-09-01"
     - path: .github/workflows/**
       rule_id: CKV_GHA_7
       reason: GitHub Actions hardening tracked in bd claude-code-0qi.
+      expiration: "2026-09-01"
+    # --- detect-secrets: all confirmed false positives (see docs/ash-integration.md
+    # "Findings triage policy"). Scoped as narrowly as practical, never repo-wide. ---
+    - path: "**/*.md"
+      rule_id: SECRET-SECRET-KEYWORD
+      reason: >-
+        Documentation prose and examples that use the words secret/token/
+        password/api_key to describe what the detector catches; no real values.
+    - path: "**/smell_types.py"
+      rule_id: SECRET-SECRET-KEYWORD
+      reason: >-
+        The literal string "secrets" is a smell-kind label / remediation message
+        in code (FIXES["secrets"], SECURITY_SEVERITY), not a credential.
+    - path: claude-dev-toolkit/scripts/publishing/setup-local-registry.sh
+      rule_id: SECRET-SECRET-KEYWORD
+      reason: >-
+        Default admin/admin credential for a throwaway LOCAL verdaccio registry
+        used only in local publish testing; not a real or shipped secret.
+    - path: hooks/README.md
+      rule_id: SECRET-BASIC-AUTH-CREDENTIALS
+      reason: Documentation example of a credential-in-URL pattern (postgres://user:pass@host).
+    - path: claude-dev-toolkit/hooks/README.md
+      rule_id: SECRET-BASIC-AUTH-CREDENTIALS
+      reason: Synced copy of hooks/README.md; same documentation example.
+    - path: hooks/README.md
+      rule_id: SECRET-PRIVATE-KEY
+      reason: Documentation example showing the literal "-----BEGIN PRIVATE KEY-----" pattern the detector matches.
+    - path: claude-dev-toolkit/hooks/README.md
+      rule_id: SECRET-PRIVATE-KEY
+      reason: Synced copy of hooks/README.md; same documentation example.
+    - path: "**/prepush_checks.py"
+      rule_id: SECRET-HEX-HIGH-ENTROPY-STRING
+      reason: >-
+        The 40-char hex string is the pinned ASH git commit SHA
+        (1dca6b3d...), a public revision identifier, not a secret.
+    - path: scripts/setup-github-actions-iam.py
+      rule_id: SECRET-HEX-HIGH-ENTROPY-STRING
+      reason: >-
+        The 40-char hex is GitHub's well-known PUBLIC OIDC root-CA thumbprint
+        (6938fd4d...), a published constant required for the OIDC trust config.
 
 scanners:
   # --- SAST -----------------------------------------------------------------
