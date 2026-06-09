@@ -48,6 +48,32 @@ class Smell:
 
 
 # ---------------------------------------------------------------------------
+# Severity model for security findings (drives the on-write severity gate)
+# ---------------------------------------------------------------------------
+# Secrets are special-cased: they ALWAYS block and are never suppressible.
+SECURITY_SEVERITY = {
+    "secrets": "critical",
+    "B102": "high", "B105": "high", "B106": "high", "B602": "high",
+    "trojan_bidi": "high", "trojan_zero_width": "high",
+    "B301": "medium",
+    "B101": "low", "B110": "low",
+}
+_SEVERITY_RANK = {"critical": 4, "high": 3, "medium": 2, "low": 1, "info": 0}
+
+
+def severity_for(kind: str) -> str:
+    """Return the severity label for a security finding kind (default medium)."""
+    return SECURITY_SEVERITY.get(kind, "medium")
+
+
+def blocks_commit(smell: Smell) -> bool:
+    """Secrets always block; other security findings block only at HIGH+."""
+    if smell.kind == "secrets":
+        return True
+    return _SEVERITY_RANK.get(severity_for(smell.kind), 2) >= _SEVERITY_RANK["high"]
+
+
+# ---------------------------------------------------------------------------
 # Shared helpers
 # ---------------------------------------------------------------------------
 

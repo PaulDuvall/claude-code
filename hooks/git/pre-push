@@ -1,0 +1,8 @@
+#!/bin/sh
+# Tier 2 pre-push logic (tracked). Runs ASH (precommit mode, Python-only
+# scanners) scoped to the push range, applicability-gated and silent when
+# nothing applies. Warns (does not block) when uvx is absent; the un-bypassable
+# CI Tier 3 enforces. Installed as a chained shim by
+# scripts/install-git-hooks.sh (which also chains any pre-existing pre-push).
+REPO=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+exec python3 "$REPO/hooks/prepush_checks.py"

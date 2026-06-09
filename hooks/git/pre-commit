@@ -1,0 +1,11 @@
+#!/bin/sh
+# Tier 1 pre-commit logic (tracked). Runs secrets (always block) + checkov on
+# staged IaC (warn-not-block if uvx absent). Applicability-gated and silent
+# when nothing applies. Installed as a chained shim by
+# scripts/install-git-hooks.sh, which also preserves any pre-existing hook
+# (e.g. the beads pre-commit) by chaining it after this one.
+REPO=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+STAGED=$(git diff --cached --name-only --diff-filter=ACM)
+[ -z "$STAGED" ] && exit 0
+# shellcheck disable=SC2086
+exec python3 "$REPO/hooks/precommit_checks.py" $STAGED

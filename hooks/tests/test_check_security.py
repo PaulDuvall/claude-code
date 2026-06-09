@@ -26,6 +26,21 @@ class TestCheckSecurityEntryPoint:
         output = json.loads(result.stdout)
         assert output["decision"] == "block"
 
+    def test_high_finding_blocks(self, tmp_py_file):
+        # exec() is B102 -> HIGH -> blocks.
+        path = tmp_py_file("exec('bad')\n")
+        result = _run_hook({"tool_input": {"file_path": path}})
+        output = json.loads(result.stdout)
+        assert output["decision"] == "block"
+
+    def test_medium_finding_warns_without_blocking(self, tmp_py_file):
+        # pickle.loads is B301 -> MEDIUM -> report on stderr, no block.
+        path = tmp_py_file("import pickle\npickle.loads(b'x')\n")
+        result = _run_hook({"tool_input": {"file_path": path}})
+        assert result.returncode == 0
+        assert result.stdout.strip() == ""
+        assert "NOTICE" in result.stderr and "MEDIUM" in result.stderr
+
     def test_invalid_json_exits_cleanly(self):
         result = subprocess.run(
             [sys.executable, "hooks/check-security.py"],

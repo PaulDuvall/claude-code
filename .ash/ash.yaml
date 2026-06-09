@@ -1,0 +1,138 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/awslabs/automated-security-helper/v3.2.6/automated_security_helper/schemas/AshConfig.json
+#
+# ASH (AWS Automated Security Helper) configuration — pinned to v3.2.6.
+# This file is the single source of truth for which scanners ASH runs and at
+# what severity. The tiered git hooks (hooks/scan_router.py) mirror the same
+# scanner-to-filetype applicability mapping; keep the two in sync.
+#
+# ASH runs at Tier 2 (pre-push, `ash --mode precommit`) and Tier 3 (CI,
+# `ash --mode container`) only. It NEVER runs at Tier 0 (PostToolUse) or as
+# an inline per-write gate — those stay sub-300ms Python/secrets-only checks.
+
+project_name: claude-code
+fail_on_findings: true
+
+global_settings:
+  severity_threshold: MEDIUM
+  ignore_paths:
+    - path: tests/
+      reason: Test fixtures and intentionally-insecure sample inputs, not shipped code.
+    - path: hooks/tests/
+      reason: Hook unit-test fixtures, not runtime code.
+    - path: claude-dev-toolkit/tests/
+      reason: NPM package test fixtures, not shipped code.
+    - path: claude-dev-toolkit/test-reports/
+      reason: >-
+        Generated test-run artifacts (HTML/JSON/MD reports), not source. Their
+        high-entropy test data trips detect-secrets. Candidate for gitignore +
+        git-rm in a follow-up; ignored here meanwhile.
+  # Suppressions triaged from the first full ASH scan. These are documented,
+  # rule-scoped decisions (not per-finding rubber-stamps): noisy Semgrep audit
+  # rules on the CLI installer that are false positives, plus two confirmed test
+  # fixtures / idioms. Genuine findings (npm-publish shell injection, xact.sh
+  # curl|bash) were FIXED, not suppressed. GitHub Actions hardening is tracked
+  # in bd claude-code-0qi.
+  suppressions:
+    - path: claude-dev-toolkit/**
+      rule_id: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
+      reason: >-
+        False positive. The toolkit is a local CLI installer that builds paths
+        from trusted config under the user's own ~/.claude; no untrusted remote
+        input reaches path.join/resolve here.
+    - path: claude-dev-toolkit/**
+      rule_id: javascript.lang.security.detect-child-process.detect-child-process
+      reason: >-
+        Accepted. The toolkit is an installer; invoking git/npm via child_process
+        with list args (no shell string interpolation) is its core function.
+    - path: claude-dev-toolkit/**
+      rule_id: javascript.lang.security.audit.detect-non-literal-regexp.detect-non-literal-regexp
+      reason: False positive. Regexes are built from internal constants, not user input.
+    - path: claude-dev-toolkit/**
+      rule_id: javascript.lang.security.audit.unsafe-formatstring.unsafe-formatstring
+      reason: False positive. Format arguments are internal, not attacker-controlled.
+    - path: .github/workflows/install-clean-env.yml
+      rule_id: generic.secrets.security.detected-aws-access-key-id-value.detected-aws-access-key-id-value
+      reason: >-
+        Intentional test fixture. This step writes the well-known fake key
+        AKIA...ZZZZZZZ to verify the secret-detection hook fires. Not a real key.
+    - path: scripts/deploy-subagents.sh
+      rule_id: bash.lang.security.ifs-tampering.ifs-tampering
+      reason: >-
+        False positive. IFS=$'\n\t' is the standard bash strict-mode idiom
+        (set -euo pipefail), a hardening measure, not IFS tampering.
+    - path: .github/workflows/**
+      rule_id: CKV2_GHA_1
+      reason: GitHub Actions least-privilege permissions hardening tracked in bd claude-code-0qi.
+      expiration: "2026-09-01"
+    - path: .github/workflows/**
+      rule_id: CKV_GHA_7
+      reason: GitHub Actions hardening tracked in bd claude-code-0qi.
+      expiration: "2026-09-01"
+    # --- detect-secrets: all confirmed false positives (see docs/ash-integration.md
+    # "Findings triage policy"). Scoped as narrowly as practical, never repo-wide. ---
+    - path: "**/*.md"
+      rule_id: SECRET-SECRET-KEYWORD
+      reason: >-
+        Documentation prose and examples that use the words secret/token/
+        password/api_key to describe what the detector catches; no real values.
+    - path: "**/smell_types.py"
+      rule_id: SECRET-SECRET-KEYWORD
+      reason: >-
+        The literal string "secrets" is a smell-kind label / remediation message
+        in code (FIXES["secrets"], SECURITY_SEVERITY), not a credential.
+    - path: claude-dev-toolkit/scripts/publishing/setup-local-registry.sh
+      rule_id: SECRET-SECRET-KEYWORD
+      reason: >-
+        Default admin/admin credential for a throwaway LOCAL verdaccio registry
+        used only in local publish testing; not a real or shipped secret.
+    - path: hooks/README.md
+      rule_id: SECRET-BASIC-AUTH-CREDENTIALS
+      reason: Documentation example of a credential-in-URL pattern (postgres://user:pass@host).
+    - path: claude-dev-toolkit/hooks/README.md
+      rule_id: SECRET-BASIC-AUTH-CREDENTIALS
+      reason: Synced copy of hooks/README.md; same documentation example.
+    - path: hooks/README.md
+      rule_id: SECRET-PRIVATE-KEY
+      reason: Documentation example showing the literal "-----BEGIN PRIVATE KEY-----" pattern the detector matches.
+    - path: claude-dev-toolkit/hooks/README.md
+      rule_id: SECRET-PRIVATE-KEY
+      reason: Synced copy of hooks/README.md; same documentation example.
+    - path: "**/prepush_checks.py"
+      rule_id: SECRET-HEX-HIGH-ENTROPY-STRING
+      reason: >-
+        The 40-char hex string is the pinned ASH git commit SHA
+        (1dca6b3d...), a public revision identifier, not a secret.
+    - path: scripts/setup-github-actions-iam.py
+      rule_id: SECRET-HEX-HIGH-ENTROPY-STRING
+      reason: >-
+        The 40-char hex is GitHub's well-known PUBLIC OIDC root-CA thumbprint
+        (6938fd4d...), a published constant required for the OIDC trust config.
+
+scanners:
+  # --- SAST -----------------------------------------------------------------
+  bandit:
+    enabled: true
+  semgrep:
+    enabled: true
+  # --- Secrets --------------------------------------------------------------
+  detect-secrets:
+    enabled: true
+  # --- IaC ------------------------------------------------------------------
+  checkov:
+    enabled: true
+  cfn-nag:
+    enabled: true
+  # cdk-nag is DISABLED ON PURPOSE. ASH's README documents a CfnInclude
+  # BootstrapVersion collision on CDK-synthesized templates: cdk-nag re-parses
+  # the synthesized template through CfnInclude, whose BootstrapVersion
+  # parameter handling collides with the CDK bootstrap parameter, producing
+  # spurious failures unrelated to real findings. cfn-nag and checkov remain
+  # enabled and provide CloudFormation coverage. Do not "fix" the collision —
+  # it is an upstream interaction, not a config error in this repo.
+  cdk-nag:
+    enabled: false
+  # --- SCA / dependencies ---------------------------------------------------
+  grype:
+    enabled: true
+  npm-audit:
+    enabled: true

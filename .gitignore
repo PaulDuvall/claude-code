@@ -352,3 +352,5 @@ test-results/
 tests/test-results/
 .npmrc
 .beads/
+.quality-gate/
+.ash/ash_output/

@@ -1,0 +1,67 @@
+name: ASH Security (Tier 3)
+
+# Tier 3 of the tiered scanner spine: the un-bypassable, full-tree merge gate.
+# Runs ASH in container mode (all scanners, cross-file analysis) on PRs and
+# pushes to main. Hardened against supply-chain risk: least privilege, no
+# secrets, egress-restricted, and every action + ASH pinned by SHA.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Least privilege at the workflow level; the job re-asserts it.
+permissions:
+  contents: read
+
+concurrency:
+  group: ash-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ash:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read          # no write, no id-token, no packages
+    steps:
+      - name: Harden runner (egress control)
+        # Start in audit mode to learn ASH's required endpoints, then flip to
+        # egress-policy: block with an allowlist once the audit is reviewed.
+        uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
+        with:
+          egress-policy: audit
+          disable-sudo: false
+
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+
+      - name: Run ASH (local mode, full tree)
+        # ASH pinned to the immutable commit SHA (== tag v3.2.6), consistent
+        # with .ash/ash.yaml, /xsecurity, and the pre-push hook.
+        #
+        # local mode (not container): this repo is not a root-level Python
+        # package, and ASH's container build runs `uv build` on the source,
+        # which fails on a non-Python project. local mode runs the Python
+        # scanners (bandit, semgrep, checkov, detect-secrets) directly; the
+        # non-Python scanners (cfn-nag, grype) report MISSING here and are a
+        # tracked coverage follow-up. fail_on_findings in .ash/ash.yaml makes a
+        # non-zero exit fail the gate.
+        run: |
+          uvx --from \
+            "git+https://github.com/awslabs/automated-security-helper@1dca6b3d10ff274115a159d869bdff8b98624b62" \
+            ash --mode local --source-dir . --output-dir ./.ash/ash_output
+
+      - name: Upload ASH results (SARIF + aggregated JSON + SBOM)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ash-results
+          path: |
+            .ash/ash_output/ash_aggregated_results.json
+            .ash/ash_output/reports/ash.sarif
+            .ash/ash_output/reports/ash.cdx.json
+            .ash/ash_output/reports/ash.summary.md
+          if-no-files-found: warn

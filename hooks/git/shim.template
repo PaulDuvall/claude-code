@@ -1,0 +1,17 @@
+#!/bin/sh
+# >>> claude-code-managed chained hook (logic: hooks/git/HOOKNAME) — do not edit
+# Installed by scripts/install-git-hooks.sh. Runs the tracked hook logic, then
+# chains any pre-existing hook preserved at HOOKNAME.chained (e.g. beads).
+REPO=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+HOOK_DIR=$(dirname "$0")
+TMP=$(mktemp 2>/dev/null) || TMP="${TMPDIR:-/tmp}/cc-hook.$$"
+cat > "$TMP"
+"$REPO/hooks/git/HOOKNAME" "$@" < "$TMP"
+rc=$?
+if [ "$rc" -ne 0 ]; then rm -f "$TMP"; exit "$rc"; fi
+if [ -x "$HOOK_DIR/HOOKNAME.chained" ]; then
+  "$HOOK_DIR/HOOKNAME.chained" "$@" < "$TMP"
+  rc=$?
+fi
+rm -f "$TMP"
+exit "$rc"

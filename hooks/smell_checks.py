@@ -221,7 +221,7 @@ def check_file(file_path: str, config: Config | None = None) -> list[Smell]:
     smells.extend(check_file_length(file_path, lines, config))
     smells.extend(check_duplicate_blocks(file_path, lines, config))
     smells.extend(_run_lang_checks(ext, file_path, source))
-    return filter_suppressed(smells, lines, "smell")
+    return filter_suppressed(smells, lines, "smell", file_path)
 
 
 def format_violations(file_path: str, smells: list[Smell]) -> str:

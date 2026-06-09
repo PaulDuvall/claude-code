@@ -45,7 +45,7 @@ def _run_checks(file_path: str, source: str, config: Config) -> list[Smell]:
     """Run applicable security checks on file contents."""
     lines = source.splitlines()
     smells = _collect_violations(file_path, source, lines, config)
-    return filter_suppressed(smells, lines, "security")
+    return filter_suppressed(smells, lines, "security", file_path)
 
 
 def _collect_violations(
