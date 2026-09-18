@@ -26,6 +26,11 @@ class InstallGuideTester {
     };
     this.testHome = process.env.TEST_HOME || process.env.HOME;
     this.originalHome = process.env.ORIGINAL_HOME || process.env.HOME;
+    // Someone following the guide runs it in one terminal, where a `cd`
+    // persists into every later command and section. Each command here runs in
+    // its own shell, so that has to be tracked explicitly or the guide is
+    // tested doing something no reader does.
+    this.currentDir = this.testHome;
   }
 
   /**
@@ -79,6 +84,9 @@ class InstallGuideTester {
   /**
    * Pre-setup phase: Prepare environment for testing scenario
    */
+  // NOTE: runPreSetup deliberately does NOT load. It is the first phase of a
+  // run, so it starts from an empty result set and its save resets the
+  // progress file, keeping a stale file from an earlier run out of this one.
   async runPreSetup() {
     console.log(`🔧 Pre-setup for scenario: ${this.scenario}`);
     
@@ -93,6 +101,13 @@ class InstallGuideTester {
       await this.ensureDirectory(path.join(this.testHome, '.claude'));
       await this.ensureDirectory(path.join(__dirname, 'test-results'));
       await this.ensureDirectory(path.join(__dirname, 'logs'));
+
+      // The guide's backup section runs `git commit`. HOME is redirected to an
+      // empty directory for isolation, which also hides the real user's
+      // ~/.gitconfig, so git has no identity and refuses to commit. Anyone
+      // actually following the guide has one configured; supply it here so the
+      // step tests the guide rather than the isolation.
+      this.ensureGitIdentity();
 
       // Scenario-specific setup
       switch (this.scenario) {
@@ -133,6 +148,11 @@ class InstallGuideTester {
    * Execute phase: Run all documentation steps
    */
   async runExecute() {
+    // Each phase runs as its own node process, so results only survive by way
+    // of the progress file. Without this load the phase starts from steps: []
+    // and saveResults() overwrites what the previous phase wrote.
+    await this.loadResults();
+
     if (!this.testSuite) {
       const loaded = await this.loadTestSuite();
       if (!loaded) {
@@ -192,6 +212,11 @@ class InstallGuideTester {
    */
   async runValidate() {
     console.log('✅ Validating installation results');
+
+    // Load first, for the reason in runExecute. This phase in particular used
+    // to discard every step the execute phase had just recorded, which is why
+    // a job with failing guide steps still reported "All tests passed!".
+    await this.loadResults();
 
     const validationStep = {
       name: 'Final Validation',
@@ -336,7 +361,8 @@ class InstallGuideTester {
           const commandResult = await this.executeCommand(command);
           stepResult.commands.push(commandResult);
           
-          if (commandResult.status === 'failed' && !command.allowFailure) {
+          if (commandResult.status === 'failed' &&
+              !commandResult.allowFailure && !command.allowFailure) {
             throw new Error(`Command failed: ${command.raw}`);
           }
         }
@@ -447,6 +473,48 @@ class InstallGuideTester {
         return commandResult;
       }
 
+      // `git push` in the guide follows `git remote add origin
+      // YOUR_REPOSITORY_URL`, a placeholder that is skipped above. With no
+      // remote there is nothing to push to and nothing to judge: a reader
+      // supplies their own repository here. Record it as skipped rather than
+      // failing the step on a command the test can never satisfy.
+      if (/^git push\b/.test(normalizedCommand.raw)) {
+        let remotes = '';
+        try {
+          remotes = require('child_process')
+            .execSync('git remote', { cwd: this.currentDir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })
+            .trim();
+        } catch (err) {
+          remotes = '';
+        }
+        if (!remotes) {
+          console.log(`      ⏭️  Skipping push with no remote configured: ${normalizedCommand.raw}`);
+          commandResult.status = 'skipped';
+          commandResult.reason = 'Depends on the skipped YOUR_REPOSITORY_URL placeholder';
+          return commandResult;
+        }
+      }
+
+      // `cd` in its own shell changes nothing. Apply it to the tracked
+      // directory so the commands after it run where the reader would be.
+      const cdMatch = normalizedCommand.raw.match(/^cd\s+([^&|;]+)$/);
+      if (cdMatch) {
+        const target = cdMatch[1].trim().replace(/^["']|["']$/g, '');
+        const resolved = target.startsWith('~')
+          ? path.join(this.testHome, target.slice(1))
+          : path.resolve(this.currentDir, target);
+
+        if (!fs.existsSync(resolved)) {
+          throw new Error(`cd: no such directory: ${resolved}`);
+        }
+        this.currentDir = resolved;
+        commandResult.status = 'passed';
+        commandResult.exitCode = 0;
+        commandResult.cwd = resolved;
+        console.log(`      📂 Working directory is now ${resolved}`);
+        return commandResult;
+      }
+
       // Mark commands that commonly fail in test environments as allowing failure
       if (normalizedCommand.raw.startsWith('pkill') || 
           normalizedCommand.raw.includes('mkdir') && normalizedCommand.raw.includes('customizations') ||
@@ -476,7 +544,12 @@ class InstallGuideTester {
       commandResult.exitCode = error.code || 1;
       
       console.log(`      ❌ Command failed: ${error.message}`);
-      
+
+      // executeStep decides whether the step survives, and it only sees what
+      // is returned here. The flag is set on the normalized copy above, so
+      // without this the step fails on a command already forgiven.
+      commandResult.allowFailure = normalizedCommand.allowFailure;
+
       if (!normalizedCommand.allowFailure) {
         throw error;
       } else {
@@ -580,7 +653,7 @@ class InstallGuideTester {
     const { stdout, stderr } = await execAsync(command.raw, {
       timeout: command.timeout || 120000,
       env,
-      cwd: this.testHome
+      cwd: this.currentDir
     });
 
     return { stdout, stderr };
@@ -598,7 +671,7 @@ class InstallGuideTester {
     const { stdout, stderr } = await execAsync(command.raw, {
       timeout: command.timeout || 10000,
       env,
-      cwd: this.testHome
+      cwd: this.currentDir
     });
 
     return { stdout, stderr };
@@ -962,6 +1035,22 @@ class InstallGuideTester {
   /**
    * Utility methods
    */
+  /**
+   * Give the isolated HOME a git identity, matching a real reader's machine.
+   */
+  ensureGitIdentity() {
+    const gitconfig = path.join(this.testHome, '.gitconfig');
+    if (fs.existsSync(gitconfig)) return;
+    fs.writeFileSync(gitconfig,
+      '[user]\n' +
+      '\tname = Install Guide Test\n' +
+      '\temail = install-guide-test@example.invalid\n' +
+      '[init]\n' +
+      '\tdefaultBranch = main\n',
+      'utf8');
+    console.log(`   🔑 Wrote a git identity to ${gitconfig}`);
+  }
+
   async ensureDirectory(dir) {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
