@@ -39,6 +39,38 @@ jobs:
           echo "Publishing $PACKAGE_NAME@$PACKAGE_VERSION with tag $TAG"
           npm publish --access public --tag "$TAG"
 
+      - name: Keep the prerelease dist-tag in sync
+        # Publishing an alpha under `latest` leaves `alpha` pointing at whatever
+        # it held before, which is how it ended up five versions stale. Point the
+        # prerelease identifier's tag at this release too, whatever tag was
+        # dispatched. npm accepts a publish before the version is queryable
+        # ("your package is being processed"), so wait for it rather than racing.
+        working-directory: claude-dev-toolkit
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          PRERELEASE_ID=$(node -p "(require('./package.json').version.match(/-([0-9a-z]+)\./) || [])[1] || ''")
+
+          if [ -z "$PRERELEASE_ID" ] || [ "$PRERELEASE_ID" = "$TAG" ]; then
+            echo "Nothing to sync (prerelease id: '${PRERELEASE_ID:-none}', dispatched tag: '$TAG')"
+            exit 0
+          fi
+
+          for attempt in $(seq 1 12); do
+            if npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version > /dev/null 2>&1; then
+              npm dist-tag add "$PACKAGE_NAME@$PACKAGE_VERSION" "$PRERELEASE_ID"
+              npm dist-tag ls "$PACKAGE_NAME"
+              exit 0
+            fi
+            echo "Waiting for $PACKAGE_VERSION to become queryable (attempt $attempt/12)..."
+            sleep 10
+          done
+
+          echo "::warning::$PACKAGE_VERSION was published but is still not queryable; '$PRERELEASE_ID' not moved. Run the NPM Dist-Tag workflow once it appears."
+
       - name: Summary
         working-directory: claude-dev-toolkit
         env:
