@@ -139,6 +139,31 @@ jobs:
         
         cd tests && npm install
 
+    - name: Verify required CLI tools
+      # Hard failure, not a warning. These four checks used to be
+      # `|| echo "⚠️ ..."`, so a CLI that was missing or could not start let the
+      # job continue and report green while every later phase ran against it.
+      # That is how the Node 18/20 engine mismatch stayed invisible:
+      # @anthropic-ai/claude-code declares engines.node >=22, npm installs it on
+      # an older runtime with only an EBADENGINE warning, and nothing here
+      # objected. Both tools are reported before exiting, so one run shows
+      # everything that is broken.
+      run: |
+        status=0
+        for cli in claude claude-commands; do
+          if ! command -v "$cli" >/dev/null 2>&1; then
+            echo "::error::$cli is not in PATH after npm install -g"
+            status=1
+            continue
+          fi
+          echo "$cli -> $(command -v "$cli")"
+          if ! "$cli" --version; then
+            echo "::error::$cli is installed but '$cli --version' failed"
+            status=1
+          fi
+        done
+        exit $status
+
     - name: Setup test environment
       run: |
         # Create clean test environment
@@ -153,13 +178,6 @@ jobs:
         # Store original npm global prefix before changing HOME
         ORIGINAL_NPM_PREFIX=$(npm config get prefix)
         echo "Original npm prefix: $ORIGINAL_NPM_PREFIX"
-        
-        # Verify required CLI tools are available before proceeding
-        echo "Checking required CLI tools..."
-        which claude || echo "⚠️ claude not found in PATH"
-        which claude-commands || echo "⚠️ claude-commands not found in PATH"
-        claude --version || echo "⚠️ claude --version failed"  
-        claude-commands --version || echo "⚠️ claude-commands --version failed"
         
         # Add original npm global bin to PATH for all subsequent steps
         echo "$ORIGINAL_NPM_PREFIX/bin" >> $GITHUB_PATH
@@ -313,6 +331,31 @@ jobs:
         npm install -g @paulduvall/claude-dev-toolkit
         
         cd tests && npm install
+
+    - name: Verify required CLI tools
+      # Hard failure, not a warning. These four checks used to be
+      # `|| echo "⚠️ ..."`, so a CLI that was missing or could not start let the
+      # job continue and report green while every later phase ran against it.
+      # That is how the Node 18/20 engine mismatch stayed invisible:
+      # @anthropic-ai/claude-code declares engines.node >=22, npm installs it on
+      # an older runtime with only an EBADENGINE warning, and nothing here
+      # objected. Both tools are reported before exiting, so one run shows
+      # everything that is broken.
+      run: |
+        status=0
+        for cli in claude claude-commands; do
+          if ! command -v "$cli" >/dev/null 2>&1; then
+            echo "::error::$cli is not in PATH after npm install -g"
+            status=1
+            continue
+          fi
+          echo "$cli -> $(command -v "$cli")"
+          if ! "$cli" --version; then
+            echo "::error::$cli is installed but '$cli --version' failed"
+            status=1
+          fi
+        done
+        exit $status
 
     - name: Setup customization test environment
       run: |
