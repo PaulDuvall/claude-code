@@ -13,6 +13,14 @@
 
 DECAY_SECONDS=180
 
+# No terminal to colour — a Claude Code tool shell, cron, CI — so there is
+# nothing to do. This has to be checked once, up front: every write below
+# redirects to /dev/tty, and a failed redirection is reported by the shell
+# itself before the command runs, so the 2>/dev/null on each one cannot
+# suppress it. Without this guard those turn into two "Device not configured"
+# lines on every invocation.
+{ : > /dev/tty; } 2>/dev/null || exit 0
+
 # Consume stdin (hook protocol sends JSON on stdin)
 cat > /dev/null
 

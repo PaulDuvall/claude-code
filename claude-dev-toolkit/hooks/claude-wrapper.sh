@@ -8,22 +8,33 @@
 # Mid-session colors (blue=working, green=done) are handled by Claude Code hooks.
 # See ~/.claude/settings.json and tab-color.sh
 
+# Exported so child shells inherit it. Claude Code snapshots shell functions into
+# the shells it runs tools in, but does not carry unexported variables — so this
+# function ran there with an empty CCDK_HOOKS_DIR and printed
+# "no such file or directory: /tab-color.sh" on every single claude invocation.
 CCDK_HOOKS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+export CCDK_HOOKS_DIR
 
 claude() {
-  # Set initial tab color to gray (idle, no prompt running yet)
-  "$CCDK_HOOKS_DIR/tab-color.sh" gray < /dev/null
+  # Resolved inside the function, with a fallback, so a snapshot that restores
+  # this definition without the variable still finds the script. Deliberately
+  # not a helper function: the snapshot may not carry that either.
+  local tab="${CCDK_HOOKS_DIR:-$HOME/Code/claude-code/hooks}/tab-color.sh"
+
+  # Colouring the tab is decoration. If the script is missing — moved checkout,
+  # lost variable — do nothing rather than fail loudly on a command run dozens
+  # of times a day.
+  [ -x "$tab" ] && "$tab" gray < /dev/null
 
   # Pass all args through to the real claude binary
   command claude "$@"
   local exit_code=$?
 
   if [ $exit_code -ne 0 ]; then
-    "$CCDK_HOOKS_DIR/tab-color.sh" red < /dev/null
+    [ -x "$tab" ] && "$tab" red < /dev/null
   fi
 
-  # Reset tab color to default
-  "$CCDK_HOOKS_DIR/tab-color.sh" reset < /dev/null
+  [ -x "$tab" ] && "$tab" reset < /dev/null
 
   return $exit_code
 }
