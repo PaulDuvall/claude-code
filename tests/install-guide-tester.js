@@ -79,6 +79,9 @@ class InstallGuideTester {
   /**
    * Pre-setup phase: Prepare environment for testing scenario
    */
+  // NOTE: runPreSetup deliberately does NOT load. It is the first phase of a
+  // run, so it starts from an empty result set and its save resets the
+  // progress file, keeping a stale file from an earlier run out of this one.
   async runPreSetup() {
     console.log(`🔧 Pre-setup for scenario: ${this.scenario}`);
     
@@ -133,6 +136,11 @@ class InstallGuideTester {
    * Execute phase: Run all documentation steps
    */
   async runExecute() {
+    // Each phase runs as its own node process, so results only survive by way
+    // of the progress file. Without this load the phase starts from steps: []
+    // and saveResults() overwrites what the previous phase wrote.
+    await this.loadResults();
+
     if (!this.testSuite) {
       const loaded = await this.loadTestSuite();
       if (!loaded) {
@@ -192,6 +200,11 @@ class InstallGuideTester {
    */
   async runValidate() {
     console.log('✅ Validating installation results');
+
+    // Load first, for the reason in runExecute. This phase in particular used
+    // to discard every step the execute phase had just recorded, which is why
+    // a job with failing guide steps still reported "All tests passed!".
+    await this.loadResults();
 
     const validationStep = {
       name: 'Final Validation',
