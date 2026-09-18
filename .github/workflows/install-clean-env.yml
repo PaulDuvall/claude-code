@@ -14,6 +14,11 @@ on:
       - 'claude-dev-toolkit/**'
       - 'hooks/**'
       - 'scripts/**'
+      # The push filter above watches this file but the pull_request one did
+      # not, so a change to this workflow was only ever exercised after it had
+      # already merged. Changing the Node matrix in a PR produced no Clean
+      # install run at all.
+      - '.github/workflows/install-clean-env.yml'
   workflow_dispatch:
 
 # Feature coverage: 15/20 (75%)
@@ -28,7 +33,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        node: ["18", "20"]
+        node: ["22", "24"]
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
