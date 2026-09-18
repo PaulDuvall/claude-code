@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PACKAGE_NAME="claude-dev-toolkit"
+PACKAGE_NAME="@paulduvall/claude-dev-toolkit"
 PUBLIC_REGISTRY="https://registry.npmjs.org"
 
 # Cleanup function for rollback
@@ -54,7 +54,7 @@ echo -e "${BLUE}📝 Step 2: Configuring for Public NPM Registry...${NC}"
 cp package.json package.json.backup
 
 # Update package.json for public registry
-cat package.json | jq '.name = "claude-dev-toolkit"' > package.json.tmp
+cat package.json | jq '.name = "@paulduvall/claude-dev-toolkit"' > package.json.tmp
 mv package.json.tmp package.json
 
 # Add publishConfig for public registry
@@ -139,15 +139,15 @@ if npm publish --registry=$PUBLIC_REGISTRY; then
     echo -e "${GREEN}🎉 Successfully published to Public NPM Registry!${NC}"
     echo
     echo "📦 Package Details:"
-    echo "  Name: claude-dev-toolkit"
+    echo "  Name: @paulduvall/claude-dev-toolkit"
     echo "  Registry: $PUBLIC_REGISTRY"
     echo "  Version: $PACKAGE_VERSION"
     echo
     echo "🔗 NPM Package URL:"
-    echo "  https://www.npmjs.com/package/claude-dev-toolkit"
+    echo "  https://www.npmjs.com/package/@paulduvall/claude-dev-toolkit"
     echo
     echo "📥 Installation Command:"
-    echo "  npm install claude-dev-toolkit"
+    echo "  npm install @paulduvall/claude-dev-toolkit"
     echo
     
     # Create and push git tag for this release

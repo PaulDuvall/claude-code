@@ -32,7 +32,7 @@
 #### REQ-001: NPM Package Structure
 **Priority:** High
 WHEN the npm package is built
-THE SYSTEM SHALL create an npm package named "claude-dev-toolkit" with a standardized directory structure including bin/, lib/, commands/, templates/, hooks/, and configuration files
+THE SYSTEM SHALL create an npm package named "@paulduvall/claude-dev-toolkit" with a standardized directory structure including bin/, lib/, commands/, templates/, hooks/, and configuration files
 **Rationale:** Provides organized, maintainable package structure following npm best practices
 **Acceptance Criteria:** Package contains all required directories and follows npm package conventions
 
@@ -54,7 +54,7 @@ THE SYSTEM SHALL make the "claude-commands" CLI globally accessible via the bin/
 
 #### REQ-004: Global NPM Installation
 **Priority:** High
-WHEN the user runs "npm install -g claude-dev-toolkit"
+WHEN the user runs "npm install -g @paulduvall/claude-dev-toolkit"
 THE SYSTEM SHALL install the package globally and make the claude-commands CLI available
 **Rationale:** Provides standard npm installation experience
 **Acceptance Criteria:** Package installs successfully and CLI is available in PATH
@@ -135,7 +135,7 @@ THE SYSTEM SHALL apply the specified configuration template to existing settings
 
 #### REQ-015: Package Updates
 **Priority:** Medium
-WHEN the user runs "npm update claude-dev-toolkit"
+WHEN the user runs "npm update @paulduvall/claude-dev-toolkit"
 THE SYSTEM SHALL update the package while preserving user configuration, installed commands, and any user-created custom commands not part of the package
 **Rationale:** Provides standard npm update mechanism while protecting user customizations
 **Acceptance Criteria:** Update completes successfully without data loss, preserving all user-created content
@@ -474,7 +474,7 @@ THE SYSTEM SHALL publish the package to the public NPM registry with proper vers
 
 ### Scenario 1: First-Time User Installation
 **Given:** A developer who has never used Claude Code or the toolkit
-**When:** They run `npm install -g claude-dev-toolkit`
+**When:** They run `npm install -g @paulduvall/claude-dev-toolkit`
 **Then:** 
 - The package installs successfully within 30 seconds
 - Post-install wizard guides them through setup

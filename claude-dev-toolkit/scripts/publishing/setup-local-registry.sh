@@ -122,7 +122,7 @@ if npm publish --registry $REGISTRY_URL; then
     echo "  Version: $(cat package.json | jq -r '.version')"
     echo
     echo "🧪 Testing Installation:"
-    echo "  npm install claude-dev-toolkit --registry=$REGISTRY_URL"
+    echo "  npm install @paulduvall/claude-dev-toolkit --registry=$REGISTRY_URL"
     echo
     echo "🌐 Registry Dashboard:"
     echo "  Open: $REGISTRY_URL"
@@ -130,7 +130,7 @@ if npm publish --registry $REGISTRY_URL; then
     echo -e "${BLUE}📋 Commands for Testing:${NC}"
     echo
     echo "# Test global installation:"
-    echo "npm install -g claude-dev-toolkit --registry=$REGISTRY_URL"
+    echo "npm install -g @paulduvall/claude-dev-toolkit --registry=$REGISTRY_URL"
     echo
     echo "# Test CLI availability:"
     echo "claude-commands --help"

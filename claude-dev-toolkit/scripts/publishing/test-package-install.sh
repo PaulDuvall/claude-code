@@ -16,7 +16,7 @@ TEST_DIR="/tmp/claude-package-test-$$"
 # Cleanup function
 cleanup() {
     echo -e "${YELLOW}🧹 Cleaning up...${NC}"
-    npm uninstall -g claude-dev-toolkit 2>/dev/null || true
+    npm uninstall -g @paulduvall/claude-dev-toolkit 2>/dev/null || true
     rm -rf "$TEST_DIR" 2>/dev/null || true
 }
 
