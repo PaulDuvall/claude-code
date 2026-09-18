@@ -143,7 +143,7 @@ npm config get registry
 ## 📊 Monitoring
 
 After publication, monitor:
-- NPM package page: https://www.npmjs.com/package/claude-dev-toolkit
+- NPM package page: https://www.npmjs.com/package/@paulduvall/claude-dev-toolkit
 - Download statistics
 - GitHub issues and feedback
 - Security advisories

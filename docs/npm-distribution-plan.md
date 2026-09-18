@@ -2,7 +2,7 @@
 
 ## Overview
 
-Transform the existing Claude Code Custom Commands repository into an npm package that provides a streamlined installation experience. Instead of manual git cloning and script execution, users will be able to install with a simple `npm install -g claude-dev-toolkit` command.
+Transform the existing Claude Code Custom Commands repository into an npm package that provides a streamlined installation experience. Instead of manual git cloning and script execution, users will be able to install with a simple `npm install -g @paulduvall/claude-dev-toolkit` command.
 
 ## Current State Analysis
 
@@ -52,7 +52,7 @@ claude-dev-toolkit/
 
 ```json
 {
-  "name": "claude-dev-toolkit",
+  "name": "@paulduvall/claude-dev-toolkit",
   "version": "1.0.0",
   "description": "58 AI-powered custom commands for Claude Code - Transform your development workflow",
   "main": "lib/index.js",
@@ -152,7 +152,7 @@ claude-commands config --help
 ### 1. Global NPM Installation
 
 ```bash
-npm install -g claude-dev-toolkit
+npm install -g @paulduvall/claude-dev-toolkit
 ```
 
 ### 2. Automatic Post-Install Process
@@ -330,7 +330,7 @@ try {
 
 **For New Users:**
 ```bash
-npm install -g claude-dev-toolkit
+npm install -g @paulduvall/claude-dev-toolkit
 # Automatic setup via post-install
 ```
 
@@ -338,10 +338,10 @@ npm install -g claude-dev-toolkit
 ```bash
 # Option 1: Clean install
 claude-commands uninstall  # Remove existing setup
-npm install -g claude-dev-toolkit
+npm install -g @paulduvall/claude-dev-toolkit
 
 # Option 2: Migrate in place
-npm install -g claude-dev-toolkit
+npm install -g @paulduvall/claude-dev-toolkit
 claude-commands migrate     # Detect and preserve existing configuration
 ```
 
@@ -357,7 +357,7 @@ claude-commands migrate     # Detect and preserve existing configuration
 - No easy uninstall
 
 **After (NPM Installation):**
-- 1-step installation: `npm install -g claude-dev-toolkit`
+- 1-step installation: `npm install -g @paulduvall/claude-dev-toolkit`
 - Automatic dependency validation
 - Interactive setup wizard
 - Standard npm update/uninstall

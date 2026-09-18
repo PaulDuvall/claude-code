@@ -34,7 +34,7 @@ Perfect for **complete isolation** and **rapid iteration**.
 ./setup-local-registry.sh
 
 # Test installation
-npm install -g claude-dev-toolkit --registry=http://localhost:4873
+npm install -g @paulduvall/claude-dev-toolkit --registry=http://localhost:4873
 
 # Test CLI
 claude-commands --help
@@ -131,7 +131,7 @@ Share this with testers:
 ### Scenario 1: First-Time User
 ```bash
 # Simulate brand new user
-npm install -g claude-dev-toolkit
+npm install -g @paulduvall/claude-dev-toolkit
 
 # What they'll try first:
 claude-commands
@@ -148,7 +148,7 @@ claude-commands list
 ```bash
 # Install in project
 cd my-project
-npm install claude-dev-toolkit
+npm install @paulduvall/claude-dev-toolkit
 npx claude-commands list
 ```
 

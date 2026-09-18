@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PACKAGE_NAME="claude-dev-toolkit"
+PACKAGE_NAME="@paulduvall/claude-dev-toolkit"
 GITHUB_REPO="PaulDuvall/claude-code"
 REGISTRY_URL="https://npm.pkg.github.com"
 

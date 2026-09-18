@@ -33,7 +33,7 @@ If you prefer to run each step manually:
 
 ### 1. Clean Environment
 ```bash
-npm uninstall -g claude-dev-toolkit 2>/dev/null || true
+npm uninstall -g @paulduvall/claude-dev-toolkit 2>/dev/null || true
 rm -rf ~/claude-toolkit-test
 rm -rf ~/.claude/commands/ ~/.claude/hooks/
 npm cache clean --force
@@ -188,7 +188,7 @@ npm run test:req018
 ```bash
 ./scripts/publishing/setup-local-registry.sh
 npm publish --registry http://localhost:4873
-npm install -g claude-dev-toolkit --registry http://localhost:4873
+npm install -g @paulduvall/claude-dev-toolkit --registry http://localhost:4873
 ```
 
 ### Using NPM Pack

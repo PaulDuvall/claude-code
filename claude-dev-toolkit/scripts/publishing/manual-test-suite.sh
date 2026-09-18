@@ -60,7 +60,7 @@ echo "🗑️  Step 1: Environment Cleanup"
 echo "--------------------------------"
 
 log_info "Removing existing installations"
-npm uninstall -g claude-dev-toolkit 2>/dev/null || true
+npm uninstall -g @paulduvall/claude-dev-toolkit 2>/dev/null || true
 rm -rf ~/claude-toolkit-test 2>/dev/null || true
 rm -rf ~/.claude/commands/ ~/.claude/hooks/ 2>/dev/null || true
 npm cache clean --force > /dev/null 2>&1

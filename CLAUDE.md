@@ -282,7 +282,7 @@ bash scripts/sync-to-npm.sh
 cd claude-dev-toolkit && npm test
 
 # Install globally from npm
-npm install -g claude-dev-toolkit
+npm install -g @paulduvall/claude-dev-toolkit
 
 # Use the CLI
 claude-commands install
