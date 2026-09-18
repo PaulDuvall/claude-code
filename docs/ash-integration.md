@@ -120,13 +120,48 @@ version control and reviewed in the PR that introduces them:
 3. **TRACKED** — real but out-of-scope-to-fix-now work is suppressed with a
    reason that **references a Beads task** and an **`expiration`** date that
    forces re-review (e.g. the GitHub Actions hardening tracked in
-   `claude-code-0qi`, expiring `2026-09-01`).
+   `claude-code-0qi`, expiring `2026-12-01`).
 
 Rules of thumb: prefer FIX over SUPPRESS; scope suppressions to the narrowest
 `path` + `rule_id` that covers the false positive; give accepted-risk and
 tracked suppressions an `expiration` so they cannot rot; secrets findings are
 suppressed only after confirming each is a non-secret (the inline Tier 0/1
 hooks keep real secrets non-suppressible regardless).
+
+### Expirations are enforced, and they fail closed loudly
+
+An `expiration` is validated by ASH at config load, and the validation is
+all-or-nothing: **one lapsed date rejects the entire `.ash/ash.yaml`**, and ASH
+falls back to its built-in defaults. That discards every suppression *and* every
+`ignore_path` in the file, not just the expired entry, so the scan reports the
+full set of triaged false positives as actionable. This happened on
+`2026-09-01`: two lapsed dates turned a green gate into 149 findings with no
+code change behind them, and the cause was one line in the scan log:
+
+```
+YYYY-MM-DD: expiration date must be in the future
+WARNING  Using default configuration due to validation error
+```
+
+`hooks/check_ash_expirations.py` runs as the first real step of the Tier 3
+workflow, before ASH, so that failure mode is reported as itself:
+
+- **fails** the job when any expiration has lapsed, is today, or is malformed,
+  annotating the exact file and line;
+- **warns** without failing when an expiration is within 14 days, so renewal is
+  a deliberate choice rather than a morning surprise.
+
+Run it locally the same way CI does:
+
+```bash
+python3 hooks/check_ash_expirations.py               # default: warn at 14 days
+python3 hooks/check_ash_expirations.py --warn-days 45
+python3 hooks/check_ash_expirations.py --fail-days 7 # treat 7 days out as red
+```
+
+Renewing a date is not the default answer. An expiration exists to force the
+FIX; extend it only with a reason, and re-check whether the tracked work can
+land instead.
 
 Note on local vs CI for secrets: ASH's `detect-secrets` plugin runs in CI but
 no-ops in local `--mode local` on some machines (the tool runs in an isolated
