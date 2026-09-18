@@ -35,6 +35,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
+      - name: Check ASH suppression expirations
+        # Runs BEFORE ASH. A lapsed `expiration` in .ash/ash.yaml makes ASH
+        # reject the whole config and scan with defaults, which drops every
+        # suppression and ignore_path and buries the cause under ~149 triaged
+        # false positives. Fail here instead, naming the date and the line.
+        # Warns (non-blocking) 14 days out so renewal is a decision, not a
+        # morning surprise. Stdlib only; no setup-python step needed.
+        run: python3 hooks/check_ash_expirations.py
+
       - name: Install uv
         uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
 
