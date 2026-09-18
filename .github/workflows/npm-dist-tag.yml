@@ -1,0 +1,63 @@
+name: NPM Dist-Tag
+
+# Moves a published dist-tag without republishing. The publish workflow only
+# moves the tag it is dispatched with, so a prerelease tag drifts whenever a
+# release goes out under a different one: `alpha` sat on 0.0.1-alpha.16 while
+# `latest` had moved five versions past it.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Published version the tag should point at (e.g. 0.0.1-alpha.22)'
+        required: true
+        type: string
+      tag:
+        description: 'dist-tag to move'
+        required: true
+        default: 'alpha'
+        type: choice
+        options:
+          - alpha
+          - beta
+          - next
+          - latest
+
+permissions:
+  contents: read
+
+jobs:
+  dist-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Move the dist-tag
+        working-directory: claude-dev-toolkit
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          VERSION: ${{ inputs.version }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+
+          # A tag pointing at an unpublished version is worse than a stale one,
+          # so confirm the version exists before moving anything.
+          if ! npm view "$PACKAGE_NAME@$VERSION" version > /dev/null 2>&1; then
+            echo "::error::$PACKAGE_NAME@$VERSION is not published; refusing to move '$TAG'"
+            exit 1
+          fi
+
+          echo "Before:"
+          npm dist-tag ls "$PACKAGE_NAME"
+
+          npm dist-tag add "$PACKAGE_NAME@$VERSION" "$TAG"
+
+          echo "After:"
+          npm dist-tag ls "$PACKAGE_NAME"
