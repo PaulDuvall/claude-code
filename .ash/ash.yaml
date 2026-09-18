@@ -60,14 +60,20 @@ global_settings:
       reason: >-
         False positive. IFS=$'\n\t' is the standard bash strict-mode idiom
         (set -euo pipefail), a hardening measure, not IFS tampering.
+    # NOTE ON `expiration`: ASH validates every expiration date at config load
+    # and rejects the WHOLE file if any one of them is in the past, falling back
+    # to its built-in defaults. That silently discards every suppression and
+    # ignore_path above, not just the expired entry, and the scan then reports
+    # ~149 triaged false positives as actionable. Renew these before the date or
+    # land the hardening; never let one lapse.
     - path: .github/workflows/**
       rule_id: CKV2_GHA_1
       reason: GitHub Actions least-privilege permissions hardening tracked in bd claude-code-0qi.
-      expiration: "2026-09-01"
+      expiration: "2026-12-01"
     - path: .github/workflows/**
       rule_id: CKV_GHA_7
       reason: GitHub Actions hardening tracked in bd claude-code-0qi.
-      expiration: "2026-09-01"
+      expiration: "2026-12-01"
     # --- detect-secrets: all confirmed false positives (see docs/ash-integration.md
     # "Findings triage policy"). Scoped as narrowly as practical, never repo-wide. ---
     - path: "**/*.md"
