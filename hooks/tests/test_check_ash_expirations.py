@@ -11,6 +11,17 @@ from check_ash_expirations import check, main
 TODAY = date(2026, 9, 18)
 
 
+@pytest.fixture(autouse=True)
+def plain_output(monkeypatch):
+    """Pin the output format to the non-CI form.
+
+    ``_annotate`` switches on ``GITHUB_ACTIONS``, which the pytest-hooks job
+    sets, so tests that assert on plain text would pass locally and fail in CI.
+    Each test opts into the annotation form explicitly instead.
+    """
+    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
+
+
 def _config(tmp_path, body: str) -> str:
     path = tmp_path / "ash.yaml"
     path.write_text(body, encoding="utf-8")
