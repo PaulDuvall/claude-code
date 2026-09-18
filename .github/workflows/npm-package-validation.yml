@@ -16,7 +16,7 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [18, 20, 22]
+        node-version: [22, 24]
     
     defaults:
       run:
@@ -151,7 +151,7 @@ jobs:
         echo "All file categories populated"
 
     - name: Upload package artifact
-      if: matrix.node-version == '20'  # Only upload once
+      if: matrix.node-version == 22  # Only upload once
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: claude-dev-toolkit-package
