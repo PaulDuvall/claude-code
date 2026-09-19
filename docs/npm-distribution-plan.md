@@ -25,7 +25,7 @@ The repository contains:
 
 ## Proposed NPM Package Structure
 
-### Main Package: `claude-dev-toolkit`
+### Main Package: `@paulduvall/claude-dev-toolkit`
 
 ```
 claude-dev-toolkit/

@@ -1,5 +1,18 @@
 # MECE Compliance Analysis: Claude Code Custom Commands
 
+> **Historical analysis, superseded. Do not read as current.**
+>
+> This report was produced on 2026-03-21 against a repository that had
+> **62 commands (16 active + 46 experimental)**, **9 hooks**, and **12 lib
+> modules**. The project has since consolidated on the npm package. As of
+> 2026-09-19 the repository has **45 commands (17 active + 28 experimental)**,
+> **11 shell + 18 Python hooks**, and **15 lib modules**, so every count,
+> gap, and overlap below describes a structure that no longer exists.
+>
+> Kept for the reasoning and the MECE method, not the numbers. Current
+> inventory: [CLAUDE.md](../../CLAUDE.md) and [hooks/README.md](../../hooks/README.md).
+
+
 **Analysis Date:** March 21, 2026
 **Total Commands Analyzed:** 62 (16 Active + 46 Experimental)
 **Status:** MECE Violations Detected - Multiple Critical Overlaps and Gaps Identified

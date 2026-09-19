@@ -14,7 +14,14 @@ thorough only as the blast radius grows.
 | 0 on-write | PostToolUse Write/Edit | <300ms | the one file just written | inline Python hooks (smells + secrets) only |
 | 1 pre-commit | `git commit` | <5s | staged files | single-file `checkov` on staged IaC, secrets on staged |
 | 2 pre-push | `git push` | <30s | push range | `ash --mode precommit` on changed files |
-| 3 CI | PR / push to main | minutes | full tree | `ash --mode container`, all scanners, SARIF upload |
+| 3 CI | PR / push to main | minutes | full tree | `ash --mode local`, Python scanners, SARIF upload |
+
+**Why `local` and not `container` at Tier 3:** ASH's container build runs
+`uv build` on the source, which fails here because this repo is not a
+root-level Python package. `local` mode runs the Python scanners (bandit,
+semgrep, checkov, detect-secrets) directly. The non-Python scanners (cfn-nag,
+grype) report MISSING in CI and are a tracked coverage follow-up -- the tier
+table above describes reach, not a claim that every bundled scanner runs.
 
 Each tier is a **superset** of the prior tier's coverage. Tiers 0–2 are
 file-scoped; cross-file and cross-resource analysis (e.g. a security group defined
@@ -69,7 +76,7 @@ The numbers — not the table above — decide tier placement.
 | `ash --mode precommit`, **warm** (1-file change) | **9.9s** | under the 30s Tier-2 budget, but a ~10s fixed floor |
 | `ash --mode precommit`, **warm** (zero matching input) | **9.7s** | ASH pays the floor even with nothing to scan → **applicability MUST be gated at the wrapper** (don't invoke ASH unless a code/IaC scanner applies). Confirms applicability rule 6. |
 | `ash --mode precommit --scanners checkov` (warm) | **9.8s** | scoping to one scanner does **not** reduce the floor — the ~10s is ASH orchestration, not scanner count |
-| `ash --mode container` (full tree) | *CI-only* | needs a container runtime; measured by the first Tier 3 CI run (Docker is present on the runner) |
+| `ash --mode container` (full tree) | *not used* | ASH's container build runs `uv build` on the source and fails on this non-Python-package repo; Tier 3 runs `--mode local` instead |
 
 **Why checkov is Tier 1, not Tier 0:** the single-file run is ~1.5s, roughly 5×
 the 300ms on-write budget. Per the integration's own escape clause, the IaC check
@@ -98,7 +105,7 @@ precommit` on the changed files":
    re-checked by the CI container — so it does **not** pay the ASH floor and the
    pre-push exits silently.
 
-The container figure is authoritative from CI, where Docker is present by default.
+Tier 3 timings are authoritative from CI, which runs `ash --mode local`.
 
 ## Findings triage policy
 
