@@ -83,7 +83,7 @@ claude-dev-toolkit/
     "fs-extra": "^11.1.0"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=22.0.0"
   },
   "files": [
     "bin/",
