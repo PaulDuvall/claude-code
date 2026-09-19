@@ -47,6 +47,7 @@ claude-code/
 │   ├── npm-distribution-plan.md       # NPM distribution strategy
 │   ├── npm-package-guide.md           # Published package information
 │   ├── subagent-hook-integration.md   # Subagent integration docs
+│   ├── analysis/                      # Historical MECE reports (superseded, dated)
 │   ├── npm-only/                      # NPM consolidation migration guides
 │   ├── plans/                         # Implementation plans
 │   └── publish/                       # Blog articles
@@ -69,7 +70,9 @@ claude-code/
 │   ├── prepush_checks.py             # Tier 2 pre-push: ASH on push range
 │   ├── check_ash_expirations.py      # Tier 3 CI: ASH suppression expiry guard
 │   ├── [12 more *.py]                # Supporting scan modules (see hooks/README.md)
+│   ├── settings.example.json         # Claude Code hook wiring to merge into settings.json
 │   ├── git/                           # Tracked git hook logic (pre-commit, pre-push)
+│   ├── tests/                         # pytest suite for the Python hooks
 │   └── lib/                           # Hook support libraries (15 shell modules + 1 config)
 │       ├── hook-helpers.sh           # Shared helpers for standalone hooks
 │       ├── config-constants.sh        # Configuration constants
