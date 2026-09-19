@@ -72,25 +72,38 @@ This directory contains security and workflow hooks for Claude Code that provide
 - `SECURITY_WEBHOOK_URL`: Optional Slack/Teams webhook for security alerts
 - `CLAUDE_SECURITY_OVERRIDE`: Emergency override (use with extreme caution)
 
-### Lifecycle & Event Hooks
+### Python Hooks
 
-The following hooks provide logging, validation, and cleanup at various Claude Code lifecycle events. All are non-blocking and log to `~/.claude/logs/`.
+The scanning hooks are Python, stdlib-only, and Python 3.9 compatible, so they
+run in a pre-push hook and in CI without a virtualenv. Wiring for the three that
+bind to Claude Code events is in
+[`settings.example.json`](settings.example.json).
 
 | Hook | Event | Purpose |
 |------|-------|---------|
-| `backup-before-edit.sh` | PreToolUse (Edit/Write) | Preserves file state before modifications |
-| `audit-bash-commands.sh` | PreToolUse (Bash) | Logs shell commands for security audit trail |
-| `log-all-operations.sh` | PostToolUse (*) | Audit trail for all tool usage |
-| `validate-changes.sh` | PostToolUse (Edit/Write) | Post-edit validation of changes |
-| `handle-notifications.sh` | Notification | Security event notification logging |
-| `prompt-analysis.sh` | UserPromptSubmit | Validates prompts for security concerns |
-| `prompt-security-scan.sh` | UserPromptSubmit | Scans prompts for credential exposure risks |
-| `cleanup-on-stop.sh` | Stop | Cleans temporary state on execution stop |
-| `subagent-cleanup.sh` | SubagentStop | Cleans subagent resources on completion |
-| `session-cleanup.sh` | SessionEnd | End-of-session security cleanup |
-| `pre-compact-backup.sh` | PreCompact | Checkpoint before context compaction |
-| `session-init.sh` | SessionStart | Validates environment at session start |
-| `security-session-init.sh` | SessionStart | Enhanced security posture validation |
+| `check-complexity.py` | PostToolUse (Write/Edit) | Code smell detection on the file just written |
+| `check-security.py` | PostToolUse (Write/Edit) | Security violations in the file just written |
+| `check-commit-signing.py` | PreToolUse (Bash) | Verifies GPG/SSH commit signing before `git commit` |
+| `precommit_checks.py` | git pre-commit (Tier 1) | Secrets on staged files (always blocks) + IaC when `uvx` is present |
+| `prepush_checks.py` | git pre-push (Tier 2) | ASH in precommit mode, scoped to the push range |
+| `check_ash_expirations.py` | CI (Tier 3) | Fails when an `.ash/ash.yaml` suppression expiration has lapsed; also runnable by hand |
+
+Supporting modules, not wired to events directly: `config.py`, `scan_router.py`,
+`suppression.py`, `security_checks.py`, `security_bandit.py`,
+`security_secrets.py`, `security_trojan.py`, `smell_checks.py`,
+`smell_python.py`, `smell_javascript.py`, `smell_ruff.py`, `smell_types.py`.
+
+See [ASH tiered security integration](https://github.com/PaulDuvall/claude-code/blob/main/docs/ash-integration.md)
+for how Tiers 0-3 fit together. (Absolute URL: this file is also shipped
+inside the npm package, where a relative path out of `hooks/` does not resolve.)
+
+### Terminal & Session Hooks
+
+| Hook | Event | Purpose |
+|------|-------|---------|
+| `tab-color.sh` | UserPromptSubmit / Stop | Colors the terminal tab by state (`blue` working, `green` done) |
+| `statusline.sh` | statusLine | Renders the Claude Code status line |
+| `claude-wrapper.sh` | shell profile | Sourced from `~/.zshrc`; wraps the `claude` entry point |
 
 ### Quality & Workflow Hooks
 
