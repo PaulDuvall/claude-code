@@ -30,7 +30,7 @@ THE SYSTEM SHALL create a new OIDC command in claude-dev-toolkit to provide comp
 
 ### Dependencies
 - **Required Tools**: AWS CLI, GitHub CLI (validated via `lib/dependency-validator.js`)
-- **Node.js**: 14+ (inherited from claude-dev-toolkit requirements)
+- **Node.js**: 22+ (inherited from claude-dev-toolkit `engines.node`)
 - **Platform**: Unix-like systems (Linux/macOS) and Windows with WSL
 
 ## Functional Requirements - EARS Format

@@ -56,7 +56,7 @@ claude-commands status
 - [ ] **Command Functionality**
   - [ ] `claude-commands list` shows available commands
   - [ ] `claude-commands status` provides useful information
-  - [ ] `claude-commands validate` works correctly
+  - [ ] `claude-commands verify` reports installation health
   
 - [ ] **Error Handling**
   - [ ] Invalid commands show helpful error messages

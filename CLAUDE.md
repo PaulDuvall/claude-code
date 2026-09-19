@@ -38,6 +38,7 @@ claude-code/
 │   ├── templates/                     # Synced template copies for npm
 │   └── tests/                         # NPM package tests
 ├── docs/                              # Documentation directory
+│   ├── ash-integration.md             # ASH tiered security integration
 │   ├── claude-custom-commands.md      # Command reference guide
 │   ├── claude-code-hooks-system.md    # Hooks architecture documentation
 │   ├── debug-context.md              # Debug context management
@@ -49,7 +50,7 @@ claude-code/
 │   ├── npm-only/                      # NPM consolidation migration guides
 │   ├── plans/                         # Implementation plans
 │   └── publish/                       # Blog articles
-├── hooks/                             # Hook implementations (10 shell + 14 Python)
+├── hooks/                             # Hook implementations (11 shell + 18 Python)
 │   ├── file-logger.sh                # File operation logging
 │   ├── on-error-debug.sh             # Error debugging hook
 │   ├── pre-commit-quality.sh         # Pre-commit quality checks
@@ -59,7 +60,16 @@ claude-code/
 │   ├── subagent-trigger.sh           # Subagent trigger hook (--simple for lightweight mode)
 │   ├── tab-color.sh                  # Terminal tab colorization
 │   ├── verify-before-edit.sh         # Warn about fabricated references
+│   ├── statusline.sh                 # Status line (model, dir, context usage)
 │   ├── claude-wrapper.sh             # Claude wrapper script
+│   ├── check-complexity.py           # PostToolUse code smell detection
+│   ├── check-security.py             # PostToolUse security violations
+│   ├── check-commit-signing.py       # PreToolUse GPG/SSH signing check
+│   ├── precommit_checks.py           # Tier 1 pre-commit: secrets + IaC
+│   ├── prepush_checks.py             # Tier 2 pre-push: ASH on push range
+│   ├── check_ash_expirations.py      # Tier 3 CI: ASH suppression expiry guard
+│   ├── [12 more *.py]                # Supporting scan modules (see hooks/README.md)
+│   ├── git/                           # Tracked git hook logic (pre-commit, pre-push)
 │   └── lib/                           # Hook support libraries (15 shell modules + 1 config)
 │       ├── hook-helpers.sh           # Shared helpers for standalone hooks
 │       ├── config-constants.sh        # Configuration constants
@@ -84,6 +94,10 @@ claude-code/
 │   ├── deploy-subagents.sh          # Subagent deployment
 │   ├── generate-command-docs.sh     # Auto-generate command docs
 │   ├── setup-hooks.sh               # Hook installation script
+│   ├── install-git-hooks.sh         # Install chained git pre-commit/pre-push shims
+│   ├── wire-settings.py             # Merge hook config into ~/.claude/settings.json
+│   ├── setup-github-actions-iam.py  # GitHub Actions IAM setup
+│   ├── testing/                     # Test support scripts
 │   ├── setup-npm-ssm.sh             # NPM SSM parameter setup
 │   ├── beads-orchestrator.sh        # Beads task orchestration
 │   ├── update-subagent-settings.py  # Settings updater
@@ -135,7 +149,7 @@ claude-code/
 │   └── subagent-hooks.yaml           # Subagent hook definitions
 └── tests/                             # Test suites (shell + JS)
     ├── run-all-tests.sh              # Test runner script
-    ├── test_*.sh                     # 25 shell-based test files for hooks/lib
+    ├── test_*.sh                     # 26 shell-based test files for hooks/lib
     ├── validate-settings-templates.js # Settings template validation
     ├── validate-documentation-accuracy.js # Documentation accuracy checks
     ├── install-guide-tester.js       # Install guide testing

@@ -20,7 +20,7 @@
 
 ## Assumptions and Dependencies
 - Claude Code is installed via `npm install -g @anthropic-ai/claude-code`
-- Node.js version 16.0.0 or higher is available
+- Node.js version 22.0.0 or higher is available
 - System has bash, jq, curl, and git installed
 - User has write permissions to `~/.claude/` directory
 - NPM registry access is available
@@ -391,7 +391,7 @@ THE SYSTEM SHALL create a local package tarball using `npm pack` and test global
 
 #### REQ-042: Multi-Environment Testing Framework
 **Priority:** Medium
-THE SYSTEM SHALL provide Docker-based testing environments for validating package installation across multiple Node.js versions (16, 18, 20+) and operating systems (Linux amd64, Linux arm64, macOS, Windows)
+THE SYSTEM SHALL provide Docker-based testing environments for validating package installation across multiple Node.js versions (22, 24) and operating systems (Linux amd64, Linux arm64, macOS, Windows)
 **Rationale:** Ensures cross-platform compatibility and prevents platform-specific installation failures
 **Acceptance Criteria:** Automated tests run in isolated environments for each supported platform and Node.js version, reporting success/failure for each combination
 

@@ -144,7 +144,7 @@ jobs:
 ```yaml
 generate-docs:
   stage: docs
-  image: node:20
+  image: node:22
   variables:
     ANTHROPIC_API_KEY: $ANTHROPIC_API_KEY
   script:

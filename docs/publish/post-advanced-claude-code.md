@@ -376,69 +376,32 @@ This hook is safe for any environment and helps you understand how hooks integra
 
 ## Four Scripts That Do The Heavy Lifting
 
-### [setup.sh](https://github.com/PaulDuvall/claude-code/blob/main/setup.sh) - One-Command Setup
+> **Superseded (2026-09).** This section described four shell scripts at the
+> repository root: `setup.sh`, `configure-claude-code.sh`, `deploy.sh`, and
+> `verify-setup.sh`. All four were removed when the project consolidated on the
+> npm package, so the links that pointed at them now 404. The article is kept as
+> written; this note records what replaced them.
+
+| Removed script | Replacement |
+|---|---|
+| `setup.sh` | `claude-commands setup` |
+| `configure-claude-code.sh` | `claude-commands configure` (its `--help` still names the script it replaced) |
+| `deploy.sh` | `claude-commands install` (`--active`, `--experiments`, `--all`, `--include`, `--exclude`, `--dry-run`) |
+| `verify-setup.sh` | `claude-commands verify` |
+
 ```bash
-./setup.sh                          # Basic
-./setup.sh --setup-type demo        # With demo hooks
-./setup.sh --setup-type comprehensive  # Advanced governance
+npm install -g @paulduvall/claude-dev-toolkit
+
+claude-commands setup --dry-run     # preview; setup is non-interactive
+claude-commands install --all       # what deploy.sh --all did
+claude-commands verify              # what verify-setup.sh did
+claude-commands --help              # full subcommand list
 ```
 
-### [configure-claude-code.sh](https://github.com/PaulDuvall/claude-code/blob/main/configure-claude-code.sh) - Configuration Automation
-```bash
-./configure-claude-code.sh --help                    # Comprehensive help
-./configure-claude-code.sh --dry-run                 # Preview changes
-./configure-claude-code.sh --os linux --ide vscode  # Cross-platform setup
-./configure-claude-code.sh                           # Apply with backups
-```
-
-**Expands on [Patrick Debois' original examples](https://gist.github.com/jedi4ever/762ca6746ef22b064550ad7c04f3bd2f) with:**
-- **Modern authentication** - Defaults to web-based auth (no API key required)
-- **Cross-platform support** - Works on macOS and Linux with multiple IDEs
-- **Comprehensive help** - Built-in documentation and usage examples
-- **Claude configuration** - Sets up `.claude.json` with trust settings and theme
-- **MCP server setup** - Configures Docker-based servers (if Docker available)
-- **Multi-IDE support** - Installs extensions for Windsurf, VSCode, or Cursor
-- **Maintainable architecture** - Modular design for easy updates and testing
-- **Security permissions** - Restricts file access and creates backups
-
-### [deploy.sh](https://github.com/PaulDuvall/claude-code/blob/main/deploy.sh) - Smart Deployment
-
-**Deployment Options:**
-- `--experiments` - Deploy experimental commands
-- `--all` - Deploy both active and experimental commands  
-- `--include <cmd>` - Deploy specific commands only
-- `--exclude <cmd>` - Exclude specific commands
-- `--dry-run` - Preview deployment without changes
-- `--list` - List available commands
-- `--remove` - Remove all x-prefixed commands
-- `--reset` - Remove commands and reset environment
-
-**Examples:**
-```bash
-./deploy.sh --dry-run --all          # Preview all deployments
-./deploy.sh --include xtest xquality  # Deploy specific commands
-./deploy.sh --exclude xdebug         # Deploy all except xdebug
-./deploy.sh --list                   # See available commands
-```
-
-### [verify-setup.sh](https://github.com/PaulDuvall/claude-code/blob/main/verify-setup.sh) - Comprehensive Diagnostics
-```bash
-./verify-setup.sh                   # Complete system validation (18 checks)
-```
-
-**Validates your complete setup with 18 comprehensive checks:**
-- **Prerequisites** - Claude Code, Node.js, npm installation and compatibility
-- **Authentication** - API key format validation or web-based auth confirmation
-- **Configuration** - ~/.claude.json validity, trust settings, file permissions (600/700)
-- **Security** - Environment credential exposure, file permissions, settings integrity
-- **Custom Commands** - Deployment status, command format validation, accessibility
-- **Security Hooks** - Installation status and functionality
-- **Development Environment** - Git integration, Docker support for MCP servers
-- **System Health** - Disk space, backup system status, functionality testing
-
-This catches issues before they become problems and gives you confidence everything is properly configured.
-
-These scripts aren't just proof-of-concepts—they include dry-run modes, create backups automatically, and handle edge cases you'll encounter in daily use.
+The dry-run modes and automatic backups the original scripts had carried over:
+`setup`, `install`, and `configure` all take `--dry-run`, and `install` takes
+`--backup`. See [the package guide](../npm-package-guide.md) for the current
+surface.
 
 ## A Day in the Life: Building a New Feature
 
