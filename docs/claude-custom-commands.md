@@ -1,9 +1,21 @@
 # Claude Custom Commands Reference
 
-> **Source of truth for command descriptions:** `slash-commands/active/*.md` and `slash-commands/experiments/*.md`.
-> This document provides extended usage examples and workflow guidance.
+> **Source of truth for command descriptions:** `slash-commands/active/*.md` and
+> `slash-commands/experiments/*.md`. The Command Index below is generated from
+> their frontmatter; this document adds extended usage and workflow guidance.
+>
+> **Scope:** the 45 commands in this repository (17 active, 28 experimental).
+> Earlier versions of this guide documented a 62-command set. The 23 commands
+> that were dropped in the npm consolidation -- among them `/xred`, `/xgreen`,
+> `/xcommit`, `/xgenerate`, `/xsetup`, `/xanalyze`, `/xvalidate`,
+> `/xmonitoring`, `/xobservable` and `/xsandbox` -- are gone from this project
+> and from this document. Where one of them named a workflow step, the step now
+> uses the command that does the job here (`/xtdd` covers Red and Green;
+> `/xgit` covers commit).
 
-This document describes custom Claude commands for development projects implementing SpecDriven AI methodology. All commands support machine-readable specifications with authority levels, dual coverage tracking, and Test-Driven Development workflows.
+This document describes custom Claude commands for development projects
+implementing SpecDriven AI methodology, with machine-readable specifications,
+authority levels, dual coverage tracking, and TDD workflows.
 
 ## Core Concepts
 
@@ -62,84 +74,86 @@ This document describes custom Claude commands for development projects implemen
 ### Most Common Commands
 | Task | Command | Example |
 |------|---------|---------|
-| Read specification | `/xspec --read <id>` | `/xspec --read cli1a` |
-| Start TDD cycle | `/xtdd --red <spec-id>` | `/xtdd --red cli1a` |
-| Write failing test | `/xred --spec <id>` | `/xred --spec cli1a` |
-| Implement code | `/xgreen --minimal` | `/xgreen --minimal` |
-| Run tests | `/xtest --spec` | `/xtest --spec` |
-| Check quality | `/xquality --all` | `/xquality --all` |
-| Commit with trace | `/xcommit --tdd <id>` | `/xcommit --tdd cli1a` |
-| Auto add/commit/push | `/xgit` | `/xgit` |
-| Setup environment | `/xsetup --env` | `/xsetup --env` |
+| Explore before changing | `/xexplore <topic>` | `/xexplore auth flow` |
+| Write a specification | `/xspec --feature <name>` | `/xspec --feature user-auth` |
+| Run a full TDD cycle | `/xtdd --component <name>` | `/xtdd --component AuthService` |
+| Run tests | `/xtest` | `/xtest --coverage` |
+| Check quality | `/xquality` | `/xquality --fix` |
+| Scan for vulnerabilities | `/xsecurity` | `/xsecurity --report` |
+| Verify claims and references | `/xverify` | `/xverify` |
+| Stage, commit, and push | `/xgit` | `/xgit` |
+| Find the right command | `/xhelp <task>` | `/xhelp deploy to staging` |
 
-
-### Essential TDD Workflow
+### Essential Development Workflow
 ```bash
-/xspec --read <spec-id>    # 1. Read requirement
-/xred --spec <spec-id>     # 2. Write failing test  
-/xgreen --minimal          # 3. Make test pass
-/xquality --all           # 4. Ensure quality
-/xcommit --tdd <spec-id>  # 5. Commit with traceability
+/xexplore <topic>            # 1. Understand the code before changing it
+/xspec --feature <name>      # 2. Capture the requirement
+/xtdd --component <name>     # 3. Red -> Green -> Refactor
+/xquality                    # 4. Lint, types, formatting
+/xsecurity                   # 5. Vulnerability and secret scan
+/xgit                        # 6. Commit with a generated message
 ```
+
+`/xtdd` runs the full Red-Green-Refactor-Commit cycle. This repository has no
+separate `/xred` or `/xgreen` command; the phases live inside `/xtdd`.
+
 
 ## Command Index
 
-| Command | Purpose | Section |
-|---------|---------|---------|
-| `/xanalyze` | Analyze code structure and find issues | [Debugging & Analysis](#debugging--analysis) |
-| `/xarchitecture` | Design and validate system architecture | [Architecture & Design](#architecture--design) |
-| `/xatomic` | Break large tasks into manageable pieces | [Task Planning & Decomposition](#task-planning--decomposition) |
-| `/xaws` | Work with AWS services and credentials | [AWS/IAM Development](#awsiam-development) |
-| `/xcommit` | Create commits linked to specifications | [Commit & Version Control](#commit--version-control) |
-| `/xcompliance` | Check project compliance with standards | [Security & Compliance](#security--compliance) |
-| `/xconfig` | Manage project configuration files | [Environment & Configuration](#environment--configuration) |
-| `/xconstraints` | Define and enforce coding constraints | [Governance & Rules](#governance--rules) |
-| `/xcoverage` | Generate and analyze test coverage reports | [Testing & Quality](#testing--quality) |
-| `/xdebug` | Debug issues and trace problems to specs | [Debugging & Analysis](#debugging--analysis) |
-| `/xdesign` | Apply design patterns and best practices | [Architecture & Design](#architecture--design) |
-| `/xdocs` | Generate documentation from code and specs | [Documentation & Reporting](#documentation--reporting) |
-| `/xfootnote` | Manage specification reference IDs | [Specification Management](#specification-management) |
-| `/xgenerate` | Auto-generate code, tests, and docs | [AI-Assisted Generation](#ai-assisted-generation) |
-| `/xgovernance` | Manage development policies and audits | [Governance & Rules](#governance--rules) |
-| `/xgreen` | Write minimal code to make tests pass | [TDD Cycle Management](#tdd-cycle-management) |
-| `/xiac` | Manage infrastructure code and IAM | [AWS/IAM Development](#awsiam-development) |
-| `/xmaturity` | Assess development process maturity | [AI Readiness & Maturity](#ai-readiness--maturity) |
-| `/xmonitoring` | Monitor development process health | [Observable Development](#observable-development) |
-| `/xobservable` | Get insights into development patterns | [Observable Development](#observable-development) |
-| `/xoptimize` | Find and apply performance improvements | [Performance & Optimization](#performance--optimization) |
-| `/xperformance` | Profile and benchmark application performance | [Performance & Optimization](#performance--optimization) |
-| `/xplanning` | Create roadmaps and estimate effort | [Task Planning & Decomposition](#task-planning--decomposition) |
-| `/xpolicy` | Generate and validate IAM policies | [AWS/IAM Development](#awsiam-development) |
-| `/xquality` | Run code quality checks and formatting | [Testing & Quality](#testing--quality) |
-| `/xreadiness` | Assess AI development readiness | [AI Readiness & Maturity](#ai-readiness--maturity) |
-| `/xred` | Write failing tests for new features | [TDD Cycle Management](#tdd-cycle-management) |
-| `/xrisk` | Identify and mitigate project risks | [Governance & Rules](#governance--rules) |
-| `/xrules` | Define coding rules and check compliance | [Governance & Rules](#governance--rules) |
-| `/xsandbox` | Create secure development environments | [Security & Compliance](#security--compliance) |
-| `/xscan` | Scan repository for specific patterns | [Debugging & Analysis](#debugging--analysis) |
-| `/xsecurity` | Run security scans and vulnerability checks | [Security & Compliance](#security--compliance) |
-| `/xsetup` | Set up development environment | [Environment & Configuration](#environment--configuration) |
-| `/xspec` | Read and manage project specifications | [Specification Management](#specification-management) |
-| `/xtdd` | Complete test-driven development cycles | [TDD Cycle Management](#tdd-cycle-management) |
-| `/xtemplate` | Generate code templates and boilerplate | [AI-Assisted Generation](#ai-assisted-generation) |
-| `/xtest` | Run tests with various options | [Testing & Quality](#testing--quality) |
-| `/xvalidate` | Validate project completeness and quality | [Documentation & Reporting](#documentation--reporting) |
-| `/xgit` | Auto stage, commit, and push changes | [Commit & Version Control](#commit--version-control) |
-| `/xanalytics` | Business and performance analytics | [Analytics & Business Intelligence](#analytics--business-intelligence) |
-| `/xapi` | API design and management | [API Management](#api-management) |
-| `/xdb` | Database management and operations | [Database Management](#database-management) |
-| `/xincident` | Incident response and management | [Incident Management](#incident-management) |
-| `/xinfra` | Infrastructure and operations | [Infrastructure Management](#infrastructure-management) |
-| `/xknowledge` | Knowledge and team management | [Knowledge Management](#knowledge-management) |
-| `/xpipeline` | Configure build and deployment pipelines | [CI/CD Pipeline Management](#cicd-pipeline-management) |
-| `/xproduct` | Product management and strategy | [Product Management](#product-management) |
-| `/xrefactor` | Get suggestions to improve code quality | [Architecture & Design](#architecture--design) |
-| `/xrelease` | Release management and coordination | [Release Management](#release-management) |
-| `/xux` | User experience and frontend | [User Experience](#user-experience) |
-| `/xevaluate` | Comprehensive evaluation and assessment | [Evaluation & Assessment](#evaluation--assessment) |
-| `/xmetrics` | Development metrics and analytics | [Development Metrics](#development-metrics) |
-| `/xtrace` | SpecDriven AI traceability analysis | [Traceability Analysis](#traceability-analysis) |
-| `/xworkflow` | Workflow management and automation | [Workflow Management](#workflow-management) |
+All 45 commands in this repository, generated from the `description` field of
+each command's frontmatter. `active` commands are production-ready and install
+by default; `experimental` commands install with `--experiments` or `--all`.
+
+Commands whose "Details" column reads *source* work, but have no extended
+usage section in this guide yet -- their own file is the reference.
+
+| Command | Description | Status | Details |
+|---------|-------------|--------|---------|
+| `/xact` | Local GitHub Actions testing with nektos/act for rapid development feedback | experimental | [source](../slash-commands/experiments/xact.md) |
+| `/xapi` | Design, implement, test, and document APIs with comprehensive automation and best practices | experimental | [Advanced Development](#advanced-development) |
+| `/xarchitecture` | Design, analyze, and evolve system architecture using Domain-Driven Design, 12-Factor App, and proven patterns | active | [Advanced Development](#advanced-development) |
+| `/xatomic` | Break complex tasks into 4-8 hour atomic units for efficient development workflow | experimental | [AI-Assisted Development](#ai-assisted-development) |
+| `/xaws` | AWS integration for credentials, services, and IAM testing with moto mocking | experimental | [Advanced Development](#advanced-development) |
+| `/xbaseline` | Establish and track quality, performance, and security baselines with regression detection | experimental | [source](../slash-commands/experiments/xbaseline.md) |
+| `/xchoice` | Generate multiple implementation options with trade-off analysis for informed decision-making | experimental | [source](../slash-commands/experiments/xchoice.md) |
+| `/xcompliance` | Check project compliance with standards and generate audit documentation | experimental | [Advanced Development](#advanced-development) |
+| `/xconfig` | Manage project configuration files, environment variables, and application settings | active | [Project Management](#project-management) |
+| `/xcontinue` | Continue an execution plan from where it left off across sessions | active | [source](../slash-commands/active/xcontinue.md) |
+| `/xcoverage` | Comprehensive dual coverage analysis for code and specifications | experimental | [Core Development Workflow](#core-development-workflow) |
+| `/xdb` | Comprehensive database management, migrations, and performance operations | experimental | [Advanced Development](#advanced-development) |
+| `/xdebug` | Interactive debugging support with error analysis and fix suggestions - integrates with Debug Specialist sub-agent for complex issues | active | [Project Management](#project-management) |
+| `/xdevcontainer` | Set up Anthropic's official devcontainer for running Claude Code with --dangerously-skip-permissions safely | experimental | [source](../slash-commands/experiments/xdevcontainer.md) |
+| `/xdocs` | Generate and maintain comprehensive documentation from code | active | [Project Management](#project-management) |
+| `/xexplore` | Explore a codebase topic before making changes (read-only) | active | [source](../slash-commands/active/xexplore.md) |
+| `/xgit` | Automate git workflow - stage, commit with smart messages, and push to specified branch | active | [Core Development Workflow](#core-development-workflow) |
+| `/xgovernance` | Comprehensive development governance framework for policies, audits, and compliance | experimental | [Project Management](#project-management) |
+| `/xhelp` | Command navigator that recommends the right slash commands for your task | active | [source](../slash-commands/active/xhelp.md) |
+| `/xiac` | Comprehensive Infrastructure as Code management with focus on AWS IAM, Terraform, CloudFormation, and infrastructure validation | experimental | [Advanced Development](#advanced-development) |
+| `/ximagespec` | Generate specifications and code from visual artifacts — diagrams, mockups, and screenshots | experimental | [source](../slash-commands/experiments/ximagespec.md) |
+| `/xincident` | Incident response automation, post-mortem analysis, and system reliability improvement through SpecDriven AI methodology | experimental | [Advanced Development](#advanced-development) |
+| `/xinfra` | Manage infrastructure operations, container orchestration, cloud resources, and deployment automation | experimental | [Advanced Development](#advanced-development) |
+| `/xknowledge` | Manage organizational knowledge, facilitate team onboarding, and create training materials with SpecDriven AI methodology | experimental | [Advanced Development](#advanced-development) |
+| `/xmaturity` | Assess and improve team's development maturity with actionable insights | experimental | [AI-Assisted Development](#ai-assisted-development) |
+| `/xmetrics` | Advanced metrics collection and analysis for development process optimization and SpecDriven AI insights | experimental | [Operations & Management (Extended)](#operations--management-extended) |
+| `/xmultirepo` | Coordinate changes across multiple repositories with parallel agent orchestration | experimental | [source](../slash-commands/experiments/xmultirepo.md) |
+| `/xnew` | Initialize a new project with comprehensive CLAUDE.md and specification framework | experimental | [source](../slash-commands/experiments/xnew.md) |
+| `/xoidc` | Automate AWS OIDC role creation for GitHub Actions with local policy discovery | experimental | [source](../slash-commands/experiments/xoidc.md) |
+| `/xpipeline` | Advanced CI/CD pipeline configuration, build automation, deployment orchestration, and optimization | active | [Advanced Development](#advanced-development) |
+| `/xplanning` | AI-assisted project planning with roadmaps, estimation, and risk analysis | experimental | [AI-Assisted Development](#ai-assisted-development) |
+| `/xpolicy` | Generate, validate, and test IAM policies with automated policy creation and best practices enforcement | experimental | [Advanced Development](#advanced-development) |
+| `/xproduct` | Product management and strategic planning tools for feature development and product lifecycle management | experimental | [Advanced Development](#advanced-development) |
+| `/xquality` | Run code quality checks with maturity-aware thresholds and centralized-rules integration | active | [Core Development Workflow](#core-development-workflow) |
+| `/xrefactor` | Interactive refactoring assistant based on Martin Fowler's catalog and project-specific rules for code smell detection | active | [Advanced Development](#advanced-development) |
+| `/xrelease` | Comprehensive release management with planning, coordination, deployment automation, and monitoring | active | [Advanced Development](#advanced-development) |
+| `/xrisk` | Comprehensive risk assessment and mitigation across technical, security, and operational domains | experimental | [Project Management](#project-management) |
+| `/xsecurity` | Run security scans via AWS Automated Security Helper (ASH) with maturity-aware thresholds and centralized-rules integration | active | [Advanced Development](#advanced-development) |
+| `/xspec` | Machine-readable specifications with unique identifiers and authority levels for precise AI code generation | active | [Core Development Workflow](#core-development-workflow) |
+| `/xstakeholder-updates` | Generate stakeholder update emails from recently completed tasks in any supported issue tracker | experimental | [source](../slash-commands/experiments/xstakeholder-updates.md) |
+| `/xtdd` | Complete Test-Driven Development workflow automation with Red-Green-Refactor-Commit cycle | active | [Core Development Workflow](#core-development-workflow) |
+| `/xtest` | Run tests with smart defaults, maturity-aware thresholds, and centralized-rules integration | active | [Core Development Workflow](#core-development-workflow) |
+| `/xtrace` | Comprehensive traceability tracking and analysis for SpecDriven AI development with end-to-end requirement tracking | experimental | [Operations & Management (Extended)](#operations--management-extended) |
+| `/xux` | User experience optimization, frontend testing, and accessibility compliance with SpecDriven AI methodology integration | experimental | [Advanced Development](#advanced-development) |
+| `/xverify` | Verify references before taking action — catch fabricated URLs, placeholder IDs, and unverified claims | active | [source](../slash-commands/active/xverify.md) |
 
 ---
 
@@ -178,23 +192,6 @@ Machine-readable specifications with unique identifiers and authority levels for
 - **Traceability**: Every test links to specific specification ID
 - **Dual Coverage**: Both code coverage and specification coverage tracked
 
-#### `/xfootnote` - Track Machine-Readable Requirement Links
-Find and manage links between requirements and their implementations using SpecDriven AI methodology.
-
-```bash
-/xfootnote --find <id>       # Find requirement by footnote ID (e.g., cli1a)
-/xfootnote --next <component> # Generate next available ID with proper format
-/xfootnote --trace <id>      # Show tests implementing requirement
-/xfootnote --validate <id>   # Validate footnote ID format (^[a-z]{3}[0-9][a-z])
-/xfootnote --authority <id>  # Show authority level for specification
-/xfootnote --coverage <id>   # Check dual coverage (code + specification)
-```
-
-**Dual Coverage Tracking:**
-- **Code Coverage**: Lines of code executed by tests
-- **Specification Coverage**: All specifications have corresponding tests
-- **Traceability**: Every test links back to specific specification ID
-
 ### TDD Cycle Management
 
 #### `/xtdd` - Run Complete TDD Workflow
@@ -205,18 +202,6 @@ Automate the full Red-Green-Refactor-Commit cycle for any feature.
 /xtdd --green                # Implement minimal passing code
 /xtdd --refactor             # Improve code, keep tests green
 /xtdd --commit <spec-id>     # Commit with spec reference
-```
-
-#### `/xred` - Write Failing Tests First
-```bash
-/xred --spec <spec-id>       # Create test for specific requirement
-/xred --component <name>     # Create test for new component
-```
-
-#### `/xgreen` - Make Tests Pass
-```bash
-/xgreen --minimal            # Implement just enough to pass
-/xgreen --check              # Verify tests pass
 ```
 
 ### Testing & Quality
@@ -256,28 +241,6 @@ Automate the full Red-Green-Refactor-Commit cycle for any feature.
 - **Traceability Coverage**: Percentage of tests linked to specifications
 
 ### Commit & Version Control
-
-#### `/xcommit` - SpecDriven AI Commits with Traceability
-```bash
-/xcommit --tdd <spec-id>     # Commit TDD cycle with footnote reference
-/xcommit --message <spec-id> # Generate commit message with spec traceability
-/xcommit --trace             # Include full traceability info
-/xcommit --authority <spec-id> # Include authority level in commit
-/xcommit --coverage <spec-id>  # Include coverage metrics in commit message
-```
-
-**SpecDriven AI Commit Format:**
-```
-feat: implement [requirement] via TDD (^cli1a)
-
-- Add failing test for [specific behavior]
-- Implement minimal code to pass test
-- Authority: developer
-- Specification Coverage: 95%
-- Code Coverage: 87%
-
-Implements: specs/specifications/cli-interface.md#{#cli1a authority=developer}
-```
 
 #### `/xgit` - Git Workflow Automation
 Automates the complete git workflow: stages all changes, generates smart commit messages, commits, and pushes.
@@ -346,14 +309,6 @@ Implements: specs/specifications/cli-interface.md#{#cli1a authority=developer}
 /xarchitecture --evolve      # Guide evolution
 ```
 
-#### `/xdesign` - Design Patterns
-```bash
-/xdesign --patterns <domain> # Suggest domain patterns
-/xdesign --principles        # Review principles
-/xdesign --refactor <component> # Refactoring guidance
-/xdesign --best-practices    # Show best practices
-```
-
 #### `/xrefactor` - Code Refactoring Guidance
 ```bash
 /xrefactor --analyze <file>   # Detect code smells and anti-patterns
@@ -365,23 +320,6 @@ Implements: specs/specifications/cli-interface.md#{#cli1a authority=developer}
 
 ### Performance & Optimization
 
-#### `/xperformance` - Performance Analysis
-```bash
-/xperformance --profile <component> # Profile performance
-/xperformance --benchmark    # Run benchmarks
-/xperformance --optimize     # Get optimizations
-/xperformance --monitor      # Monitor metrics
-/xperformance --report       # Generate report
-```
-
-#### `/xoptimize` - Code Optimization
-```bash
-/xoptimize --code <component> # Optimize code
-/xoptimize --process <workflow> # Optimize workflow
-/xoptimize --dependencies   # Optimize dependencies
-/xoptimize --resources       # Optimize resources
-```
-
 ### Security & Compliance
 
 #### `/xsecurity` - Security Analysis
@@ -391,15 +329,6 @@ Implements: specs/specifications/cli-interface.md#{#cli1a authority=developer}
 /xsecurity --dependencies    # Analyze dependencies
 /xsecurity --policies        # Validate policies
 /xsecurity --report          # Generate report
-```
-
-#### `/xsandbox` - Security Sandbox
-```bash
-/xsandbox --create           # Create secure environment
-/xsandbox --isolate          # Isolate development
-/xsandbox --validate         # Check security
-/xsandbox --monitor          # Monitor activity
-/xsandbox --cleanup          # Clean up resources
 ```
 
 #### `/xcompliance` - Compliance Management
@@ -459,16 +388,6 @@ Implements: specs/specifications/cli-interface.md#{#cli1a authority=developer}
 ```
 
 ### Analytics & Business Intelligence
-
-#### `/xanalytics` - Business & Performance Analytics
-```bash
-/xanalytics --business       # Business metrics tracking
-/xanalytics --users          # User behavior analysis
-/xanalytics --performance    # Performance analytics
-/xanalytics --custom <metric> # Custom metrics implementation
-/xanalytics --reports        # Custom reporting generation
-/xanalytics --predictions    # Predictive analytics
-```
 
 ### CI/CD Pipeline Management
 
@@ -542,15 +461,6 @@ Implements: specs/specifications/cli-interface.md#{#cli1a authority=developer}
 
 ### AI Readiness & Maturity
 
-#### `/xreadiness` - AI Development Readiness
-```bash
-/xreadiness --assess         # Run assessment
-/xreadiness --baseline       # Establish metrics
-/xreadiness --capabilities   # Assess capabilities
-/xreadiness --gaps           # Identify gaps
-/xreadiness --report         # Generate report
-```
-
 #### `/xmaturity` - Development Maturity
 ```bash
 /xmaturity --level           # Check maturity level
@@ -583,55 +493,11 @@ Breaks complex tasks into 4-8 hour units.
 
 ### Observable Development
 
-#### `/xobservable` - Development Observability
-```bash
-/xobservable --trace <operation> # Trace operations
-/xobservable --metrics       # View dashboard
-/xobservable --insights      # Get insights
-/xobservable --patterns      # Analyze patterns
-/xobservable --optimize      # Get suggestions
-```
-
-#### `/xmonitoring` - Process Monitoring
-```bash
-/xmonitoring --health        # Check health
-/xmonitoring --performance   # Monitor performance
-/xmonitoring --alerts        # Manage alerts
-/xmonitoring --dashboard     # View dashboard
-/xmonitoring --trends        # Analyze trends
-```
-
 ### AI-Assisted Generation
-
-#### `/xgenerate` - Code Generation
-```bash
-/xgenerate --test <spec-id>  # Generate test from spec
-/xgenerate --code <test>     # Generate passing code
-/xgenerate --schema <model>  # Generate Pydantic schema
-/xgenerate --docs <component> # Generate documentation
-/xgenerate --config <template> # Generate configuration
-```
-
-#### `/xtemplate` - Template Generation
-```bash
-/xtemplate --spec <type>     # Specification template
-/xtemplate --test <pattern>  # Test pattern
-/xtemplate --component <type> # Component template
-/xtemplate --workflow <pattern> # Workflow pattern
-```
-
----
 
 ## Project Management
 
 ### Environment & Configuration
-
-#### `/xsetup` - Environment Setup
-```bash
-/xsetup --env                # Run complete setup
-/xsetup --deps               # Install dependencies
-/xsetup --python             # Set up Python 3.11+
-```
 
 #### `/xconfig` - Configuration Management
 ```bash
@@ -649,13 +515,6 @@ Breaks complex tasks into 4-8 hour units.
 /xdocs --coverage            # Generate coverage docs
 ```
 
-#### `/xvalidate` - Project Validation
-```bash
-/xvalidate --compliance      # Check compliance
-/xvalidate --traceability    # Verify traceability
-/xvalidate --coverage        # Validate coverage
-```
-
 ### Debugging & Analysis
 
 #### `/xdebug` - Debugging Assistance
@@ -665,30 +524,7 @@ Breaks complex tasks into 4-8 hour units.
 /xdebug --policy <role>      # Debug policy generation
 ```
 
-#### `/xanalyze` - Code Analysis
-```bash
-/xanalyze --structure        # Check structure
-/xanalyze --types            # Verify type safety
-/xanalyze --patterns         # Analyze patterns
-```
-
-#### `/xscan` - Repository Scanning
-```bash
-/xscan --roles               # Find IAM roles
-/xscan --files               # Find IaC files
-/xscan --issues              # Identify issues
-```
-
 ### Governance & Rules
-
-#### `/xrules` - Rules as Code
-```bash
-/xrules --define <rule>      # Define new rule
-/xrules --validate           # Check compliance
-/xrules --enforce            # Apply rules
-/xrules --report             # Generate report
-/xrules --update <rule>      # Update rule
-```
 
 #### `/xgovernance` - Development Governance
 ```bash
@@ -696,14 +532,6 @@ Breaks complex tasks into 4-8 hour units.
 /xgovernance --audit         # Run audit
 /xgovernance --compliance    # Check compliance
 /xgovernance --controls      # Manage controls
-```
-
-#### `/xconstraints` - Constraint Management
-```bash
-/xconstraints --define <constraint> # Define constraint
-/xconstraints --enforce      # Enforce constraints
-/xconstraints --validate     # Check compliance
-/xconstraints --optimize     # Optimize constraints
 ```
 
 #### `/xrisk` - Risk Assessment
@@ -720,23 +548,6 @@ Breaks complex tasks into 4-8 hour units.
 ## Operations & Management (Extended)
 
 ### Evaluation & Assessment
-
-#### `/xevaluate` - Comprehensive Evaluation and Assessment
-Comprehensive evaluation and assessment tools for code quality, project health, and development practices.
-
-```bash
-/xevaluate --quality         # Assess code quality
-/xevaluate --project         # Evaluate project health
-/xevaluate --team            # Team performance assessment
-/xevaluate --process         # Process effectiveness evaluation
-/xevaluate --report          # Generate evaluation reports
-```
-
-**Quality Assessment:**
-- **Code Quality**: Maintainability, reliability, performance, security
-- **Project Health**: Delivery predictability, technical debt, risk exposure
-- **Team Performance**: Velocity, collaboration, learning metrics
-- **Process Effectiveness**: Cycle time, efficiency, continuous improvement
 
 ### Development Metrics
 
@@ -778,92 +589,63 @@ Comprehensive traceability tracking and analysis for SpecDriven AI development w
 
 ### Workflow Management
 
-#### `/xworkflow` - Workflow Management and Automation
-Automate and optimize development workflows with configurable automation patterns.
-
-```bash
-/xworkflow --create <name>   # Create new workflow
-/xworkflow --run <workflow>  # Execute workflow
-/xworkflow --list            # List workflows
-/xworkflow --optimize        # Optimize workflows
-/xworkflow --monitor         # Monitor execution
-```
-
-**Predefined Workflows:**
-- **Feature Development**: Complete feature development cycle
-- **TDD Cycle**: Automated Red-Green-Refactor workflow
-- **Quality Gate**: Pre-commit quality validation
-- **Deployment**: Environment-specific deployment workflow
-
----
-
 ## Workflow Examples
 
 ### Complete Feature Development
 
-**Prerequisites:** Environment setup complete, specifications available
+**Prerequisites:** Repository checked out, tests runnable
 
-#### Phase 1: Planning and Setup
+#### Phase 1: Understand and plan
 ```bash
-# Decompose feature into atomic tasks (4-8 hour units)
+# Read the relevant code before changing it (read-only)
+/xexplore authentication
+# Expected: Map of the files, entry points, and tests that touch auth
+
+# Break the work into 4-8 hour units
 /xatomic --decompose "implement user authentication"
-# Expected: 3-5 atomic tasks with dependencies identified
+# Expected: Atomic tasks with acceptance criteria and dependencies
 
-# Generate development roadmap
+# Sequence them
 /xplanning --roadmap
-# Expected: Prioritized task list with time estimates
-
-# Create secure development environment
-/xsandbox --create
-# Expected: Isolated environment ready for development
+# Expected: Prioritized task list with effort estimates
 ```
 
-#### Phase 2: Specification-Driven Development
+#### Phase 2: Specify and build
 ```bash
-# Read the specific requirement
-/xspec --read auth2c
-# Expected: Clear requirement definition with acceptance criteria
+# Capture the requirement as a machine-readable spec
+/xspec --feature user-auth
+# Expected: Spec file with an ID and authority level
 
-# Generate test from specification
-/xgenerate --test auth2c
-# Expected: Test file created in specs/tests/
-
-# Create failing test (Red phase)
-/xred --spec auth2c
-# Expected: Test fails as expected, proves requirement gap
+# Run the Red-Green-Refactor-Commit cycle
+/xtdd --component AuthService
+# Expected: Failing test, minimal implementation, refactor, commit
 ```
 
-#### Phase 3: Implementation (Green phase)
+#### Phase 3: Gate and commit
 ```bash
-# Implement minimal code to pass test
-/xgreen --minimal
-# Expected: Test passes, code coverage increases
+# Lint, types, formatting
+/xquality --fix
+# Expected: All quality checks pass
 
-# Enforce project constraints
-/xconstraints --enforce
-# Expected: No constraint violations
+# Smell and duplication pass
+/xrefactor --smell
+# Expected: Candidates listed with Fowler refactorings named
 
-# Run all quality checks
-/xquality --all
-# Expected: All checks pass (mypy, ruff, formatting)
+# Vulnerability and secret scan
+/xsecurity --report
+# Expected: Findings by severity, or a clean report
+
+# Catch fabricated references before they ship
+/xverify
+# Expected: No unverified URLs, IDs, or claims
+
+# Stage, generate a message, push
+/xgit
+# Expected: Commit pushed to the current branch
 ```
 
-#### Phase 4: Optimization and Commit
-```bash
-# Profile performance if needed
-/xperformance --profile authentication
-# Expected: Performance baseline established
-
-# Get optimization suggestions
-/xoptimize --code authentication
-# Expected: Specific improvement recommendations
-
-# Commit with traceability
-/xcommit --tdd auth2c
-# Expected: Commit with proper footnote reference
-```
-
-**Success Criteria:** Tests pass, quality gates pass, feature traced to specification
+**Success criteria:** tests pass, quality and security gates pass, feature
+traceable to its specification.
 
 ### Security and Compliance Workflow
 
@@ -918,84 +700,63 @@ Automate and optimize development workflows with configurable automation pattern
 
 **Prerequisites:** Active feature branch, specification available
 
+`/xtdd` drives the whole cycle. There is no separate `/xred` or `/xgreen`
+command in this repository -- the phases are flags on `/xtdd`.
+
 ```bash
-# 1. Read the specification
+# 1. Read the requirement
 /xspec --read cli1a
-# Expected: Clear understanding of requirement
+# Expected: Requirement with acceptance criteria
 
-# 2. Write failing test
-/xred --spec cli1a
-# Expected: Red test that describes desired behavior
+# 2. Red -- write the failing test
+/xtdd --red ContactForm
+# Expected: Test that fails for the right reason
 
-# 3. Run test to confirm failure
-/xtest --spec
-# Expected: Test fails for right reason
+# 3. Confirm the failure
+/xtest
+# Expected: One failing test, everything else green
 
-# 4. Write minimal implementation
-/xgreen --minimal
-# Expected: Test passes with simplest possible code
+# 4. Green -- minimal implementation
+/xtdd --green
+# Expected: Test passes with the simplest code that works
 
-# 5. Refactor if needed (while keeping tests green)
-/xquality --all
-# Expected: Clean code that passes all quality gates
+# 5. Refactor while staying green
+/xquality --fix
+/xrefactor --smell
+# Expected: Clean code, tests still passing
 
-# 6. Commit with traceability
-/xcommit --tdd cli1a
-# Expected: Clean commit with specification reference
+# 6. Commit
+/xgit
+# Expected: Commit with a message generated from the diff
 ```
 
-**Cycle Time:** 15-30 minutes per cycle
+**Cycle time:** 15-30 minutes.
 
-### AI Development Readiness Assessment
+### Development Maturity Assessment
 
 **Prerequisites:** Project structure established
 
-#### Phase 1: Baseline Assessment
 ```bash
-# Assess current AI development readiness
-/xreadiness --assess
-# Expected: Readiness score with specific improvement areas
-
-# Check development maturity level
+# Where the team is today
 /xmaturity --level
-# Expected: Maturity level (1-5) with next level requirements
+# Expected: Maturity level 1-5 with the criteria for the next one
 
-# Establish baseline metrics
-/xreadiness --baseline
-# Expected: Measurement baseline for future comparison
-```
+# Detailed assessment with evidence
+/xmaturity --assess
+# Expected: Per-area findings (testing, CI/CD, quality tooling, docs)
 
-#### Phase 2: Capability Enhancement
-```bash
-# Define AI development standards
-/xrules --define "ai-standards"
-# Expected: Codified rules for AI-assisted development
+# What to do about it
+/xmaturity --roadmap
+# Expected: Prioritized improvements toward the next level
 
-# Set up development observability
-/xobservable --metrics
-# Expected: Metrics dashboard for development insights
-
-# Create monitoring for development patterns
-/xmonitoring --health
-# Expected: Health checks for development process
-```
-
-#### Phase 3: Progress Tracking
-```bash
-# Monitor maturity progress
+# Track movement over time
 /xmaturity --progress
-# Expected: Progress report against maturity goals
-
-# Identify remaining readiness gaps
-/xreadiness --gaps
-# Expected: Prioritized list of improvement opportunities
-
-# Generate readiness report
-/xreadiness --report
-# Expected: Comprehensive readiness assessment document
+# Expected: Progress against previously identified gaps
 ```
 
-**Success Metrics:** Readiness score >80%, maturity level 3+, no critical gaps
+Narrow it to one area with `/xmaturity --testing` or `/xmaturity --ci-cd`.
+
+**Success metric:** maturity level 3+, no critical gaps outstanding.
 
 ### SpecDriven AI Complete Workflow
 
@@ -1081,10 +842,6 @@ Automate and optimize development workflows with configurable automation pattern
 /xpipeline --deploy staging
 # Expected: Successful deployment with validation
 
-# Monitor deployment metrics
-/xmonitoring --health
-# Expected: Health checks and performance metrics
-
 # Generate deployment report
 /xpipeline --monitor
 # Expected: Deployment summary with success metrics
@@ -1099,7 +856,7 @@ Automate and optimize development workflows with configurable automation pattern
 3. **Maintain dual coverage**: Track both code coverage and specification coverage using `/xcoverage --dual`
 4. **Validate continuously**: Run `/xquality --all` and `/xspec --validate` before committing
 5. **Ensure traceability**: Every test must link to a specific specification ID with authority level
-6. **Monitor development**: Use `/xobservable` for insights into specification compliance
+6. **Measure the process**: Use `/xmetrics` for development metrics and `/xtrace` for specification-to-test traceability
 7. **Secure by default**: Run `/xsecurity --scan` regularly
 8. **Plan strategically**: Use `/xplanning` for complex planning with specification references
 9. **Authority-driven development**: Respect specification authority levels (system > platform > developer)
@@ -1110,111 +867,88 @@ Automate and optimize development workflows with configurable automation pattern
 ### Common Issues and Solutions
 
 #### Command Not Found
-**Symptom:** `/xcommand` not recognized
+**Symptom:** a `/x...` command is not recognized
 **Solutions:**
-1. Verify command exists in Command Index above
-2. Check if project has `.claude/commands/` directory
-3. Ensure correct namespace: use `/project:command` or `/user:command`
-4. For `/x` shortcuts, ensure commands are in correct location
+1. Confirm the name appears in the Command Index above -- 23 commands documented
+   in older versions of this guide (`/xred`, `/xgreen`, `/xcommit`, `/xgenerate`,
+   `/xsetup`, `/xanalyze`, `/xvalidate`, `/xmonitoring` and others) were dropped
+   from this project and no longer exist here.
+2. Check that the commands are installed: `claude-commands list`
+3. Install them: `claude-commands install --active` (or `--all` for experiments)
+4. Experimental commands are not installed by default -- check the Status column
 
 #### Specification Not Found
 **Symptom:** `/xspec --read <id>` returns "specification not found"
 **Solutions:**
-1. Check `specs/specifications/` directory exists
-2. Verify footnote ID format matches `^[a-z]{3}[0-9][a-z]` pattern
-3. Use `/xfootnote --find <partial-id>` to locate specifications
-4. Ensure specification file contains the footnote reference
-
-#### Test Generation Fails
-**Symptom:** `/xgenerate --test <spec-id>` produces invalid tests
-**Solutions:**
-1. Verify specification has clear acceptance criteria
-2. Check that `specs/tests/` directory structure exists
-3. Ensure Python environment is properly configured
-4. Use `/xvalidate --spec <spec-id>` to check specification format
+1. Check that the `specs/` directory exists and contains the spec
+2. Verify the footnote ID format matches `^[a-z]{3}[0-9][a-z]`
+3. Use `/xtrace` to locate specifications and their linked tests
+4. Confirm the file actually contains the footnote reference
 
 #### Quality Checks Fail
-**Symptom:** `/xquality --all` reports errors
-**Common Issues:**
-- **MyPy errors**: Check type annotations, update imports
-- **Ruff formatting**: Run `/xquality --format` to auto-fix
-- **Missing dependencies**: Use `/xsetup --deps` to reinstall
+**Symptom:** `/xquality` reports errors
+**Common causes:**
+- **Type errors**: check annotations and imports
+- **Formatting**: `/xquality --fix` auto-fixes what it can
+- **Missing tooling**: install the linters the project expects
 
-**Resolution Steps:**
+**Resolution:**
 ```bash
-/xquality --mypy          # Check specific issue
-/xquality --format        # Auto-fix formatting
-/xanalyze --types         # Deep type analysis
+/xquality                 # See everything
+/xquality --fix           # Auto-fix what is mechanical
+/xrefactor --smell        # Structural problems the linter will not catch
 ```
 
 #### TDD Cycle Breaks
-**Symptom:** Tests pass unexpectedly or fail for wrong reasons
+**Symptom:** tests pass unexpectedly, or fail for the wrong reason
 **Diagnosis:**
-1. Use `/xtest --component <name>` to isolate issues
-2. Check test isolation with `/xtest --unit`
-3. Verify mocks with `/xaws --mock` for AWS tests
+1. Isolate with `/xtest` on the affected component
+2. Check test isolation -- shared state between tests is the usual cause
+3. For AWS code, verify mocks with `/xaws --mock`
 
 **Recovery:**
 ```bash
-/xdebug --trace <error>   # Trace error to specification
-/xtest --coverage         # Check test completeness
-/xvalidate --traceability # Verify spec-to-test links
+/xdebug                   # Analyze the error and suggest fixes
+/xtest --coverage         # Find what is not actually covered
+/xtrace                   # Verify spec-to-test links
 ```
 
-#### Performance Issues
-**Symptom:** Commands run slowly or time out
-**Optimization:**
-1. Check system resources with `/xmonitoring --performance`
-2. Profile specific operations with `/xperformance --profile <component>`
-3. Optimize command execution with appropriate flags
-
 #### Security Scan Failures
-**Symptom:** `/xsecurity --scan` reports vulnerabilities
-**Response Protocol:**
-1. **Critical vulnerabilities**: Stop development, fix immediately
-2. **High vulnerabilities**: Fix before next commit
-3. **Medium/Low**: Plan fix in next sprint
+**Symptom:** `/xsecurity` reports vulnerabilities
+**Response protocol:**
+1. **Critical**: stop, fix immediately
+2. **High**: fix before the next commit
+3. **Medium/Low**: schedule
 
 **Remediation:**
 ```bash
-/xsecurity --dependencies    # Check dependency issues
-/xsecurity --secrets         # Verify no exposed secrets
-/xrisk --mitigate <issue>   # Get specific guidance
+/xsecurity --dependencies    # Dependency advisories
+/xsecurity --report          # Full report by severity
+/xrisk                       # Risk assessment and mitigation options
 ```
 
-#### Environment Setup Problems
-**Symptom:** `/xsetup --env` fails or commands don't work
+See [ASH tiered security integration](ash-integration.md) for how the scan
+tiers fit together and what runs where.
+
+#### Environment and Configuration Problems
+**Symptom:** commands behave inconsistently across machines
 **Solutions:**
-1. Check Python version: requires 3.11+
-2. Verify `./setup.sh` exists and is executable
-3. Check environment variables are set
-4. Use `/xconfig --validate` to check configuration
+1. Check the toolkit installation: `claude-commands verify`
+2. Inspect configuration with `/xconfig`
+3. Re-apply a settings template: `claude-commands config --template basic`
+4. Reinstall the command set: `claude-commands install --active`
 
-**Reset Environment:**
-```bash
-/xsetup --python          # Reinstall Python requirements
-/xsetup --deps            # Reinstall dependencies
-/xconfig --template       # Regenerate configuration
-```
-
-### Error Code Reference
-
-| Error Pattern | Meaning | Action |
-|---------------|---------|--------|
-| `SPEC_NOT_FOUND` | Specification file missing | Check `specs/specifications/` directory |
-| `FOOTNOTE_INVALID` | Footnote ID format wrong | Use pattern `^[a-z]{3}[0-9][a-z]` |
-| `TEST_GEN_FAILED` | Test generation failed | Verify specification format |
-| `QUALITY_FAILED` | Code quality check failed | Run individual quality commands |
-| `TDD_CYCLE_BROKEN` | TDD cycle inconsistent | Reset with `/xtdd --red <spec-id>` |
-| `SECURITY_VIOLATION` | Security issue detected | Run `/xsecurity --mitigate` |
-| `ENV_SETUP_FAILED` | Environment setup failed | Check prerequisites and permissions |
+#### Claims That Do Not Check Out
+**Symptom:** a command cites a URL, ID, or file that does not exist
+**Solution:** run `/xverify` over the file or directory. It exists for exactly
+this -- catching fabricated references before they reach a commit.
 
 ### Getting Help
 
-1. **Command Help**: Most commands support `--help` flag
-2. **Specification Issues**: Use `/xvalidate --compliance` for checks
-3. **Complex Problems**: Use `/xanalyze` commands for deep analysis
-4. **Integration Issues**: Check Integration Points section below
+1. **Which command do I want?** `/xhelp <what you are trying to do>`
+2. **Command help**: most commands support `--help`
+3. **Read before changing**: `/xexplore <topic>` is read-only and safe to run first
+4. **Integration issues**: see Integration Points below
 
 ## Integration Points
 

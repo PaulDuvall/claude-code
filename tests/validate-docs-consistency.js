@@ -124,12 +124,13 @@ function checkCliSubcommands() {
 }
 
 /**
- * Every `/xcommand` named in the canonical docs must have a source file.
+ * Every `/xcommand` a doc tells you to RUN must have a source file.
  *
- * docs/claude-custom-commands.md is excluded: it still documents the
- * pre-consolidation 62-command set and carries ~180 references to commands this
- * repo no longer has. Reconciling it is tracked separately; adding it here
- * would only park a permanent failure in CI.
+ * Only instructional positions count: inside a fenced code block, or inside a
+ * markdown table cell. Prose is left alone on purpose, because the honest way
+ * to document a removed command is to name it -- claude-custom-commands.md says
+ * "there is no separate /xred or /xgreen command; the phases live inside /xtdd",
+ * and flagging that sentence would punish the fix.
  */
 function checkCommandNames() {
   const real = new Set([
@@ -137,14 +138,27 @@ function checkCommandNames() {
     ...listing('slash-commands/experiments', f => f.endsWith('.md'))
   ].map(f => f.replace(/\.md$/, '')));
 
-  const canonical = ['README.md', 'CLAUDE.md', 'docs/npm-package-guide.md'];
+  const canonical = [
+    'README.md',
+    'CLAUDE.md',
+    'docs/npm-package-guide.md',
+    'docs/claude-custom-commands.md'
+  ];
   const problems = [];
   for (const name of canonical) {
     const p = path.join(ROOT, name);
     if (!fs.existsSync(p)) continue;
-    for (const m of read(p).matchAll(/\/(x[a-z][a-z-]*)\b/g)) {
-      if (!real.has(m[1])) problems.push(`${name}: "/${m[1]}" has no file in slash-commands/`);
-    }
+    let inFence = false;
+    read(p).split('\n').forEach((line, i) => {
+      if (/^\s*```/.test(line)) { inFence = !inFence; return; }
+      const isTableRow = /^\s*\|/.test(line);
+      if (!inFence && !isTableRow) return;
+      for (const m of line.matchAll(/\/(x[a-z][a-z-]*)\b/g)) {
+        if (!real.has(m[1])) {
+          problems.push(`${name}:${i + 1}: "/${m[1]}" has no file in slash-commands/`);
+        }
+      }
+    });
   }
   return [...new Set(problems)];
 }
