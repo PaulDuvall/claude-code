@@ -263,6 +263,24 @@ npm test
 
 ## 🔄 Recent Updates
 
+### Version 0.0.1-alpha.23
+- ⚠️ **BREAKING (declared): Node 22+ required**: `engines.node` moves from
+  `>=16.0.0` to `>=22.0.0`. Node 16, 18 and 20 are all end-of-life, nothing in
+  CI has tested them since the matrix moved to 22/24, and
+  `@anthropic-ai/claude-code` already requires `>=22.0.0`. npm treats `engines`
+  as advisory, so an install on Node 20 prints `EBADENGINE` and proceeds rather
+  than failing -- but the declaration now matches what is actually tested.
+- ✅ **Hooks documentation corrected**: `hooks/README.md` listed thirteen hooks
+  (`session-init.sh`, `validate-changes.sh`, `backup-before-edit.sh` and ten
+  others) that do not exist and never did. Replaced with the real inventory:
+  six event-bound Python hooks, twelve supporting scan modules, and three
+  terminal/session shell hooks.
+- ✅ **Template fix**: `templates/headless-examples.md` pinned `node:20`
+  (EOL 2026-04-30); now `node:22`.
+
+No code changes. Three files differ from alpha.22: `package.json`,
+`hooks/README.md` and `templates/headless-examples.md`.
+
 ### Version 0.0.1-alpha.9
 - ✅ **NEW: OIDC Command**: GitHub Actions to AWS OIDC integration (`claude-commands oidc`)
 - ✅ **TDD Implementation**: Phase 1 foundation with comprehensive test coverage (14/14 tests)
