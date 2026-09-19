@@ -12,8 +12,8 @@ Users can now install your Claude Code toolkit using npm:
 # Global installation (recommended)
 npm install -g @paulduvall/claude-dev-toolkit
 
-# Or using npx without installation
-npx @paulduvall/claude-dev-toolkit
+# Or using npx without installing globally (a subcommand is required)
+npx @paulduvall/claude-dev-toolkit setup
 
 # Local project installation
 npm install @paulduvall/claude-dev-toolkit
@@ -27,12 +27,19 @@ When users install `@paulduvall/claude-dev-toolkit`, they receive:
 A command-line tool that helps set up custom slash commands for Claude Code:
 
 ```bash
-# Run the setup wizard
-claude-commands
+# Run setup (applies defaults: basic template, active commands, hooks)
+claude-commands setup
 
-# Or use npx
-npx @paulduvall/claude-dev-toolkit
+# Preview what setup would do, without changing anything
+claude-commands setup --dry-run
+
+# See every available subcommand
+claude-commands --help
 ```
+
+`claude-commands` with no subcommand prints help and exits 1; it does not start
+a setup flow. `setup` is not interactive either -- it applies its defaults
+straight through, so use `--dry-run` first or pass `--type` and `--commands`.
 
 ### 2. **45 Custom Slash Commands**
 The toolkit includes production-ready and experimental commands:
@@ -79,39 +86,47 @@ Built-in hooks for:
    npm install -g @paulduvall/claude-dev-toolkit
    ```
 
-2. **Run the setup wizard:**
+2. **Run setup:**
    ```bash
-   claude-commands
+   claude-commands setup
    ```
 
-3. **Follow the interactive prompts to:**
-   - Configure Claude Code settings
-   - Deploy custom commands
-   - Set up security hooks
-   - Apply configuration templates
+3. **What setup does** (non-interactive; defaults shown):
+   - Applies a configuration template to `~/.claude/settings.json` (`--type basic`)
+   - Installs a command set to `~/.claude/commands/` (`--commands active`)
+   - Installs the security hooks (`--skip-hooks` to opt out)
+   - Verifies the result
+
+   Preview it first with `claude-commands setup --dry-run`.
 
 ### Manual Setup
 
 Users can also manually set up specific components:
 
 ```bash
-# Deploy only active commands
-claude-commands deploy --active
+# Install only active commands
+claude-commands install --active
 
-# Deploy experimental commands
-claude-commands deploy --experimental
+# Install experimental commands
+claude-commands install --experiments
 
-# Install security hooks
-claude-commands hooks --install
+# Install both sets
+claude-commands install --all
 
 # Apply a specific configuration template
 claude-commands config --template security
+
+# List the available templates
+claude-commands config --list
 ```
+
+Hooks are installed by `claude-commands setup`; there is no separate `hooks`
+subcommand. Run `claude-commands --help` for the full list of subcommands.
 
 ## Package Details
 
 - **Package Name:** `@paulduvall/claude-dev-toolkit`
-- **Version:** 0.0.1-alpha.2
+- **Current version:** see the registry -- `npm view @paulduvall/claude-dev-toolkit version`
 - **Registry:** https://registry.npmjs.org
 - **License:** MIT
 - **Author:** Paul Duvall
